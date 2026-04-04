@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-PeopleHub.Worker-7a92c5fb-2d42-4e7b-8c3d-1f6d4e5c1a2b</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PeopleHub.Application\PeopleHub.Application.csproj" />
+    <ProjectReference Include="..\PeopleHub.Infrastructure\PeopleHub.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

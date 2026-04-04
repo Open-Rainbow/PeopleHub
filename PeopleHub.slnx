@@ -1,0 +1,11 @@
+<Solution>
+  <Project Path="peoplehub.client/peoplehub.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="PeopleHub.Server/PeopleHub.Server.csproj" />
+  <Project Path="core/PeopleHub.Application/PeopleHub.Application.csproj" />
+  <Project Path="core/PeopleHub.Domain/PeopleHub.Domain.csproj" />
+  <Project Path="core/PeopleHub.Infrastructure/PeopleHub.Infrastructure.csproj" />
+  <Project Path="core/PeopleHub.Worker/PeopleHub.Worker.csproj" />
+</Solution>

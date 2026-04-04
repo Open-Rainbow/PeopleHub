@@ -1,0 +1,98 @@
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.sln.user
+*.user
+*.suo
+*.sln.docstates
+
+# Build results
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
+*.dll
+*.exe
+*.pdb
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Entity Framework
+Migrations/
+
+# ReSharper
+.idea/
+*.resharper
+*.DotSettings.user
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.npmrc
+
+# Angular Specific
+.sass-cache/
+.vuepress/dist
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+coverage/
+.nyc_output/
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+# Build artifacts
+dist-ssr/
+
+# IDE Caches
+*.cache
+
+# General
+.git/
+.gitattributes
+.gitlab-ci.yml
+.crowdin.yml
+*.orig
+
+# ASP.NET Core
+appsettings.Development.json
+appsettings.Production.json
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Development certificates
+*.pem
+*.key
+*.crt
