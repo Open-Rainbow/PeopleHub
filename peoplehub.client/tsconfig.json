@@ -4,8 +4,119 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
+    "rootDir": "./src",
     "strict": true,
     "noImplicitOverride": true,
+    "paths": {
+      "api": [
+        "./dist/api"
+      ],
+      "app-shell": [
+        "./dist/app-shell"
+      ],
+      "attendance": [
+        "./dist/attendance"
+      ],
+      "auth": [
+        "./dist/auth"
+      ],
+      "branding": [
+        "./dist/branding"
+      ],
+      "breadcrumbs": [
+        "./dist/breadcrumbs"
+      ],
+      "common": [
+        "./dist/common"
+      ],
+      "dashboard": [
+        "./dist/dashboard"
+      ],
+      "directives": [
+        "./dist/directives"
+      ],
+      "documents": [
+        "./dist/documents"
+      ],
+      "employees": [
+        "./dist/employees"
+      ],
+      "feature-flags": [
+        "./dist/feature-flags"
+      ],
+      "forms": [
+        "./dist/forms"
+      ],
+      "header": [
+        "./dist/header"
+      ],
+      "holiday": [
+        "./dist/holiday"
+      ],
+      "layout": [
+        "./dist/layout"
+      ],
+      "leave": [
+        "./dist/leave"
+      ],
+      "navigation": [
+        "./dist/navigation"
+      ],
+      "notifications": [
+        "./dist/notifications"
+      ],
+      "org-a": [
+        "./dist/org-a"
+      ],
+      "org-b": [
+        "./dist/org-b"
+      ],
+      "org-c": [
+        "./dist/org-c"
+      ],
+      "payroll": [
+        "./dist/payroll"
+      ],
+      "performance": [
+        "./dist/performance"
+      ],
+      "pipes": [
+        "./dist/pipes"
+      ],
+      "quick-actions": [
+        "./dist/quick-actions"
+      ],
+      "recruitment": [
+        "./dist/recruitment"
+      ],
+      "reports": [
+        "./dist/reports"
+      ],
+      "settings": [
+        "./dist/settings"
+      ],
+      "sidebar": [
+        "./dist/sidebar"
+      ],
+      "super-admin": [
+        "./dist/super-admin"
+      ],
+      "tenant-config": [
+        "./dist/tenant-config"
+      ],
+      "tenant-context": [
+        "./dist/tenant-context"
+      ],
+      "theme-tokens": [
+        "./dist/theme-tokens"
+      ],
+      "ui": [
+        "./dist/ui"
+      ],
+      "utils": [
+        "./dist/utils"
+      ]
+    },
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
@@ -19,6 +130,7 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
+    "types": ["jasmine"],
     "lib": [
       "ES2022",
       "dom"
