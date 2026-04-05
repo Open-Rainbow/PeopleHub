@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "PeopleHubComponentSchematic",
+  "$id": "PeopleHubComponentSchematic",
   "title": "PeopleHub Component with Story",
   "type": "object",
   "description": "Creates an Angular component alongside a Storybook story file.",
@@ -23,7 +23,7 @@
     "standalone": {
       "type": "boolean",
       "description": "Generate a standalone component.",
-      "default": false
+      "default": true
     },
     "flat": {
       "type": "boolean",

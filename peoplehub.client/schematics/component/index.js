@@ -12,6 +12,11 @@ const nodePath = require('path');
  * a Storybook .stories.ts file in the same folder.
  */
 function component(options) {
+  // Enforce standalone components for all future generation.
+  options.standalone = true;
+  options.style = options.style || 'scss';
+  options.type = options.type || 'component';
+
   return chain([
     externalSchematic('@schematics/angular', 'component', options),
     generateStoryFile(options),
@@ -29,16 +34,25 @@ function generateStoryFile(options) {
     const classified = strings.classify(options.name);
 
     let componentDir = null;
+    let componentBaseName = null;
 
     // Primary: look through staged actions for the CREATE of component.ts.
     // This is the most reliable approach – it only targets files that were
     // just staged by the preceding externalSchematic() call.
     for (const action of tree.actions) {
-      if (
-        action.kind === 'c' &&
-        action.path.endsWith(`/${dasherized}.component.ts`)
-      ) {
+      if (action.kind !== 'c') {
+        continue;
+      }
+
+      if (action.path.endsWith(`/${dasherized}.component.ts`)) {
         componentDir = nodePath.posix.dirname(action.path);
+        componentBaseName = `${dasherized}.component`;
+        break;
+      }
+
+      if (action.path.endsWith(`/${dasherized}.ts`)) {
+        componentDir = nodePath.posix.dirname(action.path);
+        componentBaseName = dasherized;
         break;
       }
     }
@@ -48,19 +62,25 @@ function generateStoryFile(options) {
       tree.visit((filePath) => {
         if (filePath.endsWith(`/${dasherized}.component.ts`)) {
           componentDir = nodePath.posix.dirname(filePath);
+          componentBaseName = `${dasherized}.component`;
+        }
+
+        if (filePath.endsWith(`/${dasherized}.ts`)) {
+          componentDir = nodePath.posix.dirname(filePath);
+          componentBaseName = dasherized;
         }
       });
     }
 
-    if (!componentDir) {
+    if (!componentDir || !componentBaseName) {
       return;
     }
 
-    const storyPath = `${componentDir}/${dasherized}.component.stories.ts`;
+    const storyPath = `${componentDir}/${componentBaseName}.stories.ts`;
 
     // Never overwrite an existing story – the developer may have customised it.
     if (!tree.exists(storyPath)) {
-      tree.create(storyPath, buildStoryContent(classified, dasherized));
+      tree.create(storyPath, buildStoryContent(classified, componentBaseName));
     }
   };
 }
@@ -68,9 +88,9 @@ function generateStoryFile(options) {
 /**
  * Builds the initial Storybook story file content for a component.
  */
-function buildStoryContent(classified, dasherized) {
+function buildStoryContent(classified, componentBaseName) {
   return `import type { Meta, StoryObj } from '@storybook/angular';
-import { ${classified}Component } from './${dasherized}.component';
+import { ${classified}Component } from './${componentBaseName}';
 
 const meta: Meta<${classified}Component> = {
   title: 'Components/${classified}',

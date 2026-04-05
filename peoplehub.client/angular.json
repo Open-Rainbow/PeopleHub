@@ -3,23 +3,35 @@
     "version":  1,
     "newProjectRoot":  "projects",
     "cli":  {
+          "defaultCollection": "./schematics",
                 "schematicCollections":  [
                                              "./schematics",
                                              "@schematics/angular"
                                          ]
+            },
+    "schematics":  {
+              "@schematics/angular:component":  {
+                                  "standalone":  true
+                                },
+              "@schematics/angular:directive":  {
+                                  "standalone":  true
+                                },
+              "@schematics/angular:pipe":  {
+                               "standalone":  true
+                             }
             },
     "projects":  {
                      "peoplehub.client":  {
                                               "projectType":  "application",
                                               "schematics":  {
                                                                  "@schematics/angular:component":  {
-                                                                                                       "standalone":  false
+                                                                                     "standalone":  true
                                                                                                    },
                                                                  "@schematics/angular:directive":  {
-                                                                                                       "standalone":  false
+                                                                                     "standalone":  true
                                                                                                    },
                                                                  "@schematics/angular:pipe":  {
-                                                                                                  "standalone":  false
+                                                                                  "standalone":  true
                                                                                               }
                                                              },
                                               "root":  "",
