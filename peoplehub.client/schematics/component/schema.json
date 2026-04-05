@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "PeopleHubComponentSchematic",
+  "title": "PeopleHub Component with Story",
+  "type": "object",
+  "description": "Creates an Angular component alongside a Storybook story file.",
+  "additionalProperties": true,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the component.",
+      "$default": { "$source": "argv", "index": 0 }
+    },
+    "path": {
+      "type": "string",
+      "description": "The path where the component will be created, relative to the workspace root."
+    },
+    "project": {
+      "type": "string",
+      "description": "The name of the project.",
+      "$default": { "$source": "projectName" }
+    },
+    "standalone": {
+      "type": "boolean",
+      "description": "Generate a standalone component.",
+      "default": false
+    },
+    "flat": {
+      "type": "boolean",
+      "description": "Create files at the top level of the path without a sub-folder.",
+      "default": false
+    },
+    "skipTests": {
+      "type": "boolean",
+      "description": "Skip generating a spec.ts file.",
+      "default": false
+    },
+    "style": {
+      "type": "string",
+      "description": "Style file extension (css, scss, less, etc.).",
+      "default": "scss"
+    },
+    "inlineStyle": {
+      "type": "boolean",
+      "description": "Inline styles inside the component .ts file.",
+      "default": false
+    },
+    "inlineTemplate": {
+      "type": "boolean",
+      "description": "Inline the template inside the component .ts file.",
+      "default": false
+    },
+    "changeDetection": {
+      "type": "string",
+      "description": "The change detection strategy.",
+      "default": "Default"
+    },
+    "viewEncapsulation": {
+      "type": "string",
+      "description": "The view encapsulation strategy."
+    },
+    "prefix": {
+      "type": "string",
+      "description": "Selector prefix."
+    },
+    "selector": {
+      "type": "string",
+      "description": "Custom HTML selector for the component."
+    },
+    "module": {
+      "type": "string",
+      "description": "The declaring NgModule."
+    },
+    "export": {
+      "type": "boolean",
+      "description": "Export the component from its NgModule.",
+      "default": false
+    },
+    "skipImport": {
+      "type": "boolean",
+      "description": "Skip importing the component into an NgModule.",
+      "default": false
+    },
+    "skipSelector": {
+      "type": "boolean",
+      "description": "Do not add a selector to the component.",
+      "default": false
+    },
+    "displayBlock": {
+      "type": "boolean",
+      "description": "Add display:block automatically.",
+      "default": false
+    },
+    "type": {
+      "type": "string",
+      "description": "A developer-defined suffix added to the filename.",
+      "default": ""
+    }
+  },
+  "required": ["name"]
+}

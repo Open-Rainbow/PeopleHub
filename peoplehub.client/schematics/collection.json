@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "component": {
+      "description": "Generate an Angular component with an auto-created Storybook story file",
+      "factory": "./component/index#component",
+      "schema": "./component/schema.json"
+    }
+  }
+}
