@@ -185,7 +185,7 @@ Client/
 │   │   │   ├── employee-layout/
 │   │   │   ├── hr-admin-layout/
 │   │   │   └── super-admin-layout/
-│   │   ├── features/          (Feature modules - lazy loaded)
+│   │   ├── modules/          (Feature modules - lazy loaded)
 │   │   │   ├── auth/
 │   │   │   ├── dashboard/
 │   │   │   ├── employees/
