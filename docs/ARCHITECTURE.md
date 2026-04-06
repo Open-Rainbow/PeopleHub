@@ -1138,10 +1138,13 @@ On-Premises / Cloud (Azure, AWS, GCP)
 - **Testing**: xUnit, Moq
 
 ### Frontend
-- **Language**: TypeScript 5.7
+- **Language**: TypeScript 5.9
 - **Framework**: Angular 21+
-- **Styling**: CSS, SCSS
-- **Build Tool**: Angular CLI, ng-packagr
+- **Architecture Style**: Standalone APIs (no NgModule-based app bootstrap)
+- **Styling**: Tailwind CSS 4.2, CSS, SCSS
+- **Icons**: Iconify (`iconify-icon` web component)
+- **UI Documentation**: Storybook 8.6
+- **Build Tool**: Angular CLI, ng-packagr, PostCSS (`@tailwindcss/postcss`)
 - **State Management**: NgRx (optional), RxJS
 - **Testing**: Jasmine, Karma
 - **HTTP Client**: Angular HttpClient

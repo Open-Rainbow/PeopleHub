@@ -1,40 +1,25 @@
-import { HttpClient } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
-}
+import { IconifyIconComponent } from './iconify-icon.component';
+import { WeatherForecast, WeatherForecastService } from './weather-forecast.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconifyIconComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
-  public forecasts: WeatherForecast[] = [];
+  readonly forecasts = signal<WeatherForecast[]>([]);
+  readonly title = 'peoplehub.client';
 
-  constructor(private http: HttpClient) {}
+  private readonly weatherService = inject(WeatherForecastService);
 
   ngOnInit() {
-    this.getForecasts();
+    this.weatherService.getForecasts().subscribe(data => {
+      this.forecasts.set(data);
+    });
   }
-
-  getForecasts() {
-    this.http.get<WeatherForecast[]>('/weatherforecast').subscribe(
-      (result) => {
-        this.forecasts = result;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-
-  title = 'peoplehub.client';
 }

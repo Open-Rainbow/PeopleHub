@@ -5,16 +5,9 @@ const config: StorybookConfig = {
     '../src/**/*.stories.ts',
     '../src/**/*.stories.mdx',
   ],
-  addons: [
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-  ],
   framework: {
     name: '@storybook/angular',
     options: {},
-  },
-  docs: {
-    autodocs: 'tag',
   },
 };
 
