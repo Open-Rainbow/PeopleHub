@@ -1,11 +1,11 @@
-﻿# PeopleHub Architecture Documentation
+# PeopleHub Architecture Documentation
 
 ## 1. Project Overview & Vision
 
-**PeopleHub** is a comprehensive, multi-tenant Human Resource Management System (HRMS) designed as a scalable **SaaS product**. It enables organizations to:
+**PeopleHub** is a comprehensive, multi-organization Human Resource Management System (HRMS) designed as a scalable **SaaS product**. It enables organizations to:
 
 - Manage employees, attendance, leave, payroll, recruitment, performance, and more
-- Scale from single-tenant to multi-tenant deployments
+- Scale from single-organization to multi-organization deployments
 - Customize features and branding per organization
 - Integrate with external systems
 - Generate business intelligence reports
@@ -309,15 +309,15 @@ Application/
 │   │
 │   └── SuperAdmin/
 │       ├── Commands/
-│       │   ├── CreateTenantCommand
-│       │   ├── SuspendTenantCommand
-│       │   └── ConfigureTenantCommand
+│       │   ├── CreateOrganizationCommand
+│       │   ├── SuspendOrganizationCommand
+│       │   └── ConfigureOrganizationCommand
 │       ├── Queries/
-│       │   ├── GetAllTenantsQuery
-│       │   └── GetTenantMetricsQuery
+│       │   ├── GetAllOrganizationsQuery
+│       │   └── GetOrganizationMetricsQuery
 │       └── DTOs/
-│           ├── TenantResponse
-│           └── TenantMetricsResponse
+│           ├── OrganizationResponse
+│           └── OrganizationMetricsResponse
 │
 └── Customization/         Organization-specific logic
     ├── Features/          Feature toggle service
@@ -385,7 +385,7 @@ Infrastructure/
 │   ├── Context/                 Organization context resolution
 │   │   └── OrganizationContextProvider (Current org from request)
 │   ├── DomainMapping/           Map domain to organization
-│   ├── Resolution/              Tenant resolution strategies
+│   ├── Resolution/              Organization resolution strategies
 │   └── Stores/                  Organization configuration storage
 │
 ├── Caching/
@@ -505,7 +505,7 @@ Server/
 │   └── SuperAdmin/
 │
 ├── Middleware/              HTTP request processing
-│   ├── OrganizationResolverMiddleware  (Resolve tenant)
+│   ├── OrganizationResolverMiddleware  (Resolve organization)
 │   ├── ExceptionHandlingMiddleware     (Global error handling)
 │   ├── AuthenticationMiddleware        (JWT validation)
 │   ├── RequestLoggingMiddleware        (Audit trail)
@@ -904,7 +904,7 @@ Employee Portal:
 
 ## 6. Multi-Tenancy Architecture
 
-### 6.1 Tenant Isolation Strategy
+### 6.1 Organization Isolation Strategy
 
 **Data Level**:
 - Each organization has isolated database tables or schema
@@ -1173,7 +1173,7 @@ On-Premises / Cloud (Azure, AWS, GCP)
 | **Strategy Pattern** | Org-specific customization without new code |
 | **JWT Authentication** | Stateless, scalable, API-friendly |
 | **Event Publishing** | Loose coupling, asynchronous processing, audit trail |
-| **Middleware for Org Resolve** | Centralized tenant resolution, clean abstraction |
+| **Middleware for Org Resolve** | Centralized organization resolution, clean abstraction |
 
 ---
 

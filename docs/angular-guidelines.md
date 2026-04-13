@@ -14,6 +14,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use **OnPush change detection** (`ChangeDetectionStrategy.OnPush`).
 - Use **signals** for state management and `computed()` for derived state.
 - Keep state transformations pure; use `set()` / `update()` — never mutate state directly.
+- Use **organization** terminology consistently in code, APIs, and docs; avoid **tenant** naming unless required by external contracts.
 - No inline styles.
 
 ## Component Design
