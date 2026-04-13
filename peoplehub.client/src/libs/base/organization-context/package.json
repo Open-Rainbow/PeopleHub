@@ -1,5 +1,5 @@
 {
-  "name": "tenant-config",
+  "name": "organization-context",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^21.0.0",

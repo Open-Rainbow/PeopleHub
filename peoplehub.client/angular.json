@@ -677,23 +677,23 @@
                                               }
                                             }
                                           },
-                                          "tenant-config": {
+                                          "organization-config": {
                                             "projectType": "library",
-                                            "root": "src/libs/runtime/tenant-config",
-                                            "sourceRoot": "src/libs/runtime/tenant-config/src",
+                                            "root": "src/libs/runtime/organization-config",
+                                            "sourceRoot": "src/libs/runtime/organization-config/src",
                                             "prefix": "ph",
                                             "architect": {
                                               "build": {
                                                 "builder": "@angular-devkit/build-angular:ng-packagr",
                                                 "options": {
-                                                  "project": "src/libs/runtime/tenant-config/ng-package.json"
+                                                  "project": "src/libs/runtime/organization-config/ng-package.json"
                                                 },
                                                 "configurations": {
                                                   "production": {
-                                                    "tsConfig": "src/libs/runtime/tenant-config/tsconfig.lib.prod.json"
+                                                    "tsConfig": "src/libs/runtime/organization-config/tsconfig.lib.prod.json"
                                                   },
                                                   "development": {
-                                                    "tsConfig": "src/libs/runtime/tenant-config/tsconfig.lib.json"
+                                                    "tsConfig": "src/libs/runtime/organization-config/tsconfig.lib.json"
                                                   }
                                                 },
                                                 "defaultConfiguration": "production"
@@ -701,7 +701,7 @@
                                               "test": {
                                                 "builder": "@angular-devkit/build-angular:karma",
                                                 "options": {
-                                                  "tsConfig": "src/libs/runtime/tenant-config/tsconfig.spec.json",
+                                                  "tsConfig": "src/libs/runtime/organization-config/tsconfig.spec.json",
                                                   "polyfills": [
                                                     "zone.js",
                                                     "zone.js/testing"
@@ -710,23 +710,23 @@
                                               }
                                             }
                                           },
-                                          "tenant-context": {
+                                          "organization-context": {
                                             "projectType": "library",
-                                            "root": "src/libs/runtime/tenant-context",
-                                            "sourceRoot": "src/libs/runtime/tenant-context/src",
+                                            "root": "src/libs/runtime/organization-context",
+                                            "sourceRoot": "src/libs/runtime/organization-context/src",
                                             "prefix": "ph",
                                             "architect": {
                                               "build": {
                                                 "builder": "@angular-devkit/build-angular:ng-packagr",
                                                 "options": {
-                                                  "project": "src/libs/runtime/tenant-context/ng-package.json"
+                                                  "project": "src/libs/runtime/organization-context/ng-package.json"
                                                 },
                                                 "configurations": {
                                                   "production": {
-                                                    "tsConfig": "src/libs/runtime/tenant-context/tsconfig.lib.prod.json"
+                                                    "tsConfig": "src/libs/runtime/organization-context/tsconfig.lib.prod.json"
                                                   },
                                                   "development": {
-                                                    "tsConfig": "src/libs/runtime/tenant-context/tsconfig.lib.json"
+                                                    "tsConfig": "src/libs/runtime/organization-context/tsconfig.lib.json"
                                                   }
                                                 },
                                                 "defaultConfiguration": "production"
@@ -734,7 +734,7 @@
                                               "test": {
                                                 "builder": "@angular-devkit/build-angular:karma",
                                                 "options": {
-                                                  "tsConfig": "src/libs/runtime/tenant-context/tsconfig.spec.json",
+                                                  "tsConfig": "src/libs/runtime/organization-context/tsconfig.spec.json",
                                                   "polyfills": [
                                                     "zone.js",
                                                     "zone.js/testing"

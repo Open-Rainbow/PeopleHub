@@ -101,11 +101,11 @@
       "super-admin": [
         "./dist/super-admin"
       ],
-      "tenant-config": [
-        "./dist/tenant-config"
+      "organization-config": [
+        "./dist/organization-config"
       ],
-      "tenant-context": [
-        "./dist/tenant-context"
+      "organization-context": [
+        "./dist/organization-context"
       ],
       "theme-tokens": [
         "./dist/theme-tokens"

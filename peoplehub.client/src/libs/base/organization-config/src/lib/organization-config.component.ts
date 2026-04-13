@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'ph-tenant-config',
+  selector: 'ph-organization-config',
   standalone: true,
   imports: [],
   template: `
     <p>
-      tenant-config works!
+      organization-config works!
     </p>
   `,
   styles: ``
 })
-export class TenantConfigComponent {
+export class OrganizationConfigComponent {
 
 }
