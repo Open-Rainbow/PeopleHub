@@ -43,6 +43,8 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 - Use SCSS.
 - Use design tokens (CSS variables); avoid hard-coded values.
+- Any new color must define both light and dark theme tokens; do not add single-theme-only colors.
+- When copying or moving frontend files into this project, convert any `.css` files/references to `.scss` immediately.
 
 ```css
 color: var(--color-primary);
