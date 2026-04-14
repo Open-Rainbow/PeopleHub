@@ -50,8 +50,8 @@
       "header": [
         "./dist/header"
       ],
-      "holiday": [
-        "./dist/holiday"
+      "holidays": [
+        "./dist/holidays"
       ],
       "layout": [
         "./dist/layout"

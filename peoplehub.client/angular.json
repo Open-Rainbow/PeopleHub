@@ -314,6 +314,39 @@
                                               }
                                             }
                                           },
+                                          "holidays": {
+                                            "projectType": "library",
+                                            "root": "src/libs/modules/holidays",
+                                            "sourceRoot": "src/libs/modules/holidays/src",
+                                            "prefix": "ph",
+                                            "architect": {
+                                              "build": {
+                                                "builder": "@angular-devkit/build-angular:ng-packagr",
+                                                "options": {
+                                                  "project": "src/libs/modules/holidays/ng-package.json"
+                                                },
+                                                "configurations": {
+                                                  "production": {
+                                                    "tsConfig": "src/libs/modules/holidays/tsconfig.lib.prod.json"
+                                                  },
+                                                  "development": {
+                                                    "tsConfig": "src/libs/modules/holidays/tsconfig.lib.json"
+                                                  }
+                                                },
+                                                "defaultConfiguration": "production"
+                                              },
+                                              "test": {
+                                                "builder": "@angular-devkit/build-angular:karma",
+                                                "options": {
+                                                  "tsConfig": "src/libs/modules/holidays/tsconfig.spec.json",
+                                                  "polyfills": [
+                                                    "zone.js",
+                                                    "zone.js/testing"
+                                                  ]
+                                                }
+                                              }
+                                            }
+                                          },
                                           "notifications": {
                                             "projectType": "library",
                                             "root": "src/libs/modules/notifications",
