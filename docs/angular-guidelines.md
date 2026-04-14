@@ -20,7 +20,11 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 ## Type Definitions
 
 - **Never add interfaces in component.ts files**.
-- Always define interfaces in separate `.model.ts` or `.types.ts` files.
+- Keep interfaces/models in `.model.ts` files.
+- Do not keep types inside `.model.ts` files.
+- Always maintain types in separate `.types.ts` files.
+- It is fine to keep module-wise types together in a single `types.ts` file per module.
+- Never keep model/type files inside component folders; place them in dedicated model/type directories.
 - **Keep all related interfaces in one file** (group by feature/domain).
 - Components and services import interfaces from their model files.
 - This prevents circular dependencies and keeps components focused on templating/logic.
