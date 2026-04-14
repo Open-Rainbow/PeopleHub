@@ -1,1360 +1,671 @@
-# PeopleHub Architecture Documentation
+# PeopleHub Architecture - Single Source of Truth
 
-## 1. Project Overview & Vision
+## Project Overview and Vision
 
-**PeopleHub** is a comprehensive, multi-organization Human Resource Management System (HRMS) designed as a scalable **SaaS product**. It enables organizations to:
+PeopleHub is a multi-organization HRMS platform designed for SaaS-style scale, organization-level customization, and modular growth across backend and frontend workstreams.
 
-- Manage employees, attendance, leave, payroll, recruitment, performance, and more
-- Scale from single-organization to multi-organization deployments
-- Customize features and branding per organization
-- Integrate with external systems
-- Generate business intelligence reports
+Primary business capabilities:
+- Employee lifecycle and organization management.
+- Attendance, leave, payroll, recruitment, performance, and reporting.
+- Organization-aware branding, navigation, and feature controls.
+- Integration-driven workflows (notifications, messaging, storage, and external APIs).
+
+Architecture goals:
+- Keep business logic isolated and testable through clean layering.
+- Maintain strict dependency direction and public API boundaries.
+- Support asynchronous and scheduled workloads through worker and messaging patterns.
+- Preserve extensibility with configuration/strategy-driven organization customization.
 
 ### Core Principles
+- Clean Architecture with explicit boundaries.
+- Domain-first modeling and CQRS orchestration.
+- Organization-first multi-tenancy.
+- API-first delivery for web, worker, and integration channels.
+- Library-driven frontend modularity with reusable shared assets.
 
-- **Clean Architecture**: Separation of concerns with clear boundaries
-- **Domain-Driven Design**: Business logic drives architecture
-- **Multi-Tenancy-First**: Built from the ground up for multi-organizational support
-- **API-First**: RESTful APIs support web, mobile, and third-party integrations
-- **Extensibility**: Strategy pattern for customization without code changes
+## 1. Project Versions
 
----
+### Runtime and Framework Versions (current from repository)
 
-## 2. Solution Structure
+#### Backend
+- Target framework: .NET 10 (`net10.0`)
+- C# language standard: C# 13 (architecture standard)
+- ASP.NET Core OpenAPI package: `Microsoft.AspNetCore.OpenApi` 10.0.2
+- Worker host package: `Microsoft.Extensions.Hosting` `10.*`
+- ASP.NET SPA proxy: `Microsoft.AspNetCore.SpaProxy` `10.*-*`
+- EF Core: 8+ (architecture standard)
+- MediatR: required for CQRS orchestration (architecture standard)
+- AutoMapper: required for DTO/domain mapping (architecture standard)
+- Redis cache: required for distributed caching (architecture standard)
+- RabbitMQ: required for async messaging/event workflows (architecture standard)
+- xUnit: required backend unit/integration test framework (architecture standard)
+- Moq: required mocking framework for backend tests (architecture standard)
+- Database target: PostgreSQL 13+ (architecture target)
+- Logging stack status: Serilog is not currently referenced in repository package/project manifests
 
-```
-PeopleHub/
-├── core/                                 (Backend business logic)
-│   ├── PeopleHub.Domain/                (Pure business entities & rules)
-│   ├── PeopleHub.Application/           (Use cases & orchestration)
-│   ├── PeopleHub.Infrastructure/        (Data access, external services)
-│   └── PeopleHub.Worker/                (Background jobs & scheduling)
-│
-├── PeopleHub.Server/                    (ASP.NET Core API Host)
-│   ├── Program.cs                       (Dependency injection & startup)
-│   ├── Controllers/                     (HTTP endpoints)
-│   ├── Middleware/                      (Request processing)
-│   ├── Extensions/                      (Service registration)
-│   └── Configuration/                   (Feature flags, settings)
-│
-├── peoplehub.client/                    (Angular SPA frontend)
-│   ├── src/
-│   │   ├── app/                         (Core app module & routing)
-│   │   ├── libs/                        (Feature & shared libraries)
-│   │   ├── assets/                      (Images, icons, etc.)
-│   │   ├── styles/                      (Global styles)
-│   │   └── environments/                (Configuration)
-│   └── angular.json                     (Build configuration)
-│
-├── tests/                               (Unit & integration tests)
-├── scripts/                             (Utility scripts)
-└── docs/                                (Documentation)
-    └── ARCHITECTURE.md                  (This file)
-```
+#### Frontend
+- Framework: Angular 21 (`@angular/*` `^21.0.0`)
+- Angular CLI: `^21.0.0`
+- ng-packagr: `^21.0.0`
+- TypeScript: `~5.9.0`
+- RxJS: `~7.8.0`
+- Zone.js: `~0.15.0`
+- Storybook: 10.3.4 (`storybook`, `@storybook/angular`)
+- Tailwind CSS: `^4.2.2`
+- Jasmine: `~5.2.0`
+- Karma: `~6.4.0`
+- Chart.js: `^4.5.1`
+- Iconify runtime: `iconify-icon` `^3.0.2`
+- Iconify icon packs: `@iconify/icons-*` family (for example `@iconify/icons-lucide` `^1.2.135`, `@iconify/icons-material-symbols` `^1.2.58`, `@iconify-icons/tabler` `^1.2.95`)
 
----
+#### Tooling and Local Environment
+- Node.js runtime: `v20.19.2` (local environment)
+- npm version: `10.8.2` (local environment)
+- IDE target: Visual Studio 2026 (team standard)
 
-## 3. Backend Architecture
+### Platform Notes
+- Workspace currently follows Angular CLI multi-library layout with Nx-style boundaries.
+- No explicit `nx.json` detected in this repository snapshot.
+- PostgreSQL provider package/configuration is not yet pinned in current server project files.
+- Backend architecture stack items (EF Core/MediatR/AutoMapper/Redis/RabbitMQ/xUnit/Moq) are documented as standards and should be package-pinned explicitly in project manifests.
 
-### 3.1 Layered Architecture Overview
+## 2. Backend Architecture (Clean Architecture)
 
-PeopleHub follows **Clean Architecture** with strict dependency rules:
+### Layering and Dependency Direction
+- `PeopleHub.Server` -> `PeopleHub.Application` -> `PeopleHub.Domain`
+- `PeopleHub.Infrastructure` depends on `PeopleHub.Application` and `PeopleHub.Domain`
+- `PeopleHub.Worker` depends on `PeopleHub.Application` and `PeopleHub.Infrastructure`
 
-```
-┌─────────────────────────────────────────────────────┐
-│  PeopleHub.Server                                   │ (HTTP/REST Layer)
-│  (Controllers, Middleware, Filters)                 │
-└────────────┬────────────────────────────────────────┘
-             │ depends on
-             ↓
-┌─────────────────────────────────────────────────────┐
-│  PeopleHub.Application                              │ (Use Cases Layer)
-│  (Commands, Queries, Services, DTOs, Validators)   │
-└────────────┬────────────────────────────────────────┘
-             │ depends on
-             ↓
-┌─────────────────────────────────────────────────────┐
-│  PeopleHub.Domain                                   │ (Business Logic Layer)
-│  (Entities, Value Objects, Domain Events, Rules)   │
-└─────────────────────────────────────────────────────┘
-             ↑ depends on
-             │
-┌─────────────────────────────────────────────────────┐
-│  PeopleHub.Infrastructure                           │ (Data Access Layer)
-│  (Repositories, DbContext, External Services)       │
-│  (depends on both Application & Domain)             │
-└─────────────────────────────────────────────────────┘
+### Layer Responsibilities
+- Domain: entities, value objects, enums, domain rules/events; no infrastructure dependencies.
+- Application: use-case orchestration, CQRS handlers, validation, DTO mapping, ports/interfaces.
+- Infrastructure: persistence, integrations, caching, storage, identity, messaging implementations.
+- Server: HTTP transport, controllers, middleware pipeline, auth surface, request/response policies.
+- Worker: background jobs, schedulers, consumers, asynchronous workflows.
 
-PeopleHub.Worker                                       (Background Processing)
-(depends on Application & Infrastructure)
-```
+### CQRS Pattern
+- Commands and queries are organized by module under Application.
+- Validation and pipeline behaviors apply cross-cutting concerns.
+- Controllers stay thin and delegate behavior to Application layer.
 
-### 3.2 PeopleHub.Domain - Business Logic Foundation
+### Multi-tenancy (organization-first)
+- Organization context is treated as a first-class business boundary.
+- Organization scoping must be enforced in API, caching keys, and data access.
+- Use "organization" terminology in code and docs unless external contract requires "tenant".
 
-**Purpose**: Define pure business entities, rules, and events with zero external dependencies.
+### Server Controller and Middleware Organization
+- Controllers are grouped by business area: Attendance, Auth, Employees, Leave, Organization, Payroll, Recruitment, Reports, Settings, SuperAdmin.
+- Middleware and Filters centralize cross-cutting concerns (logging, auth handling, error shaping, context propagation).
 
-**Structure**:
-```
-Domain/
-├── Entities/              Business domain entities
-│   ├── Employee           Employee master data
-│   ├── Organization       Organization details
-│   ├── AttendanceRecord   Daily attendance tracking
-│   ├── LeaveRequest       Employee leave applications
-│   ├── PayrollCycle       Salary processing cycles
-│   ├── RecruitmentJob     Job postings & applications
-│   ├── PerformanceReview  Performance evaluation data
-│   └── Document           Document storage records
-│
-├── ValueObjects/          Immutable value types
-│   ├── Email              Validated email
-│   ├── PhoneNumber        Validated phone
-│   ├── DateRange          Period with start & end
-│   ├── Money              Currency with amount
-│   └── LeaveBalance       Encapsulates leave calculations
-│
-├── Enums/                 Domain enumerations
-│   ├── LeaveStatus        (Pending, Approved, Rejected)
-│   ├── EmployeeStatus     (Active, Inactive, OnLeave)
-│   ├── AttendanceType     (Present, Absent, Half-day)
-│   ├── JobStatus          (Open, Closed, On-Hold)
-│   └── PerformanceRating  (Outstanding, Exceeds, Meets, Below)
-│
-├── Events/                Domain events (event sourcing)
-│   ├── EmployeeCreated    Fired when employee added
-│   ├── LeaveRequested     Fired when leave requested
-│   ├── AttendanceLogged   Fired when attendance recorded
-│   └── PayrollProcessed   Fired when payroll completed
-│
-├── Rules/                 Business rule implementations
-│   ├── LeaveBalanceCalculationRule
-│   ├── SalaryCalculationRule
-│   ├── AttendanceValidationRule
-│   └── PromotionEligibilityRule
-│
-└── Constants/             Shared constants
-    ├── LeaveTypeConstants
-    ├── PayrollConstants
-    └── OrganizationConstants
-```
+## 3. Frontend Architecture (Monorepo Libraries)
 
-**Key Concepts**:
-- **Entities**: Mutable objects with identity (e.g., Employee with ID)
-- **Value Objects**: Immutable, no identity (e.g., Email, PhoneNumber)
-- **Domain Events**: Represent significant business occurrences
-- **Business Rules**: Encapsulate complex domain logic
+### Frontend Library Domains
+- `src/libs/base`: core app foundations and app-level concerns.
+- `src/libs/shell`: layout, header, sidebar, breadcrumbs, quick actions.
+- `src/libs/shared`: reusable UI, forms, auth, api, common types, directives, pipes, theme tokens, utils.
+- `src/libs/modules`: business-feature libraries (employees, attendance, leave, payroll, etc.).
+- `src/libs/extensions`: customization and plugin style extension points.
 
-### 3.3 PeopleHub.Application - Use Cases & Orchestration
+### Frontend Workspace Blueprint
 
-**Purpose**: Implement application use cases by orchestrating domain logic and infrastructure.
-
-**Structure**:
-```
-Application/
-├── Common/
-│   ├── Interfaces/        Contracts for infrastructure
-│   │   ├── IRepository    Generic repository pattern
-│   │   ├── IUnitOfWork    Transaction coordination
-│   │   ├── IEmailService  Email sending
-│   │   ├── IStorageService  File storage
-│   │   └── ICacheService  Caching abstraction
-│   │
-│   ├── Behaviors/         MediatR pipeline behaviors
-│   │   ├── ValidationBehavior  (FluentValidation)
-│   │   ├── LoggingBehavior     (Request/response logging)
-│   │   ├── TransactionBehavior (Unit of work)
-│   │   └── PerformanceBehavior (Execution timing)
-│   │
-│   ├── Exceptions/        Application-specific exceptions
-│   │   ├── ValidationException
-│   │   ├── NotFoundException
-│   │   ├── UnauthorizedException
-│   │   └── BusinessRuleException
-│   │
-│   ├── Models/            Data Transfer Objects (DTOs)
-│   │   ├── CreateEmployeeRequest
-│   │   ├── EmployeeResponse
-│   │   ├── UpdateLeaveRequestCommand
-│   │   └── LeaveRequestResponse
-│   │
-│   ├── Mappings/          AutoMapper profiles
-│   │   ├── EmployeeProfile
-│   │   ├── LeaveProfile
-│   │   └── AttendanceProfile
-│   │
-│   └── Validators/        FluentValidation rules
-│       ├── CreateEmployeeValidator
-│       ├── UpdateLeaveValidator
-│       └── CreatePayrollCycleValidator
-│
-├── Modules/               Feature-specific use cases
-│   ├── Attendance/
-│   │   ├── Commands/
-│   │   │   ├── LogAttendanceCommand
-│   │   │   ├── UpdateAttendanceHandler
-│   │   │   └── DeleteAttendanceCommand
-│   │   ├── Queries/
-│   │   │   ├── GetEmployeeAttendanceQuery
-│   │   │   ├── GetMonthlyAttendanceQuery
-│   │   │   └── GenerateAttendanceReportQuery
-│   │   └── DTOs/
-│   │       ├── LogAttendanceRequest
-│   │       └── AttendanceResponse
-│   │
-│   ├── Employees/
-│   │   ├── Commands/
-│   │   │   ├── CreateEmployeeCommand
-│   │   │   ├── UpdateEmployeeCommand
-│   │   │   ├── PromoteEmployeeCommand
-│   │   │   └── TerminateEmployeeCommand
-│   │   ├── Queries/
-│   │   │   ├── GetEmployeeQuery
-│   │   │   ├── GetAllEmployeesQuery
-│   │   │   ├── SearchEmployeesQuery
-│   │   │   └── GetEmployeeHierarchyQuery
-│   │   └── DTOs/
-│   │       ├── CreateEmployeeRequest
-│   │       └── EmployeeDetailResponse
-│   │
-│   ├── Leave/
-│   │   ├── Commands/
-│   │   │   ├── RequestLeaveCommand
-│   │   │   ├── ApproveLeaveCommand
-│   │   │   ├── RejectLeaveCommand
-│   │   │   └── CancelLeaveCommand
-│   │   ├── Queries/
-│   │   │   ├── GetLeaveBalanceQuery
-│   │   │   ├── GetLeaveRequestsQuery
-│   │   │   └── GetPendingApprovalsQuery
-│   │   └── DTOs/
-│   │       ├── RequestLeaveRequest
-│   │       └── LeaveRequestResponse
-│   │
-│   ├── Payroll/
-│   │   ├── Commands/
-│   │   │   ├── CreatePayrollCycleCommand
-│   │   │   ├── ProcessPayrollCommand
-│   │   │   ├── GeneratePayslipCommand
-│   │   │   └── ApprovePayrollCommand
-│   │   ├── Queries/
-│   │   │   ├── GetPayslipQuery
-│   │   │   ├── GetPayrollHistoryQuery
-│   │   │   └── GetSalaryBreakdownQuery
-│   │   └── DTOs/
-│   │       ├── ProcessPayrollRequest
-│   │       └── PayslipResponse
-│   │
-│   ├── Recruitment/
-│   │   ├── Commands/
-│   │   │   ├── PostJobCommand
-│   │   │   ├── ApplyJobCommand
-│   │   │   ├── ScreenApplicationCommand
-│   │   │   ├── ScheduleInterviewCommand
-│   │   │   └── MakeOfferCommand
-│   │   ├── Queries/
-│   │   │   ├── GetJobPostingQuery
-│   │   │   ├── GetApplicationsQuery
-│   │   │   └── GetCandidatePipelineQuery
-│   │   └── DTOs/
-│   │       ├── PostJobRequest
-│   │       └── ApplicationResponse
-│   │
-│   ├── Performance/
-│   │   ├── Commands/
-│   │   │   ├── CreatePerformanceReviewCommand
-│   │   │   ├── SubmitReviewCommand
-│   │   │   └── PublishReviewCommand
-│   │   ├── Queries/
-│   │   │   ├── GetEmployeeReviewsQuery
-│   │   │   └── GetReviewAnalyticsQuery
-│   │   └── DTOs/
-│   │       ├── CreateReviewRequest
-│   │       └── ReviewResponse
-│   │
-│   ├── Reports/
-│   │   ├── Queries/
-│   │   │   ├── GenerateEmployeeReportQuery
-│   │   │   ├── GeneratePayrollReportQuery
-│   │   │   ├── GenerateAttendanceReportQuery
-│   │   │   └── GenerateRecruitmentReportQuery
-│   │   └── DTOs/
-│   │       ├── ReportRequest
-│   │       └── ReportResponse
-│   │
-│   ├── Organization/
-│   │   ├── Commands/
-│   │   │   ├── CreateOrganizationCommand
-│   │   │   ├── UpdateOrganizationCommand
-│   │   │   └── ConfigureOrganizationCommand
-│   │   ├── Queries/
-│   │   │   ├── GetOrganizationQuery
-│   │   │   └── GetOrganizationSettingsQuery
-│   │   └── DTOs/
-│   │       ├── CreateOrganizationRequest
-│   │       └── OrganizationResponse
-│   │
-│   ├── Identity/
-│   │   ├── Commands/
-│   │   │   ├── RegisterUserCommand
-│   │   │   ├── LoginCommand
-│   │   │   ├── RefreshTokenCommand
-│   │   │   └── ChangePasswordCommand
-│   │   ├── Queries/
-│   │   │   ├── GetCurrentUserQuery
-│   │   │   └── GetUserPermissionsQuery
-│   │   └── DTOs/
-│   │       ├── LoginRequest
-│   │       ├── TokenResponse
-│   │       └── UserResponse
-│   │
-│   └── SuperAdmin/
-│       ├── Commands/
-│       │   ├── CreateOrganizationCommand
-│       │   ├── SuspendOrganizationCommand
-│       │   └── ConfigureOrganizationCommand
-│       ├── Queries/
-│       │   ├── GetAllOrganizationsQuery
-│       │   └── GetOrganizationMetricsQuery
-│       └── DTOs/
-│           ├── OrganizationResponse
-│           └── OrganizationMetricsResponse
-│
-└── Customization/         Organization-specific logic
-    ├── Features/          Feature toggle service
-    ├── Themes/            Branding & theming
-    ├── Navigation/        Custom menu structures
-    ├── CustomFields/      Dynamic field definitions
-    ├── Workflows/         Workflow definitions
-    ├── Strategies/        Strategy implementations
-    ├── Resolvers/         Organization resolver
-    └── Contracts/         Customization contracts
-```
-
-**Pattern: CQRS (Command Query Responsibility Segregation)**
-- **Commands**: Modify state (Create, Update, Delete)
-- **Queries**: Read state (Get, Search, Report)
-- **Handlers**: Implement business logic for commands/queries
-
-**Example - Leave Request Flow**:
-```
-Client Request
-    ↓
-LeaveRequestValidator (validates input)
-    ↓
-RequestLeaveCommand (encapsulates intent)
-    ↓
-RequestLeaveHandler (orchestrates)
-    ├─ Fetch Employee from Domain
-    ├─ Fetch Leave Settings from Domain
-    ├─ Calculate Leave Balance (Business Rule)
-    ├─ Create LeaveRequest Entity
-    ├─ Save via Repository (Infrastructure)
-    ├─ Publish LeaveRequested Event
-    └─ Return LeaveRequestResponse (DTO)
-```
-
-### 3.4 PeopleHub.Infrastructure - Data Access & External Services
-
-**Purpose**: Implement persistence, external service integrations, and infrastructure concerns.
-
-**Structure**:
-```
-Infrastructure/
-├── Persistence/
-│   ├── PeopleHubDbContext       EF Core DbContext
-│   ├── Configurations/
-│   │   ├── EmployeeConfiguration
-│   │   ├── LeaveRequestConfiguration
-│   │   ├── AttendanceConfiguration
-│   │   └── ... (one per entity)
-│   ├── Repositories/
-│   │   ├── Repository           Generic base repository
-│   │   ├── EmployeeRepository
-│   │   ├── LeaveRepository
-│   │   └── ... (one per entity)
-│   ├── UnitOfWork/              Transaction management
-│   └── Seeds/                   Initial data seeding
-│
-├── Identity/
-│   ├── IdentityService          User authentication
-│   ├── TokenService             JWT token generation
-│   ├── PermissionService        Authorization & permissions
-│   └── DirectoryService         LDAP/AD integration
-│
-├── MultiOrganization/
-│   ├── Context/                 Organization context resolution
-│   │   └── OrganizationContextProvider (Current org from request)
-│   ├── DomainMapping/           Map domain to organization
-│   ├── Resolution/              Organization resolution strategies
-│   └── Stores/                  Organization configuration storage
-│
-├── Caching/
-│   ├── CacheService             Cache abstraction layer
-│   ├── DistributedCache         Redis/distributed caching
-│   └── CacheInvalidation        Cache eviction strategies
-│
-├── Messaging/
-│   ├── MessageBus               Event publishing
-│   ├── EventPublisher           Domain event propagation
-│   └── MessageHandlers/         Message processing
-│
-├── Integrations/
-│   ├── PaymentGateway           Payment processing
-│   ├── EmailService             Email notifications
-│   ├── SmsService               SMS communications
-│   ├── StorageService           File storage (S3, Azure Blob)
-│   └── ApiClients/              Third-party API clients
-│
-├── Services/
-│   ├── OrganizationService
-│   ├── ReportGenerationService
-│   ├── FileProcessingService
-│   └── DataExportService
-│
-└── Storage/
-    ├── FileStorageProvider      Abstract file storage
-    ├── S3StorageProvider        AWS S3 implementation
-    ├── AzureBlobProvider        Azure Blob implementation
-    └── LocalFileProvider        Local filesystem
-```
-
-**Key Responsibilities**:
-- **EF Core DbContext**: Database mapping and schema
-- **Repositories**: Query and persist entities
-- **Unit of Work**: Coordinate multiple repositories in transactions
-- **Identity**: Authentication, JWT tokens, permissions
-- **Multi-Org Context**: Resolve current organization from request
-- **Caching**: Distributed caching for performance
-- **External Services**: Email, SMS, storage, payments
-
-### 3.5 PeopleHub.Worker - Background Processing
-
-**Purpose**: Execute long-running jobs, scheduled tasks, and asynchronous processing.
-
-**Structure**:
-```
-Worker/
-├── Consumers/                Message queue consumers
-│   ├── PayrollProcessConsumer
-│   ├── ReportGenerationConsumer
-│   ├── EmailNotificationConsumer
-│   └── EmployeeDataSyncConsumer
-│
-├── Schedulers/              Scheduled job executors
-│   ├── PayrollScheduler     Monthly payroll processing
-│   ├── AttendanceScheduler  Daily attendance cleanup
-│   ├── ReportScheduler      Scheduled report generation
-│   └── LeaveExpiryScheduler Leave balance expiry
-│
-├── Jobs/                    Job definitions
-│   ├── PayrollProcessJob
-│   ├── GenerateReportJob
-│   ├── SendNotificationJob
-│   └── ArchiveDataJob
-│
-└── Services/                Worker-specific services
-    ├── JobExecutionService
-    ├── RetryPolicyService
-    └── DeadLetterHandler
-```
-
-**Examples**:
-- **Payroll Processing**: Monthly salary calculation & payment
-- **Attendance Reports**: Generate dept-wise attendance summaries
-- **Notifications**: Send approval reminders, leave confirmations
-- **Data Archival**: Archive old records, compress logs
-
-### 3.6 PeopleHub.Server - HTTP API Layer
-
-**Purpose**: Expose REST API endpoints, handle HTTP concerns, host the SPA.
-
-**Structure**:
-```
-Server/
-├── Program.cs               Startup & dependency injection
-│   ├── Service registration (Application, Infrastructure)
-│   ├── Middleware setup
-│   ├── Authentication configuration
-│   └── CORS, logging, etc.
-│
-├── Controllers/             HTTP endpoint handlers
-│   ├── Attendance/
-│   │   ├── LogAttendanceRequest (POST /api/attendance)
-│   │   ├── GetMyAttendance (GET /api/attendance/my)
-│   │   └── ManagerReports (GET /api/attendance/reports)
-│   │
-│   ├── Employees/
-│   │   ├── GetEmployees (GET /api/employees)
-│   │   ├── CreateEmployee (POST /api/employees)
-│   │   ├── UpdateEmployee (PUT /api/employees/{id})
-│   │   └── TerminateEmployee (DELETE /api/employees/{id})
-│   │
-│   ├── Leave/
-│   │   ├── RequestLeave (POST /api/leave-requests)
-│   │   ├── GetLeaveBalance (GET /api/leave-balance)
-│   │   ├── ApproveLeave (PUT /api/leave-requests/{id}/approve)
-│   │   └── RejectLeave (PUT /api/leave-requests/{id}/reject)
-│   │
-│   ├── Payroll/
-│   ├── Recruitment/
-│   ├── Performance/
-│   ├── Reports/
-│   ├── Auth/
-│   ├── Organization/
-│   ├── Settings/
-│   └── SuperAdmin/
-│
-├── Middleware/              HTTP request processing
-│   ├── OrganizationResolverMiddleware  (Resolve organization)
-│   ├── ExceptionHandlingMiddleware     (Global error handling)
-│   ├── AuthenticationMiddleware        (JWT validation)
-│   ├── RequestLoggingMiddleware        (Audit trail)
-│   └── PerformanceMonitoringMiddleware
-│
-├── Filters/                 Action filters
-│   ├── AuthorizeFilter      (Role-based access)
-│   ├── ValidateModelFilter  (Model validation)
-│   └── AuditFilter          (Track changes)
-│
-├── Extensions/              Service registration helpers
-│   ├── ApplicationExtensions
-│   ├── InfrastructureExtensions
-│   ├── IdentityExtensions
-│   └── CachingExtensions
-│
-└── Configuration/           Settings & feature flags
-    ├── appsettings.json
-    ├── appsettings.Development.json
-    └── Feature flags per organization
-```
-
----
-
-## 4. Frontend Architecture
-
-### 4.1 Frontend Structure Overview
-
-```
+```text
 peoplehub.client/
-├── src/
-│   ├── main.ts                 Application entry point
-│   ├── index.html              Root HTML
-│   ├── styles.css              Global styles
-│   │
-│   ├── app/                    Root module & shell
-│   │   ├── app.module.ts       Main module
-│   │   ├── app-routing.module.ts
-│   │   ├── app.component.ts    Root component
-│   │   ├── bootstrap/          Bootstrap configuration
-│   │   ├── providers/          Global service providers
-│   │   └── routes/             Route definitions
-│   │
-│   ├── libs/                   Feature & shared libraries
-│   │   ├── base/               Base/core functionality
-│   │   ├── modules/            Feature modules
-│   │   ├── shell/              Shell/layout components
-│   │   ├── shared/             Shared components & services
-│   │   └── extensions/         Extensions & utilities
-│   │
-│   ├── assets/                 Static resources
-│   ├── styles/                 Style sheets
-│   └── environments/           Environment configuration
+├─ src/app/                 app root bootstrap, providers, and route composition
+├─ src/libs/
+│  ├─ shared/               cross-feature reusable libraries
+│  ├─ base/                 app infrastructure and context libraries
+│  ├─ shell/                layout and navigation shell libraries
+│  ├─ modules/              business feature libraries
+│  └─ extensions/           organization-specific extension points
+├─ src/assets/              static frontend assets (images, icons, fonts)
+├─ src/styles/              global styles and tokens
+├─ src/environments/        environment configuration
+└─ angular.json, tsconfig*, package.json, proxy.conf.js, karma.conf.js
+```
+
+### Library Responsibilities
+- Shared libraries (`src/libs/shared`) provide reusable building blocks:
+  - `ui`: component system (primitives, controls, charts)
+  - `forms`: validators, builders, and form helpers
+  - `common`: shared models, DTOs, and constants
+  - `api`: HTTP services and request pipeline helpers
+  - `auth`: authentication/authorization guards and flows
+  - `directives`, `pipes`, `theme-tokens`, `utils`
+- Base libraries (`src/libs/base`) provide application infrastructure:
+  - `app-shell`, `navigation`, `branding`, `feature-flags`
+  - `organization-context`, `organization-config`, `app-initialization`
+- Shell libraries (`src/libs/shell`) provide presentation shell:
+  - `layout`, `header`, `sidebar`, `breadcrumbs`, `quick-actions`
+- Module libraries (`src/libs/modules`) implement business features:
+  - `dashboard`, `employees`, `attendance`, `leave`, `payroll`, `recruitment`, `performance`, `reports`, `notifications`, `documents`, `settings`, `super-admin`
+
+### Feature Module Internal Shape
+- Standard module layout under `src/libs/modules/<module>/src/lib`:
+  - `routes/` for lazy-route definitions
+  - `pages/` for container/smart components
+  - `components/` for presentation components
+  - `services/`, `models/`, `config/`, `guards/`, `resolvers/`
+  - `public-api.ts` for exported module surface
+
+### Component Layering Model
+- `shared/ui/components/primitives`: foundational UI blocks (button, icon, toast, table, tooltip).
+- `shared/ui/components/controls`: form controls (dropdown, checkbox, text-box, calendar, file-upload).
+- `shared/ui/components/charts`: data visualization (line, bar, scatter, doughnut, org-chart).
+- Feature components in module libraries compose shared UI and feature services.
+
+### Component Communication Patterns
+- Smart container/page components live in feature libraries.
+- Shared reusable components live in shared libraries and expose inputs/outputs only.
+- Cross-library communication occurs through typed APIs/services and exported public contracts.
+
+### Frontend Dependency Direction
+
+```text
+app (root)
+  -> shell
+  -> modules
+
+shell -> base -> shared
+modules -> base
+modules -> shared
+shared -> (no module dependencies)
+
+Rule: Shared <- Base <- Shell <- App
+Rule: Shared <- Base <- Modules
+No circular dependencies.
+```
+
+### Frontend File and Selector Conventions
+- Each component must include:
+  - `<name>.component.ts`
+  - `<name>.component.html`
+  - `<name>.component.scss`
+  - `<name>.component.spec.ts`
+  - `<name>.stories.ts`
+- Selector prefixes:
+  - shared UI components: `ui-*`
+  - other shared/base/shell/modules: `ph-*`
+  - app root: `app-root`
+- Interfaces/models are kept in dedicated `*.model.ts` or `*.types.ts` files, not in component files.
+
+### Theming and Styling Standards
+- Use SCSS with design tokens/CSS variables from theme token libraries.
+- Avoid hard-coded color/spacing values in component styles when token equivalents exist.
+- Maintain light/dark theme variable sets in shared theme token assets.
+
+### Library Build Process
+- Libraries use ng-packagr builder in `angular.json`.
+- Every library exposes via `src/public-api.ts`.
+- Build output lands under `peoplehub.client/dist/<library>`.
+
+### Routing, Environment, and Build Conventions
+- Feature routes are lazy-loaded from module library entry points.
+- Environment-specific values live in `src/environments`.
+- Common frontend build commands:
+  - `ng serve` / `npm start`
+  - `ng build <library>` for library builds
+  - `ng build --configuration production`
+  - `npm run storybook` and `npm run build-storybook`
+- Path aliases (`@ph/shared/*`, `@ph/modules/*`, `@ph/base/*`, `@ph/shell/*`) are defined in TypeScript config and must be preferred over deep relative imports.
+
+## 4. Folder-by-Folder Explanation
+
+```text
+PeopleHub/
+├─ .github/
+│  Purpose: CI/CD workflows and repository automation.
+│  Do not put: runtime application code.
 │
-├── angular.json               Build configuration
-├── tsconfig.json              TypeScript configuration
-├── karma.conf.js              Test runner config
-└── package.json               Dependencies
-```
-
-### 4.2 Monorepo Structure with Nx/ng-packagr
-
-The frontend uses **workspace libraries** organized by feature:
-
-```
-libs/
-├── base/
-│   ├── app-shell/             Application shell & layout
-│   │   ├── src/lib/
-│   │   │   ├── components/
-│   │   │   │   ├── app-shell/
-│   │   │   │   ├── navbar/
-│   │   │   │   ├── sidebar/
-│   │   │   │   └── footer/
-│   │   │   ├── services/
-│   │   │   │   ├── app-shell.service
-│   │   │   │   ├── navigation.service
-│   │   │   │   └── layout.service
-│   │   │   └── public-api.ts
-│   │   └── ng-package.json
-│   │
-│   ├── auth/                  Authentication & authorization
-│   ├── core-services/         Global services
-│   ├── http-interceptors/     HTTP request/response handling
-│   ├── guards/                Route guards
-│   └── error-handling/        Global error handling
+├─ core/
+│  Purpose: backend clean-architecture layers.
+│  ├─ PeopleHub.Domain/
+│  │  Purpose: pure business entities, value objects, rules, events.
+│  │  Do not put: EF, HTTP, external integration code.
+│  ├─ PeopleHub.Application/
+│  │  Purpose: use cases, CQRS handlers, validators, interfaces.
+│  │  Do not put: controller logic and DB-provider specifics.
+│  ├─ PeopleHub.Infrastructure/
+│  │  Purpose: persistence, integrations, caching, messaging implementations.
+│  │  Do not put: UI logic or domain shortcuts.
+│  └─ PeopleHub.Worker/
+│     Purpose: background jobs, schedulers, consumers.
+│     Do not put: HTTP controllers.
 │
-├── shared/
-│   ├── ui-components/         Reusable UI components
-│   │   ├── buttons/
-│   │   ├── modals/
-│   │   ├── tables/
-│   │   ├── forms/
-│   │   └── alerts/
-│   │
-│   ├── models/                Shared data models & interfaces
-│   ├── utils/                 Utility functions
-│   ├── pipes/                 Custom pipes
-│   ├── directives/            Custom directives
-│   └── validators/            Custom validators
+├─ PeopleHub.Server/
+│  Purpose: API transport layer and host composition.
+│  ├─ Common/         Purpose: server-local shared constants/helpers.
+│  ├─ Configuration/  Purpose: app settings and options binding.
+│  ├─ Contracts/      Purpose: HTTP request/response contracts.
+│  ├─ Controllers/    Purpose: feature endpoints; keep thin.
+│  ├─ Extensions/     Purpose: DI/host registration extensions.
+│  ├─ Filters/        Purpose: reusable MVC policies.
+│  └─ Middleware/     Purpose: request pipeline concerns.
 │
-├── modules/
-│   ├── employees/             Employee management feature
-│   │   ├── src/lib/
-│   │   │   ├── components/
-│   │   │   │   ├── employee-list/
-│   │   │   │   ├── employee-detail/
-│   │   │   │   ├── employee-form/
-│   │   │   │   └── employee-card/
-│   │   │   ├── pages/
-│   │   │   │   ├── employees-page/
-│   │   │   │   └── employee-detail-page/
-│   │   │   ├── services/
-│   │   │   │   ├── employee.service
-│   │   │   │   └── employee-resolver.service
-│   │   │   ├── models/
-│   │   │   │   ├── employee.interface
-│   │   │   │   └── employee.dto
-│   │   │   ├── employees-routing.module
-│   │   │   ├── employees.module
-│   │   │   └── public-api.ts
-│   │   └── ng-package.json
-│   │
-│   ├── attendance/            Attendance tracking
-│   ├── leave/                 Leave management
-│   ├── payroll/               Payroll & salary
-│   ├── recruitment/           Recruitment & hiring
-│   ├── performance/           Performance reviews
-│   ├── reports/               Business reports
-│   ├── documents/             Document management
-│   ├── organization/          Organization settings
-│   ├── settings/              User settings
-│   └── dashboard/             Analytics dashboard
+├─ peoplehub.client/
+│  Purpose: Angular frontend workspace.
+│  ├─ src/app/
+│  │  Purpose: app bootstrap and root routing composition.
+│  │  Files: app.component.ts/html/scss/spec, app.stories.ts,
+│  │         iconify-icon.component.ts, iconify-icon.stories.ts,
+│  │         weather-forecast.service.ts
+│  │  Folders: bootstrap/, providers/, routes/
+│  │  Do not put: generic shared library code.
+│  ├─ src/libs/
+│  │  Purpose: modular frontend architecture.
+│  │  ├─ base/
+│  │  │  Purpose: foundational app services and context.
+│  │  │  ├─ app-shell/
+│  │  │  ├─ branding/
+│  │  │  ├─ feature-flags/
+│  │  │  ├─ navigation/
+│  │  │  ├─ organization-config/
+│  │  │  └─ organization-context/
+│  │  │  Each base library leaf files:
+│  │  │    ng-package.json, package.json,
+│  │  │    tsconfig.lib.json, tsconfig.lib.prod.json, tsconfig.spec.json,
+│  │  │    src/public-api.ts,
+│  │  │    src/lib/<name>.component.ts, src/lib/<name>.component.spec.ts,
+│  │  │    src/lib/<name>.stories.ts,
+│  │  │    src/lib/services/<name>.service.ts, src/lib/services/<name>.service.spec.ts
+│  │  ├─ shell/
+│  │  │  Purpose: layout frame and navigation shell.
+│  │  │  ├─ breadcrumbs/
+│  │  │  ├─ header/
+│  │  │  ├─ layout/
+│  │  │  ├─ quick-actions/
+│  │  │  └─ sidebar/
+│  │  │  Each shell library leaf files:
+│  │  │    ng-package.json, package.json,
+│  │  │    tsconfig.lib.json, tsconfig.lib.prod.json, tsconfig.spec.json,
+│  │  │    src/public-api.ts,
+│  │  │    src/lib/<name>.component.ts, src/lib/<name>.component.spec.ts,
+│  │  │    src/lib/<name>.stories.ts,
+│  │  │    src/lib/services/<name>.service.ts, src/lib/services/<name>.service.spec.ts
+│  │  ├─ shared/
+│  │  │  Purpose: reusable cross-feature assets.
+│  │  │  ├─ api/
+│  │  │  │  Leaf files: src/lib/api.component.ts/spec/stories,
+│  │  │  │             src/lib/services/api.service.ts/spec,
+│  │  │  │             src/lib/services/requester.service.ts/spec,
+│  │  │  │             plus ng-package/package/tsconfig/public-api files.
+│  │  │  ├─ auth/
+│  │  │  │  Leaf files: src/lib/auth.component.ts/spec/stories,
+│  │  │  │             src/lib/services/auth.service.ts/spec,
+│  │  │  │             src/lib/config/form-configs/*.ts,
+│  │  │  │             plus ng-package/package/tsconfig/public-api files.
+│  │  │  ├─ common/
+│  │  │  │  Leaf files: src/lib/common.component.ts/spec/stories,
+│  │  │  │             src/lib/constants/api-names.ts,
+│  │  │  │             src/lib/models/**/*.ts,
+│  │  │  │             src/lib/services/common.service.ts/spec,
+│  │  │  │             src/lib/services/dropdown.service.ts,
+│  │  │  │             src/lib/services/requester.service.ts,
+│  │  │  │             plus ng-package/package/tsconfig/public-api files.
+│  │  │  ├─ directives/
+│  │  │  │  Leaf files: src/lib/directives.component.ts/spec/stories,
+│  │  │  │             src/lib/services/directives.service.ts/spec,
+│  │  │  │             plus ng-package/package/tsconfig/public-api files.
+│  │  │  ├─ forms/
+│  │  │  │  Leaf files: src/lib/forms.component.ts/spec/stories,
+│  │  │  │             src/lib/services/forms.service.ts/spec,
+│  │  │  │             plus ng-package/package/tsconfig/public-api files.
+│  │  │  ├─ pipes/
+│  │  │  │  Leaf files: src/lib/duration.pipe.ts/spec,
+│  │  │  │             src/lib/initials.pipe.ts/spec,
+│  │  │  │             src/lib/pipes.component.ts/spec/stories,
+│  │  │  │             src/lib/services/pipes.service.ts/spec,
+│  │  │  │             plus ng-package/package/tsconfig/public-api files.
+│  │  │  ├─ theme-tokens/
+│  │  │  │  Leaf files: src/lib/theme-tokens.component.ts/spec/stories,
+│  │  │  │             src/lib/services/theme-tokens.service.ts/spec,
+│  │  │  │             plus ng-package/package/tsconfig/public-api files.
+│  │  │  ├─ ui/
+│  │  │  │  Purpose: reusable UI system (full component tree).
+│  │  │  │  Leaf roots:
+│  │  │  │    src/public-api.ts
+│  │  │  │    src/lib/ui.component.ts/spec/stories
+│  │  │  │    src/lib/migration-map-common-ui.csv
+│  │  │  │    src/lib/assets/icons/icon-registry.ts
+│  │  │  │    src/lib/models/**/*.ts
+│  │  │  │    src/lib/services/**/*.ts
+│  │  │  │  Component branches under src/lib/components:
+│  │  │  │    charts/ -> dial-chart, doughnut-chart, employee-org-chart,
+│  │  │  │              horizontal-bar-chart, line-chart, org-chart,
+│  │  │  │              progress-chart, scatter-chart, spinning-chart
+│  │  │  │    controls/ -> button, calendar, calendar-timer, checkbox, chip,
+│  │  │  │                detailed-calendar, dropdown, file-upload, icon-button,
+│  │  │  │                icon-button-popup, label-value, multi-select,
+│  │  │  │                number-box, otp, password, progress-bar, search-bar,
+│  │  │  │                search-dropdown, text-area, text-box, timepicker,
+│  │  │  │                toggle, value-dropdown
+│  │  │  │    primitives/ -> a4-doc, accordian, bullet-list, buttonlist,
+│  │  │  │                 caller, confirm-popup, count-widget, dot, icon,
+│  │  │  │                 loader, menu-bar, notice-banner, pagination,
+│  │  │  │                 table, toast, toast-stack, tooltip
+│  │  │  │  For each component branch, leaf files are maintained as:
+│  │  │  │    <name>.component.ts
+│  │  │  │    <name>.component.html
+│  │  │  │    <name>.component.scss
+│  │  │  │    <name>.component.spec.ts
+│  │  │  │    <name>.stories.ts
+│  │  │  │  Plus library build/config files:
+│  │  │  │    ng-package.json, package.json,
+│  │  │  │    tsconfig.json, tsconfig.lib.json,
+│  │  │  │    tsconfig.lib.prod.json, tsconfig.spec.json
+│  │  │  └─ utils/
+│  │  │     Leaf files: src/lib/utils.component.ts/spec/stories,
+│  │  │                src/lib/services/utils.service.ts/spec,
+│  │  │                plus ng-package/package/tsconfig/public-api files.
+│  │  ├─ modules/
+│  │  │  Purpose: feature-specific business libraries.
+│  │  │  ├─ attendance/
+│  │  │  ├─ dashboard/
+│  │  │  ├─ documents/
+│  │  │  ├─ employees/
+│  │  │  ├─ leave/
+│  │  │  ├─ notifications/
+│  │  │  ├─ payroll/
+│  │  │  ├─ performance/
+│  │  │  ├─ recruitment/
+│  │  │  ├─ reports/
+│  │  │  ├─ settings/
+│  │  │  └─ super-admin/
+│  │  │  Each module branch leaf files:
+│  │  │    ng-package.json, package.json,
+│  │  │    tsconfig.lib.json, tsconfig.lib.prod.json, tsconfig.spec.json,
+│  │  │    src/public-api.ts,
+│  │  │    src/lib/<module>.component.ts, src/lib/<module>.component.spec.ts,
+│  │  │    src/lib/<module>.stories.ts,
+│  │  │    src/lib/services/*.ts, src/lib/services/*.spec.ts
+│  │  │  Module-specific config branches:
+│  │  │    documents/src/lib/config/**
+│  │  │    employees/src/lib/config/**
+│  │  │    leave/src/lib/config/**
+│  │  │    notifications/src/lib/config/**
+│  │  └─ extensions/
+│  │     Purpose: plugin and customization extension points.
+│  │     └─ org-a/
+│  │        Leaf files:
+│  │          ng-package.json, package.json,
+│  │          tsconfig.lib.json, tsconfig.lib.prod.json, tsconfig.spec.json,
+│  │          src/public-api.ts,
+│  │          src/lib/org-a.component.ts/spec/stories,
+│  │          src/lib/services/org-a.service.ts/spec
+│  ├─ src/assets/
+│  │  Purpose: static assets (images/icons/fonts).
+│  ├─ src/styles/
+│  │  Purpose: global styles and tokens.
+│  │  Leaf files: common-css.scss
+│  └─ src/environments/
+│     Purpose: environment-specific runtime configuration.
 │
-├── shell/
-│   ├── header/                Top navigation
-│   ├── sidebar/               Side navigation
-│   ├── breadcrumbs/           Breadcrumb navigation
-│   ├── notifications/         Notification center
-│   ├── quick-actions/         Quick action menu
-│   ├── theme-switcher/        Theme toggling
-│   ├── search/                Global search
-│   └── layout/                Main layout wrapper
+├─ docs/
+│  Purpose: architecture, standards, and runbooks.
+│  Do not put: implementation code.
 │
-└── extensions/
-    ├── feature-flags/         Feature toggle management
-    ├── customization/         Custom branding & themes
-    └── plugins/               Plugin system
-```
-
-### 4.3 Feature Module Pattern (Example: Employees)
-
-Each feature module follows a consistent pattern:
-
-```
-employees/
-├── src/lib/
-│   ├── components/            Dumb components (presentation)
-│   │   ├── employee-list/
-│   │   │   ├── employee-list.component.ts
-│   │   │   ├── employee-list.component.html
-│   │   │   ├── employee-list.component.scss
-│   │   │   └── employee-list.component.spec.ts
-│   │   ├── employee-form/
-│   │   ├── employee-card/
-│   │   └── employee-table/
-│   │
-│   ├── pages/                 Smart components (container)
-│   │   ├── employees-page/
-│   │   │   ├── employees-page.component.ts
-│   │   │   ├── employees-page.component.html
-│   │   │   ├── employees-page.component.scss
-│   │   │   └── employees-page.component.spec.ts
-│   │   └── employee-detail-page/
-│   │
-│   ├── services/              Feature services
-│   │   ├── employee.service.ts        (API communication)
-│   │   ├── employee-resolver.service  (Route data resolution)
-│   │   └── employee-state.service     (State management)
-│   │
-│   ├── models/                Data models & interfaces
-│   │   ├── employee.interface.ts
-│   │   ├── employee.dto.ts
-│   │   └── employee-form.interface.ts
-│   │
-│   ├── guards/                Route guards (if feature-specific)
-│   │   └── employee-resolver.guard.ts
-│   │
-│   ├── pipes/                 Feature-specific pipes
-│   │   └── employee-status.pipe.ts
-│   │
-│   ├── employees.module.ts    Feature module
-│   ├── employees-routing.module.ts
-│   └── public-api.ts          Public exports
+├─ scripts/
+│  Purpose: repeatable automation and migration tooling.
+│  Do not put: production runtime business logic.
 │
-├── ng-package.json            Library build config
-└── tsconfig.lib.json          Library TypeScript config
-```
-
-### 4.4 Component Communication Flow
-
-```
-App.Component (Root)
-├── App-Shell.Component (Layout)
-│   ├── Header.Component (Navigation)
-│   ├── Sidebar.Component (Menu)
-│   ├── Main Content (Router Outlet)
-│   │   └── Feature Page Component (Smart)
-│   │       ├── Service (Fetches Data)
-│   │       ├── Child Component 1 (Dumb)
-│   │       │   └── @Input, @Output
-│   │       ├── Child Component 2 (Dumb)
-│   │       │   └── @Input, @Output
-│   │       └── Child Component 3 (Dumb)
-│   │           └── @Input, @Output
-│   └── Footer.Component
-```
-
-### 4.5 Angular Service Architecture
-
-**Authentication Service** (Core):
-```
-AuthService
-├── login(credentials: LoginRequest): Observable<TokenResponse>
-├── logout(): void
-├── refreshToken(): Observable<TokenResponse>
-├── getCurrentUser(): Observable<User>
-├── isAuthenticated(): Observable<boolean>
-└── getToken(): string
-```
-
-**Employee Service** (Feature):
-```
-EmployeeService
-├── getEmployees(filter: EmployeeFilter): Observable<EmployeeResponse[]>
-├── getEmployee(id: string): Observable<EmployeeResponse>
-├── createEmployee(data: CreateEmployeeRequest): Observable<EmployeeResponse>
-├── updateEmployee(id: string, data: UpdateEmployeeRequest): Observable<void>
-├── deleteEmployee(id: string): Observable<void>
-├── getHierarchy(organizationId: string): Observable<EmployeeHierarchy>
-└── exportEmployees(format: 'csv' | 'excel'): Observable<Blob>
-```
-
-**Organization Context Service** (Shared):
-```
-OrganizationContextService
-├── getCurrentOrganization(): Observable<Organization>
-├── setCurrentOrganization(org: Organization): void
-├── getOrganizationSettings(): Observable<OrganizationSettings>
-├── onOrganizationChanged(): Observable<Organization>
-└── getOrganizationPermissions(): Permission[]
-```
-
----
-
-## 5. Key Use Cases & Data Flows
-
-### 5.1 Use Case: Employee Requests Leave
-
-**Scenario**: Employee logs in, navigates to Leave module, and requests 5 days leave.
-
-**Flow**:
-
-```
-┌─ Frontend (Angular) ──────────────────────────────┐
-│                                                    │
-│  1. User fills LeaveRequestForm                   │
-│     ├─ Leave Type: Casual                         │
-│     ├─ Start Date: 2025-05-01                     │
-│     └─ End Date: 2025-05-05                       │
-│                                                    │
-│  2. Form validation (Frontend)                    │
-│     ├─ Date range check                           │
-│     ├─ Required field check                       │
-│     └─ Custom async validation                    │
-│                                                    │
-│  3. POST /api/leave-requests                      │
-│     └─ RequestLeaveRequest { leaveTypeId, ... }   │
-│                                                    │
-└─────────────────┬──────────────────────────────────┘
-                  │
-        HTTP POST
-                  │
-┌─ Backend (ASP.NET Core) ───────────────────────────┐
-│                                                     │
-│  4. LeaveController.RequestLeave(command)          │
-│     └─ Validate JWT token, check authorization     │
-│                                                     │
-│  5. RequestLeaveCommand → Handler                  │
-│     ├─ Validate command (BusinessRuleValidator)    │
-│     ├─ AuthenticationBehavior (verify user)        │
-│     ├─ TransactionBehavior (open transaction)      │
-│     └─ LoggingBehavior (log request)               │
-│                                                     │
-│  6. RequestLeaveHandler executes:                  │
-│     ├─ Get Employee from Repository                │
-│     ├─ Get LeaveType & Settings                    │
-│     ├─ Calculate Leave Balance (Domain Rule)       │
-│     │  └─ For Casual: 12 days/year                 │
-│     │  └─ Already used: 2 days                     │
-│     │  └─ Available: 10 days                       │
-│     ├─ Validate request (5 ≤ 10, no overlap)       │
-│     ├─ Create LeaveRequest Entity                  │
-│     │  └─ Status: Pending                          │
-│     ├─ Save via LeaveRepository.Add()              │
-│     ├─ Publish: LeaveRequested (Domain Event)      │
-│     └─ Commit transaction                          │
-│                                                     │
-│  7. Event: LeaveRequested                          │
-│     ├─ MessageBus publishes event                  │
-│     ├─ Notification Consumer receives              │
-│     │  ├─ Identify Manager                         │
-│     │  └─ Queue email: "Leave request for approval"
-│     └─ Optional: Send notification to Manager      │
-│                                                     │
-│  8. Return response (HTTP 200/201)                 │
-│     └─ LeaveRequestResponse { id, status, ... }    │
-│                                                     │
-└─────────────────┬──────────────────────────────────┘
-                  │
-        HTTP Response
-                  │
-┌─ Frontend (Angular) ──────────────────────────────┐
-│                                                    │
-│  9. Handle response in Component                  │
-│     ├─ Show success toast                         │
-│     ├─ Redirect to Leave Requests page            │
-│     └─ Refresh leave balance                      │
-│                                                    │
-│  10. NgRx Store updated (if using state mgmt)     │
-│      └─ leaveRequests$ emits new state            │
-│                                                    │
-└────────────────────────────────────────────────────┘
-```
-
-### 5.2 Use Case: Manager Approves Leave
-
-**Flow**:
-
-```
-Manager Dashboard
-  ↓
-Pending Approvals Table
-  ↓
-Click "Approve" on Leave Request
-  ↓
-Confirmation Dialog
-  ↓
-PUT /api/leave-requests/{id}/approve
-  ↓
-Backend:
-  ├─ Verify manager authorization
-  ├─ Get LeaveRequest (must be Pending)
-  ├─ Update status to Approved
-  ├─ Publish LeaveApproved event
-  ├─ Queue notification to employee
-  └─ Return updated LeaveRequest
-  ↓
-Frontend:
-  ├─ Close dialog
-  ├─ Refresh table
-  └─ Show success message
-```
-
-### 5.3 Use Case: System Generates Monthly Payroll
-
-**Flow**:
-
-```
-Scheduled Job (Payroll Scheduler)
-  ├─ Triggers: 1st of every month at 2 AM
-  ├─ Get all organizations
-  └─ For each organization:
-      ├─ Resolve organization context
-      ├─ Get all Active employees
-      ├─ Calculate salary for each:
-      │   ├─ Base salary
-      │   ├─ Deductions (tax, insurance)
-      │   ├─ Additions (bonus, incentive)
-      │   ├─ Leave adjustments
-      │   └─ Net salary
-      ├─ Create PayslipEntity
-      ├─ Create PaymentTransaction
-      ├─ Save to database
-      ├─ Publish PayrollProcessed event
-      └─ Queue notification: "Payslip generated"
-  ↓
-Employee Portal:
-  ├─ Sees notification "Your payslip is ready"
-  ├─ Navigates to Payroll > Payslips
-  ├─ Downloads PDF payslip
-  └─ Views payment details
-```
-
----
-
-## 6. Multi-Tenancy Architecture
-
-### 6.1 Organization Isolation Strategy
-
-**Data Level**:
-- Each organization has isolated database tables or schema
-- All queries automatically filtered by `organization_id`
-- Database constraints prevent data leakage
-
-**Application Level**:
-```
-OrganizationResolverMiddleware
-├─ Extract organization from:
-│  ├─ Subdomain (org-a.peoplehub.com)
-│  ├─ Header (X-Organization-ID)
-│  └─ JWT claim (organization_id)
+├─ tests/
+│  Purpose: cross-project integration/e2e/performance tests.
 │
-├─ Load organization settings
-├─ Set in HttpContext.Items
-└─ Make available to handlers
-
-RequestLeaveHandler
-├─ Get org from context
-├─ Add filter: Where(x => x.OrganizationId == org.Id)
-└─ Ensure data isolation
+└─ bin/ and obj/
+  Purpose: generated build artifacts only.
+  Do not put: hand-written source files.
 ```
 
-### 6.2 Customization Strategy Pattern
+### Structure Rules (quick reference)
+- Shared libraries stay feature-agnostic.
+- Feature business workflows stay inside `peoplehub.client/src/libs/modules/*`.
+- API transport concerns stay in `PeopleHub.Server`; business rules stay in Domain/Application.
+- Infrastructure implements interfaces; it does not redefine business policy.
 
-Each organization can customize behaviors without code changes:
+## 5. File Patterns and Naming
 
-```
-IEmployeeValidationStrategy (interface)
-├─ VerifyEmployeeData(employee)
-│
-├─ StandardEmployeeValidationStrategy (default)
-│  └─ Basic validation for all orgs
-│
-└─ Organization-specific implementations:
-    ├─ OrgA_EmployeeValidationStrategy
-    │  └─ Requires medical clearance
-    │
-    ├─ OrgB_EmployeeValidationStrategy
-    │  └─ Requires background check
-    │
-    └─ OrgC_EmployeeValidationStrategy
-       └─ Requires security clearance
-```
+### Required Library Surface
+- Every library must expose a `src/public-api.ts`.
+- Export only stable and intentional symbols from `public-api.ts`.
+- Do not deep-import internals across library boundaries.
 
-Resolution in handler:
-
-```csharp
-var strategy = strategyResolver.Resolve<IEmployeeValidationStrategy>(organizationId);
-strategy.VerifyEmployeeData(employee);  // Org-specific logic
-```
-
----
-
-## 7. Authentication & Authorization
-
-### 7.1 Authentication Flow
-
-```
-Frontend
-  ├─ User enters credentials (email, password)
-  ├─ POST /api/auth/login
-  │  └─ {email, password}
-  │
-Backend:
-  ├─ Find user by email
-  ├─ Verify password hash
-  ├─ Load user roles, permissions
-  ├─ Generate JWT token
-  │  └─ Claims: userId, email, roles, organizationId
-  ├─ Return token + refresh token
-  │
-Frontend:
-  ├─ Store JWT in localStorage/sessionStorage
-  ├─ Store refresh token securely
-  ├─ Set Authorization header: "Bearer {token}"
-  └─ Redirect to dashboard
-
-HTTPClient Interceptor:
-  ├─ On each request
-  ├─ Add Authorization header
-  ├─ On 401: Try refresh token
-  └─ On 403: Redirect to login
-```
-
-### 7.2 Role-Based Access Control (RBAC)
-
-**Roles**:
-- **Super Admin**: Full platform access
-- **Organization Admin**: Organization configuration
-- **Manager**: Department & team management
-- **Employee**: Personal profile & requests
-- **HR**: Recruitment, payroll, reports
-
-**Authorization**:
-
-Frontend Route Guard:
-```typescript
-@CanActivate([AuthGuard, RoleGuard])
-{
-  data: { requiredRoles: ['Manager', 'HR', 'Admin'] }
-}
-```
-
-Backend Action Filter:
-```csharp
-[Authorize(Roles = "Manager,HR,Admin")]
-public IActionResult ApproveLeave(int id) { ... }
-```
-
----
-
-## 8. Data Flow Diagram
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│  WEB BROWSER (Angular SPA)                                          │
-│  ├─ Components (Employees, Leave, Payroll, etc.)                   │
-│  ├─ Services (Data fetching, state management)                     │
-│  └─ Guards (Authentication, authorization)                         │
-└────────────────────────┬────────────────────────────────────────────┘
-                         │ HTTP/REST
-┌─────────────────────────▼────────────────────────────────────────────┐
-│  ASP.NET CORE API (HTTP Layer)                                      │
-│  ├─ Controllers (Handle requests)                                   │
-│  ├─ Middleware (Organization resolution, auth, logging)            │
-│  └─ Filters (Validation, authorization)                            │
-└────────────────────────┬────────────────────────────────────────────┘
-                         │ CQRS
-┌─────────────────────────▼────────────────────────────────────────────┐
-│  APPLICATION LAYER (Business Logic)                                 │
-│  ├─ Commands/Queries (Use cases)                                    │
-│  ├─ Handlers (Orchestrate logic)                                    │
-│  ├─ Validators (Input validation)                                   │
-│  └─ DTOs (Data transfer)                                            │
-└────────────────────────┬────────────────────────────────────────────┘
-                         │ Repositories
-┌─────────────────────────▼────────────────────────────────────────────┐
-│  DOMAIN LAYER (Business Rules)                                      │
-│  ├─ Entities (Employee, Leave, Payroll)                             │
-│  ├─ Value Objects (Email, PhoneNumber)                              │
-│  ├─ Rules (Salary calculation, leave balance)                       │
-│  └─ Events (EmployeeCreated, LeaveApproved)                         │
-└────────────────────────┬────────────────────────────────────────────┘
-                         │ Repository Pattern
-┌─────────────────────────▼────────────────────────────────────────────┐
-│  INFRASTRUCTURE LAYER (Data Access)                                 │
-│  ├─ DbContext (EF Core)                                             │
-│  ├─ Repositories (Query builders)                                   │
-│  ├─ Services (Email, storage, cache)                                │
-│  └─ External APIs (Payment, SSO)                                    │
-└────────────────────────┬────────────────────────────────────────────┘
-                         │ DB Driver
-┌─────────────────────────▼────────────────────────────────────────────┐
-│  DATA PERSISTENCE                                                   │
-│  ├─ PostgreSQL Database (Employees, Leaves, Payroll, etc.)         │
-│  ├─ Redis Cache (Sessions, frequently accessed data)                │
-│  └─ File Storage (S3, Azure Blob)                                   │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 9. Deployment Architecture
-
-### 9.1 Development Environment
-
-```
-Developer Machine
-├─ Visual Studio 2024 / VS Code
-├─ .NET 10 SDK
-├─ Node.js 18+
-├─ PostgreSQL (local or Docker)
-├─ SQL Server (optional for testing)
-└─ Git & GitHub
-
-Workflow:
-├─ Backend: PeopleHub.Server runs on https://localhost:5001
-├─ Frontend: ng serve runs on http://localhost:4200
-├─ API requests proxied via proxy.conf.js
-└─ Hot reload on file changes
-```
-
-### 9.2 Production Deployment
-
-```
-On-Premises / Cloud (Azure, AWS, GCP)
-│
-├─ Load Balancer (NGINX, Azure LB)
-│  └─ Routes to multiple instances
-│
-├─ Web Server Farm
-│  ├─ PeopleHub.Server 1 (API)
-│  ├─ PeopleHub.Server 2 (API)
-│  └─ PeopleHub.Server N (API)
-│     └─ Handles requests, serves Angular SPA
-│
-├─ Background Worker Services
-│  ├─ PeopleHub.Worker 1 (Scheduled jobs)
-│  ├─ PeopleHub.Worker 2 (Message consumers)
-│  └─ Job Queue (RabbitMQ / Azure Service Bus)
-│
-├─ Data Layer
-│  ├─ PostgreSQL (Primary + Replicas)
-│  ├─ Redis Cluster (Distributed cache)
-│  └─ Blob Storage (Azure Blob / S3)
-│
-└─ Monitoring & Logging
-   ├─ Application Insights
-   ├─ ELK Stack (Elasticsearch, Logstash, Kibana)
-   └─ Grafana (Metrics)
-```
-
----
-
-## 10. Technology Stack Summary
-
-### Backend
-- **Language**: C# 13
-- **.NET**: .NET 10
-- **Database**: PostgreSQL 13+
-- **ORM**: Entity Framework Core 8+
-- **API Pattern**: REST with OpenAPI/Swagger
-- **CQRS**: MediatR
-- **Validation**: FluentValidation
-- **Mapping**: AutoMapper
-- **Logging**: Serilog
-- **Caching**: Redis, In-Memory Cache
-- **Message Queue**: RabbitMQ / Azure Service Bus
-- **Testing**: xUnit, Moq
-
-### Frontend
-- **Language**: TypeScript 5.9
-- **Framework**: Angular 21+
-- **Architecture Style**: Standalone APIs (no NgModule-based app bootstrap)
-- **Styling**: Tailwind CSS 4.2, CSS, SCSS
-- **Icons**: Iconify (`iconify-icon` web component)
-- **UI Documentation**: Storybook 8.6
-- **Build Tool**: Angular CLI, ng-packagr, PostCSS (`@tailwindcss/postcss`)
-- **State Management**: NgRx (optional), RxJS
-- **Testing**: Jasmine, Karma
-- **HTTP Client**: Angular HttpClient
-- **Library Architecture**: Nx Monorepo style
-
-### Infrastructure
-- **Hosting**: Azure App Service / AWS EC2
-- **CI/CD**: GitHub Actions, Azure DevOps
-- **Containerization**: Docker
-- **Orchestration**: Kubernetes (optional)
-- **CDN**: Azure CDN, CloudFront
-- **Monitoring**: Application Insights, DataDog
-
----
-
-## 11. Key Architectural Decisions
-
-| Decision | Rationale |
-|----------|-----------|
-| **Clean Architecture** | Clear separation of concerns, testability, maintainability |
-| **CQRS Pattern** | Scalability, clear intent, query optimization possibilities |
-| **Domain-Driven Design** | Business logic is central, ubiquitous language |
-| **Multi-Tenancy First** | Built-in from day one, easier to scale for multiple orgs |
-| **Monorepo Frontend** | Code reuse, shared utilities, consistent architecture |
-| **Repository Pattern** | Abstract data access, easier to switch DBs, testability |
-| **Strategy Pattern** | Org-specific customization without new code |
-| **JWT Authentication** | Stateless, scalable, API-friendly |
-| **Event Publishing** | Loose coupling, asynchronous processing, audit trail |
-| **Middleware for Org Resolve** | Centralized organization resolution, clean abstraction |
-
----
-
-## 12. Development Workflow
-
-### Creating a New Feature (Example: Leave Allocation)
-
-**1. Domain Layer** (`PeopleHub.Domain`)
-```csharp
-// Create entity
-public class LeaveAllocation : Entity
-{
-    public string EmployeeId { get; set; }
-    public string LeaveTypeId { get; set; }
-    public int TotalDays { get; set; }
-    public DateTime AllocationDate { get; set; }
-}
-
-// Create rule
-public class LeaveAllocationRule
-{
-    public void ValidateAllocation(LeaveAllocation allocation)
-    {
-        if (allocation.TotalDays < 0)
-            throw new BusinessRuleException("Leave days cannot be negative");
-    }
-}
-```
-
-**2. Application Layer** (`PeopleHub.Application`)
-```csharp
-// Create command
-public class AllocateLeaveCommand : IRequest<AllocateLeaveResponse>
-{
-    public string EmployeeId { get; set; }
-    public string LeaveTypeId { get; set; }
-    public int Days { get; set; }
-}
-
-// Create handler
-public class AllocateLeaveHandler : IRequestHandler<AllocateLeaveCommand, AllocateLeaveResponse>
-{
-    public async Task<AllocateLeaveResponse> Handle(AllocateLeaveCommand request, 
-        CancellationToken cancellationToken)
-    {
-        var employee = await _employeeRepo.GetByIdAsync(request.EmployeeId);
-        var allocation = new LeaveAllocation { /* ... */ };
-        _leaveAllocationRule.ValidateAllocation(allocation);
-        await _leaveAllocationRepo.AddAsync(allocation);
-        return new AllocateLeaveResponse { /* ... */ };
-    }
-}
-
-// Create validator
-public class AllocateLeaveValidator : AbstractValidator<AllocateLeaveCommand>
-{
-    public AllocateLeaveValidator()
-    {
-        RuleFor(x => x.EmployeeId).NotEmpty();
-        RuleFor(x => x.Days).GreaterThan(0);
-    }
-}
-```
-
-**3. Infrastructure Layer** (`PeopleHub.Infrastructure`)
-```csharp
-// Create repository
-public class LeaveAllocationRepository : Repository<LeaveAllocation>
-{
-    public async Task<List<LeaveAllocation>> GetByEmployeeAsync(string employeeId)
-    {
-        return await _context.LeaveAllocations
-            .Where(x => x.EmployeeId == employeeId)
-            .ToListAsync();
-    }
-}
-
-// Register in DI
-services.AddScoped<IRepository<LeaveAllocation>, LeaveAllocationRepository>();
-```
-
-**4. Server Layer** (`PeopleHub.Server`)
-```csharp
-[ApiController]
-[Route("api/[controller]")]
-public class LeaveAllocationController : ControllerBase
-{
-    [HttpPost]
-    [Authorize(Roles = "HR,Admin")]
-    public async Task<ActionResult> AllocateLeave(AllocateLeaveRequest request)
-    {
-        var command = new AllocateLeaveCommand { /* ... */ };
-        var result = await _mediator.Send(command);
-        return CreatedAtAction(nameof(AllocateLeave), result);
-    }
-}
-```
-
-**5. Frontend** (`peoplehub.client`)
-```typescript
-// Create service
-@Injectable()
-export class LeaveAllocationService {
-    constructor(private http: HttpClient) {}
-    
-    allocateLeave(request: AllocateLeaveRequest): Observable<AllocateLeaveResponse> {
-        return this.http.post<AllocateLeaveResponse>('/api/leave-allocation', request);
-    }
-}
-
-// Create component
-@Component({
-    selector: 'app-allocate-leave',
-    templateUrl: './allocate-leave.component.html',
-    styleUrls: ['./allocate-leave.component.scss']
-})
-export class AllocateLeaveComponent {
-    form: FormGroup;
-    
-    constructor(private leaveService: LeaveAllocationService) {}
-    
-    submit() {
-        if (this.form.valid) {
-            this.leaveService.allocateLeave(this.form.value).subscribe(
-                result => this.handleSuccess(result),
-                error => this.handleError(error)
-            );
-        }
-    }
-}
-```
-
----
-
-## 13. Future Enhancements
-
-- **GraphQL API**: Alternative to REST for complex queries
-- **Event Sourcing**: Complete audit trail with event replay
-- **CQRS Read Models**: Separate optimized read database
-- **API Versioning**: Support multiple API versions
-- **Webhook Support**: Push notifications to external systems
-- **Mobile Apps**: Native iOS/Android using same APIs
-- **Advanced Analytics**: ML-based insights and predictions
-- **Workflow Engine**: Visual workflow builder for processes
-- **Integration Hub**: Pre-built connectors (Zoom, Slack, etc.)
-
----
-
-## 14. Project Maintenance & Conventions
-
-### Code Organization Rules
-
-1. **Domain Layer**: No external dependencies (except base .NET)
-2. **Application Layer**: Depends on Domain only
-3. **Infrastructure**: Depends on Application & Domain
-4. **Server/Frontend**: Depend on Application
-5. **Cross-cutting**: Handled via middleware, DI, and base classes
+### Barrel Rules
+- Library root barrel: only public surface.
+- Feature/local barrels allowed for local convenience but must not create cyclic imports.
+- Avoid wildcard export chains that hide ownership.
 
 ### Naming Conventions
+- Components: kebab-case file names; PascalCase classes.
+- Services: `*.service.ts` with single responsibility.
+- Models/types/interfaces: grouped by feature in `*.model.ts` or `*.types.ts`.
+- Never declare interfaces inside component files.
+- Keep all related interfaces in one model/types file when practical.
+- Component file set is mandatory:
+  - `component.ts`
+  - `component.html`
+  - `component.scss`
+  - `component.spec.ts`
+  - `component.stories.ts`
 
-- **Entities**: Singular, no suffix (e.g., `Employee`)
-- **Services**: `{Feature}Service` (e.g., `EmployeeService`)
-- **Repositories**: `{Entity}Repository` (e.g., `EmployeeRepository`)
-- **Commands**: `{Action}{Entity}Command` (e.g., `CreateEmployeeCommand`)
-- **Queries**: `Get{Entity(ies)}{Criteria}Query` (e.g., `GetEmployeesByDepartmentQuery`)
-- **Handlers**: `{Command/Query}Handler` (e.g., `CreateEmployeeCommandHandler`)
-- **DTOs**: `{Entity}{Operation}Request/Response` (e.g., `CreateEmployeeRequest`)
-- **Components**: `{feature}-{type}.component.ts` (e.g., `employee-list.component.ts`)
-- **Services**: `{feature}.service.ts` (e.g., `employee.service.ts`)
+### Selector Conventions
+- Shared UI selectors: `ui-*`.
+- Other library selectors generally use `ph-*` by library/domain convention.
+- App root selector remains `app-root`.
 
-### Testing Strategy
+## 6. Architectural Constraints
 
-- **Unit Tests**: Domain logic, business rules, DTOs
-- **Integration Tests**: Repository, service integration
-- **API Tests**: Controller endpoints
-- **E2E Tests**: Full feature workflows
+### Dependency Direction Rules
+- Backend: Server -> Application -> Domain; Infrastructure -> Application/Domain.
+- Frontend: shared libraries cannot import feature libraries.
+- Base/shell may depend on shared, but shared must stay feature-agnostic.
 
----
+### Shared vs Feature Boundaries
+- Put code in shared only if truly reusable across features.
+- Feature-specific workflows, policies, and state remain in feature module libraries.
+- Avoid leaking business-specific logic into shared UI primitives.
 
-## Conclusion
+### Library Import Restrictions
+- Import through library public APIs whenever possible.
+- No cross-feature deep relative imports.
+- No circular library references.
 
-PeopleHub is architected to be **scalable, maintainable, and extensible**. The clean separation of concerns enables teams to work independently, the multi-tenancy support allows for SaaS deployment, and the CQRS pattern provides flexibility for future optimizations. The frontend modular structure ensures code reusability and clear feature organization.
+### Multi-organization Isolation Rules
+- Organization context must be resolved at request/job entry points.
+- All data access paths must apply organization-scoped filtering.
+- Cache keys and async message payloads must include organization identity.
+- Organization customization must be injected by strategy/resolver patterns, not hard-coded feature branches.
 
-This architecture provides a solid foundation for growing the HRMS platform while maintaining code quality and system performance.
+### Authentication and Authorization Rules
+- JWT-based authentication for API and UI session flow.
+- Role and permission checks enforced in both route policies and API endpoints.
+- Token refresh and 401/403 handling must be centralized in frontend HTTP pipeline.
+- Super-admin operations must remain separated from organization-admin scopes.
+
+## 7. Data Flow Diagrams
+
+### 7.1 Backend Data Flow (API Request Lifecycle)
+
+Backend request lifecycle steps:
+1. HTTP request reaches `PeopleHub.Server` controller.
+2. Middleware and filters apply context, auth, validation, and error policies.
+3. Controller dispatches Application command/query (MediatR).
+4. Handler executes Domain rules and coordinates Infrastructure.
+5. Infrastructure reads/writes PostgreSQL and optional Redis cache.
+6. Domain/application events are published through RabbitMQ when required.
+7. AutoMapper maps domain/application models to response DTOs.
+8. Controller returns standardized HTTP response payload.
+
+```mermaid
+flowchart TD
+  A[HTTP Request] --> B[PeopleHub.Server Controller]
+  B --> C[Middleware and Filters]
+  C --> D[Application Command or Query]
+  D --> E[MediatR Handler]
+  E --> F[Domain Rules and Policies]
+  E --> G[Infrastructure Repository]
+  G --> H[(PostgreSQL)]
+  G --> I[(Redis Cache)]
+  E --> J[RabbitMQ Publisher]
+  J --> K[(RabbitMQ)]
+  E --> L[AutoMapper]
+  L --> M[Response DTO]
+  M --> B
+  B --> N[HTTP Response]
+```
+
+### 7.1.1 Backend Worker Job Flow (Scheduler -> Handler -> DB -> RabbitMQ -> Notification)
+
+Worker job lifecycle steps:
+1. `PeopleHub.Worker` scheduler triggers a job (for example payroll, report, or reminder).
+2. Worker resolves organization context and builds job command payload.
+3. Job handler executes Application use case and Domain validations.
+4. Infrastructure persists job results/state to PostgreSQL.
+5. Relevant events are published to RabbitMQ for downstream processing.
+6. Notification consumer/service sends user-facing notifications (email/in-app/SMS).
+7. Worker records completion/failure status and retry metadata.
+
+```mermaid
+flowchart TD
+  A[Worker Scheduler Trigger] --> B[Worker Job Command]
+  B --> C[Application Job Handler]
+  C --> D[Domain Validation and Rules]
+  C --> E[Infrastructure Persistence]
+  E --> F[(PostgreSQL)]
+  C --> G[RabbitMQ Publisher]
+  G --> H[(RabbitMQ)]
+  H --> I[Notification Consumer]
+  I --> J[Email or In-App Notification]
+  C --> K[Job Status and Retry Tracking]
+```
+
+### 7.2 Use Case Flow: Employee Requests Leave
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant U as Employee User
+  participant UI as Leave Page (Angular)
+  participant API as LeaveController
+  participant APP as RequestLeaveCommand Handler
+  participant DOM as Domain Rules
+  participant DB as PostgreSQL
+  participant BUS as RabbitMQ
+
+  U->>UI: Submit leave request form
+  UI->>UI: Client validation (dates, required fields)
+  UI->>API: POST /api/leave-requests
+  API->>APP: Dispatch RequestLeaveCommand
+  APP->>DOM: Validate leave balance and overlap rules
+  APP->>DB: Save LeaveRequest (Pending)
+  APP->>BUS: Publish LeaveRequested event
+  APP-->>API: Return LeaveRequestResponse DTO
+  API-->>UI: HTTP 201 Created
+  UI-->>U: Show success + refresh leave balance
+```
+
+### 7.3 Use Case Flow: Manager Approves Leave
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant M as Manager User
+  participant UI as Approval Page
+  participant API as LeaveController
+  participant APP as ApproveLeaveCommand Handler
+  participant DB as PostgreSQL
+  participant BUS as RabbitMQ
+
+  M->>UI: Click Approve on pending request
+  UI->>API: PUT /api/leave-requests/{id}/approve
+  API->>APP: Dispatch ApproveLeaveCommand
+  APP->>DB: Load request + verify Pending status
+  APP->>DB: Update status to Approved
+  APP->>BUS: Publish LeaveApproved event
+  APP-->>API: Return updated DTO
+  API-->>UI: HTTP 200 OK
+  UI-->>M: Refresh table + show success toast
+```
+
+### 7.4 Use Case Flow: Monthly Payroll Processing
+
+```mermaid
+flowchart TD
+  A[Scheduler Trigger: Monthly Payroll Job] --> B[Resolve Organization Context]
+  B --> C[Load Active Employees]
+  C --> D[Calculate Payroll Components]
+  D --> E[Base Salary]
+  D --> F[Deductions: tax, insurance]
+  D --> G[Additions: bonus, incentives]
+  D --> H[Leave Adjustments]
+  E --> I[Net Salary]
+  F --> I
+  G --> I
+  H --> I
+  I --> J[Persist Payslip + Transactions]
+  J --> K[Publish PayrollProcessed Event]
+  K --> L[(RabbitMQ)]
+  J --> M[Notify Employee]
+  M --> N[Employee Portal shows payslip ready]
+```
+
+### 7.5 Frontend Library Interaction Flow
+
+```mermaid
+flowchart TD
+  A[App Bootstrap] --> B[Shell Libraries]
+  B --> C[Base Libraries]
+  C --> D[Shared Libraries]
+  B --> E[Feature Module Libraries]
+  E --> D
+```
+
+## 8. Common-UI Migration Governance
+
+### Source Read-only Rule
+- Source reference path for migration inputs is read-only.
+- No edits, renames, moves, or deletions are allowed in source during migration.
+
+### Placement Decision Hierarchy
+1. This architecture document.
+2. Existing PeopleHub library structure.
+3. Actual file responsibility/use case.
+4. Legacy source folder naming.
+
+### Migration Quality Gates
+- Documentation complete before migration actions.
+- Every source file must be classified and mapped.
+- Destination imports/exports and `public-api.ts` must be valid.
+- No silent skips.
+- Source remains untouched.
+
+## 9. Deployment and Runtime Topology (Reference)
+
+### Development Runtime
+- Backend API host: `PeopleHub.Server` (local HTTPS endpoint).
+- Frontend dev host: Angular CLI serve (`peoplehub.client`).
+- API proxy bridging frontend and backend in local environment.
+- Worker host runs independently for scheduled and queue-based workloads.
+
+### Production Topology (target pattern)
+- Stateless API host instances behind load balancer/reverse proxy.
+- Dedicated worker instances for schedulers and message consumers.
+- PostgreSQL as system-of-record with Redis for distributed cache.
+- RabbitMQ for decoupled async workflows and event fan-out.
+- Centralized monitoring/logging stack for API and worker observability.
+
+## 10. Current Validation Checklist
+
+- [x] `architecture.md` exists and is the consolidated architecture source.
+- [x] Frontend architecture and backend architecture are both documented.
+- [x] Major repository folders and rationale are documented.
+- [x] Version and tooling baseline documented from current repository state.
+- [x] Source inventory validated from read-only filesystem snapshot in this session.
+
+### Source Inventory Note
+The exact source path provided for read-only inventory was not found in this environment:
+`D:\Projects\Open Rainbow\Open-Rainbow-Management-Studio\orms.client\src\app\common-ui`
+
+Read-only source paths discovered and used for inventory:
+- `D:\Projects\Open Rainbow\_readonly_common_ui_snapshot\src\app\common-ui`
+- `D:\Projects\Open Rainbow\Open-Rainbow-Management-Studio\orms.client\src\stories\common-ui`
+
+Migration artifact files in docs are not currently present and should be regenerated if needed.

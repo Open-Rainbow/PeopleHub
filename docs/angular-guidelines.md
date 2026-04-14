@@ -17,6 +17,16 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use **organization** terminology consistently in code, APIs, and docs; avoid **tenant** naming unless required by external contracts.
 - No inline styles.
 
+## Type Definitions
+
+- **Never add interfaces in component.ts files**.
+- Always define interfaces in separate `.model.ts` or `.types.ts` files.
+- **Keep all related interfaces in one file** (group by feature/domain).
+- Components and services import interfaces from their model files.
+- This prevents circular dependencies and keeps components focused on templating/logic.
+- Create new model files only when needed; reuse existing model files when interfaces already exist there.
+- Optimize for the existing structure—don't create unnecessary files.
+
 ## Component Design
 
 - Single responsibility per component.
@@ -25,6 +35,16 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use `computed()` for derived state.
 - Prefer inline templates for simple components; external templates for complex UI.
 - Define host bindings inside the `host` property, not decorators.
+
+## Component Structure
+
+- **Every component must have the following file structure** (do not keep all content in a single `.ts` file):
+  - `component.ts` — Component logic and class definition.
+  - `component.html` — Component template.
+  - `component.scss` — Component styles.
+  - `component.spec.ts` — Unit tests.
+  - `component.stories.ts` — Storybook documentation (required for all components).
+- This separation enables reusability, testability, and documentation.
 
 ## Templates
 
