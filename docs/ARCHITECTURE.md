@@ -137,7 +137,20 @@ peoplehub.client/
 - Shell libraries (`src/libs/shell`) provide presentation shell:
   - `layout`, `header`, `sidebar`, `breadcrumbs`, `quick-actions`
 - Module libraries (`src/libs/modules`) implement business features:
-  - `dashboard`, `employees`, `attendance`, `leave`, `payroll`, `recruitment`, `performance`, `reports`, `notifications`, `documents`, `settings`, `super-admin`
+  - `announcements`: organization-wide communication posts, updates, and broadcast surfaces.
+  - `attendance`: attendance tracking and related workflows.
+  - `dashboard`: overview widgets and operational summaries.
+  - `documents`: employee and organization document workflows.
+  - `employees`: employee profile and lifecycle management UI.
+  - `holidays`: holiday calendar and holiday configuration flows.
+  - `leave`: leave request, approval, and balance flows.
+  - `notifications`: in-app notification management and listing.
+  - `payroll`: payroll processing views and payslip workflows.
+  - `performance`: performance review and goal tracking experiences.
+  - `recruitment`: hiring pipeline and candidate workflow screens.
+  - `reports`: report generation and analytics-oriented pages.
+  - `settings`: organization and product configuration screens.
+  - `super-admin`: platform-level administration across organizations.
 
 ### Feature Module Internal Shape
 - Standard module layout under `src/libs/modules/<module>/src/lib`:
@@ -358,10 +371,12 @@ PeopleHub/
 │  │  │                plus ng-package/package/tsconfig/public-api files.
 │  │  ├─ modules/
 │  │  │  Purpose: feature-specific business libraries.
+│  │  │  ├─ announcements/
 │  │  │  ├─ attendance/
 │  │  │  ├─ dashboard/
 │  │  │  ├─ documents/
 │  │  │  ├─ employees/
+│  │  │  ├─ holidays/
 │  │  │  ├─ leave/
 │  │  │  ├─ notifications/
 │  │  │  ├─ payroll/
@@ -659,6 +674,25 @@ flowchart TD
 - [x] Major repository folders and rationale are documented.
 - [x] Version and tooling baseline documented from current repository state.
 - [x] Source inventory validated from read-only filesystem snapshot in this session.
+- [x] Architecture change governance rule is documented and must be followed for all structural updates.
+
+## 11. Architecture Change Governance
+
+### Update Rule (mandatory)
+- If architecture changes happen, update `docs/architecture.md` in the same PR/commit.
+- Do not merge structure-impacting changes without updating this document.
+
+### What counts as an architecture change
+- New/removed/renamed library, module, backend project, or top-level folder.
+- Dependency-direction or boundary rule changes.
+- New cross-cutting pattern (for example caching, messaging, auth flow, or organization isolation strategy).
+- Build/runtime topology changes that affect deployment or hosting.
+
+### Minimum sections to update
+- `Frontend Library Domains` and `Library Responsibilities` when frontend libraries change.
+- `Folder-by-Folder Explanation` when real paths/folder structure changes.
+- `Dependency Direction Rules` when layering boundaries change.
+- `Project Versions` when framework/runtime baselines are changed.
 
 ### Source Inventory Note
 The exact source path provided for read-only inventory was not found in this environment:
