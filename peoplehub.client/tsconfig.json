@@ -8,6 +8,9 @@
     "strict": true,
     "noImplicitOverride": true,
     "paths": {
+      "announcements": [
+        "./dist/announcements"
+      ],
       "api": [
         "./dist/api"
       ],
@@ -141,5 +144,5 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
 }
