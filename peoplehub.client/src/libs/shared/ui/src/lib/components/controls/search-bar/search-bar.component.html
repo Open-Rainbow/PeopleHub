@@ -1,0 +1,75 @@
+<div class="w-full h-full bg-white rounded-lg border-none" [formGroup]="parentFormGroup">
+  <div class="w-full relative flex flex-col">
+
+    <!-- <div
+      class="h-9 flex items-center bg-white rounded-lg px-3.5 py-2.5 transition-all duration-300 ease-in-out"
+      [class.shadow-[inset_0_0_0_1px_var(--border-color,#2563eb)]]="showBorder && !searchControl.focused"
+      [class.shadow-[0_0_0_1px_var(--border-color,#2563eb)]]="showBorder && searchControl.focused"
+      [style.--border-color]="borderColor"
+      [class.flex-row-reverse]="iconPosition === 'right'"
+      [class.ring-1]="isInvalid"
+      style="border-width: 2px;"
+    > -->
+    <div
+  class="h-9 flex items-center bg-white rounded-lg px-3.5 py-2.5 transition-all duration-300 ease-in-out"
+  [class.shadow-[inset_0_0_0_1px_var(--border-color,#2563eb)]]="showBorder"
+  [class.focus-within:shadow-[0_0_0_1px_var(--border-color,#2563eb)]]="showBorder"
+  [class.ring-1]="isInvalid && showBorder"
+  [class.ring-red-500]="isInvalid && showBorder"
+  [style.--border-color]="borderColor"
+  [class.flex-row-reverse]="iconPosition === 'right'"
+>
+
+      <!-- Search Icon -->
+      <ui-icon
+        *ngIf="showIcon"
+        class="text-gray-400 min-w-[20px] flex items-center justify-center"
+        [class.mr-2.5]="iconPosition === 'left'"
+        [class.ml-2.5]="iconPosition === 'right'"
+        [name]="'iconamoon:search'">
+      </ui-icon>
+
+      <!-- Input -->
+      <input
+        type="text"
+        class="w-full bg-transparent border-none outline-none text-[15px] text-gray-800 placeholder:text-gray-400 pl-2.5"
+        [class.pl-2.5]="showIcon"
+        [formControl]="searchControl"
+        [placeholder]="placeholderText"
+        (focus)="showIntelegiencebox = enableIntelligenceBox && !!searchControl.value && filteredSuggestions.length > 0"
+        (blur)="hideSuggestionsWithDelay()"
+      />
+
+      <!-- Clear Icon -->
+      <ui-icon
+        class="text-black cursor-pointer"
+        [style.visibility]="searchControl.value ? 'visible' : 'hidden'"
+        [name]="'cross_2'"
+        (click)="clearSearch()">
+      </ui-icon>
+
+    </div>
+
+    <!-- Suggestion Box -->
+    @if (showIntelegiencebox) {
+      <ul class="absolute top-full left-0 w-full mt-1.5 bg-white rounded-lg shadow-md z-[1000] p-2 max-h-[60vh] overflow-y-auto text-xs mb-2.5">
+
+        @if (filteredSuggestions.length > 0) {
+          @for (suggestion of filteredSuggestions; track suggestion) {
+            <li
+              class="px-4 py-2.5 cursor-pointer rounded-lg transition-colors duration-200 hover:bg-gray-200"
+              (mousedown)="selectSuggestion(suggestion)">
+              {{ suggestion }}
+            </li>
+          }
+        } @else {
+          <li class="cursor-default text-gray-500 italic px-4 py-2.5">
+            No such data is found
+          </li>
+        }
+
+      </ul>
+    }
+
+  </div>
+</div>

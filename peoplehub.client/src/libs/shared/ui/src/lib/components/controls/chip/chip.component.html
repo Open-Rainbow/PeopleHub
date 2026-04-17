@@ -1,0 +1,17 @@
+<div
+  class="inline-flex  justify-center border border-gray-200 shadow-sm cursor-pointer transition-all duration-300 ease-in-out select-none"
+  [class.error]="isInvalid"
+  [style.backgroundColor]="isHovered ? activeBGColor : finalBgColor"
+  [style.color]="isHovered ? activeColor : color"
+  [style.cursor]="usePointerCursor ? 'pointer' : 'default'"
+  [style.borderRadius]="borderRadius"
+  [style.height]="height"
+  [style.width]="width"
+  [style.fontSize]="fontSize"
+  [style.paddingLeft]="horizontalGap"
+  [style.paddingRight]="horizontalGap"
+  (mouseenter)="isHovered = true"
+  (mouseleave)="isHovered = false"
+>
+  {{ text }}
+</div>

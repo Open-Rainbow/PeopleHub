@@ -1,0 +1,184 @@
+/* .form-group {
+  margin-bottom: 20px;
+  max-width: 400px;
+}
+
+
+label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+  font-size: 14px;
+} 
+
+
+input[type="number"] {
+  width: 100%;
+  color: #1f2937;
+  border-radius: 6px;
+  outline: none;
+  font-size: 14px;
+}
+input {
+   width: 100%; 
+  color: #1f2937; 
+  border-radius: 6px; 
+  outline: none;
+  font-size: 14px;
+  height: 36px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]:focus {
+  border-color: #2563eb !important;
+  border-width: 1px !important;
+  box-shadow: none !important;
+}
+
+input[type="number"]:focus ~ label {
+  color: #2563eb !important;
+}
+
+
+
+ input.error {
+  border-color: #dc2626 !important;
+}
+
+input.error ~ label {
+  color: #dc2626 !important;
+}
+
+
+input.error:focus {
+  border-color: #dc2626 !important;
+}
+
+input.error:focus~label {
+  color: #dc2626 !important;
+}
+
+
+input.save-state {
+  border-color: green !important;
+  border-width: 1px !important;
+}
+
+input.save-state:focus~label {
+  color: green !important;
+} 
+
+
+.relative label {
+  position: absolute;
+  z-index: 2;
+  background: transparent !important;
+}
+
+.relative input:focus~label,
+.relative input:not(:placeholder-shown)~label {
+  top: -7.5px;
+  font-size: 12px;
+}
+
+.relative input:focus ~ label::after,
+.relative input:not(:placeholder-shown) ~ label::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 50%;
+  height: 2.5px;
+  background: #fff;
+  transform: translateY(-50%);
+  z-index: -1;
+}
+
+
+.number-spinner {
+  position: absolute;
+  right: 10px; 
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  z-index: 50; 
+}
+
+.number-spinner button {
+  width: 20px;
+  height: 16px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+
+.number-spinner button,
+.number-spinner button * {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 51;
+}
+
+.number-spinner button:hover {
+  color: #2563eb;
+  background-color: #f3f4f6;
+  border-radius: 2px;
+}
+
+.number-spinner button:active {
+  transform: scale(0.95);
+  background-color: #e5e7eb;
+}
+
+
+.number-spinner orms-icon,
+.number-spinner svg,
+.number-spinner ::ng-deep svg {
+  pointer-events: none !important;
+  width: 12px;
+  height: 12px;
+}
+
+
+.relative {
+  position: relative;
+}
+
+.inputBoxHeight {
+  height: 42px;
+  padding-right: 40px !important; 
+}
+
+
+.relative label {
+  pointer-events: none;
+  z-index: 2; 
+}
+
+.relative input {
+  position: relative;
+  z-index: 1;
+} */

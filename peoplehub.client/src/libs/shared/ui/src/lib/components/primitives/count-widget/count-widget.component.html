@@ -1,0 +1,26 @@
+<div class="w-full h-full border-2 border-gray-300 rounded-lg p-2 flex justify-center items-center" [ngStyle]="{
+    'border-color': showBorder ? borderColor : 'transparent',
+    'background-color': backgroundColor
+  }" style="overflow: hidden;">
+
+  @if (labelPosition === 'top' || labelPosition === 'bottom') {
+    <div
+    class="flex items-center justify-center w-full h-full gap-2" [ngStyle]="{
+      'flex-direction': labelPosition === 'top' ? 'column' : 'column-reverse'
+    }">
+      <span [style.color]="labelColor" [style.fontSize]="lebelsize" class="font-[Inter] leading-none whitespace-nowrap text-center text-[clamp(8px,2vw,22px)]">{{ label }}</span>
+      <span [style.color]="valueColor" [style.fontSize]="valuesize" class="font-[Inter] leading-none whitespace-nowrap text-center text-[clamp(8px,2vw,22px)] font-semibold">{{ value }}</span>
+    </div>
+  }
+
+  @if (labelPosition === 'before' || labelPosition === 'after') {
+    <div
+    class="flex items-center justify-center w-full h-full gap-2" [ngStyle]="{
+      'flex-direction': labelPosition === 'before' ? 'row' : 'row-reverse'
+    }">
+      <span [style.color]="labelColor" [style.fontSize]="lebelsize" class="font-[Inter] leading-none whitespace-nowrap text-center text-[clamp(8px,2vw,22px)]">{{ label }}</span>
+      <span [style.color]="valueColor" [style.fontSize]="valuesize" class="font-[Inter] leading-none whitespace-nowrap text-center text-[clamp(8px,2vw,22px)] font-semibold">{{ value }}</span>
+    </div>
+  }
+
+</div>

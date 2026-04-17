@@ -1,0 +1,29 @@
+<div 
+  class="relative inline-flex items-center justify-center"
+  (mouseenter)="!disable && (isHovered = true)"
+  (mouseleave)="!disable && (isHovered = false)"
+>
+  <ui-icon-button
+    [iconName]="iconName"
+    [bgColor]="bgColor"
+    [color]="color"
+    [hoverBGColor]="hoverBGColor"
+    [hoverColor]="hoverColor"
+    [borderRadius]="borderRadius"
+    [borderColor]="borderColor"
+    [showBorder]="showBorder"
+    [disable]="disable"
+    [borderRadius]="6"
+  ></ui-icon-button>
+
+  @if(isHovered){
+    <div [class]="positionClasses" [ngStyle]="{'background-color': popupBgColor, 'color': popupTxtColor}"
+      role="tooltip">
+    
+      {{ description }}
+    
+      <div [class]="arrowClasses" [ngStyle]="{'background-color': popupBgColor}">
+      </div>
+    </div>
+  }
+</div>

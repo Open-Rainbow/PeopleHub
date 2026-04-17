@@ -1,0 +1,82 @@
+<div class="button-list-container flex rounded-lg w-fit overflow-hidden border border-gray-300" [style.--theme-border]="selectedBgColor">
+
+  @for (btn of buttons; track btn; let idx = $index; let total = $count) {
+  <button class="border-l border-[var(--theme-border)]
+         first:border-l-0
+         px-3 py-[2px] h-10
+         flex items-center justify-center
+         whitespace-nowrap overflow-hidden"  [class.active]="selectedId === btn.labelId" (mouseenter)="hoverId = btn.labelId" (mouseleave)="hoverId = null" [class.rounded-top]="idx === 0"
+    [class.rounded-bottom]="idx === total - 1" 
+    [ngStyle]="{      
+   'background-color': selectedId === btn.labelId
+          ? selectedBgColor
+          : (hoverId === btn.labelId ? hoverBgColor : bgColor),
+ 'border-color': selectedId === btn.labelId ? selectedBgColor : '',
+    'color': selectedId === btn.labelId 
+        ? selectedTextColor 
+        : (hoverId === btn.labelId ? hoverTextColor : textColor),
+   
+  }"
+      (click)="selectButton(btn) ; createRipple($event)">
+
+    <!-- ICON ONLY -->
+    @if (btn.showIcon && !btn.showTextAndIcon) {
+    <div class="inline-flex items-center gap-[6px] flex-nowrap">
+      <ui-icon [name]="btn.label"></ui-icon>
+
+      @if (btn.showCount) { 
+      <span class="min-w-[20px] h-5 px-[6px] shrink-0
+               flex items-center justify-center
+               text-xs font-semibold
+               rounded-full leading-none
+               transition-colors duration-200" [class.bg-white/30]="selectedId === btn.labelId"
+        [class.bg-gray-300]="selectedId !== btn.labelId">
+        {{ btn.count }}
+      </span>
+      }
+    </div>
+    }
+
+    <!-- TEXT ONLY -->
+    @if (!btn.showIcon && !btn.showTextAndIcon) {
+    <div class="inline-flex items-center gap-[6px] flex-nowrap">
+      <span class="text">{{ btn.label }}</span>
+
+      @if (btn.showCount) {
+      <span class="min-w-[20px] h-5 px-[6px] shrink-0
+               flex items-center justify-center
+               text-xs font-semibold
+               rounded-full leading-none
+               transition-colors duration-200" [class.bg-white/30]="selectedId === btn.labelId"
+        [class.bg-gray-300]="selectedId !== btn.labelId">
+        {{ btn.count }}
+      </span>
+      }
+    </div>
+    }
+
+    <!-- ICON + TEXT -->
+    @if (btn.showTextAndIcon) {
+    <div class="btn-content" class="inline-flex items-center gap-[6px] flex-nowrap">
+      <ui-icon [name]="btn.label"></ui-icon>
+      <span class="text">{{ btn.label }}</span>
+
+      @if (btn.showCount) {
+    <span class="min-w-[20px] h-5 px-[6px] shrink-0
+             flex items-center justify-center
+             text-xs font-semibold
+             rounded-full leading-none
+             transition-colors duration-200" [class.bg-white/30]="selectedId === btn.labelId"
+      [class.bg-gray-300]="selectedId !== btn.labelId">
+      {{ btn.count }}
+    </span>
+      }
+    </div>
+    }
+
+  </button>
+
+  }
+
+
+</div>

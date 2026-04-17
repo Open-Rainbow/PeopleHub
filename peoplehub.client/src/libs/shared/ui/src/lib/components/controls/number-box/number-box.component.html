@@ -1,0 +1,120 @@
+<!-- <div class="form-group" [formGroup]="parentFormGroup">
+  <label for="numbers">{{label}}
+    <span *ngIf="isRequired">*</span>
+  </label>
+
+  <input
+    type="number"
+    id="numbers"
+        [formControlName]="id"       
+    [placeholder]="Placeholder"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+    class="w-full"
+    [class.error]="isInvalid"
+  />
+</div> -->
+
+<div class="relative w-full" [formGroup]="activeForm">
+
+  <input
+    type="number"
+    step="1"
+    [id]="id"
+    [formControlName]="id"
+    [placeholder]="Placeholder"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+    [class.border-red-600]="isInvalid"
+    class="peer w-full h-[36px] inputBoxHeight
+           text-[14px] text-[#1f2937]
+           rounded-[6px]
+           outline-none
+           transition
+           bg-white
+           px-3 pr-[40px] pb-1
+           border border-slate-300
+           placeholder-transparent
+           focus:placeholder-gray-400
+           focus:!border-[#2563eb]
+           focus:shadow-none
+           [&::-webkit-inner-spin-button]:appearance-none
+           [&::-webkit-outer-spin-button]:appearance-none"
+  />
+
+  <label
+    [for]="id"
+    class="absolute left-3 bg-white px-1
+           transition-all duration-200 ease-out
+           pointer-events-none z-[2]
+           text-gray-500 font-medium whitespace-nowrap
+           text-[14px]
+           -top-[7.5px] text-[12px]
+           peer-placeholder-shown:top-[6px]
+           peer-placeholder-shown:text-[14px]
+           peer-focus:-top-[7.5px]
+           peer-focus:text-[12px]
+           peer-focus:text-[#2563eb]
+           peer-[.border-red-600]:text-[#dc2626]">
+    {{ label }}
+    @if (isRequired) {
+      <span class="required">*</span>
+    }
+  </label>
+
+  <!-- Number Spinner -->
+  <div class="absolute right-[10px] top-1/2 -translate-y-1/2
+              flex flex-col gap-0 z-[50]">
+
+    <button
+      type="button"
+      (click)="increment($event)"
+      tabindex="-1"
+      class="w-[20px] h-[16px]
+             flex items-center justify-center
+             bg-transparent
+             text-[#6b7280]
+             cursor-pointer
+             outline-none
+             select-none
+             hover:text-[#2563eb]
+             hover:bg-[#f3f4f6]
+             hover:rounded-[2px]
+             active:scale-[0.95]
+             active:bg-[#e5e7eb]
+             relative z-[51]">
+
+      <ui-icon
+        [name]="'fluent:caret-up-24-filled'"
+        class="pointer-events-none w-[12px] h-[12px]">
+      </ui-icon>
+
+    </button>
+
+    <button
+      type="button"
+      (click)="decrement($event)"
+      tabindex="-1"
+      class="w-[20px] h-[16px]
+             flex items-center justify-center
+             bg-transparent
+             text-[#6b7280]
+             cursor-pointer
+             outline-none
+             select-none
+             hover:text-[#2563eb]
+             hover:bg-[#f3f4f6]
+             hover:rounded-[2px]
+             active:scale-[0.95]
+             active:bg-[#e5e7eb]
+             relative z-[51]">
+
+      <ui-icon
+        [name]="'fluent:caret-down-24-filled'"
+        class="pointer-events-none w-[12px] h-[12px]">
+      </ui-icon>
+
+    </button>
+
+  </div>
+</div>

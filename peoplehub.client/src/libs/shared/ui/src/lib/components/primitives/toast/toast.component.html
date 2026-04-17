@@ -1,0 +1,51 @@
+@if (visible) {
+  <div
+    (mouseenter)="pauseTimer()"
+    (mouseleave)="resumeTimer()"
+    class="relative z-[9999] flex items-center justify-between
+           gap-4 px-4 py-3
+           w-fit max-w-[300px]
+           rounded-xl overflow-hidden
+           transition-all duration-300
+           hover:shadow-2xl"
+
+    [ngClass]="{
+      'bg-white text-gray-500': type === 'normal',
+      'bg-yellow-400 text-black': type === 'warning',
+      'bg-red-500 text-black': type === 'alert',
+      'bg-green-600 text-white': type === 'success'
+    }"
+  >
+<!-- Left Content -->
+    <div class="flex items-center gap-2 flex-grow">
+      <ui-icon class="text-lg" [name]="icon"></ui-icon>
+
+      <div class="text-sm break-words min-w-0">
+        <div class="font-bold">{{ title }}</div>
+        <div>{{ subTitle }}</div>
+      </div>
+    </div>
+
+    <!-- Close Button -->
+    <div
+      class="cursor-pointer text-lg flex items-center hover:text-gray-400"
+      (click)="closeToast()"
+    >
+      <ui-icon name="mdi:multiply"></ui-icon>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="absolute bottom-0 left-0 h-1 w-full">
+      <div
+        class="h-full transition-all duration-100"
+        [ngClass]="{
+          'bg-gray-500': type === 'normal',
+          'bg-black': type === 'warning' || type === 'alert',
+          'bg-white': type === 'success'
+        }"
+        [style.width.%]="progress"
+      ></div>
+    </div>
+
+  </div>
+}

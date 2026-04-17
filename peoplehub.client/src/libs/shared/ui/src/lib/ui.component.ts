@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 
 @Component({
-  selector: 'ph-ui',
+  selector: 'ui-root',
   standalone: true,
   imports: [],
   template: `
@@ -14,3 +14,4 @@ import { Component } from '@angular/core';
 export class UiComponent {
 
 }
+

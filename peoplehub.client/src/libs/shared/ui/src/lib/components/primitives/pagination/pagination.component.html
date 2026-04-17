@@ -1,0 +1,132 @@
+<!-- <div class="pagination-container" [style.backgroundColor]="backgroundColor">
+  @if (isShowingEntries) {
+    <div class="left">
+      <p>Showing {{(currentPage - 1) * pageSize + 1}}
+        to {{(currentPage * pageSize) > totalItems ? totalItems : (currentPage * pageSize) }}
+        of {{ totalItems }} entries
+      </p>
+    </div>
+  }
+
+@if (isDropCount) {
+  <div class="dropcount">
+    <p>Items per page : </p>
+    <div class="dropdown">
+      <ui-drop-down 
+    [label]="''" 
+    [(ngModel)]="pageSize" 
+    [options]="pageSizeOptions$ | async" 
+    [draggable]="false" 
+    [isRequired]="false"
+    (selectedChange)="onPageSizeChange($event)">
+    <ui-dropdown 
+    </div>
+  </div>
+}
+
+
+  @if (isGoto) {
+    </ui-dropdown>
+      <p>Go to :</p>
+      <div class="num-box">
+        <ui-number-box [label]="''" [isRequired]="false" [Placeholder]="currentPage.toString()"
+           (numberBox)="onGoToInput($event)"></ui-number-box>
+      </div>
+
+    <p>of {{ totalPages }} pages</p>
+    <ui-button [ngClass]="{ 'disabled-goto': isGoDisabled }" [text]="'Go'" [bgColor]="'#9eeff2'" [color]="'#ffffff'"
+      [hoverBGColor]="'#9eeff2'" [hoverColor]="'#ffffff'" [borderColor]="'black'" [isexpand]="false"
+      [showBorder]="false" (click)="goToPage(goToNumber)\"></ui-button>
+  </div>
+  }
+
+  @if (isPagination) {
+  <div>
+    @if (shouldShowPagination) {
+    <ui-buttonlist [buttons]="paginationButtons" [selectedId]="currentPage" [textColor]="'#087ff3'"
+      [bgColor]="'#e5ebf1'" [selectedBgColor]="'#087ff3'" [selectedTextColor]="'white'" [hoverBgColor]="'#087ff3'"
+      [hoverTextColor]="'white'" (buttonClick)="goToPage($event.labelId)">
+    </ui-buttonlist>
+    }
+  </div>
+  }
+
+</div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="flex items-center justify-between px-2.5 py-[5px] text-[16px] text-gray-500" 
+     [style.backgroundColor]="backgroundColor">
+  
+  @if (isShowingEntries) {
+    <div>
+      <p>Showing {{(currentPage - 1) * pageSize + 1}}
+        to {{(currentPage * pageSize) > totalItems ? totalItems : (currentPage * pageSize) }}
+        of {{ totalItems }} entries
+      </p>
+    </div>
+  }
+
+  @if (isDropCount) {
+    <div class="flex w-1/5 items-center gap-2.5">
+      <p>Items per page : </p>
+      <div class="!w-[30%]">
+        <ui-dropdown 
+          [label]="''" 
+          [(ngModel)]="pageSize" 
+          [options]="pageSizeOptions$ | async" 
+          [isRequired]="false"
+          (selectedChange)="onPageSizeChange($event)">
+        </ui-dropdown>
+      </div>
+    </div>
+  }
+
+  @if (isGoto) {
+    <div class="flex items-center gap-2.5">
+      <p>Go to :</p>
+      <div class="w-[15%] cursor-pointer text-center text-xs">
+        <ui-number-box [label]="''" [isRequired]="false" [Placeholder]="currentPage.toString()"
+          (numberBox)="onGoToInput($event)"></ui-number-box>
+      </div>
+
+      <p>of {{ totalPages }} pages</p>
+      <ui-button 
+        [ngClass]="{ '!pointer-events-none rounded-lg grayscale-[80%] !cursor-not-allowed': isGoDisabled }" 
+        [text]="'Go'" 
+        [bgColor]="'#9eeff2'" 
+        [color]="'#ffffff'"
+        [hoverBGColor]="'#9eeff2'" 
+        [hoverColor]="'#ffffff'" 
+        [borderColor]="'black'" 
+        [isexpand]="false"
+        [showBorder]="false" 
+        (click)="goToPage(goToNumber)">
+      </ui-button>
+    </div>
+  }
+
+  @if (isPagination) {
+    <div>
+      @if (shouldShowPagination) {
+        <ui-button-list [buttons]="paginationButtons" [selectedId]="currentPage" [textColor]="'#087ff3'"
+          [bgColor]="'#e5ebf1'" [selectedBgColor]="'#087ff3'" [selectedTextColor]="'white'" [hoverBgColor]="'#087ff3'"
+          [hoverTextColor]="'white'" (buttonClick)="goToPage($any($event).labelId)">
+        </ui-button-list>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,42 @@
+<div class="custom-dropdown" [formGroup]="parentFormGroup" [class.error]="isInvalid" [class.active-border]="isOpen" [class.has-value]="selectedValue">
+ 
+ 
+ 
+<span
+  class="absolute left-3 z-10 pointer-events-none transition-all duration-200 ease-out pointer-events-none font-medium
+          "
+  [ngClass]="{
+    'top-3 text-gray-500 text-sm': !isActive && !selectedValue,
+    '-top-2 text-xs text-gray-500': isActive || selectedValue,
+    'text-red-600': isInvalid
+  }"
+>
+  {{ label }}
+  @if (isRequired) {
+    <span class="required" >*</span>
+  }
+</span>
+ 
+ 
+ 
+  <input type="checkbox" [id]="uniqueId" class="dropdown-toggle" hidden (change)="onToggle($event)" />
+ 
+  <input type="hidden" [formControlName]="dropDownModel" [value]="selectedValue" />
+ 
+  <label [for]="uniqueId" class="inputBoxHeight custom-dropdown-selected"
+    [class.placeholder]="isActive && !selectedValue" (click)="isActive = true" (blur)="onBlur()">
+   {{ isActive && !selectedValue ? placeHolder : getSelectedName() }}
+    <ui-icon [name]="'arrow_down'" class="calendar-icon" [ngClass]="{ rotated: isOpen }"></ui-icon>
+  </label>
+ 
+  <ul class="custom-dropdown-list">
+    @for (option of options; track option) {
+    <li (click)="selectOption(option)" [class.selected]="selectedValue === option.value">
+      <label [for]="uniqueId">{{ option.name }}</label>
+    </li>
+    }
+    @if(draggable) {
+    <hr class="resize-hr" />
+    }
+  </ul>
+</div>

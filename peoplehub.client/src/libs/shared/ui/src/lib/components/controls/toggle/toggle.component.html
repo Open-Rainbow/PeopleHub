@@ -1,0 +1,142 @@
+<!-- <div
+class="toggle-container"
+[class.label-left]="labelPosition === 'left'"
+[style.--label-color]="labelColor"
+>
+<label @ngIf="label" class="upload-label" for="toggle">{{ label }}</label>
+ 
+<div class="switch-wrapper">
+  <input
+    type="checkbox"
+    id="toggle"
+    class="toggle-input"
+    [checked]="checked"
+    (change)="onToggle($event)"
+    />
+    <label
+      for="toggle"
+      class="toggle-label"
+      [class.on]="checked"
+      [style.--toggle-color]="color"
+    ></label>
+  </div>
+</div>
+ 
+-->
+ 
+ 
+<!-- <div
+class="toggle-container"
+[class.label-left]="labelPosition === 'left'"
+[style.--label-color]="labelColor"
+>
+<label @ngIf="label" class="upload-label" for="toggle">{{ label }}</label>
+ 
+<div class="switch-wrapper">
+  <input
+    type="checkbox"
+    id="toggle"
+    class="toggle-input"
+    [checked]="checked"
+    (change)="onToggle($event)"
+    />
+    <label
+      for="toggle"
+      class="toggle-label"
+      [class.on]="checked"
+      [ngClass]="size"
+      [style.--toggle-color]="color"
+      [style.--toggle-width]="toggleWidth"
+      [style.--toggle-height]="toggleHeight"
+      [style.--knob-size]="knobSize"
+      [style.--knob-translate]="knobTranslate"
+    ></label>
+  </div>
+</div> -->
+ 
+ 
+<!-- <label
+    [for]="id"
+    class="toggle-label"
+    [class.on]="checked"
+    [ngClass]="size"
+    [style.--toggle-color]="color"
+      [style.--toggle-width]="toggleWidth"
+       [style.--toggle-height]="toggleHeight"
+        [style.--knob-size]="knobSize"
+      [style.--knob-translate]="knobTranslate"
+      ></label> -->
+ 
+ 
+<div class="flex items-center justify-between gap-2">
+ 
+  <!-- LEFT LABEL -->
+   @if(labelPosition === 'left' || labelPosition === 'both'){
+    <span
+      class="text-sm transition-colors duration-200 cursor-pointer"
+      [ngClass]="{
+        'text-black': !checked || (labelPosition === 'left' && checked && !manualToggle && isDualLabelMode),
+        'text-gray-400': checked && !(labelPosition === 'left' && !manualToggle && isDualLabelMode)
+      }"
+      (click)="!toggleOnlyMode && onLabelClick(false)"
+    >
+      {{ dynamicLeftLabel }}
+    </span>
+   }
+  
+ 
+  <!-- TOGGLE -->
+  <label class="relative inline-flex items-center cursor-pointer">
+ 
+    <!-- Hidden Input -->
+    <input
+      type="checkbox"
+      [checked]="checked"
+      (change)="onChange($event)"
+      class="peer sr-only"
+    />
+ 
+    <!-- Background -->
+    <div
+      class="
+        w-[34px] h-[18px]
+        bg-gray-300
+        rounded-full
+        transition-colors duration-300
+        peer-checked:bg-[var(--toggle-active-color)]
+      "
+    ></div>
+ 
+    <!-- Knob -->
+    <div
+      class="
+        absolute
+        left-[2px] top-[50%]
+        -translate-y-1/2
+        w-[14px] h-[14px]
+        rounded-full
+        bg-black
+        transition-all duration-300
+        peer-checked:translate-x-[16px]
+        peer-checked:bg-white
+      "
+    ></div>
+ 
+  </label>
+ 
+  <!-- RIGHT LABEL -->
+  @if(labelPosition === 'right' || labelPosition === 'both'){
+    <span
+      class="text-sm transition-colors duration-200 cursor-pointer"
+      [ngClass]="{
+        'text-black': checked || (labelPosition === 'right' && !checked && !manualToggle && isDualLabelMode),
+        'text-gray-400': !checked && !(labelPosition === 'right' && !manualToggle && isDualLabelMode)
+      }"
+      (click)="!toggleOnlyMode && onLabelClick(true)"
+      >
+      {{ dynamicRightLabel }}
+    </span>
+  }
+  
+ 
+</div>

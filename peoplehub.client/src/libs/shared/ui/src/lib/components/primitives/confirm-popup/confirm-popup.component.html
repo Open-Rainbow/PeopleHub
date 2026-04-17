@@ -1,0 +1,40 @@
+@if (showPopup) {
+  <div class="fixed inset-0 w-screen h-screen bg-gray-500/60 flex justify-center items-center z-[999]">
+    
+    <div
+      class="w-1/2 bg-white rounded-xl px-10 py-8 border border-gray-400 text-center 
+             max-h-[80vh] overflow-y-auto box-border shadow-[0_5px_25px_rgba(0,0,0,0.3)]
+             origin-center animate-popupIn"
+      [ngClass]="{ 'animate-popupOut': isClosing }"
+      [ngStyle]="{'border-left': '5px solid ' + borderColor}"
+    >
+
+      <div class="text-4xl">{{ changeIcon }}</div>
+
+      <h2 class="flex justify-center text-center text-[32px] font-medium my-2">
+        {{ title }}
+      </h2>
+
+      <p
+        class="flex justify-center text-center text-[20px] text-gray-500 leading-relaxed break-words whitespace-normal"
+        [innerHTML]="safeLabel">
+      </p>
+
+      <div class="mt-5 flex justify-center gap-2 flex-wrap">
+        @for (item of data; track item.value) {
+          <ui-button 
+            [text]="item.text"
+            [bgColor]="item.bgColor"
+            [color]="item.color"
+            [hoverBGColor]="item.hoverBGColor"
+            [hoverColor]="item.hoverColor"
+            [borderColor]="item.borderColor"
+            [showBorder]="item.showBorder"
+            (click)="handleButtonClick(item.value)">
+          </ui-button>
+        }
+      </div>
+
+    </div>
+  </div>
+}

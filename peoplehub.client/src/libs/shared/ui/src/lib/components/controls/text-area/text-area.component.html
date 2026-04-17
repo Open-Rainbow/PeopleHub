@@ -1,0 +1,46 @@
+<div class="relative w-full" [formGroup]="parentFormGroup">
+ 
+  <textarea
+  [formControl]="control"
+  [id]="id"
+  (input)="onInput($event)"
+  [placeholder]="Placeholder"
+  [attr.maxlength]="maxLength"
+  [class.border]="showBorder"
+  [class.border-slate-300]="showBorder"
+  [class.border-0]="!showBorder"
+  [class.error]="isInvalid"
+  [ngStyle]="getTextareaStyle()"
+  class="peer w-full h-32 p-2 text-[14px] text-gray-800 rounded-md outline-none transition bg-white resize-none
+         placeholder-transparent focus:placeholder-gray-400 border border-slate-300 
+         h-full rounded-[6px] border-[#e2e8f0]"
+  (focus)="onFocus()"
+  (blur)="onBlur($event)">
+</textarea>
+ 
+  <label
+  [for]="id"
+  class="absolute left-3 bg-white px-1 transition-all duration-200 ease-out pointer-events-none text-gray-500 font-medium whitespace-nowrap"
+  [class.-top-2.5]="currentValue || isFocused"
+  [class.text-xs]="currentValue || isFocused"
+   [ngClass]="{ '!top-[25%] !-translate-y-1/2': !currentValue && !isFocused }"
+  [class.text-sm]="!currentValue && !isFocused"
+  [class.text-blue-600]="isFocused"
+>
+  {{ label }}
+  @if (isRequired) {
+    <span class="text-red-500 ml-0.5">*</span>
+  }
+</label>
+ 
+  @if (showCharCount) {
+    <p
+      [ngStyle]="{ color: isInvalid ? '#dc2626' : '#000000' }"
+      class="text-[11px] font-medium text-left mt-1 transition-opacity duration-200"
+      [class.opacity-100]="shouldShowCount"
+      [class.opacity-0]="!shouldShowCount"
+    >
+      {{ currentCharCount }} of {{ maxLength }} characters left
+    </p>
+  }
+</div>

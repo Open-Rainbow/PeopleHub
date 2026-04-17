@@ -1,0 +1,25 @@
+<div class="parent" [formGroup]="parentFormGroup">
+  <div class="w-full flex flex-col font-sans" [class.error]="isInvalid">
+    
+    <div class="flex items-center gap-1">
+      <div class="text-sm text-gray-500 font-medium mb-1">{{ label }}</div>
+      @if (isRequired) {
+        <span class="text-red-600 text-base font-semibold -mt-3">*</span>
+      }
+    </div>
+    
+    @if (!isEditMode) {
+      <div class="text-base text-gray-900 font-bold">{{ value }}</div>
+    } @else {
+      <input 
+       class="edit-input" 
+        type="text"
+        [(ngModel)]="editableValue"
+        [formControlName]="id" 
+        (ngModelChange)="onValueChange($event)"
+        [required]="isRequired">
+        <!--  class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" 
+         -->
+    }
+  </div>
+</div>

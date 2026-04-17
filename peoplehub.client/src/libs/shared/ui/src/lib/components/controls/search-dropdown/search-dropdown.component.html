@@ -1,0 +1,46 @@
+<div class="w-full h-full bg-white rounded-[9px] p-5 border-none" [formGroup]="parentFormGroup">
+  <div class="w-full border-none">
+
+    <div
+      class="h-9 flex items-center bg-[#f3f3f5] rounded-lg px-3.5 py-2.5 border-none transition-all duration-300 ease-in-out focus-within:bg-white"
+      [class.flex-row-reverse]="iconPosition === 'right'"
+      [class.shadow-[inset_0_0_0_1px_var(--border-color,#2563eb)]]="showBorder"
+      [class.focus-within:shadow-[0_0_0_3px_color-mix(in_srgb,var(--border-color,#2563eb)_50%,transparent)]]="showBorder"
+      [style.--border-color]="borderColor"
+    >
+
+      <!-- Icon -->
+      <ui-icon
+        *ngIf="showIcon"
+        class="text-gray-600 text-[18px] min-w-[20px] flex items-center justify-center"
+        [class.mr-2.5]="iconPosition === 'left'"
+        [class.ml-2.5]="iconPosition === 'right'"
+        [name]="'iconamoon:search'">
+      </ui-icon>
+
+      <!-- Input -->
+      <input
+        type="text"
+        class="w-full bg-transparent border-none outline-none text-[15px] text-gray-800 placeholder:text-gray-400"
+        [class.ml-2.5]="showIcon && iconPosition === 'left'"
+        [class.mr-2.5]="showIcon && iconPosition === 'right'"
+        [placeholder]="placeholderText"
+        [(ngModel)]="searchText"
+        (input)="filterList()"
+      />
+
+    </div>
+
+    @if (filteredList.length > 0) {
+      <ul class="mt-2.5 p-1.5 rounded w-[80%] bg-[aquamarine] text-lg">
+        @for (emp of filteredList; track emp) {
+          <li>
+            {{ emp.name }} - {{ emp.email }}
+            <hr>
+          </li>
+        }
+      </ul>
+    }
+
+  </div>
+</div>
