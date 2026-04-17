@@ -1,64 +1,17 @@
 :host {
   display: block;
 }
-/* Make the rounded cards more like the design: larger border-radius */
-/* .rounded-full {
-  border-radius: 9999px;
-} */
-/* Adjust shadows for cards to be soft */
+
+
+
 .shadow {
   box-shadow: 0 6px 20px rgba(16,24,40,0.06);
 }
-/* Thin vertical line for connectors */
-/* .connector-vertical {
-  width: 2px;
-  background: #e5e7eb;
-  height: 24px;
-  margin: 0 auto;
-} */
-/* Responsive tweaks for small screens */
+
+
+
 @media (max-width: 640px) {
   .max-w-7xl { padding-left: 1rem; padding-right: 1rem; }
 }
 
-/* Horizontal scroll ONLY for org chart component */
-/* .org-chart-scroll {
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-}
 
-.org-chart-scroll {
-  scroll-behavior: smooth;
-}
-
-.org-chart-scroll::-webkit-scrollbar {
-  height: 8px;
-}
-.org-chart-scroll::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-}
-
-.org-chart-scroll {
-  position: relative;
-  overflow-x: auto !important;
-  overflow-y: hidden;
-  max-width: 100%;
-}
-
-.org-chart-scroll {
-  width: calc(100vw - 260px);
-}
-
-.org-chart-scroll > div {
-  min-width: 1636px;
-}
-
-.org-chart-scroll {
-  border: 3px solid red;
-}
-
-.org-chart-scroll > div {
-  min-width: 2000px !important;
-} */

@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { ButtonListComponent } from './button-list.component';
 
 type Story = StoryObj<ButtonListComponent>;
 
 const meta: Meta<ButtonListComponent> = {
   component: ButtonListComponent,
-  title: 'ui-button-list',
+  title: 'UI/Primitives/Button List',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

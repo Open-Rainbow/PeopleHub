@@ -1,19 +1,4 @@
-<!-- <div class="form-group" [formGroup]="parentFormGroup">
-  <label for="numbers">{{label}}
-    <span *ngIf="isRequired">*</span>
-  </label>
 
-  <input
-    type="number"
-    id="numbers"
-        [formControlName]="id"       
-    [placeholder]="Placeholder"
-    (input)="onInput($event)"
-    (blur)="onBlur()"
-    class="w-full"
-    [class.error]="isInvalid"
-  />
-</div> -->
 
 <div class="relative w-full" [formGroup]="activeForm">
 
@@ -22,7 +7,7 @@
     step="1"
     [id]="id"
     [formControlName]="id"
-    [placeholder]="Placeholder"
+    [placeholder]="placeholder"
     (input)="onInput($event)"
     (blur)="onBlur()"
     [class.border-red-600]="isInvalid"
@@ -62,7 +47,7 @@
     }
   </label>
 
-  <!-- Number Spinner -->
+  
   <div class="absolute right-[10px] top-1/2 -translate-y-1/2
               flex flex-col gap-0 z-[50]">
 

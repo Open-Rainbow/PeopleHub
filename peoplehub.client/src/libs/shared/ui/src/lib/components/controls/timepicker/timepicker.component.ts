@@ -28,8 +28,6 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
 
    @Input() parentFormGroup!: FormGroup;
   @Input() id!: string;
-
-  // ADD these 2 getters
   get control() {
     return this.parentFormGroup?.get(this.id);
   }
@@ -323,8 +321,6 @@ onBlur() {
         col!.nativeElement.classList.toggle('smooth', enable);
       });
   }
-
-  // Public getters
   get hours(): number { return this._time.hours; }
   get minutes(): number { return this._time.minutes; }
   get seconds(): number { return this._time.seconds; }

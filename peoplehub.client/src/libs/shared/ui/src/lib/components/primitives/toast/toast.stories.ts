@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { ToastComponent } from './toast.component';
 
 type Story = StoryObj<ToastComponent>;
 
 const meta: Meta<ToastComponent> = {
   component: ToastComponent,
-  title: 'ui-toast',
+  title: 'UI/Primitives/Toast',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -19,9 +19,9 @@ const meta: Meta<ToastComponent> = {
       control: 'text',
       description: 'title property',
     },
-    subTitle: {
+    subtitle: {
       control: 'text',
-      description: 'subTitle property',
+      description: 'subtitle property',
     },
     icon: {
       control: 'text',
@@ -44,7 +44,7 @@ export const Default: Story = {
   args: {
     'type': 'normal',
     'title': 'Hi',
-    'subTitle': 'Hello, world! This is a Toast message.',
+    'subtitle': 'Hello, world! This is a Toast message.',
     'icon': 'home',
     'position': 'top-center',
     'duration': 5000

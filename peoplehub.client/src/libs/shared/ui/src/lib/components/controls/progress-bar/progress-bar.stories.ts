@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { ProgressBarComponent } from './progress-bar.component';
 
 type Story = StoryObj<ProgressBarComponent>;
 
 const meta: Meta<ProgressBarComponent> = {
   component: ProgressBarComponent,
-  title: 'ui-progress-bar',
+  title: 'UI/Controls/Progress Bar',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

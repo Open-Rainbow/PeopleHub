@@ -61,7 +61,6 @@ export class HorizontalBarChartComponent implements OnInit, OnDestroy {
   }
 
   createChart() {
-    // const dashArray = this.gridLineStyle === 'dashed' ? [1, 8] : this.gridLineStyle === 'dotted' ? [1, 3] : [];
     const dashArray = this.gridLineStyle === 'dashed' ? [6, 4] : this.gridLineStyle === 'dotted' ? [1, 3] : [];
     const baseDatasets = this.data.map((datasetData, index) => ({
       label: this.datasetLabels[index] || `Series ${index + 1}`,
@@ -72,8 +71,6 @@ export class HorizontalBarChartComponent implements OnInit, OnDestroy {
       borderSkipped: false,
       borderWidth: 1,
       borderColor: 'transparent',
-      // borderWidth: this.whiteTheme ? 1 : 1,
-      // borderColor: this.whiteTheme ? 'transparent' : 'transparent',
     }));
     const datasets = this.showData
       ? baseDatasets
@@ -137,9 +134,7 @@ export class HorizontalBarChartComponent implements OnInit, OnDestroy {
         },
         scales: {
           x: {
-            // beginAtZero: true,
              stacked: this.singleLine,
-            // stacked: true,
             grid: this.getGridConfig('x'),
 
             ticks: {
@@ -157,9 +152,7 @@ export class HorizontalBarChartComponent implements OnInit, OnDestroy {
             }
           },
           y: {
-            // beginAtZero: true,
              stacked: this.singleLine,
-            // stacked: true,
             grid: this.getGridConfig('y'),
             ticks: {
               display: this.showLabels,

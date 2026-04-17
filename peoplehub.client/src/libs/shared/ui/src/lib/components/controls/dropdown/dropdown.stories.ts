@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { DropdownComponent } from './dropdown.component';
 
 type Story = StoryObj<DropdownComponent>;
 
 const meta: Meta<DropdownComponent> = {
   component: DropdownComponent,
-  title: 'ui-dropdown',
+  title: 'UI/Controls/Dropdown',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -15,9 +15,9 @@ const meta: Meta<DropdownComponent> = {
       control: 'text',
       description: 'label property',
     },
-    placeHolder: {
+    placeholder: {
       control: 'text',
-      description: 'placeHolder property',
+      description: 'placeholder property',
     },
     isRequired: {
       control: 'boolean',
@@ -39,9 +39,9 @@ const meta: Meta<DropdownComponent> = {
       control: 'text',
       description: 'selectedValue property',
     },
-    dropDownModel: {
+    dropdownModel: {
       control: 'text',
-      description: 'dropDownModel property',
+      description: 'dropdownModel property',
     },
   },
 };
@@ -51,11 +51,11 @@ export default meta;
 export const Default: Story = {
   args: {
     label: 'Gender',
-    placeHolder: 'Select Gender',
+    placeholder: 'Select Gender',
     isRequired: false,
     options: null,
     selectedValue: null,
-    dropDownModel: ''
+    dropdownModel: ''
 },
 };
 

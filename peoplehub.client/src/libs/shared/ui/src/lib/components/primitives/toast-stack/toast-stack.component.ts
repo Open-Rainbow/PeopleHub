@@ -21,13 +21,10 @@ export class ToastStackComponent {
     | 'bottom-left'
     | 'bottom-center'
     | 'bottom-right' = 'top-right';
-  // @Input() type: 'normal' | 'warning' | 'alert' | 'success' = 'normal';
-  //   @Input() duration = 3000;
 
   @Input() toasts: ToastMessage[] = [];
   @Output() toastClosed = new EventEmitter<number>();
   removeToast(id: number) {
-    // this.toasts = this.toasts.filter(t => t.id !== id);
     this.toastClosed.emit(id);
   }
 

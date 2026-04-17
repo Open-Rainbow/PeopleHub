@@ -9,16 +9,12 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 })
 export class LabelValueComponent {
   @Input() label?: string = 'Employee ID';
-  @Input() value!: string;  // Already bound data
+  @Input() value!: string;
   @Input() isRequired: boolean = false;
   @Input() isEditMode: boolean = false;
 
    @Input() parentFormGroup!: FormGroup;
   @Input() id!: string;
-  
-
-
-  // ADD these 2 getters
   get control() {
     return this.parentFormGroup?.get(this.id);
   }
@@ -26,13 +22,9 @@ export class LabelValueComponent {
   get isInvalid() {
     return this.control?.invalid && (this.control?.dirty || this.control?.touched);
   }
-
-  
-  // Local editable copy
   editableValue: string = '';
 
   ngOnChanges() {
-    // Initialize editable value when entering edit mode or data changes
     if (this.isEditMode) {
       this.editableValue = this.value || '';
     }
@@ -40,6 +32,5 @@ export class LabelValueComponent {
 
   onValueChange(value: string) {
     this.editableValue = value;
-    // Emit change if needed, or update parent via @ViewChild/service
   }
 }

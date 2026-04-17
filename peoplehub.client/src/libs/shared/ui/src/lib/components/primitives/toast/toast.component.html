@@ -16,17 +16,17 @@
       'bg-green-600 text-white': type === 'success'
     }"
   >
-<!-- Left Content -->
+
     <div class="flex items-center gap-2 flex-grow">
       <ui-icon class="text-lg" [name]="icon"></ui-icon>
 
       <div class="text-sm break-words min-w-0">
         <div class="font-bold">{{ title }}</div>
-        <div>{{ subTitle }}</div>
+        <div>{{ subtitle }}</div>
       </div>
     </div>
 
-    <!-- Close Button -->
+    
     <div
       class="cursor-pointer text-lg flex items-center hover:text-gray-400"
       (click)="closeToast()"
@@ -34,7 +34,7 @@
       <ui-icon name="mdi:multiply"></ui-icon>
     </div>
 
-    <!-- Progress Bar -->
+    
     <div class="absolute bottom-0 left-0 h-1 w-full">
       <div
         class="h-full transition-all duration-100"

@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { EmployeeOrgChartComponent } from './employee-org-chart.component';
 
 type Story = StoryObj<EmployeeOrgChartComponent>;
 
 const meta: Meta<EmployeeOrgChartComponent> = {
   component: EmployeeOrgChartComponent,
-  title: 'ui-employee-org-chart',
+  title: 'UI/Charts/Employee Org Chart',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

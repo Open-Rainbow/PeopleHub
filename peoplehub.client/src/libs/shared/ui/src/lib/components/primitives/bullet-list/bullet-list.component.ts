@@ -10,7 +10,7 @@ import { IconComponent } from '../icon/icon.component';
 })
 export class BulletListComponent {
 
-  @Input() mode: 'bullet' | 'icon' | 'number' | 'alphabet' = 'bullet'; // Added 'alphabet' type
+  @Input() mode: 'bullet' | 'icon' | 'number' | 'alphabet' = 'bullet';
 
   constructor(
     private vcr: ViewContainerRef,
@@ -64,8 +64,8 @@ export class BulletListComponent {
     }
     if (this.mode === 'alphabet') {
       const index = Array.from(prevLi.parentElement!.children).indexOf(prevLi);
-      const alphabet = this.getAlphabetSequence(index + 1); // +1 because we're creating a new item after current
-      prefix.innerHTML = `${alphabet}.`;
+      const alphabet = this.getAlphabetSequence(index + 1);
+      prefix.innerHTML = `${alphabet}`;
     }
 
     const text = document.createElement('span');

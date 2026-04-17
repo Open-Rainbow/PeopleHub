@@ -1,8 +1,5 @@
-﻿export * from './lib/services/ui.service';
+export * from './lib/services/ui.service';
 export * from './lib/ui.component';
-
-
-//controls
 export { ButtonComponent } from './lib/components/controls/button/button.component';
 export { CalendarTimerComponent } from './lib/components/controls/calendar-timer/calendar-timer.component';
 export { CalendarComponent } from './lib/components/controls/calendar/calendar.component';
@@ -26,8 +23,6 @@ export { TextBoxComponent } from './lib/components/controls/text-box/text-box.co
 export { TimepickerComponent } from './lib/components/controls/timepicker/timepicker.component';
 export { ToggleComponent } from './lib/components/controls/toggle/toggle.component';
 export { ValueDropdownComponent } from './lib/components/controls/value-dropdown/value-dropdown.component';
-
-// primitives
 export * from './lib/components/primitives/a4-doc/a4-doc.component';
 export * from './lib/components/primitives/accordion/accordion.component';
 export * from './lib/components/primitives/bullet-list/bullet-list.component';
@@ -45,8 +40,6 @@ export * from './lib/components/primitives/pagination/pagination.component';
 export * from './lib/components/primitives/table/table.component';
 export * from './lib/components/primitives/toast-stack/toast-stack.component';
 export * from './lib/components/primitives/toast/toast.component';
-
-// charts
 export * from './lib/components/charts/dial-chart/dial-chart.component';
 export * from './lib/components/charts/doughnut-chart/doughnut-chart.component';
 export * from './lib/components/charts/employee-org-chart/employee-org-chart.component';

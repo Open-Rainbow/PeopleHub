@@ -16,13 +16,13 @@ export class ButtonComponent {
   @Input() text?: string = 'text';
   @Input() bgColor?: string = 'white';
   @Input() color?: string = 'red';
-  @Input() hoverBGColor?: string = 'red';
+  @Input() hoverBgColor?: string = 'red';
   @Input() hoverColor?: string = 'black';
   @Input() borderRadius?: number = 8;
   @Input() borderColor?: string = 'blue';
   @Input() showBorder?: boolean = true;
   @Input() disable?: boolean = false;
-  @Input() isexpand?: boolean = false;
+  @Input() isExpand?: boolean = false;
   @Input() iconName?: string = '';
   @Input() iconPosition?: 'left' | 'right' |  'both' = 'left';
   @Input() borderStyle: 'solid' | 'dashed' | 'dotted' = 'solid';

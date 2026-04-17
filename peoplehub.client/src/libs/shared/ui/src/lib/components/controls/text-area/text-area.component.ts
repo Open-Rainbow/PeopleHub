@@ -23,7 +23,7 @@ import { takeUntil } from 'rxjs/operators';
 export class TextAreaComponent implements OnInit, OnDestroy, OnChanges  {
 
   @Input() label?: string = 'Text Area';
-  @Input() Placeholder?: string = 'Enter text area';
+  @Input() placeholder?: string = 'Enter text area';
   @Input() isRequired?: boolean = true;
   @Input() showBorder: boolean = true;
   @Input() maxLength: number = 20;
@@ -54,8 +54,6 @@ export class TextAreaComponent implements OnInit, OnDestroy, OnChanges  {
   }
 
   ngOnInit(): void {
-
-  // ✅ Add validators dynamically
   this.control.setValidators([
     ...(this.isRequired ? [Validators.required] : []),
     ...(this.minLength > 0 ? [Validators.minLength(this.minLength)] : []),
@@ -105,12 +103,10 @@ export class TextAreaComponent implements OnInit, OnDestroy, OnChanges  {
   onInput(event: Event) {
   const textarea = event.target as HTMLTextAreaElement;
   let value = textarea.value;
-
-  // Enforce strict max length
   if (value.length > this.maxLength) {
     value = value.substring(0, this.maxLength);
-    textarea.value = value; // update UI
-    this.control.setValue(value, { emitEvent: false }); // update FormControl without loop
+    textarea.value = value;
+    this.control.setValue(value, { emitEvent: false });
   }
 
   this.currentValue = value;
@@ -129,8 +125,6 @@ export class TextAreaComponent implements OnInit, OnDestroy, OnChanges  {
 
   const textarea = event.target as HTMLTextAreaElement;
   this.currentValue = textarea.value;
-
-  // ✅ Mark as touched so validation triggers
   this.control.markAsTouched();
   this.control.updateValueAndValidity();
 

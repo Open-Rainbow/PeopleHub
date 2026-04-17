@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { DetailedCalendarComponent } from './detailed-calendar.component';
 
 type Story = StoryObj<DetailedCalendarComponent>;
 
 const meta: Meta<DetailedCalendarComponent> = {
   component: DetailedCalendarComponent,
-  title: 'ui-detailed-calendar',
+  title: 'UI/Controls/Detailed Calendar',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

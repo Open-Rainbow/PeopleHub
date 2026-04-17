@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { HorizontalBarChartComponent } from './horizontal-bar-chart.component';
 
 type Story = StoryObj<HorizontalBarChartComponent>;
 
 const meta: Meta<HorizontalBarChartComponent> = {
   component: HorizontalBarChartComponent,
-  title: 'ui-horizontal-bar-chart',
+  title: 'UI/Charts/Horizontal Bar Chart',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

@@ -1,4 +1,4 @@
-﻿import { DropdownValues } from "../../../models/common.model";
+import { DropdownValues } from "../../../models/common.model";
 
 export const commonObjectConfig = {
     calendarDropDown: [

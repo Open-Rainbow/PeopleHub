@@ -71,39 +71,7 @@ export class SearchBarComponent implements OnInit {
     );
 
     this.showIntelegiencebox = true;
-    // this.showIntelegiencebox = this.filteredSuggestions.length > 0;
   }
-
-
-  // ngOnInit() {
-  //   this.searchControl.valueChanges.subscribe(value => {
-
-  //     if (!this.enableIntelligenceBox && value || value?.length == 0) {
-  //       this.onSelect.emit(value);
-  //       if (value?.length == 0) {
-  //         this.showIntelegiencebox = false;
-  //       }
-  //       return;
-  //     }
-  //     this.filterData(value ?? '');
-  //   });
-  // }
-
-  // filterData(query: string) {
-  //   if (!query.trim()) {
-  //     this.filteredSuggestions = [];
-  //     this.showIntelegiencebox = false;
-  //     return;
-  //   }
-
-  //   const lowerQuery = query.toLowerCase();
-
-  //   this.filteredSuggestions = this.searchData.filter(item =>
-  //     item.toLowerCase().includes(lowerQuery)
-  //   );
-
-  //   this.showIntelegiencebox = this.filteredSuggestions.length > 0;
-  // }
 
   selectSuggestion(value: string) {
     this.searchControl.setValue(value, { emitEvent: false });

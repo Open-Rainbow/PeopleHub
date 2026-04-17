@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { SearchDropdownComponent } from './search-dropdown.component';
 
 type Story = StoryObj<SearchDropdownComponent>;
 
 const meta: Meta<SearchDropdownComponent> = {
   component: SearchDropdownComponent,
-  title: 'ui-search-dropdown',
+  title: 'UI/Controls/Search Dropdown',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

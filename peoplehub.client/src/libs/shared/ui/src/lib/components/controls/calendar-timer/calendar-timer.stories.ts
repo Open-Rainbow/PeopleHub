@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { CalendarTimerComponent } from './calendar-timer.component';
 
 type Story = StoryObj<CalendarTimerComponent>;
 
 const meta: Meta<CalendarTimerComponent> = {
   component: CalendarTimerComponent,
-  title: 'ui-calendar-timer',
+  title: 'UI/Controls/Calendar Timer',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

@@ -193,9 +193,6 @@ export class SpinningChartComponent
         maintainAspectRatio: false,
         cutout: '80%',
         circumference: 360,
-        // animation:{
-        //   duration: isInvalid ? 0 : 1000,
-        // },
         plugins: {
           legend: { display: false },
           tooltip: { enabled: false },

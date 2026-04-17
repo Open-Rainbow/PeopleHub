@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { ButtonComponent } from './button.component';
 
 type Story = StoryObj<ButtonComponent>;
 
 const meta: Meta<ButtonComponent> = {
   component: ButtonComponent,
-  title: 'ui-button',
+  title: 'UI/Controls/Button',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -23,9 +23,9 @@ const meta: Meta<ButtonComponent> = {
       control: 'text',
       description: 'color property',
     },
-    hoverBGColor: {
+    hoverBgColor: {
       control: 'text',
-      description: 'hoverBGColor property',
+      description: 'hoverBgColor property',
     },
     hoverColor: {
       control: 'text',
@@ -47,9 +47,9 @@ const meta: Meta<ButtonComponent> = {
       control: 'boolean',
       description: 'disable property',
     },
-    isexpand: {
+    isExpand: {
       control: 'boolean',
-      description: 'isexpand property',
+      description: 'isExpand property',
     },
     iconName: {
       control: 'text',
@@ -81,13 +81,13 @@ export const Default: Story = {
     'text': 'text',
     'bgColor': 'white',
     'color': 'red',
-    'hoverBGColor': 'red',
+    'hoverBgColor': 'red',
     'hoverColor': 'black',
     'borderRadius': 8,
     'borderColor': 'blue',
     'showBorder': true,
     'disable': false,
-    'isexpand': false,
+    'isExpand': false,
     'iconName': '',
     'iconPosition': 'left',
     'borderStyle': 'solid'
@@ -99,13 +99,13 @@ export const Disabled: Story = {
     'text': 'text',
     'bgColor': 'white',
     'color': 'red',
-    'hoverBGColor': 'red',
+    'hoverBgColor': 'red',
     'hoverColor': 'black',
     'borderRadius': 8,
     'borderColor': 'blue',
     'showBorder': true,
     'disable': true,
-    'isexpand': false,
+    'isExpand': false,
     'iconName': '',
     'iconPosition': 'left',
     'borderStyle': 'solid'
@@ -117,13 +117,13 @@ export const Colored: Story = {
     'text': 'text',
     'bgColor': '#FF5733',
     'color': 'red',
-    'hoverBGColor': 'red',
+    'hoverBgColor': 'red',
     'hoverColor': 'black',
     'borderRadius': 8,
     'borderColor': 'blue',
     'showBorder': true,
     'disable': false,
-    'isexpand': false,
+    'isExpand': false,
     'iconName': '',
     'iconPosition': 'left',
     'borderStyle': 'solid'

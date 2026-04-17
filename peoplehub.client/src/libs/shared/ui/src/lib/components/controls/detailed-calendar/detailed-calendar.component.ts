@@ -94,7 +94,7 @@ export class DetailedCalendarComponent implements OnInit {
   }
 
   formatDate(d: Date): string {
-    return d.toISOString().split("T")[0]; // yyyy-mm-dd
+    return d.toISOString().split("T")[0];
   }
   getEventsForDate(dateString: string) {
     return this.events
@@ -147,8 +147,6 @@ export class DetailedCalendarComponent implements OnInit {
       .sort((a, b) => a.startMinutes - b.startMinutes);
 
     if (dayEvents.length === 0) return [];
-
-    // 2. Build clusters of overlapping events
     const clusters: CalendarPositionedEvent[][] = [];
     let currentCluster: CalendarPositionedEvent[] = [];
     let clusterEnd = -1;
@@ -158,11 +156,9 @@ export class DetailedCalendarComponent implements OnInit {
         currentCluster.push(evt);
         clusterEnd = evt.endMinutes;
       } else if (evt.startMinutes < clusterEnd) {
-        // overlaps current cluster
         currentCluster.push(evt);
         clusterEnd = Math.max(clusterEnd, evt.endMinutes);
       } else {
-        // no overlap -> new cluster
         clusters.push(currentCluster);
         currentCluster = [evt];
         clusterEnd = evt.endMinutes;
@@ -593,9 +589,6 @@ export class DetailedCalendarComponent implements OnInit {
     this.currentDate = new Date(today);
     this.defaultDate = new Date(today);
     this.selectedDate = new Date(today);
-
-
-    // ---------------- MONTH VIEW ----------------
     if (this.currentView === 'month') {
       this.currentMonth = today.getMonth();
       this.currentYear = today.getFullYear();
@@ -603,8 +596,6 @@ export class DetailedCalendarComponent implements OnInit {
       this.dateSelected.emit(today);
       return;
     }
-
-    // ---------------- WEEK VIEW ----------------
     if (this.currentView === 'week') {
       this.currentMonth = today.getMonth();
       this.currentYear = today.getFullYear();
@@ -624,8 +615,6 @@ export class DetailedCalendarComponent implements OnInit {
       this.updateWeekHeader();
       return;
     }
-
-    // ---------------- DAY VIEW ----------------
     if (this.currentView === 'day') {
       this.currentMonth = today.getMonth();
       this.currentYear = today.getFullYear();
@@ -686,7 +675,7 @@ export class DetailedCalendarComponent implements OnInit {
 
   isWeekCellSelected(date: Date, hour: string): boolean {
     const keyDate = date.toISOString().split("T")[0];
-    const slotHour = this.parseHour(hour); // 0-23
+    const slotHour = this.parseHour(hour);
     const key = `${keyDate}-${slotHour}`;
     return !!this.selectedWeekCells[key];
   }

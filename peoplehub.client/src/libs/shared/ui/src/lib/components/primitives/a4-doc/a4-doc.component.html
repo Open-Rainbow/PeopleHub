@@ -1,19 +1,19 @@
-<!-- A4 paper styled container -->
+
 <div
   class="bg-white shadow-lg mx-auto my-10  max-w-[210mm] w-full min-h-[297mm] box-border print:p-0 print:min-h-auto flex flex-col"
 >
 <div class="p-16">
-  <!-- Header displaying the document type -->
+  
   <header class="mb-8 border-b border-gray-300 pb-4">
     <h1 class="text-2xl font-bold text-center">{{ docType }}</h1>
   </header>
 
-  <!-- Main content area now uses content projection -->
+  
   <section class="prose max-w-none flex-grow">
     <ng-content></ng-content>
   </section>
 
-  <!-- Footer for additional info -->
+  
   <footer
     class="mt-8 pt-4 border-t border-gray-300 text-sm text-center text-gray-500"
   >

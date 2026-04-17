@@ -302,7 +302,7 @@ export class LeaveCategoriesGroup {
 export interface ToastMessage {
   id: number;
   title?: string;
-  subTitle?: string;
+  subtitle?: string;
   type?: 'normal' | 'warning' | 'alert' | 'success';
   duration?: number;
   icon?: string;

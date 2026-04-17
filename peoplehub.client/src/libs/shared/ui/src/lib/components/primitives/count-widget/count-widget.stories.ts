@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { CountWidgetComponent } from './count-widget.component';
 
 type Story = StoryObj<CountWidgetComponent>;
 
 const meta: Meta<CountWidgetComponent> = {
   component: CountWidgetComponent,
-  title: 'ui-count-widget',
+  title: 'UI/Primitives/Count Widget',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -43,13 +43,13 @@ const meta: Meta<CountWidgetComponent> = {
       control: 'text',
       description: 'labelPosition property',
     },
-    lebelsize: {
+    labelSize: {
       control: 'text',
-      description: 'lebelsize property',
+      description: 'labelSize property',
     },
-    valuesize: {
+    valueSize: {
       control: 'text',
-      description: 'valuesize property',
+      description: 'valueSize property',
     },
   },
 };
@@ -66,8 +66,8 @@ export const Default: Story = {
     'backgroundColor': 'white',
     'showBorder': true,
     'labelPosition': 'top',
-    'lebelsize': '14px',
-    'valuesize': '24px'
+    'labelSize': '14px',
+    'valueSize': '24px'
 },
 };
 
@@ -81,7 +81,7 @@ export const Colored: Story = {
     'backgroundColor': 'white',
     'showBorder': true,
     'labelPosition': 'top',
-    'lebelsize': '14px',
-    'valuesize': '24px'
+    'labelSize': '14px',
+    'valueSize': '24px'
 },
 };

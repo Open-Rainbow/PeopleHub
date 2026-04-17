@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { CheckboxComponent } from './checkbox.component';
 
 type Story = StoryObj<CheckboxComponent>;
 
 const meta: Meta<CheckboxComponent> = {
   component: CheckboxComponent,
-  title: 'ui-checkbox',
+  title: 'UI/Controls/Checkbox',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

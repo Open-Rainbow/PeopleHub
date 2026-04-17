@@ -8,8 +8,8 @@
     class="flex items-center justify-center w-full h-full gap-2" [ngStyle]="{
       'flex-direction': labelPosition === 'top' ? 'column' : 'column-reverse'
     }">
-      <span [style.color]="labelColor" [style.fontSize]="lebelsize" class="font-[Inter] leading-none whitespace-nowrap text-center text-[clamp(8px,2vw,22px)]">{{ label }}</span>
-      <span [style.color]="valueColor" [style.fontSize]="valuesize" class="font-[Inter] leading-none whitespace-nowrap text-center text-[clamp(8px,2vw,22px)] font-semibold">{{ value }}</span>
+      <span [style.color]="labelColor" [style.fontSize]="labelSize" class="font-[Inter] leading-none whitespace-nowrap text-center text-[clamp(8px,2vw,22px)]">{{ label }}</span>
+      <span [style.color]="valueColor" [style.fontSize]="valueSize" class="font-[Inter] leading-none whitespace-nowrap text-center text-[clamp(8px,2vw,22px)] font-semibold">{{ value }}</span>
     </div>
   }
 
@@ -18,8 +18,8 @@
     class="flex items-center justify-center w-full h-full gap-2" [ngStyle]="{
       'flex-direction': labelPosition === 'before' ? 'row' : 'row-reverse'
     }">
-      <span [style.color]="labelColor" [style.fontSize]="lebelsize" class="font-[Inter] leading-none whitespace-nowrap text-center text-[clamp(8px,2vw,22px)]">{{ label }}</span>
-      <span [style.color]="valueColor" [style.fontSize]="valuesize" class="font-[Inter] leading-none whitespace-nowrap text-center text-[clamp(8px,2vw,22px)] font-semibold">{{ value }}</span>
+      <span [style.color]="labelColor" [style.fontSize]="labelSize" class="font-[Inter] leading-none whitespace-nowrap text-center text-[clamp(8px,2vw,22px)]">{{ label }}</span>
+      <span [style.color]="valueColor" [style.fontSize]="valueSize" class="font-[Inter] leading-none whitespace-nowrap text-center text-[clamp(8px,2vw,22px)] font-semibold">{{ value }}</span>
     </div>
   }
 

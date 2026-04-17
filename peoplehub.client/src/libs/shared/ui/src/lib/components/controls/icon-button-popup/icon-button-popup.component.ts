@@ -20,7 +20,7 @@ export class IconButtonPopupComponent {
   @Input() iconName: string = 'info'; 
   @Input() bgColor: string = 'white';
   @Input() color: string = 'red';
-  @Input() hoverBGColor: string = 'red';
+  @Input() hoverBgColor: string = 'red';
   @Input() hoverColor: string = 'white';
   @Input() borderRadius: number = 8;
   @Input() borderColor: string = 'blue';

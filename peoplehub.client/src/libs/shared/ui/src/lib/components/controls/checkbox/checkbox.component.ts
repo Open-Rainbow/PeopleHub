@@ -67,7 +67,7 @@ export class CheckboxComponent implements OnChanges {
     if (ctrl) ctrl.setValue(this.checked);
   }
 
-  /* CSS variable bindings */
+  
   @HostBinding('style.--checkbox-active-color')
   get checkboxColor() {
     return this.color;

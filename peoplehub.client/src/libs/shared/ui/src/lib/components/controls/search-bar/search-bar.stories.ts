@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { SearchBarComponent } from './search-bar.component';
 
 type Story = StoryObj<SearchBarComponent>;
 
 const meta: Meta<SearchBarComponent> = {
   component: SearchBarComponent,
-  title: 'ui-search-bar',
+  title: 'UI/Controls/Search Bar',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

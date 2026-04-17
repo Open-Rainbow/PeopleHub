@@ -4,20 +4,20 @@
   [class.error]="isInvalid" [ngStyle]="{
     backgroundColor: disable
       ? '#e5e7eb'
-      : isHovered ? hoverBGColor : bgColor,
+      : isHovered ? hoverBgColor : bgColor,
     color: disable
       ? '#9ca3af'
       : isHovered ? hoverColor : color,
     borderRadius: borderRadius + 'px',
     borderColor: borderColor,
-    width: isexpand ? '100%' : 'auto',
+    width: isExpand ? '100%' : 'auto',
   }"
   (mouseenter)="!disable && (isHovered = true)"
   (mouseleave)="!disable && (isHovered = false)"
   (click)="!disable && createRipple($event)">
-    <!-- {{ text }} -->
+    
   
-  <!-- @if(iconName && (iconPosition === 'left' || iconPosition === 'both')){ -->
+  
     @if(iconName){
     <ng-container>
       <span class="flex items-center">

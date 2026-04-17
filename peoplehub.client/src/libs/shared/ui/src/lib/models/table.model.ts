@@ -64,7 +64,7 @@ export interface ImageCell extends BaseCell {
 }
 export interface UserCell extends BaseCell {
   type: TableCellType.USER;
-  value?: { title?: string; subTitle?: string };
+  value?: { title?: string; subtitle?: string };
 }
 
 export interface ValueDropdownCell extends BaseCell {
@@ -80,7 +80,7 @@ export interface IconPopoverCell extends BaseCell {
     description?: string;
     popupPosition?: 'top' | 'bottom' | 'left' | 'right';
     bgColor?: string;
-    hoverBGColor?: string;
+    hoverBgColor?: string;
     hoverColor?: string;
     popupBgColor?: string;
     popupTxtColor?: string;

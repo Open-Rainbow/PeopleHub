@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { SpinningChartComponent } from './spinning-chart.component';
 
 type Story = StoryObj<SpinningChartComponent>;
 
 const meta: Meta<SpinningChartComponent> = {
   component: SpinningChartComponent,
-  title: 'ui-spinning-chart',
+  title: 'UI/Charts/Spinning Chart',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

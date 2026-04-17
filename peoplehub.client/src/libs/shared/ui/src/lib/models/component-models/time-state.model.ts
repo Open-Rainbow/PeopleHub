@@ -1,4 +1,4 @@
-﻿export interface TimeState {
+export interface TimeState {
   hours: number;
   minutes: number;
   seconds: number;

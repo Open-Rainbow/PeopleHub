@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { IconButtonComponent } from './icon-button.component';
 
 type Story = StoryObj<IconButtonComponent>;
 
 const meta: Meta<IconButtonComponent> = {
   component: IconButtonComponent,
-  title: 'ui-icon-button',
+  title: 'UI/Controls/Icon Button',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -19,9 +19,9 @@ const meta: Meta<IconButtonComponent> = {
       control: 'text',
       description: 'color property',
     },
-    hoverBGColor: {
+    hoverBgColor: {
       control: 'text',
-      description: 'hoverBGColor property',
+      description: 'hoverBgColor property',
     },
     hoverColor: {
       control: 'text',
@@ -43,9 +43,9 @@ const meta: Meta<IconButtonComponent> = {
       control: 'boolean',
       description: 'disable property',
     },
-    isexpand: {
+    isExpand: {
       control: 'boolean',
-      description: 'isexpand property',
+      description: 'isExpand property',
     },
     iconName: {
       control: 'text',
@@ -68,13 +68,13 @@ export const Default: Story = {
   args: {
     bgColor: 'white',
     color: 'red',
-    hoverBGColor: 'red',
+    hoverBgColor: 'red',
     hoverColor: 'black',
     borderRadius: 6,
     borderColor: 'blue',
     showBorder: true,
     disable: false,
-    isexpand: false,
+    isExpand: false,
     iconName: 'home',
 },
 };
@@ -83,13 +83,13 @@ export const Disabled: Story = {
   args: {
     bgColor: 'white',
     color: 'red',
-    hoverBGColor: 'red',
+    hoverBgColor: 'red',
     hoverColor: 'black',
     borderRadius: 6,
     borderColor: 'blue',
     showBorder: true,
     disable: true,
-    isexpand: false,
+    isExpand: false,
     iconName: 'home',
 },
 };
@@ -98,13 +98,13 @@ export const Colored: Story = {
   args: {
     bgColor: '#FF5733',
     color: 'red',
-    hoverBGColor: 'red',
+    hoverBgColor: 'red',
     hoverColor: 'black',
     borderRadius: 6,
     borderColor: 'blue',
     showBorder: true,
     disable: false,
-    isexpand: false,
+    isExpand: false,
     iconName: 'home',
 },
 };

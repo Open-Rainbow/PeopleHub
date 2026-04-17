@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { OtpComponent } from './otp.component';
 
 type Story = StoryObj<OtpComponent>;
 
 const meta: Meta<OtpComponent> = {
   component: OtpComponent,
-  title: 'ui-otp',
+  title: 'UI/Controls/Otp',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { ScatterChartComponent } from './scatter-chart.component';
 
 type Story = StoryObj<ScatterChartComponent>;
 
 const meta: Meta<ScatterChartComponent> = {
   component: ScatterChartComponent,
-  title: 'ui-scatter-chart',
+  title: 'UI/Charts/Scatter Chart',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

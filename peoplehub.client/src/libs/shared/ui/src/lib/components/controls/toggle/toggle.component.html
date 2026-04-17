@@ -1,76 +1,15 @@
-<!-- <div
-class="toggle-container"
-[class.label-left]="labelPosition === 'left'"
-[style.--label-color]="labelColor"
->
-<label @ngIf="label" class="upload-label" for="toggle">{{ label }}</label>
- 
-<div class="switch-wrapper">
-  <input
-    type="checkbox"
-    id="toggle"
-    class="toggle-input"
-    [checked]="checked"
-    (change)="onToggle($event)"
-    />
-    <label
-      for="toggle"
-      class="toggle-label"
-      [class.on]="checked"
-      [style.--toggle-color]="color"
-    ></label>
-  </div>
-</div>
- 
--->
+
  
  
-<!-- <div
-class="toggle-container"
-[class.label-left]="labelPosition === 'left'"
-[style.--label-color]="labelColor"
->
-<label @ngIf="label" class="upload-label" for="toggle">{{ label }}</label>
- 
-<div class="switch-wrapper">
-  <input
-    type="checkbox"
-    id="toggle"
-    class="toggle-input"
-    [checked]="checked"
-    (change)="onToggle($event)"
-    />
-    <label
-      for="toggle"
-      class="toggle-label"
-      [class.on]="checked"
-      [ngClass]="size"
-      [style.--toggle-color]="color"
-      [style.--toggle-width]="toggleWidth"
-      [style.--toggle-height]="toggleHeight"
-      [style.--knob-size]="knobSize"
-      [style.--knob-translate]="knobTranslate"
-    ></label>
-  </div>
-</div> -->
+
  
  
-<!-- <label
-    [for]="id"
-    class="toggle-label"
-    [class.on]="checked"
-    [ngClass]="size"
-    [style.--toggle-color]="color"
-      [style.--toggle-width]="toggleWidth"
-       [style.--toggle-height]="toggleHeight"
-        [style.--knob-size]="knobSize"
-      [style.--knob-translate]="knobTranslate"
-      ></label> -->
+
  
  
 <div class="flex items-center justify-between gap-2">
  
-  <!-- LEFT LABEL -->
+  
    @if(labelPosition === 'left' || labelPosition === 'both'){
     <span
       class="text-sm transition-colors duration-200 cursor-pointer"
@@ -85,10 +24,10 @@ class="toggle-container"
    }
   
  
-  <!-- TOGGLE -->
+  
   <label class="relative inline-flex items-center cursor-pointer">
  
-    <!-- Hidden Input -->
+    
     <input
       type="checkbox"
       [checked]="checked"
@@ -96,7 +35,7 @@ class="toggle-container"
       class="peer sr-only"
     />
  
-    <!-- Background -->
+    
     <div
       class="
         w-[34px] h-[18px]
@@ -107,7 +46,7 @@ class="toggle-container"
       "
     ></div>
  
-    <!-- Knob -->
+    
     <div
       class="
         absolute
@@ -124,7 +63,7 @@ class="toggle-container"
  
   </label>
  
-  <!-- RIGHT LABEL -->
+  
   @if(labelPosition === 'right' || labelPosition === 'both'){
     <span
       class="text-sm transition-colors duration-200 cursor-pointer"

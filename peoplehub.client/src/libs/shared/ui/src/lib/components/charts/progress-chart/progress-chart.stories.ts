@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { ProgressChartComponent } from './progress-chart.component';
 
 type Story = StoryObj<ProgressChartComponent>;
 
 const meta: Meta<ProgressChartComponent> = {
   component: ProgressChartComponent,
-  title: 'ui-progress-chart',
+  title: 'UI/Charts/Progress Chart',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

@@ -23,7 +23,6 @@ export class ButtonListComponent {
   hoverId: number | null = null;
 
   selectButton(btn: ButtonListItem) {
-    // this.selectedId = btn.labelId;
     this.buttonClick.emit(btn);
   }
 

@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { DialChartComponent } from './dial-chart.component';
 
 type Story = StoryObj<DialChartComponent>;
 
 const meta: Meta<DialChartComponent> = {
   component: DialChartComponent,
-  title: 'ui-dial-chart',
+  title: 'UI/Charts/Dial Chart',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

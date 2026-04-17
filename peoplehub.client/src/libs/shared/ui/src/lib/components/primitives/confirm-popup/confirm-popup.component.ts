@@ -70,8 +70,6 @@ export class ConfirmPopupComponent implements OnInit, OnDestroy {
   @HostListener('document:keydown.enter', ['$event'])
 handleEnterKey(event: Event) {
   if (!this.showPopup || this.isClosing) return;
- 
-  // Click the OK button (first button)
   const okButton = this.data?.[0];
   if (okButton) {
     event.preventDefault();

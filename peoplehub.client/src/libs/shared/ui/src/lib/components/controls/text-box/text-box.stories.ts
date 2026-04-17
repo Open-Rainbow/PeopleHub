@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { TextBoxComponent } from './text-box.component';
 
 type Story = StoryObj<TextBoxComponent>;
 
 const meta: Meta<TextBoxComponent> = {
   component: TextBoxComponent,
-  title: 'ui-text-box',
+  title: 'UI/Controls/Text Box',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -15,9 +15,9 @@ const meta: Meta<TextBoxComponent> = {
       control: 'text',
       description: 'label property',
     },
-    placeHolder: {
+    placeholder: {
       control: 'text',
-      description: 'placeHolder property',
+      description: 'placeholder property',
     },
     isRequired: {
       control: 'boolean',
@@ -75,7 +75,7 @@ export default meta;
 export const Default: Story = {
   args: {
     label: 'Text Box',
-    placeHolder: 'Enter here...',
+    placeholder: 'Enter here...',
     isRequired: true,
     isFocused: false,
     showBorder: true,

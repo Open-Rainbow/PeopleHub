@@ -18,7 +18,7 @@ export class ConfirmPopupService {
       value: 'OK',
       bgColor: color,
       color: 'white',
-      hoverBGColor: '#337ab7',
+      hoverBgColor: '#337ab7',
       hoverColor: 'white',
       borderColor: color,
       showBorder: true,
@@ -45,7 +45,7 @@ export class ConfirmPopupService {
       value: 'OK',
       bgColor: 'red',
       color: 'white',
-      hoverBGColor: '#337ab7',
+      hoverBgColor: '#337ab7',
       hoverColor: 'white',
       borderColor: 'red',
       showBorder: true,
@@ -56,17 +56,17 @@ export class ConfirmPopupService {
 
   public showConfirm(title: string, message: string, icon?: string, color = 'red'): EventEmitter<string> {
     const buttons: ConfirmPopup[] = [
-      { text: 'Yes', value: 'Yes', bgColor: 'green', color: 'white', hoverBGColor: 'darkgreen', hoverColor: 'white', borderColor: 'green', showBorder: true },
-      { text: 'No', value: 'No', bgColor: color, color: 'white', hoverBGColor: 'darkred', hoverColor: 'white', borderColor: color, showBorder: true },
+      { text: 'Yes', value: 'Yes', bgColor: 'green', color: 'white', hoverBgColor: 'darkgreen', hoverColor: 'white', borderColor: 'green', showBorder: true },
+      { text: 'No', value: 'No', bgColor: color, color: 'white', hoverBgColor: 'darkred', hoverColor: 'white', borderColor: color, showBorder: true },
     ];
     return this.show(title, message, buttons, icon, color);
   }
 
   public showMaybe(title: string, message: string, icon?: string, color = 'orange'): EventEmitter<string> {
     const buttons: ConfirmPopup[] = [
-      { text: 'Yes', value: 'Yes', bgColor: 'green', color: 'white', hoverBGColor: 'darkgreen', hoverColor: 'white', borderColor: 'green', showBorder: true },
-      { text: 'No', value: 'No', bgColor: 'red', color: 'white', hoverBGColor: 'darkred', hoverColor: 'white', borderColor: 'red', showBorder: true },
-      { text: 'Maybe', value: 'Maybe', bgColor: color, color: 'white', hoverBGColor: 'darkorange', hoverColor: 'white', borderColor: color, showBorder: true },
+      { text: 'Yes', value: 'Yes', bgColor: 'green', color: 'white', hoverBgColor: 'darkgreen', hoverColor: 'white', borderColor: 'green', showBorder: true },
+      { text: 'No', value: 'No', bgColor: 'red', color: 'white', hoverBgColor: 'darkred', hoverColor: 'white', borderColor: 'red', showBorder: true },
+      { text: 'Maybe', value: 'Maybe', bgColor: color, color: 'white', hoverBgColor: 'darkorange', hoverColor: 'white', borderColor: color, showBorder: true },
     ];
     return this.show(title, message, buttons, icon, color);
   }

@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { PaginationComponent } from './pagination.component';
 
 type Story = StoryObj<PaginationComponent>;
 
 const meta: Meta<PaginationComponent> = {
   component: PaginationComponent,
-  title: 'ui-pagination',
+  title: 'UI/Primitives/Pagination',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

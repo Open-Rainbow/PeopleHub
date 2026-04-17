@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { MultiSelectComponent } from './multi-select.component';
 
 type Story = StoryObj<MultiSelectComponent>;
 
 const meta: Meta<MultiSelectComponent> = {
   component: MultiSelectComponent,
-  title: 'ui-multi-select',
+  title: 'UI/Controls/Multi Select',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -15,9 +15,9 @@ const meta: Meta<MultiSelectComponent> = {
       control: 'text',
       description: 'label property',
     },
-    placeHolder: {
+    placeholder: {
       control: 'text',
-      description: 'placeHolder property',
+      description: 'placeholder property',
     },
     isRequired: {
       control: 'boolean',
@@ -43,9 +43,9 @@ const meta: Meta<MultiSelectComponent> = {
       control: 'boolean',
       description: 'showSearch property',
     },
-    dropDownModel: {
+    dropdownModel: {
       control: 'text',
-      description: 'dropDownModel property',
+      description: 'dropdownModel property',
     },
   },
 };
@@ -55,7 +55,7 @@ export default meta;
 export const Default: Story = {
   args: {
     label: 'Gender',
-    placeHolder: 'Select Gender',
+    placeholder: 'Select Gender',
     isRequired: false,
     options: [
       { value: 1, name: 'Male' },
@@ -69,7 +69,7 @@ export const Default: Story = {
     ],
     showCheckbox: true,
     showSearch: true,
-    dropDownModel: ''
+    dropdownModel: ''
 },
 };
 

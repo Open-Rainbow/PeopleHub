@@ -23,7 +23,6 @@ export class ValueDropdownComponent implements OnInit {
   @Input() id!: string;
   @Input() showIcon: boolean = true;
   @Output() onSelect = new EventEmitter<string | number>();
-  // ADD these 2 getters
   get control() {
     return this.parentFormGroup?.get(this.id);
   }
@@ -39,10 +38,6 @@ export class ValueDropdownComponent implements OnInit {
   isOpen = false;
 
   constructor(private renderer: Renderer2) { }
-
-   // ngOnInit() {
-  //   this.selectedYear = this.dropdownValues.filter(x=>x.isDefault)[0].value
-  // }
 ngOnInit() {
   if (this.defaultSelected !== null && this.defaultSelected !== undefined) {
     this.selectedYear = this.defaultSelected;
@@ -70,7 +65,6 @@ ngOnInit() {
   }
 
   selectYear(value: string | number) {
-    // event.preventDefault();
     this.selectedYear = value;
     this.isOpen = false;
     this.onSelect.emit(value);

@@ -22,9 +22,8 @@ import { Subscription } from 'rxjs';
 })
 export class TextBoxComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() label?: string = 'Text Box';
-  @Input() placeHolder?: string = 'Enter here...';
+  @Input() placeholder?: string = 'Enter here...';
   @Input() isRequired?: boolean = true;
-  // @Input() isFocused: boolean = false;
 
   @Input() showBorder: boolean = true;
   @Input() minLength: number = 0;

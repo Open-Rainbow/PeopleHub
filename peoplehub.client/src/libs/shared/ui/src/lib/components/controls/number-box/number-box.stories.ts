@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { NumberBoxComponent } from './number-box.component';
 
 type Story = StoryObj<NumberBoxComponent>;
 
 const meta: Meta<NumberBoxComponent> = {
   component: NumberBoxComponent,
-  title: 'ui-number-box',
+  title: 'UI/Controls/Number Box',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -19,9 +19,9 @@ const meta: Meta<NumberBoxComponent> = {
       control: 'boolean',
       description: 'isRequired property',
     },
-    Placeholder: {
+    placeholder: {
       control: 'text',
-      description: 'Placeholder property',
+      description: 'placeholder property',
     },
     parentFormGroup: {
       control: 'text',
@@ -52,7 +52,7 @@ export const Default: Story = {
   args: {
     label: 'Casual',
     isRequired: true,
-    Placeholder: '0',
+    placeholder: '0',
     step: 1,
     id: 'casual'
 },

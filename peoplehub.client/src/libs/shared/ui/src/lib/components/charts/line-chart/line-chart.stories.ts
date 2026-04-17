@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { LineChartComponent } from './line-chart.component';
 
 type Story = StoryObj<LineChartComponent>;
 
 const meta: Meta<LineChartComponent> = {
   component: LineChartComponent,
-  title: 'ui-line-chart',
+  title: 'UI/Charts/Line Chart',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

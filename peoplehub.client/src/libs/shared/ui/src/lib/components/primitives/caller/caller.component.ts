@@ -20,11 +20,7 @@ import { ConfirmPopupService } from '../../../services/confirm-popup.service';
 export class CallerComponent implements OnInit {
 
   constructor(private popupService: ConfirmPopupService) {}
-
-  // Trigger one on load for Storybook testing
   ngOnInit(): void {
-    // Optional: Trigger a popup immediately for testing
-    // this.triggerOk();
   }
 
   triggerOk() {
@@ -33,7 +29,7 @@ export class CallerComponent implements OnInit {
       'The requested action was successfully executed.',
       'âœ…'
     ).subscribe((result: string) => {
-      console.log('OK Alert Closed. Result:', result); // Logs 'OK'
+      console.log('OK Alert Closed. Result:', result);
     });
   }
 
@@ -44,7 +40,7 @@ export class CallerComponent implements OnInit {
       'âš ï¸',
       'orange'
     ).subscribe((result: string) => {
-      console.log('Confirm Closed. Result:', result); // Logs 'Yes' or 'No'
+      console.log('Confirm Closed. Result:', result);
     });
   }
 
@@ -53,14 +49,14 @@ export class CallerComponent implements OnInit {
       'Uncertain Action', 
       'Are you sure about this change? What if you are unsure?'
     ).subscribe((result: string) => {
-      console.log('Maybe Closed. Result:', result); // Logs 'Yes', 'No', or 'Maybe'
+      console.log('Maybe Closed. Result:', result);
     });
   }
 
   triggerCustom() {
     const customButtons: ConfirmPopup[] = [
-      { text: 'Save', value: 'Saved', bgColor: '#38761d', color: 'white', hoverBGColor: '#6aa84f', hoverColor: 'white', borderColor: '#38761d', showBorder: true },
-      { text: 'Discard', value: 'Discarded', bgColor: '#cc0000', color: 'white', hoverBGColor: '#e06666', hoverColor: 'white', borderColor: '#cc0000', showBorder: true },
+      { text: 'Save', value: 'Saved', bgColor: '#38761d', color: 'white', hoverBgColor: '#6aa84f', hoverColor: 'white', borderColor: '#38761d', showBorder: true },
+      { text: 'Discard', value: 'Discarded', bgColor: '#cc0000', color: 'white', hoverBgColor: '#e06666', hoverColor: 'white', borderColor: '#cc0000', showBorder: true },
     ];
     
     this.popupService.showCustomButtons(
@@ -68,7 +64,7 @@ export class CallerComponent implements OnInit {
       'You have unsaved changes.',
       customButtons
     ).subscribe((result: string) => {
-      console.log('Custom Closed. Result:', result); // Logs 'Saved' or 'Discarded'
+      console.log('Custom Closed. Result:', result);
     });
   }
 }

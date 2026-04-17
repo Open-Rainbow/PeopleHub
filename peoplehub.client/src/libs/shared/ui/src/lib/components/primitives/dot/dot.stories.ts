@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { DotComponent } from './dot.component';
 
 type Story = StoryObj<DotComponent>;
 
 const meta: Meta<DotComponent> = {
   component: DotComponent,
-  title: 'ui-dot',
+  title: 'UI/Primitives/Dot',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

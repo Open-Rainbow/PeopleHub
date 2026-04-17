@@ -23,8 +23,6 @@ export class SearchDropdownComponent {
 
    @Input() parentFormGroup!: FormGroup;
   @Input() id!: string;
-
-  // ADD these 2 getters
   get control() {
     return this.parentFormGroup?.get(this.id);
   }

@@ -1,4 +1,4 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostListener, Input, OnInit, Output, forwardRef } from '@angular/core';
 import { ControlValueAccessor, FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { IconComponent } from '../../primitives/icon/icon.component';
@@ -22,7 +22,7 @@ export class CalendarComponent implements OnInit, ControlValueAccessor {
   @Input() isRequired?: boolean = true;
   @Input() parentFormGroup!: FormGroup;
   @Input() id!: string;
-  @Input() placeHolder?: string = 'Select Gender';
+  @Input() placeholder?: string = 'Select Gender';
   @Output() dateSelected = new EventEmitter<string | null>();
   @Output() calendarClosed = new EventEmitter<void>();
 
@@ -92,11 +92,6 @@ export class CalendarComponent implements OnInit, ControlValueAccessor {
   ngOnInit() {
     this.generateYears();
     this.generateCalendar();
-
-    // if (this.formattedDate) {
-    //   this.isLabelFloating = true;
-
-    // }
     const value = this.control?.value;
     if (value) {
       this.setDateFromValue(value);
@@ -136,12 +131,9 @@ export class CalendarComponent implements OnInit, ControlValueAccessor {
       this.selectedDate = value;
     }
     else if (typeof value === 'string') {
-
-      // Handle ISO format (2026-02-20T00:00:00)
       if (!isNaN(Date.parse(value))) {
         this.selectedDate = new Date(value);
       }
-      // Handle dd-mm-yyyy
       else {
         const parts = value.split('-');
         if (parts.length === 3) {
@@ -221,10 +213,6 @@ export class CalendarComponent implements OnInit, ControlValueAccessor {
 
     const formatted = this.toDDMMYYYY(this.selectedDate);
 
-    // console.log(this.selectedDate);
-    // console.log(this.currentMonth);
-    // console.log(this.currentYear);
-
     this.dateSelected.emit(formatted);
     console.log(formatted);
     this.onChange(formatted);
@@ -253,7 +241,6 @@ export class CalendarComponent implements OnInit, ControlValueAccessor {
 
     this.dateSelected.emit(null);
     this.onChange(null);
-    // this.markAsTouched();
   }
 
   closeCalendar() {

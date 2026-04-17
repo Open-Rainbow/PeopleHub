@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { IconComponent } from './icon.component';
 
 type Story = StoryObj<IconComponent>;
 
 const meta: Meta<IconComponent> = {
   component: IconComponent,
-  title: 'ui-icon',
+  title: 'UI/Primitives/Icon',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

@@ -1,4 +1,4 @@
-﻿import type { ButtonListItem } from './button-list-item.model';
+import type { ButtonListItem } from './button-list-item.model';
 
 export type buttonList = ButtonListItem;
 

@@ -1,4 +1,3 @@
-// src/assets/configs/dropdown.config.ts
 import { DropdownOption } from './dropdown-option.model';
 
 export const dropdownConfig = {

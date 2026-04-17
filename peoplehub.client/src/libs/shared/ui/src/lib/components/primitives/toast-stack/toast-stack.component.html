@@ -12,7 +12,7 @@
   @for (toast of toasts; track trackById($index, toast)) {
     <ui-toast
       class="transition-all duration-300 ease-in-out"
-      [subTitle]="toast.subTitle"
+      [subtitle]="toast.subtitle"
       [type]="toast.type ?? 'normal'"
       [icon]="toast.icon ?? ''"
       [title]="toast.title ?? ''"

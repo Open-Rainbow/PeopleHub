@@ -6,12 +6,12 @@ import { IconComponent } from '../icon/icon.component';
   selector: 'ui-toast',
   imports: [IconComponent,CommonModule],
   templateUrl: './toast.component.html',
-  styleUrls: ['./toast.component.scss'], // fixed typo
+  styleUrls: ['./toast.component.scss'],
 })
 export class ToastComponent implements OnInit {
   @Input() type: 'normal' | 'warning' | 'alert' | 'success' = 'normal';
   @Input() title?: string = 'Hi';
-  @Input() subTitle?: string = 'Hello, world! This is a Toast message.';
+  @Input() subtitle?: string = 'Hello, world! This is a Toast message.';
   @Input() icon: string = 'home';
   @Input() position:
     | 'top-left' 

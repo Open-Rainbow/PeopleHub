@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { ToastStackComponent } from './toast-stack.component';
 
 type Story = StoryObj<ToastStackComponent>;
 
 const meta: Meta<ToastStackComponent> = {
   component: ToastStackComponent,
-  title: 'ui-toast-stack',
+  title: 'UI/Primitives/Toast Stack',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

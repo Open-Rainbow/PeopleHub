@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { ValueDropdownComponent } from './value-dropdown.component';
 
 type Story = StoryObj<ValueDropdownComponent>;
 
 const meta: Meta<ValueDropdownComponent> = {
   component: ValueDropdownComponent,
-  title: 'ui-value-dropdown',
+  title: 'UI/Controls/Value Dropdown',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

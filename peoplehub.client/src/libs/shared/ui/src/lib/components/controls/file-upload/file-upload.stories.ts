@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { FileUploadComponent } from './file-upload.component';
 
 type Story = StoryObj<FileUploadComponent>;
 
 const meta: Meta<FileUploadComponent> = {
   component: FileUploadComponent,
-  title: 'ui-file-upload',
+  title: 'UI/Controls/File Upload',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

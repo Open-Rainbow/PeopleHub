@@ -43,19 +43,6 @@ export class FileUploadComponent {
     }, 200);
   }
 
-  // onFileSelected(event: any) {
-  //   const input = event.target as HTMLInputElement;
-  //   const file = input.files?.[0];
-
-  //   if (file) {
-  //     this.fileName = file.name;
-  //     this.control?.markAsTouched();
-  //     this.control?.markAsDirty();
-  //   } else {
-  //     this.fileName = null;
-  //   }
-  // }
-
 
 
 

@@ -95,11 +95,11 @@ export class LineChartComponent implements OnInit, OnChanges, OnDestroy {
 
           ctx.save();
           ctx.beginPath();
-          ctx.setLineDash([4, 4]); // Dotted pattern
+          ctx.setLineDash([4, 4]);
           ctx.moveTo(x, topY);
           ctx.lineTo(x, bottomY);
           ctx.lineWidth = 1;
-          ctx.strokeStyle = '#9ca3af'; // Gray line color
+          ctx.strokeStyle = '#9ca3af';
           ctx.stroke();
           ctx.restore();
         }
@@ -120,7 +120,7 @@ export class LineChartComponent implements OnInit, OnChanges, OnDestroy {
         interaction: { mode: 'index', intersect: false },
         plugins: {
           tooltip: {
-            enabled: false, // Disable default canvas tooltip
+            enabled: false,
             external: (context) => this.externalTooltipHandler(context),
           },
           legend: {
@@ -322,8 +322,6 @@ export class LineChartComponent implements OnInit, OnChanges, OnDestroy {
       
       
       yScale.ticks.stepSize = this.yAxisStep ?? undefined;
-      
-      // Add these lines to dynamically toggle the axis line:
       if (yScale.border) yScale.border.display = this.showYAxisLine;
      
     }

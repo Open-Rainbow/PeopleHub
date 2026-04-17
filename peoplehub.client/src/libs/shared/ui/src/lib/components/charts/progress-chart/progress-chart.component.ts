@@ -84,8 +84,6 @@ export class ProgressChartComponent implements AfterViewInit, OnChanges {
     };
 
     this.chart = new Chart(ctx!, config);
-
-    // Background color hack using canvas fill
     this.goalChart.nativeElement.style.background = this.bgColor;
     this.goalChart.nativeElement.style.borderRadius = '10px';
   }

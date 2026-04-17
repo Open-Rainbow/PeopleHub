@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { IconButtonPopupComponent } from './icon-button-popup.component';
 
 type Story = StoryObj<IconButtonPopupComponent>;
 
 const meta: Meta<IconButtonPopupComponent> = {
   component: IconButtonPopupComponent,
-  title: 'ui-icon-button-popup',
+  title: 'UI/Controls/Icon Button Popup',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -39,9 +39,9 @@ const meta: Meta<IconButtonPopupComponent> = {
       control: 'text',
       description: 'color property',
     },
-    hoverBGColor: {
+    hoverBgColor: {
       control: 'text',
-      description: 'hoverBGColor property',
+      description: 'hoverBgColor property',
     },
     hoverColor: {
       control: 'text',
@@ -77,7 +77,7 @@ export const Default: Story = {
     'iconName': 'info',
     'bgColor': 'white',
     'color': 'red',
-    'hoverBGColor': 'red',
+    'hoverBgColor': 'red',
     'hoverColor': 'white',
     'borderRadius': 8,
     'borderColor': 'blue',
@@ -95,7 +95,7 @@ export const Disabled: Story = {
     'iconName': 'info',
     'bgColor': 'white',
     'color': 'red',
-    'hoverBGColor': 'red',
+    'hoverBgColor': 'red',
     'hoverColor': 'white',
     'borderRadius': 8,
     'borderColor': 'blue',
@@ -113,7 +113,7 @@ export const Colored: Story = {
     'iconName': 'info',
     'bgColor': '#FF5733',
     'color': 'red',
-    'hoverBGColor': 'red',
+    'hoverBgColor': 'red',
     'hoverColor': 'white',
     'borderRadius': 8,
     'borderColor': 'blue',

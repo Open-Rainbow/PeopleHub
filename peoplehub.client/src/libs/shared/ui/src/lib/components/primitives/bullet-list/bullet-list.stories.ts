@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { BulletListComponent } from './bullet-list.component';
 
 type Story = StoryObj<BulletListComponent>;
 
 const meta: Meta<BulletListComponent> = {
   component: BulletListComponent,
-  title: 'ui-bullet-list',
+  title: 'UI/Primitives/Bullet List',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

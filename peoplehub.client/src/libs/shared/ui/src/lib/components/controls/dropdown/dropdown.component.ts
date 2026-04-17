@@ -41,7 +41,7 @@ export class DropdownComponent
   implements AfterViewInit, OnDestroy, ControlValueAccessor
 {
   @Input() label?: string = 'Gender';
-  @Input() placeHolder?: string = 'Select Gender';
+  @Input() placeholder?: string = 'Select Gender';
   @Input() isRequired?: boolean = false;
   @Input() options: DropdownOption[] | null = null;
   @Input() parentFormGroup!: FormGroup;
@@ -50,7 +50,7 @@ export class DropdownComponent
   @Output() blurEvent = new EventEmitter<void>();
   @Input() selectedValue: any = null;
 
-  @Input() dropDownModel: string = '';
+  @Input() dropdownModel: string = '';
   get optionLength(): number {
     return this.options?.length ?? 0;
   }
@@ -171,7 +171,7 @@ export class DropdownComponent
     this.blurEvent.emit();
 
     if (!this.selectedValue) {
-      this.isActive = false; // move label down if no value
+      this.isActive = false;
     }
   }
 
@@ -283,30 +283,6 @@ export class DropdownComponent
       passive: false,
     });
   }
-  // private startResize(event: MouseEvent, list: HTMLElement) {
-  //   this.startY = event.clientY;
-  //   this.startHeight = list.offsetHeight;
-  //   this.resizing = true;
-
-  //   event.preventDefault();
-  //   event.stopPropagation();
-  //   event.stopImmediatePropagation();
-
-  //   document.body.style.cursor = 'ns-resize';
-  //   document.body.style.userSelect = 'none';
-  //   document.body.style.webkitUserSelect = 'none';
-
-  //   document.addEventListener('mousemove', this.mouseMoveListener!, {
-  //     passive: false,
-  //   });
-  //   document.addEventListener('mouseup', this.mouseUpListener!, {
-  //     passive: false,
-  //   });
-
-  //   document.addEventListener('contextmenu', this.preventContextMenu, {
-  //     passive: false,
-  //   });
-  // }
 
   private handleMouseMove(event: MouseEvent) {
     if (!this.resizing) return;

@@ -12,21 +12,16 @@ import { IconComponent } from '../../primitives/icon/icon.component';
   encapsulation: ViewEncapsulation.None
 })
 export class IconButtonComponent {
-
-
-
-  // @Input() text?: string = '';
   @Input() bgColor?: string = 'white';
   @Input() color?: string = 'red';
-  @Input() hoverBGColor?: string = 'red';
+  @Input() hoverBgColor?: string = 'red';
   @Input() hoverColor?: string = 'black';
   @Input() borderRadius?: number = 6;
   @Input() borderColor?: string = 'blue';
   @Input() showBorder?: boolean = true;
   @Input() disable?: boolean = false;
-  @Input() isexpand?: boolean = false;
+  @Input() isExpand?: boolean = false;
   @Input() iconName?: string = 'home';
-  // @Input() iconPosition?: 'left' | 'right' |  'both' = 'left';
   isHovered: boolean = false;
 
  @Input() parentFormGroup!: FormGroup;

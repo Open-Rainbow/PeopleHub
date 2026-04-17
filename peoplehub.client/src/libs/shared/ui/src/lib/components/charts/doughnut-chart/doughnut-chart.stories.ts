@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { DoughnutChartComponent } from './doughnut-chart.component';
 
 type Story = StoryObj<DoughnutChartComponent>;
 
 const meta: Meta<DoughnutChartComponent> = {
   component: DoughnutChartComponent,
-  title: 'ui-doughnut-chart',
+  title: 'UI/Charts/Doughnut Chart',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

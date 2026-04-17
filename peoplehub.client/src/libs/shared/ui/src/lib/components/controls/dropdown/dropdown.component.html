@@ -21,11 +21,11 @@
  
   <input type="checkbox" [id]="uniqueId" class="dropdown-toggle" hidden (change)="onToggle($event)" />
  
-  <input type="hidden" [formControlName]="dropDownModel" [value]="selectedValue" />
+  <input type="hidden" [formControlName]="dropdownModel" [value]="selectedValue" />
  
   <label [for]="uniqueId" class="inputBoxHeight custom-dropdown-selected"
     [class.placeholder]="isActive && !selectedValue" (click)="isActive = true" (blur)="onBlur()">
-   {{ isActive && !selectedValue ? placeHolder : getSelectedName() }}
+   {{ isActive && !selectedValue ? placeholder : getSelectedName() }}
     <ui-icon [name]="'arrow_down'" class="calendar-icon" [ngClass]="{ rotated: isOpen }"></ui-icon>
   </label>
  

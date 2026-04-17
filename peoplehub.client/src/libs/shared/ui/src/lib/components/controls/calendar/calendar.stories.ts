@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { CalendarComponent } from './calendar.component';
 
 type Story = StoryObj<CalendarComponent>;
 
 const meta: Meta<CalendarComponent> = {
   component: CalendarComponent,
-  title: 'ui-calendar',
+  title: 'UI/Controls/Calendar',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -27,9 +27,9 @@ const meta: Meta<CalendarComponent> = {
       control: 'text',
       description: 'id property',
     },
-    placeHolder: {
+    placeholder: {
       control: 'text',
-      description: 'placeHolder property',
+      description: 'placeholder property',
     },
   },
 };
@@ -40,7 +40,7 @@ export const Default: Story = {
   args: {
     'label': 'Date of Birth',
     'isRequired': true,
-    'placeHolder': 'Select Gender'
+    'placeholder': 'Select Gender'
 },
 };
 

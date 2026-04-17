@@ -3,7 +3,7 @@ export interface ConfirmPopup {
   value: string;
   bgColor: string;
   color: string;
-  hoverBGColor: string;
+  hoverBgColor: string;
   hoverColor: string;
   borderColor: string;
   showBorder: boolean;

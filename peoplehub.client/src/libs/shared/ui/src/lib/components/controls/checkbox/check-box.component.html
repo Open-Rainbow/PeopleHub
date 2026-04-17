@@ -5,13 +5,7 @@
   }
 
   @if (labelPosition === 'left') {
-    <!-- <span
-      class="checkbox-label text-sm"
-      [class.label-disabled]="!checked"
-      [class.label-enabled]="checked"
-      (click)="onLabelClick()">
-      {{ label }}
-    </span> -->
+    
     <span class="text-sm transition-colors duration-200 ease-in-out cursor-pointer" [class.text-[#999]]="!checked"
       [class.text-black]="checked" (click)="onLabelClick()">
       {{ label }}
@@ -19,13 +13,7 @@
   }
 
   <div class="checkbox-wrapper flex items-center">
-    <!-- <input
-      type="checkbox"
-      class="checkbox-input"
-      [id]="id"
-      [checked]="checked"
-      [formControlName]="id"
-      (change)="onChange($event)" /> -->
+    
       <input type="checkbox" [id]="id" [checked]="checked" [formControlName]="id" (change)="onChange($event)" class="
           appearance-none
           w-5 h-5
@@ -60,13 +48,7 @@
   }
 
   @if (labelPosition === 'right') {
-    <!-- <span
-      class="checkbox-label text-sm"
-      [class.label-disabled]="!checked"
-      [class.label-enabled]="checked"
-      (click)="onLabelClick()">
-      {{ label }}
-    </span> -->
+    
     <span class="text-sm transition-colors duration-200 ease-in-out cursor-pointer" [class.text-[#999]]="!checked"
       [class.text-black]="checked" (click)="onLabelClick()">
       {{ label }}

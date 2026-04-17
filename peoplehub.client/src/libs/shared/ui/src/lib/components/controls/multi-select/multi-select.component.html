@@ -4,7 +4,7 @@
   [formGroup]="parentFormGroup"
   [class.error]="isInvalid">
 
-  <!-- Floating label -->
+  
   <span
     class="absolute left-3 z-10 font-medium px-1 pointer-events-none transition-all duration-200 ease-out"
     [ngClass]="{
@@ -19,9 +19,9 @@
   </span>
 
   <input type="checkbox" [id]="uniqueId" class="dropdown-toggle peer sr-only" (change)="onToggle($event)" />
-  <input type="hidden" [formControlName]="dropDownModel" [value]="selectedValues" />
+  <input type="hidden" [formControlName]="dropdownModel" [value]="selectedValues" />
 
-  <!-- Trigger / selected-value area -->
+  
   <label
     [for]="uniqueId"
     class="relative min-h-[48px] h-auto w-full cursor-pointer rounded-lg border bg-white px-3 pr-16 py-3 text-sm flex items-start gap-2 transition-colors duration-200 peer-checked:border-blue-600"
@@ -34,7 +34,7 @@
     (click)="isActive = true"
     (blur)="onBlur()">
 
-    <!-- Left content: chips or placeholder -->
+    
     <div class="flex flex-col flex-1 items-start gap-2 min-w-0">
 
       @if (selectedValues.length > 0) {
@@ -55,12 +55,12 @@
       }
 
       @if (!hasSelectedValues) {
-      <span class="text-gray-500 font-normal w-full">{{ placeHolder }}</span>
+      <span class="text-gray-500 font-normal w-full">{{ placeholder }}</span>
       }
 
     </div>
 
-    <!-- Arrow icon -->
+    
     <div class="absolute right-3 top-3 flex items-center gap-1">
       @if (selectedValues.length > 1) {
       <ui-icon
@@ -79,7 +79,7 @@
 
   </label>
 
-  <!-- Dropdown list -->
+  
   <ul
     class="custom-dropdown-list absolute left-0 right-0 z-[1000] hidden w-full max-w-full box-border rounded-lg border border-gray-300 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] peer-checked:block"
     [ngClass]="{

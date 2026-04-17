@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { ToggleComponent } from './toggle.component';
 
 type Story = StoryObj<ToggleComponent>;
 
 const meta: Meta<ToggleComponent> = {
   component: ToggleComponent,
-  title: 'ui-toggle',
+  title: 'UI/Controls/Toggle',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

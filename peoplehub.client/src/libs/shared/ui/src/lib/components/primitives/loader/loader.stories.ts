@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { LoaderComponent } from './loader.component';
 
 type Story = StoryObj<LoaderComponent>;
 
 const meta: Meta<LoaderComponent> = {
   component: LoaderComponent,
-  title: 'ui-loader',
+  title: 'UI/Primitives/Loader',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

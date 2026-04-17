@@ -35,8 +35,6 @@ onMouseLeave() {
 
 
   menuItems: MenuItem[] = [];
-
-  // activeIndex: number = -1;
   activeIndex: number | null = null;
   viewSubMenu: boolean = false;
   activeSubRoute: string | null = null;

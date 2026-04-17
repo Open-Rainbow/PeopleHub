@@ -16,6 +16,6 @@ export class CountWidgetComponent {
   @Input() backgroundColor: string = 'white';
   @Input() showBorder: boolean = true;
   @Input() labelPosition: 'top' | 'bottom' | 'before' | 'after' = 'top';
-  @Input() lebelsize: string = '14px';
-  @Input() valuesize: string = '24px';
+  @Input() labelSize: string = '14px';
+  @Input() valueSize: string = '24px';
 }

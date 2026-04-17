@@ -73,13 +73,10 @@ export class DoughnutChartComponent implements OnInit, OnDestroy {
             ctx.font = `bold 30px Arial`;
              ctx.fillStyle = '#9CA3AF';
             ctx.fillText(this.activeValue, width / 2, height / 2 - 8);
-            // ctx.font = `${(+fontSizeMain / 2.0).toFixed(0)}px Arial`;
             ctx.font = `12px Arial`;
             ctx.fillStyle = '#9CA3AF';
             ctx.fillText(this.activeLabel, width / 2, height / 2 + 18);
           } else {
-        //     ctx.font = `bold 30px  Arial`;
-        // ctx.fillStyle = '#9CA3AF';
             ctx.fillText(this.activeValue, width / 2, height / 2);
           }
         }
@@ -210,10 +207,6 @@ private animateNumbers() {
   const totalFrames = duration / frameRate;
 
   let frame = 0;
-
-  // const targetPercentages = this.legendData.map(item =>
-  //   Math.round((item.value / this.total) * 100)
-  // );
   const targetValues = this.legendData.map(item => item.value);
 
 

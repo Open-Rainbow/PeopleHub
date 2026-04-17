@@ -49,7 +49,7 @@ export class MultiSelectComponent
   implements AfterViewInit, OnDestroy, ControlValueAccessor
 {
   @Input() label?: string = 'Gender';
-  @Input() placeHolder?: string = 'Select Gender';
+  @Input() placeholder?: string = 'Select Gender';
   @Input() isRequired?: boolean = false;
   @Input() options: DropdownOption[] = [
     { value: 1, name: 'Male' },
@@ -73,7 +73,7 @@ export class MultiSelectComponent
     search: new FormControl(''),
   });
 
-  @Input() dropDownModel: string = '';
+  @Input() dropdownModel: string = '';
   get hasSelectedValues(): boolean {
     return this.selectedValues.length > 0;
   }
@@ -118,8 +118,6 @@ export class MultiSelectComponent
     this.hasInteracted = true;
 
     this.isOpen = !this.isOpen;
-
-    // â­ ADD THIS LINE
     if (this.isOpen) {
       this.isActive = true;
     }
@@ -412,30 +410,6 @@ export class MultiSelectComponent
       passive: false,
     });
   }
-  // private startResize(event: MouseEvent, list: HTMLElement) {
-  //   this.startY = event.clientY;
-  //   this.startHeight = list.offsetHeight;
-  //   this.resizing = true;
-
-  //   event.preventDefault();
-  //   event.stopPropagation();
-  //   event.stopImmediatePropagation();
-
-  //   document.body.style.cursor = 'ns-resize';
-  //   document.body.style.userSelect = 'none';
-  //   document.body.style.webkitUserSelect = 'none';
-
-  //   document.addEventListener('mousemove', this.mouseMoveListener!, {
-  //     passive: false,
-  //   });
-  //   document.addEventListener('mouseup', this.mouseUpListener!, {
-  //     passive: false,
-  //   });
-
-  //   document.addEventListener('contextmenu', this.preventContextMenu, {
-  //     passive: false,
-  //   });
-  // }
 
   private handleMouseMove(event: MouseEvent) {
     if (!this.resizing) return;

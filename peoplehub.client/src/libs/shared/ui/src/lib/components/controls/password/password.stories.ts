@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { PasswordComponent } from './password.component';
 
 type Story = StoryObj<PasswordComponent>;
 
 const meta: Meta<PasswordComponent> = {
   component: PasswordComponent,
-  title: 'ui-password',
+  title: 'UI/Controls/Password',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

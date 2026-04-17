@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { TimepickerComponent } from './timepicker.component';
 
 type Story = StoryObj<TimepickerComponent>;
 
 const meta: Meta<TimepickerComponent> = {
   component: TimepickerComponent,
-  title: 'ui-timepicker',
+  title: 'UI/Controls/Timepicker',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

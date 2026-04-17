@@ -30,9 +30,9 @@ export class DialChartComponent implements AfterViewInit, OnChanges {
   @Input() lastMonthChange = 5;
   @Input() isRounded = false;
 
-  dialColor = '#ff7a00'; // orange
-  hoverColor = '#1d4ed8'; // blue
-  bgColor = '#f5f5f5'; // gray background
+  dialColor = '#ff7a00';
+  hoverColor = '#1d4ed8';
+  bgColor = '#f5f5f5';
   private chart!: Chart;
 
   ngAfterViewInit() {
@@ -40,7 +40,6 @@ export class DialChartComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // update chart dynamically if inputs change
     if (this.chart && (changes['isRounded'] || changes['percentage'])) {
       const dataset = this.chart.data.datasets[0];
       dataset.data = [this.percentage, 100 - this.percentage];
@@ -80,21 +79,15 @@ export class DialChartComponent implements AfterViewInit, OnChanges {
         onHover: (event: ChartEvent, elements) => {
           const canvas = this.dialCanvas.nativeElement;
           const dataset = this.chart.data.datasets[0];
-
-          // If hovering over the orange arc
           const hovered =
             elements && elements.length > 0 && (elements[0] as any).index === 0;
 
           canvas.style.cursor = hovered ? 'pointer' : 'default';
-
-          // Change color only when hovered
           if (hovered) {
             (dataset as any).backgroundColor = [this.hoverColor, this.bgColor];
           } else {
             (dataset as any).backgroundColor = [this.dialColor, this.bgColor];
           }
-
-          // Update immediately without flicker
           this.chart.update('none');
         },
       },

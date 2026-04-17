@@ -19,7 +19,7 @@
   }"
       (click)="selectButton(btn) ; createRipple($event)">
 
-    <!-- ICON ONLY -->
+    
     @if (btn.showIcon && !btn.showTextAndIcon) {
     <div class="inline-flex items-center gap-[6px] flex-nowrap">
       <ui-icon [name]="btn.label"></ui-icon>
@@ -37,7 +37,7 @@
     </div>
     }
 
-    <!-- TEXT ONLY -->
+    
     @if (!btn.showIcon && !btn.showTextAndIcon) {
     <div class="inline-flex items-center gap-[6px] flex-nowrap">
       <span class="text">{{ btn.label }}</span>
@@ -55,7 +55,7 @@
     </div>
     }
 
-    <!-- ICON + TEXT -->
+    
     @if (btn.showTextAndIcon) {
     <div class="btn-content" class="inline-flex items-center gap-[6px] flex-nowrap">
       <ui-icon [name]="btn.label"></ui-icon>

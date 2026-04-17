@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { LabelValueComponent } from './label-value.component';
 
 type Story = StoryObj<LabelValueComponent>;
 
 const meta: Meta<LabelValueComponent> = {
   component: LabelValueComponent,
-  title: 'ui-label-value',
+  title: 'UI/Controls/Label Value',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

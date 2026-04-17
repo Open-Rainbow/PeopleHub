@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { ChipComponent } from './chip.component';
 
 type Story = StoryObj<ChipComponent>;
 
 const meta: Meta<ChipComponent> = {
   component: ChipComponent,
-  title: 'ui-chip',
+  title: 'UI/Controls/Chip',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',

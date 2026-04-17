@@ -1,11 +1,11 @@
-﻿import { Meta, StoryObj } from '@storybook/angular';
+import { Meta, StoryObj } from '@storybook/angular';
 import { TextAreaComponent } from './text-area.component';
 
 type Story = StoryObj<TextAreaComponent>;
 
 const meta: Meta<TextAreaComponent> = {
   component: TextAreaComponent,
-  title: 'ui-text-area',
+  title: 'UI/Controls/Text Area',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -15,9 +15,9 @@ const meta: Meta<TextAreaComponent> = {
       control: 'text',
       description: 'label property',
     },
-    Placeholder: {
+    placeholder: {
       control: 'text',
-      description: 'Placeholder property',
+      description: 'placeholder property',
     },
     isRequired: {
       control: 'boolean',
@@ -55,7 +55,7 @@ export default meta;
 export const Default: Story = {
   args: {
     'label': 'Text Area',
-    'Placeholder': 'Enter text area',
+    'placeholder': 'Enter text area',
     'isRequired': true,
     'showBorder': true,
     'maxLength': 20,

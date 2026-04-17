@@ -39,12 +39,9 @@ export class PaginationComponent {
   isGoDisabled: boolean = true;
 
   paginationButtons: any[] = [];
-  
-  // Add page size dropdown options
   pageSizeOptions$!: Observable<DropdownOption[]>;
 
   constructor(private dropdownService: DropdownConfigService) {
-    // Initialize page size options from service
     this.pageSizeOptions$ = this.dropdownService.getOptions('pageSize');
   }
 
@@ -140,19 +137,6 @@ export class PaginationComponent {
 
     this.generateButtons();
   }
-
-  // onPageSizeChange(event: any) {
-  //   this.pageSize = Number(event.value); 
-  //   this.currentPage = 1;
-  //   this.countTotalPage();
-
-  //   this.pageChange.emit({
-  //     page: this.currentPage,
-  //     pageSize: this.pageSize,
-  //   });
-
-  //   this.generateButtons();
-  // }
   onPageSizeChange(value: any) {
   const newSize = Number(value);
 
@@ -170,14 +154,6 @@ export class PaginationComponent {
     pageSize: this.pageSize,
   });
 }
-
-//   onGoToInput(event: any) {
-//     const value = event.target.value.replace(/[^0-9]/g, '');
-//     // this.goToNumber = Number(value);
-
-//     this.isGoDisabled =
-//       this.goToNumber < 1 || this.goToNumber > this.totalPages;
-//   }
 onGoToInput(value: number) {
   this.goToNumber = Number(value);
 

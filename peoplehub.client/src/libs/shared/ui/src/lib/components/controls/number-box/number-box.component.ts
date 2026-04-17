@@ -13,9 +13,8 @@ import { IconComponent } from '../../primitives/icon/icon.component';
 export class NumberBoxComponent {
   @Input() label: string = 'Casual';
   @Input() isRequired: boolean = true;
-  @Input() Placeholder: string = '0';
+  @Input() placeholder: string = '0';
   @Input() parentFormGroup!: FormGroup;
-  // @Input() id!: string;
   @Input() minValue?: number;
   @Input() maxValue?: number;
   @Input() step: number = 1;
