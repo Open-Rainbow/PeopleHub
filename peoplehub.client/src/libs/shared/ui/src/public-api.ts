@@ -5,7 +5,7 @@ export { CalendarTimerComponent } from './lib/components/controls/calendar-timer
 export { CalendarComponent } from './lib/components/controls/calendar/calendar.component';
 export { CheckboxComponent } from './lib/components/controls/checkbox/checkbox.component';
 export { ChipComponent } from './lib/components/controls/chip/chip.component';
-export { DetailedCalendarComponent } from './lib/components/controls/detailed-calendar/detailed-calendar.component';
+export { PlannerCalendarComponent } from './lib/components/controls/planner-calendar/planner-calendar.component';
 export { DropdownComponent } from './lib/components/controls/dropdown/dropdown.component';
 export { FileUploadComponent } from './lib/components/controls/file-upload/file-upload.component';
 export { IconButtonPopupComponent } from './lib/components/controls/icon-button-popup/icon-button-popup.component';

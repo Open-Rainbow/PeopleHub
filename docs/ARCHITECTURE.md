@@ -345,8 +345,8 @@ PeopleHub/
 │  │  │  │    charts/ -> dial-chart, doughnut-chart, employee-org-chart,
 │  │  │  │              horizontal-bar-chart, line-chart, org-chart,
 │  │  │  │              progress-chart, scatter-chart, spinning-chart
-│  │  │  │    controls/ -> button, calendar, calendar-timer, checkbox, chip,
-│  │  │  │                detailed-calendar, dropdown, file-upload, icon-button,
+│  │  │  │    controls/ -> button, calendar, checkbox, chip,
+│  │  │  │                planner-calendar, dropdown, file-upload, icon-button,
 │  │  │  │                icon-button-popup, label-value, multi-select,
 │  │  │  │                number-box, otp, password, progress-bar, search-bar,
 │  │  │  │                search-dropdown, text-area, text-box, timepicker,
