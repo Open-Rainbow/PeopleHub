@@ -20,12 +20,17 @@ const meta: Meta<CheckboxComponent> = {
       description: 'label property',
     },
     labelPosition: {
-      control: 'text',
+      control: 'radio',
+      options: ['left', 'right'],
       description: 'labelPosition property',
     },
     isRequired: {
       control: 'boolean',
       description: 'isRequired property',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'disabled property',
     },
     labelClick: {
       control: 'boolean',
@@ -50,6 +55,7 @@ export const Default: Story = {
     label: '',
     labelPosition: 'right',
     isRequired: false,
+    disabled: false,
     labelClick: true
 },
 };
@@ -60,6 +66,7 @@ export const Colored: Story = {
     label: '',
     labelPosition: 'right',
     isRequired: false,
+    disabled: false,
     labelClick: true
 },
 };

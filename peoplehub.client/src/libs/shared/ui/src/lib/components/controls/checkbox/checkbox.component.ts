@@ -1,15 +1,22 @@
 import { CommonModule } from '@angular/common';
 import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    HostBinding,
-    Input,
-    OnChanges,
-    Output,
-    SimpleChanges
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  Output,
+  EventEmitter,
+  HostBinding,
+  SimpleChanges,
+  forwardRef,
+  ChangeDetectorRef,
 } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormGroup,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
 @Component({
   selector: 'ui-checkbox',
@@ -18,63 +25,126 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
   templateUrl: './checkbox.component.html',
   styleUrls: ['./checkbox.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => CheckboxComponent),
+      multi: true,
+    },
+  ],
 })
-export class CheckboxComponent implements OnChanges {
-
-  @Input() checked = false;
-  @Input() color = '#4CAF50';
-  @Input() tickColor: string = '#fff';
+export class CheckboxComponent implements ControlValueAccessor, OnChanges {
   @Input() label: string = '';
-  @Input() labelPosition: 'left' | 'right' = 'right';
   @Input() isRequired: boolean = false;
-  @Input() labelClick: boolean = true;
+  @Input() disabled: boolean = false;
+  @Input() color: string = '#2563eb';
+  @Input() tickColor: string = '#ffffff';
+  @Input() id!: string; // MANDATORY - required for accessibility
+  @Input() labelPosition: 'left' | 'right' = 'right'; // Label position relative to checkbox
+  @Input() labelClick: boolean = true; // Whether label click toggles checkbox
+  @Input('checked') checkedInput: boolean = false;
 
   @Input() parentFormGroup!: FormGroup;
-  @Input() id!: string;
 
   @Output() checkedChange = new EventEmitter<boolean>();
-  @Output() toggleChange = new EventEmitter<boolean>();
 
-  ngOnChanges(changes: SimpleChanges): void {}
+  private internalValue: boolean = false;
+  private onChange = (_value: boolean) => {};
+  private onTouched = () => {};
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  get checked(): boolean {
+    return this.internalValue;
+  }
+
+  set checked(value: boolean) {
+    if (this.internalValue !== value) {
+      this.internalValue = value;
+      this.onChange(value);
+      this.checkedChange.emit(value);
+      this.cdr.markForCheck();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('checkedInput' in changes) {
+      const nextValue = this.coerceBoolean(changes['checkedInput'].currentValue);
+      if (this.internalValue !== nextValue) {
+        this.internalValue = nextValue;
+        this.cdr.markForCheck();
+      }
+    }
+  }
 
   get control() {
     return this.parentFormGroup?.get(this.id);
   }
 
-  get isInvalid() {
-    return this.control?.invalid && (this.control?.dirty || this.control?.touched);
+  get isInvalid(): boolean {
+    return (
+      (this.control?.invalid &&
+        (this.control?.dirty || this.control?.touched)) ??
+      false
+    );
   }
 
-  onChange(event: Event): void {
-    const value = (event.target as HTMLInputElement).checked;
-    this.checked = value;
-
-    this.checkedChange.emit(value);
-    this.toggleChange.emit(value);
+  writeValue(value: any): void {
+    this.internalValue = this.coerceBoolean(value);
+    this.cdr.markForCheck();
   }
 
-  onLabelClick() {
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+    this.cdr.markForCheck();
+  }
+
+  onChange_internal(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.checked = target.checked;
+    if (this.control) {
+      this.control.setValue(this.checked);
+      this.control.markAsTouched();
+    }
+  }
+
+  onLabelClick(): void {
     if (!this.labelClick) {
-    return;
-  }
-
+      return;
+    }
     this.checked = !this.checked;
-
-    this.checkedChange.emit(this.checked);
-    this.toggleChange.emit(this.checked);
-
-    const ctrl = this.parentFormGroup?.get(this.id);
-    if (ctrl) ctrl.setValue(this.checked);
+    if (this.control) {
+      this.control.setValue(this.checked);
+      this.control.markAsTouched();
+    }
   }
 
-  
-  @HostBinding('style.--checkbox-active-color')
-  get checkboxColor() {
+  handleBlur(): void {
+    this.onTouched();
+    if (this.control) {
+      this.control.markAsTouched();
+    }
+  }
+
+  @HostBinding('style.--checkbox-color')
+  get checkboxColor(): string {
     return this.color;
   }
 
   @HostBinding('style.--tick-color')
-  get tickClr() {
+  get tickColor_binding(): string {
     return this.tickColor;
+  }
+
+  private coerceBoolean(value: unknown): boolean {
+    return value === true || value === 'true';
   }
 }

@@ -1,4 +1,185 @@
+// Checkbox Component Scoped Styles
+// Following Angular and Material Design Guidelines
 
+.checkbox-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: inherit;
+  position: relative;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  transition: background-color 0.15s ease;
+
+  &.label-clickable:hover:not(.disabled) {
+    background-color: rgba(37, 99, 235, 0.05);
+  }
+
+  &:not(.label-clickable) {
+    cursor: default;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.checkbox-label-right {
+  // Right label renders after checkbox input and visual
+  // No special styling needed - flexbox handles the layout
+}
+
+.checkbox-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  cursor: pointer;
+
+  &:focus-visible ~ .checkbox-visual {
+    outline: 2px solid var(--checkbox-color, #2563eb);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &:disabled ~ .checkbox-visual {
+    background-color: #f3f4f6;
+    border-color: #d1d5db;
+    cursor: not-allowed;
+  }
+
+  &:disabled ~ .checkbox-label-text {
+    color: #9ca3af;
+  }
+}
+
+.checkbox-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: white;
+  transition: all 0.2s ease;
+
+  .checkbox-input:not(:checked) ~ & {
+    background-color: white;
+    border-color: #d1d5db;
+  }
+
+  .checkbox-input:not(:checked):hover ~ & {
+    border-color: #9ca3af;
+  }
+
+  .checkbox-input:checked ~ & {
+    background-color: var(--checkbox-color, #2563eb);
+    border-color: var(--checkbox-color, #2563eb);
+  }
+
+  .checkbox-input:checked:hover ~ & {
+    background-color: var(--checkbox-color, #2563eb);
+    border-color: var(--checkbox-color, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    display: none;
+    width: 0.375rem;
+    height: 0.625rem;
+    border: solid var(--tick-color, #ffffff);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-top: -0.125rem;
+  }
+
+  .checkbox-input:checked ~ &::after {
+    display: block;
+  }
+}
+
+.checkbox-label-text {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #1f2937;
+  transition: color 0.15s ease;
+
+  .checkbox-input:not(:checked):hover ~ .checkbox-visual ~ & {
+    color: #111827;
+  }
+
+  .checkbox-input:checked ~ .checkbox-visual ~ & {
+    color: var(--checkbox-color, #2563eb);
+  }
+
+  .checkbox-label:disabled & {
+    color: #9ca3af;
+  }
+}
+
+.required-asterisk {
+  color: #dc2626;
+  font-weight: 600;
+  margin-left: 0.125rem;
+}
+
+@media (max-width: 640px) {
+  .checkbox-label {
+    gap: 0.625rem;
+    padding: 0.25rem 0.125rem;
+  }
+
+  .checkbox-visual {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .checkbox-label-text {
+    font-size: 0.875rem;
+  }
+}
+
+.checkbox-input.invalid:checked ~ .checkbox-visual {
+  border-color: #dc2626;
+  background-color: #dc2626;
+}
+
+.checkbox-input.invalid ~ .checkbox-visual {
+  border-color: #dc2626;
+}
+
+@media print {
+  .checkbox-label {
+    padding: 0;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  .checkbox-visual {
+    border-width: 1px;
+  }
+}
 
 
 

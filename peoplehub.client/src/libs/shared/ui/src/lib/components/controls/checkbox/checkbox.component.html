@@ -1,58 +1,54 @@
-<div class="checkbox-container flex items-center gap-[10px]" [formGroup]="parentFormGroup">
-
-  @if (isRequired && labelPosition === 'right') {
-    <span class="required text-red-500 font-semibold">*</span>
-  }
-
+<div class="checkbox-wrapper" [formGroup]="parentFormGroup">
+  
+  <!-- Label on left -->
   @if (labelPosition === 'left') {
-    
-    <span class="text-sm transition-colors duration-200 ease-in-out cursor-pointer" [class.text-[#999]]="!checked"
-      [class.text-black]="checked" (click)="onLabelClick()">
-      {{ label }}
-    </span>
+    <label 
+      [for]="id" 
+      class="checkbox-label" 
+      [class.disabled]="disabled"
+      [class.label-clickable]="labelClick"
+      (click)="labelClick ? onLabelClick() : null">
+      <span class="checkbox-label-text">
+        {{ label }}
+        @if (isRequired) {
+          <span class="required-asterisk">*</span>
+        }
+      </span>
+    </label>
   }
 
-  <div class="checkbox-wrapper flex items-center">
-    
-      <input type="checkbox" [id]="id" [checked]="checked" [formControlName]="id" (change)="onChange($event)" class="
-          appearance-none
-          w-5 h-5
-          border-2 border-[#999]
-          rounded
-          bg-white
-          cursor-pointer
-          relative
-          transition-all duration-200 ease-in-out
-      
-          hover:border-gray-500
-          active:scale-95
-      
-          checked:bg-[var(--checkbox-active-color)]
-          checked:border-[var(--checkbox-active-color)]
-      
-          checked:after:content-['']
-          checked:after:absolute
-          checked:after:top-[1px]
-          checked:after:left-[5px]
-          checked:after:w-[6px]
-          checked:after:h-[12px]
-          checked:after:border-r-[3px]
-          checked:after:border-b-[3px]
-          checked:after:border-[var(--tick-color)]
-          checked:after:rotate-45
-        " />
-  </div>
+  <!-- Checkbox input (hidden, real checkbox) -->
+  <input
+    type="checkbox"
+    [id]="id"
+    [checked]="checked"
+    [disabled]="disabled"
+    [formControlName]="id"
+    (change)="onChange_internal($event)"
+    (blur)="handleBlur()"
+    class="checkbox-input"
+    [class.invalid]="isInvalid"
+    aria-role="checkbox"
+  />
+  
+  <!-- Visual checkbox representation -->
+  <span class="checkbox-visual"></span>
 
-  @if (isRequired && labelPosition === 'left') {
-    <span class="required text-red-500 font-semibold">*</span>
-  }
-
+  <!-- Label on right -->
   @if (labelPosition === 'right') {
-    
-    <span class="text-sm transition-colors duration-200 ease-in-out cursor-pointer" [class.text-[#999]]="!checked"
-      [class.text-black]="checked" (click)="onLabelClick()">
-      {{ label }}
-    </span>
+    <label 
+      [for]="id" 
+      class="checkbox-label checkbox-label-right" 
+      [class.disabled]="disabled"
+      [class.label-clickable]="labelClick"
+      (click)="labelClick ? onLabelClick() : null">
+      <span class="checkbox-label-text">
+        {{ label }}
+        @if (isRequired) {
+          <span class="required-asterisk">*</span>
+        }
+      </span>
+    </label>
   }
 
 </div>
