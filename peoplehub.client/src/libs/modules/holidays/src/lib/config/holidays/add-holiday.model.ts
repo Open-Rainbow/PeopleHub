@@ -1,10 +1,12 @@
-import { IFormFieldConfig } from '../form-field-config.model';
+import { IFormFieldConfig } from 'common';
 
-interface IHolidayFormFields {
+export interface IHolidayFormFields {
     title: IFormFieldConfig;
     date: IFormFieldConfig;
     type: IFormFieldConfig;
     description: IFormFieldConfig;
 }
 
-export type IAddHolidayForm = IHolidayFormFields;
+export type { IAddHolidayForm } from './add-holiday.types';
+
+

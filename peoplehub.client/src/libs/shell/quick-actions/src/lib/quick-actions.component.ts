@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'ph-quick-actions',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'quick-actions-root',
   standalone: true,
   imports: [],
   template: `
@@ -14,3 +15,4 @@ import { Component } from '@angular/core';
 export class QuickActionsComponent {
 
 }
+

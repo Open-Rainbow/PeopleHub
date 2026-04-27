@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'ph-breadcrumbs',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'breadcrumbs-root',
   standalone: true,
   imports: [],
   template: `
@@ -14,3 +15,4 @@ import { Component } from '@angular/core';
 export class BreadcrumbsComponent {
 
 }
+

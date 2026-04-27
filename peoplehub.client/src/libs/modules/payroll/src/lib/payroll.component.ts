@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'ph-payroll',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'payroll-root',
   standalone: true,
   imports: [],
   template: `
@@ -14,3 +15,4 @@ import { Component } from '@angular/core';
 export class PayrollComponent {
 
 }
+

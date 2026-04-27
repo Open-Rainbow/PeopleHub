@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'ph-feature-flags',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'feature-flags-root',
   standalone: true,
   imports: [],
   template: `
@@ -14,3 +15,4 @@ import { Component } from '@angular/core';
 export class FeatureFlagsComponent {
 
 }
+

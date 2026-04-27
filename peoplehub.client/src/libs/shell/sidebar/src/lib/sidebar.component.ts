@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'ph-sidebar',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'sidebar-root',
   standalone: true,
   imports: [],
   template: `
@@ -14,3 +15,4 @@ import { Component } from '@angular/core';
 export class SidebarComponent {
 
 }
+

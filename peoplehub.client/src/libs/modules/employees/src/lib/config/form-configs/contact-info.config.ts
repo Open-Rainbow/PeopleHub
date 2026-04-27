@@ -1,0 +1,133 @@
+import { IContactInfoForm } from "./contact-info.model";
+
+export const contactInfoForm: IContactInfoForm =
+{
+    "personalMail": {
+        id: 'personalMail',
+        isHide: false,
+        readOnly: true,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: true,
+        label: 'Personal Mail',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 1,
+        isDisable: false,
+        placeholder:'Enter your mail Id'
+    },
+    "linkedinUrl": {
+        id: 'linkedinUrl',
+        isHide: false,
+        readOnly: true,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: true,
+        label: 'Linkedin Url',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 2,
+        isDisable: false,
+        placeholder:'Enter your linkedin url'
+
+    },
+    "contactNo": {
+        id: 'contactNo',
+        isHide: false,
+        readOnly: true,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: true,
+        label: 'Contact No',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 3,
+        isDisable: false,
+        placeholder:'Enter your contact number'
+    },
+    "permanentAddress": {
+        id: 'permanentAddress',
+        isHide: false,
+        readOnly: true,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: true,
+        label: 'Permanent Address',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 4,
+        isDisable: false,
+        placeholder:'Enter your permanent address'
+    },
+    "currentAddress": {
+        id: 'currentAddress',
+        isHide: false,
+        readOnly: true,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: true,
+        label: 'Current Address',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 5,
+        isDisable: false,
+        placeholder:'Enter your current address'
+    },
+    "checkToggle": {
+        id: 'checkToggle',
+        isHide: false,
+        readOnly: true,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: false,
+        label: 'Same as Permanent Address',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 6,
+        isDisable: false,
+        placeholder: ''
+    },
+
+    "contactName": {
+        id: 'contactName',
+        isHide: false,
+        readOnly: true,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: true,
+        label: 'Contact Name',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 7,
+        isDisable: false,
+        placeholder:'Enter name'
+    },
+    "contactNumber": {
+        id: 'contactNumber',
+        isHide: false,
+        readOnly: true,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: true,
+        label: 'Contact Number',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 8,
+        isDisable: false,
+        placeholder:'Enter Contact Number'
+    },
+    "relation": {
+        id: 'relation',
+        isHide: false,
+        readOnly: true,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: true,
+        label: "Relation",
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 9,
+        isDisable: false,
+        placeholder:'Select Your Relation'
+    },
+}

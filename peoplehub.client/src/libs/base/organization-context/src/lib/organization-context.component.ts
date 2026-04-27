@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'ph-organization-context',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'organization-context-root',
   standalone: true,
   imports: [],
   template: `
@@ -14,3 +15,4 @@ import { Component } from '@angular/core';
 export class OrganizationContextComponent {
 
 }
+

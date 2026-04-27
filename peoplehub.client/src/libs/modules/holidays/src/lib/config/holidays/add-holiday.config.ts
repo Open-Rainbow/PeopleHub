@@ -14,7 +14,7 @@ export const addHolidayForm: IAddHolidayForm =
         fieldValue: null,
         tabIndex: 1,
         isDisable: false,
-        placeHolder: 'Enter the title'
+        placeholder: 'Enter the title'
     },
     date: {
         id: 'date',
@@ -41,7 +41,7 @@ export const addHolidayForm: IAddHolidayForm =
         fieldValue: null,
         tabIndex: 3,
         isDisable: false,
-        placeHolder: 'Select severity type'
+        placeholder: 'Select severity type'
     },
     description: {
         id: 'description',
@@ -55,6 +55,6 @@ export const addHolidayForm: IAddHolidayForm =
         fieldValue: null,
         tabIndex: 4,
         isDisable: false,
-        placeHolder: 'Enter Description'
+        placeholder: 'Enter Description'
     },
 };

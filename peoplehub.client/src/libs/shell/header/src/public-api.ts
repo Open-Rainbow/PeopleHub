@@ -1,6 +1,4 @@
-﻿/*
- * Public API Surface of header
- */
 
-export * from './lib/services/header.service';
+
 export * from './lib/header.component';
+export * from './lib/services/header.service';
