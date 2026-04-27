@@ -1,7 +1,6 @@
 export * from './lib/services/ui.service';
 export * from './lib/ui.component';
 export { ButtonComponent } from './lib/components/controls/button/button.component';
-export { CalendarTimerComponent } from './lib/components/controls/calendar-timer/calendar-timer.component';
 export { CalendarComponent } from './lib/components/controls/calendar/calendar.component';
 export { CheckboxComponent } from './lib/components/controls/checkbox/checkbox.component';
 export { ChipComponent } from './lib/components/controls/chip/chip.component';
