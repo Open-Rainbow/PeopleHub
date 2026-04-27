@@ -6,7 +6,9 @@
   },
   "include": [
     "./*.ts",
-    "../src/**/*.ts"
+    "../src/**/*.stories.ts",
+    "../src/**/*.story.ts",
+    "../src/**/*.mdx"
   ],
   "exclude": [
     "../src/**/*.spec.ts"
