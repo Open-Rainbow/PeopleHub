@@ -1,0 +1,591 @@
+.inputBoxHeight {
+  height: 36px;
+  border: 1px solid #e2e8f0;
+  width: 100%;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+label {
+  color: black !important;
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.required {
+  color: red;
+}
+
+
+
+.error-text-box {
+  color: red !important;
+}
+
+input.save-state {
+  border-color: green !important;
+  border-width: 1px !important;
+}
+
+
+
+input:focus {
+  border-color: #2563eb !important;
+  border-width: 1px !important;
+  box-shadow: none;
+}
+
+
+
+input:focus~label {
+  color: #2563eb !important;
+}
+
+input.error {
+  border-color: #dc2626 !important;
+}
+
+input.error~label {
+  color: #dc2626 !important;
+}
+
+input.error:focus {
+  border-color: #dc2626 !important;
+}
+
+
+input.error:focus~label {
+  color: #dc2626 !important;
+}
+
+
+input.save-state:focus~label {
+  color: green !important;
+}
+
+
+
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+label {
+  margin-bottom: 6px;
+  
+  font-weight: 500;
+  
+  
+}
+
+
+
+.required-star {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+
+textarea.error {
+  border: 1px solid #dc2626 !important;
+  box-shadow: none !important;
+  background-color: rgba(220, 38, 38, 0.02) !important;
+}
+
+textarea.error~label {
+  color: #dc2626 !important;
+}
+
+textarea.error:focus {
+  border-color: #dc2626 !important;
+}
+
+textarea.error:focus~label {
+  color: #dc2626 !important;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #2563eb !important;
+  
+  box-shadow: none;
+  background-color: #fff !important;
+}
+
+textarea:focus~label {
+  color: #2563eb !important;
+}
+
+
+textarea.save-state {
+  border-color: green !important;
+  
+  box-shadow: none !important;
+}
+
+textarea.save-state:focus~label {
+  color: green !important;
+}
+
+
+
+
+
+.error-label {
+  color: #e11d48 !important;
+}
+
+.top-3 {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+
+.custom-dropdown.active-border {
+  border-color: #2563eb !important;
+}
+
+.custom-dropdown-selected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 500;
+  min-height: 36px;
+
+  border: 1px solid #d1d5db;
+
+
+}
+
+
+.placeholder {
+  color: #94a3b8;
+}
+
+
+.custom-dropdown.active-border .custom-dropdown-selected {
+  border-color: #2563eb !important;
+}
+
+
+.custom-dropdown-list {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  list-style: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  margin-top: 4px;
+  z-index: 1000;
+  overflow-y: auto;
+  cursor: default;
+  box-sizing: border-box !important;
+}
+
+
+.calendar-icon {
+
+  position: absolute;
+  right: 10px;
+  top: 50% !important;
+  display: inline-block;
+  transform: translateY(-50%) scale(2.0) rotate(0deg);
+  color: #888;
+  pointer-events: none;
+  transition: transform 0.3s ease, color 0.2s ease;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-icon.rotated {
+  transform: translateY(-50%) scale(2.0) rotate(180deg);
+}
+
+.dropdown-toggle:focus+.calendar-icon {
+  color: #007BFF;
+}
+
+.dropdown-toggle:focus {
+  outline: none;
+  border-color: #007BFF;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  background-color: #f0f8ff;
+  transition: all 0.3s ease;
+}
+
+.resize-hr {
+  position: sticky;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  
+  height: 4px;
+  background-color: #9ca3af;
+  border: none;
+  border-radius: 4px;
+  
+  cursor: ns-resize;
+  transition: all 0.2s ease;
+}
+
+
+.resize-hr:hover {
+  width: 30px;
+  background-color: #6b7280;
+}
+
+
+.dropdown-toggle:focus+.calendar-icon {
+  color: #007BFF;
+}
+
+.resize-hr.dragging {
+  width: 30px;
+  background-color: #4b5563;
+}
+
+
+
+.dropdown-wrapper {
+  text-align: left;
+}
+
+.label-name {
+  display: block;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+label {
+  color: #1f2937 !important;
+  display: block;
+}
+
+.required {
+  color: red;
+}
+
+
+
+
+
+.custom-dropdown-selected {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  height: 36px;
+  font-size: 12px;
+}
+
+span.absolute {
+  pointer-events: none;
+}
+
+.custom-dropdown-selected.placeholder {
+  color: #9ca3af;
+}
+
+span.required {
+  color: red;
+}
+
+.custom-dropdown-list li {
+  margin: 4px 3px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+
+
+}
+
+.custom-dropdown-list li label {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  margin: 3px 5px;
+  font-size: 14px;
+  color: #333;
+  
+}
+
+.custom-dropdown-list li:hover {
+  background-color: #c7cacf;
+  font-weight: bold;
+  
+}
+
+.dropdown-toggle:checked~.custom-dropdown-list {
+  display: block;
+
+}
+
+
+
+.custom-dropdown-list li.selected {
+  background-color: #c7cacf;
+}
+
+.custom-dropdown-list.open-up {
+  bottom: 100%;
+  top: auto;
+  margin-top: 0;
+  margin-bottom: 4px;
+}
+
+.dropdown-toggle:checked+.custom-dropdown-selected {
+  border: 1px solid #007BFF !important;
+
+}
+
+.dropdown-toggle:checked+.custom-dropdown-selected .calendar-icon {
+  color: #007BFF;
+}
+
+
+
+
+
+
+
+
+
+.dob-input {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 14px;
+  width: 100%;
+  background: white;
+  cursor: pointer;
+}
+
+.dob-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.error {
+  border: 1px solid #dc2626 !important;
+  box-shadow: none !important;
+  background-color: rgba(220, 38, 38, 0.02) !important;
+  color: #dc2626 !important;
+}
+
+.error input,
+.error textarea,
+.error .dob-input,
+.error .custom-dropdown-selected {
+  border-color: #dc2626 !important;
+  background-color: rgba(220, 38, 38, 0.02) !important;
+  box-shadow: none !important;
+  color: black !important;
+}
+
+
+
+.dob-input.error {
+  border-color: #dc2626 !important;
+  background-color: transparent !important;
+  color: #dc2626 !important;
+}
+
+
+
+.container.active-border .dob-label {
+  color: #2563eb !important;
+  
+}
+
+.container .dob-label.invalid-label {
+  color: #dc2626;
+}
+
+
+.error.custom-dropdown {
+  border: none !important;
+  padding: 0 !important;
+  background: none !important;
+}
+
+
+
+
+.container.floating .dob-label,
+.dob-input:focus + .dob-label,
+.dob-input:not(:placeholder-shown) + .dob-label {
+  top: 0;
+  transform: translateY(-50%) scale(0.85);
+  color: #2563eb;
+  transition: all 0.25s ease;
+}
+
+.dob-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: none !important;
+  box-shadow: none !important;
+}
+.dob-input:not(:placeholder-shown) {
+  background: #fff !important;
+}
+
+.relative,
+.form-group,
+.container,
+.custom-dropdown {
+  position: relative;
+  --input-bg: #fff;
+}
+.relative label,
+.form-group label,
+.container .dob-label {
+  background: transparent !important;
+  padding: 0 0;
+  z-index: 3;
+}
+.container .dob-label::before {
+  transition: opacity 0.2s ease;
+}
+
+.relative label::before,
+.form-group label::before,
+.container .dob-label::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  top: 50%;
+  height: 2px;
+  background: var(--input-bg);
+  transform: translateY(-50%);
+  z-index: -1;
+  opacity: 0;
+}
+input:focus ~ label::before,
+input:not(:placeholder-shown) ~ label::before {
+  opacity: 1;
+}
+textarea:focus ~ label::before,
+textarea:not(:placeholder-shown) ~ label::before {
+  opacity: 1;
+}
+.custom-dropdown.active-border label::before {
+  opacity: 1;
+}
+.container.active-border .dob-label::before {
+  opacity: 1;
+}
+
+.dob-input[value]:not([value=""]) {
+  background: #fff !important;
+}
+.dob-input:focus + .dob-label::before {
+  opacity: 1;
+}
+
+.dob-label.floated::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: #fff;
+  transform: translateY(-50%);
+  z-index: -1;
+}
+.container .dob-label.floating-label::before {
+  opacity: 1;
+}
+.custom-dropdown > span::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  top: 50%;
+  height: 2px;
+  background: #fff;     
+  transform: translateY(-50%);
+  z-index: -1;
+  opacity: 0;
+}
+.custom-dropdown > span {
+  position: absolute;   
+  z-index: 2;           
+}
+.custom-dropdown.has-value > span::before {
+  opacity: 1;
+}
+.custom-dropdown.has-value > span::before,
+.custom-dropdown.active-border > span::before {
+  opacity: 1;
+}
+.custom-dropdown.active-border > span {
+  color: #2563eb;
+
+}
+body,
+input,
+textarea,
+select,
+button,
+label,
+.custom-dropdown,
+.custom-dropdown-selected,
+.calendar-container,
+.calendar-header,
+.calendar-day,
+.calendar-weekdays,
+.dropdown-display,
+.dob-input {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.left-3 {
+  left: 13px;
+}
+
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.peer:focus ~ .peer-focus\:text-xs {
+  font-size: 0.75rem;
+}
+
+
+
+.-top-2\.5 { top: -11.5px !important; }
+.text-base {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+}
