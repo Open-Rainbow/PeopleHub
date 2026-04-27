@@ -153,6 +153,29 @@ function validateTemplates(templateFiles, contractMap) {
   return violations;
 }
 
+function validateLegacyNaming(files) {
+  const violations = [];
+  const supportedExtensions = new Set(['.ts', '.html', '.mdx']);
+  // Intentionally matches legacy, non-camelCase tokens that must be rejected.
+  // Keep these values as historical bad spellings to prevent regressions.
+  const legacyNameRegex = /\b(isexpand|hoverBGColor|placeHolder|dropDownModel|Placeholder|lebelsize|valuesize|subTitle)\b/g;
+
+  for (const file of files) {
+    if (!supportedExtensions.has(path.extname(file))) {
+      continue;
+    }
+
+    const text = fs.readFileSync(file, 'utf8');
+    const rel = toRel(file);
+    for (const match of text.matchAll(legacyNameRegex)) {
+      const token = match[1] ?? match[0];
+      violations.push(`${rel}:${lineOfIndex(text, match.index ?? 0)} -> legacy non-camelCase token "${token}" is not allowed`);
+    }
+  }
+
+  return violations;
+}
+
 if (!fs.existsSync(libsRoot)) {
   console.error('Unable to validate Angular guidelines: src/libs directory not found.');
   process.exit(1);
@@ -163,7 +186,10 @@ const componentFiles = allFiles.filter((f) => f.endsWith('.component.ts'));
 const templateFiles = allFiles.filter((f) => f.endsWith('.component.html'));
 
 const contractMap = buildComponentContractMap(componentFiles);
-const violations = validateTemplates(templateFiles, contractMap);
+const violations = [
+  ...validateTemplates(templateFiles, contractMap),
+  ...validateLegacyNaming(allFiles),
+];
 
 if (violations.length > 0) {
   console.error('Angular guideline validation failed (binding contracts / camelCase consistency):');
