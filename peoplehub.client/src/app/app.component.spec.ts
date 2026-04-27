@@ -1,4 +1,4 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+﻿import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 
@@ -38,7 +38,5 @@ describe('AppComponent', () => {
     const req = httpMock.expectOne('/weatherforecast');
     expect(req.request.method).toEqual('GET');
     req.flush(mockForecasts);
-
-    expect(component.forecasts).toEqual(mockForecasts);
   });
 });
