@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/angular';
 import { ChipComponent } from './chip.component';
+import { CHIP_VARIANTS } from '../../../models/component-models/chip.types';
 
 type Story = StoryObj<ChipComponent>;
 
@@ -36,8 +37,18 @@ const meta: Meta<ChipComponent> = {
       description: 'borderRadius property',
     },
     size: {
-      control: 'text',
+      control: 'select',
+      options: ['extrasmall', 'small', 'medium', 'large', 'status'],
       description: 'size property',
+    },
+    variant: {
+      control: 'select',
+      options: CHIP_VARIANTS,
+      description: 'reference variant palette',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'disabled property',
     },
     usePointerCursor: {
       control: 'boolean',
@@ -60,10 +71,12 @@ export const Default: Story = {
   args: {
     text: 'text',
     color: '#6b7280',
+    variant: 'lightGrey',
     activeBGColor: '#7c3aed',
     activeColor: 'white',
     borderRadius: '9999px',
     size: 'extrasmall',
+    disabled: false,
     usePointerCursor: true
 },
 };
@@ -72,10 +85,12 @@ export const Colored: Story = {
   args: {
     text: 'text',
     color: '#6b7280',
+    variant: 'lightGrey',
     activeBGColor: '#7c3aed',
     activeColor: 'white',
     borderRadius: '9999px',
     size: 'extrasmall',
+    disabled: false,
     usePointerCursor: true,
     bgColor: '#FF5733'
 },

@@ -1,5 +1,17 @@
-import { Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import {
+  ChipPalette,
+  ChipVariant,
+  CHIP_VARIANT_PALETTE,
+} from '../../../models/component-models/chip.types';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -7,20 +19,25 @@ import { FormGroup } from '@angular/forms';
   templateUrl: './chip.component.html',
   styleUrls: ['./chip.component.scss'],
 })
-export class ChipComponent implements OnChanges {
+export class ChipComponent implements OnChanges, OnInit {
 
   @Input() text?: string = 'text';
 
 
-  @Input() color: string = '#6b7280';
+  private readonly defaultTextColor = '#6b7280';
+
+  @Input() color: string = this.defaultTextColor;
 
   
   @Input() bgColor?: string;
 
+  @Input() variant?: ChipVariant;
+  @Input() disabled: boolean = false;
+
   @Input() activeBGColor: string = '#7c3aed';
   @Input() activeColor: string = 'white';
   @Input() borderRadius: string = '9999px';
-  @Input() size: 'extrasmall' | 'small' | 'medium' | 'large' = 'extrasmall';
+  @Input() size: 'extrasmall' | 'small' | 'medium' | 'large' | 'status' = 'extrasmall';
   @Input() usePointerCursor: boolean = true;
 
   height = '28px';
@@ -37,8 +54,24 @@ export class ChipComponent implements OnChanges {
     return this.parentFormGroup?.get(this.id);
   }
 
-  get isInvalid() {
-    return this.control?.invalid && (this.control?.dirty || this.control?.touched);
+  get isInvalid(): boolean {
+    return (
+      (this.control?.invalid && (this.control?.dirty || this.control?.touched)) ??
+      false
+    );
+  }
+
+  get variantPalette(): ChipPalette | undefined {
+    return this.variant ? CHIP_VARIANT_PALETTE[this.variant] : undefined;
+  }
+
+  get textColor(): string {
+    const palette = this.variantPalette;
+    if (palette && this.color === this.defaultTextColor) {
+      return palette.text;
+    }
+
+    return this.color;
   }
 
  
@@ -47,7 +80,11 @@ export class ChipComponent implements OnChanges {
       return this.bgColor; 
     }
 
-    return this.convertToOpacity(this.color, 0.1);
+    if (this.variantPalette) {
+      return this.variantPalette.background;
+    }
+
+    return this.convertToOpacity(this.textColor, 0.1);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -64,6 +101,12 @@ export class ChipComponent implements OnChanges {
         this.height = '33px';
         this.fontSize = '1.1rem';
         this.horizontalGap = '22px';
+        break;
+
+      case 'status':
+        this.height = '28px';
+        this.fontSize = '0.75rem';
+        this.horizontalGap = '8px';
         break;
 
       case 'medium':
@@ -85,6 +128,16 @@ export class ChipComponent implements OnChanges {
         this.horizontalGap = '12px';
         break;
     }
+  }
+
+  onMouseEnter(): void {
+    if (!this.disabled) {
+      this.isHovered = true;
+    }
+  }
+
+  onMouseLeave(): void {
+    this.isHovered = false;
   }
 
 
