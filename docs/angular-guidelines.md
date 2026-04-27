@@ -7,6 +7,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Enable strict type checking (`strict: true` in `tsconfig.json`).
 - Prefer type inference when types are obvious.
 - Avoid `any`; use `unknown` when uncertain.
+- Always maintain camelCase naming wherever required (variables, properties, inputs/outputs, methods, config keys, and template bindings).
 
 ## Core Principles
 
