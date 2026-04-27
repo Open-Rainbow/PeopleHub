@@ -1,0 +1,180 @@
+<section class="planner-calendar" aria-label="Planner calendar">
+  <header class="planner-toolbar" aria-label="Planner toolbar">
+    <div class="planner-toolbar__identity">
+      <p class="planner-toolbar__kicker">Planning calendar</p>
+      <h2 class="planner-toolbar__title">{{ periodLabel() }}</h2>
+    </div>
+
+    <div class="planner-toolbar__controls">
+      <div class="planner-toolbar__nav" role="group" aria-label="Calendar navigation">
+        <button type="button" class="planner-button planner-button--ghost" (click)="goToPrevious()" aria-label="Previous period">
+          Previous
+        </button>
+        <button type="button" class="planner-button planner-button--primary" (click)="goToToday()" aria-label="Go to today">
+          Today
+        </button>
+        <button type="button" class="planner-button planner-button--ghost" (click)="goToNext()" aria-label="Next period">
+          Next
+        </button>
+      </div>
+
+      <div class="planner-toolbar__views" role="group" aria-label="Calendar view switcher">
+        @for (view of availableViews(); track view) {
+          <button
+            type="button"
+            class="planner-button planner-button--view"
+            [class.is-active]="isCurrentView(view)"
+            (click)="setView(view)">
+            {{ view | titlecase }}
+          </button>
+        }
+      </div>
+    </div>
+  </header>
+
+  <div class="planner-layout">
+    <div class="planner-main">
+      @if (isCurrentView('month')) {
+        <div class="planner-month" role="grid" aria-label="Month view">
+          <div class="planner-month__weekday-row" role="row">
+            @for (weekDay of weekDayHeaders; track weekDay) {
+              <div class="planner-month__weekday" role="columnheader">{{ weekDay }}</div>
+            }
+          </div>
+
+          <div class="planner-month__grid">
+            @for (dayCell of monthCells(); track trackByDayCell($index, dayCell)) {
+              <article
+                class="planner-day"
+                tabindex="0"
+                role="button"
+                [class.is-current-month]="dayCell.isCurrentMonth"
+                [class.is-selected]="dayCell.isSelected"
+                [class.is-today]="dayCell.isToday"
+                (click)="onMonthCellClick(dayCell)"
+                (keydown.enter)="onMonthCellClick(dayCell)"
+                (keydown.space)="onMonthCellClick(dayCell)">
+                <span class="planner-day__date" [attr.aria-current]="dayCell.isToday ? 'date' : null">
+                  {{ dayCell.dayNumber }}
+                </span>
+
+                <div class="planner-day__events">
+                  @for (event of dayCell.events.slice(0, 3); track trackByEvent($index, event)) {
+                    <button
+                      type="button"
+                      class="planner-event"
+                      [class.color-blue]="event.color === 'blue'"
+                      [class.color-green]="event.color === 'green'"
+                      [class.color-amber]="event.color === 'amber'"
+                      [class.color-rose]="event.color === 'rose'"
+                      [class.color-violet]="event.color === 'violet'"
+                      (click)="$event.stopPropagation(); onEventClick(event, dayCell.date)">
+                      <span class="planner-event__title">{{ event.title }}</span>
+                      <span class="planner-event__time">{{ formatEventTime(event) }}</span>
+                    </button>
+                  }
+
+                  @if (dayCell.events.length > 3) {
+                    <p class="planner-day__more">+{{ dayCell.events.length - 3 }} more</p>
+                  }
+
+                  @if (dayCell.events.length === 0 && dayCell.isSelected) {
+                    <p class="planner-day__empty">No events</p>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+        </div>
+      }
+
+      @if (!isCurrentView('month')) {
+        <div class="planner-schedule" [class.planner-schedule--single]="isCurrentView('day')" role="table" aria-label="Schedule view">
+          <div class="planner-schedule__header" role="rowgroup">
+            <div class="planner-schedule__spacer" aria-hidden="true"></div>
+            @for (weekDay of weekDays(); track trackByWeekDay($index, weekDay)) {
+              <button
+                type="button"
+                class="planner-schedule__day"
+                [class.is-selected]="isSelectedDate(weekDay.date)"
+                [class.is-today]="weekDay.isToday"
+                (click)="selectDate(weekDay.date)">
+                <span>{{ weekDay.shortName }}</span>
+                <strong>{{ weekDay.dayNumber }}</strong>
+              </button>
+            }
+          </div>
+
+          <div class="planner-schedule__body" role="rowgroup">
+            @for (hour of timelineHours; track hour) {
+              <div class="planner-schedule__row" role="row">
+                <div class="planner-schedule__time" role="cell">{{ formatHourLabel(hour) }}</div>
+
+                @for (weekDay of weekDays(); track trackByWeekDay($index, weekDay)) {
+                  <div class="planner-schedule__cell" role="cell">
+                    @for (event of getEventsForHour(weekDay.date, hour); track trackByEvent($index, event)) {
+                      <button
+                        type="button"
+                        class="planner-event planner-event--compact"
+                        [class.color-blue]="event.color === 'blue'"
+                        [class.color-green]="event.color === 'green'"
+                        [class.color-amber]="event.color === 'amber'"
+                        [class.color-rose]="event.color === 'rose'"
+                        [class.color-violet]="event.color === 'violet'"
+                        (click)="onEventClick(event, weekDay.date)">
+                        <span class="planner-event__title">{{ event.title }}</span>
+                        <span class="planner-event__time">{{ formatEventTime(event) }}</span>
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <aside class="planner-sidebar" aria-label="Planner sidebar">
+      <section class="planner-sidebar__section">
+        <p class="planner-sidebar__label">Selected date</p>
+        <h3 class="planner-sidebar__heading">{{ formatSelectedDate() }}</h3>
+
+        @if (selectedDayEvents().length === 0) {
+          <p class="planner-sidebar__empty">No planned items for this date.</p>
+        }
+
+        @for (event of selectedDayEvents(); track trackByEvent($index, event)) {
+          <article class="planner-sidebar__event-card">
+            <p class="planner-sidebar__event-title">{{ event.title }}</p>
+            <p class="planner-sidebar__event-time">{{ formatEventTime(event) }}</p>
+            @if (event.location) {
+              <p class="planner-sidebar__event-meta">{{ event.location }}</p>
+            }
+            @if (event.ownerName) {
+              <p class="planner-sidebar__event-meta">Owner: {{ event.ownerName }}</p>
+            }
+          </article>
+        }
+      </section>
+
+      <section class="planner-sidebar__section" [class.is-hidden]="sidebarMode() === 'details'">
+        <p class="planner-sidebar__label">Upcoming</p>
+
+        @if (upcomingEvents().length === 0) {
+          <p class="planner-sidebar__empty">No upcoming events in this period.</p>
+        }
+
+        @for (event of upcomingEvents(); track trackByEvent($index, event)) {
+          <button
+            type="button"
+            class="planner-sidebar__upcoming"
+            (click)="onUpcomingEventClick(event)">
+            <span class="planner-sidebar__upcoming-title">{{ event.title }}</span>
+            <span class="planner-sidebar__upcoming-time">{{ formatEventTime(event) }}</span>
+          </button>
+        }
+      </section>
+    </aside>
+  </div>
+</section>

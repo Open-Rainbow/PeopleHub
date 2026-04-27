@@ -1,0 +1,22 @@
+import { Meta, Canvas, Controls, Stories } from 'storybook/blocks';
+import * as StoriesRef from './planner-calendar.stories';
+
+<Meta of={StoriesRef} />
+
+# Planner Calendar
+
+Reusable admin-style calendar built for month, week, and day planning workflows.
+
+<Canvas of={StoriesRef.Default} />
+
+## Parent Integration Example
+
+<Canvas of={StoriesRef.ParentUsageExample} />
+
+## Props
+
+<Controls of={StoriesRef.Default} />
+
+## Variants
+
+<Stories includePrimary={false} />
