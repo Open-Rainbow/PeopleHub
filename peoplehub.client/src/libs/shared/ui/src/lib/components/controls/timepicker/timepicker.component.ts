@@ -1,5 +1,4 @@
-import {
-    AfterViewInit,
+import { AfterViewInit,
     Component,
     ElementRef,
     EventEmitter,
@@ -8,12 +7,12 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    ViewChild
-} from '@angular/core';
+    ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import type { TimeState } from '../../../models/component-models/time-state.model';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-timepicker',
   templateUrl: './timepicker.component.html',
   styleUrls: ['./timepicker.component.scss'],

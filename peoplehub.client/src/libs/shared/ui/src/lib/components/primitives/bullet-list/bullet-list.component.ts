@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, ComponentFactoryResolver, Input, ViewContainerRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, Input, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
 import { IconComponent } from '../icon/icon.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-bullet-list',
   templateUrl: './bullet-list.component.html',
   imports: [CommonModule, IconComponent],

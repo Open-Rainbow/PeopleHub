@@ -1,7 +1,9 @@
 <div class="relative w-full" [formGroup]="parentFormGroup">
 
   <input type="text" [id]="id" [formControlName]="id" [placeholder]="placeholder" [attr.maxlength]="maxLength"
-    [readonly]="isReadOnly" [tabindex]="tabindex" [ngStyle]="getInputStyle()" [class.error]="isInvalid" [value]="value"
+    [readonly]="isReadOnly" [tabindex]="tabindex" [class.error]="isInvalid" [value]="value"
+    [style.background-color]="'white'"
+    [style.border]="showBorder ? (isInvalid ? '1px solid #dc2626' : '') : 'none'"
     class="peer inputBoxHeight px-3  pb-1 text-[14px] text-gray-800 outline-none transition bg-white
            placeholder-transparent 
            focus:placeholder-gray-400
@@ -20,9 +22,8 @@
     {{ label }}
     @if (isRequired) { <span class="required">*</span> }
   </label>
-
   @if (showCharCount ) {
-  <p [ngStyle]="{ color: isInvalid ? '#dc2626' : '#000000' }"
+  <p [style.color]="isInvalid ? '#dc2626' : '#000000'"
     class="text-[11px] font-medium text-left mt-1 transition-opacity duration-200" [class.opacity-100]="shouldShowCount"
     [class.opacity-0]="!shouldShowCount">
     {{ currentCharCount }} of {{ maxLength }} characters left

@@ -50,26 +50,26 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'totalItems': 77,
-    'pageSize': 10,
-    'currentPage': 1,
-    'isDropCount': true,
-    'isPagination': true,
-    'isGoto': true,
-    'isShowingEntries': true,
-    'backgroundColor': '#fff4f4'
+    totalItems: 77,
+    pageSize: 10,
+    currentPage: 1,
+    isDropCount: true,
+    isPagination: true,
+    isGoto: true,
+    isShowingEntries: true,
+    backgroundColor: '#fff4f4'
 },
 };
 
 export const Colored: Story = {
   args: {
-    'totalItems': 77,
-    'pageSize': 10,
-    'currentPage': 1,
-    'isDropCount': true,
-    'isPagination': true,
-    'isGoto': true,
-    'isShowingEntries': true,
-    'backgroundColor': '#fff4f4'
+    totalItems: 77,
+    pageSize: 10,
+    currentPage: 1,
+    isDropCount: true,
+    isPagination: true,
+    isGoto: true,
+    isShowingEntries: true,
+    backgroundColor: '#fff4f4'
 },
 };

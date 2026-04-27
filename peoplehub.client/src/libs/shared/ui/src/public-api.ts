@@ -15,6 +15,7 @@ export { MultiSelectComponent } from './lib/components/controls/multi-select/mul
 export { NumberBoxComponent } from './lib/components/controls/number-box/number-box.component';
 export { OtpComponent } from './lib/components/controls/otp/otp.component';
 export { PasswordComponent } from './lib/components/controls/password/password.component';
+export { PlainButtonComponent } from './lib/components/controls/plain-button/plain-button.component';
 export { ProgressBarComponent } from './lib/components/controls/progress-bar/progress-bar.component';
 export { SearchBarComponent } from './lib/components/controls/search-bar/search-bar.component';
 export { SearchDropdownComponent } from './lib/components/controls/search-dropdown/search-dropdown.component';

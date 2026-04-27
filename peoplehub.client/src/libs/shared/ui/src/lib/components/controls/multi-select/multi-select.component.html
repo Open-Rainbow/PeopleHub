@@ -7,11 +7,8 @@
   
   <span
     class="absolute left-3 z-10 font-medium px-1 pointer-events-none transition-all duration-200 ease-out"
-    [ngClass]="{
-      'top-3 text-sm text-gray-500 bg-transparent': !isOpen && !hasSelectedValues,
-      '-top-2 text-xs text-gray-500 bg-white':      isOpen || hasSelectedValues,
-      'text-red-600': isInvalid
-    }">
+    [class]="(!isOpen && !hasSelectedValues) ? 'top-3 text-sm text-gray-500 bg-transparent' : '-top-2 text-xs text-gray-500 bg-white'"
+    [class.text-red-600]="isInvalid">
     {{ label }}
     @if (isRequired) {
       <span class="ml-px inline text-[12px] text-red-600">*</span>
@@ -25,12 +22,10 @@
   <label
     [for]="uniqueId"
     class="relative min-h-[48px] h-auto w-full cursor-pointer rounded-lg border bg-white px-3 pr-16 py-3 text-sm flex items-start gap-2 transition-colors duration-200 peer-checked:border-blue-600"
-    [ngClass]="{
-      'border-red-600': isInvalid,
-      'border-blue-600': !isInvalid && isOpen,
-      'border-gray-300': !isInvalid && !isOpen,
-      'text-gray-400': isActive && !hasSelectedValues
-    }"
+    [class.border-red-600]="isInvalid"
+    [class.border-blue-600]="!isInvalid && isOpen"
+    [class.border-gray-300]="!isInvalid && !isOpen"
+    [class.text-gray-400]="isActive && !hasSelectedValues"
     (click)="isActive = true"
     (blur)="onBlur()">
 
@@ -82,10 +77,8 @@
   
   <ul
     class="custom-dropdown-list absolute left-0 right-0 z-[1000] hidden w-full max-w-full box-border rounded-lg border border-gray-300 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] peer-checked:block"
-    [ngClass]="{
-      'top-[calc(100%+4px)]': !isOpenUp,
-      'bottom-[calc(100%+4px)]': isOpenUp
-    }">
+    [class.top-[calc(100%+4px)]]="!isOpenUp"
+    [class.bottom-[calc(100%+4px)]]="isOpenUp">
 
     @if (showSearch) {
     <li class="border-b border-gray-200 p-2" (click)="$event.stopPropagation()">

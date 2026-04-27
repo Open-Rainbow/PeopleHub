@@ -1,12 +1,10 @@
-import {
-    AfterViewInit,
+import { AfterViewInit,
     Component,
     ElementRef,
     Input,
     OnChanges,
     SimpleChanges,
-    ViewChild,
-} from '@angular/core';
+    ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
     ArcElement,
     Chart,
@@ -19,6 +17,7 @@ import {
 Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-dial-chart',
   templateUrl: './dial-chart.component.html',
   styleUrls: ['./dial-chart.component.scss'],

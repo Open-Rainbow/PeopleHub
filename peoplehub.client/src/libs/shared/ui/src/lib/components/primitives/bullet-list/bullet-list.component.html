@@ -4,15 +4,20 @@
          font-sans leading-relaxed">
   <li class="flex items-start mb-1 line">
     <span class="prefix mr-2">
-      <ng-container [ngSwitch]="mode">
-        <span *ngSwitchCase="'bullet'">•</span>
-
-        <ui-icon *ngSwitchCase="'icon'" name="home"></ui-icon>
-
-        <span *ngSwitchCase="'number'">1.</span>
-
-        <span *ngSwitchCase="'alphabet'">a.</span>
-      </ng-container>
+      @switch (mode) {
+        @case ('bullet') {
+          <span>•</span>
+        }
+        @case ('icon') {
+          <ui-icon name="home"></ui-icon>
+        }
+        @case ('number') {
+          <span>1.</span>
+        }
+        @case ('alphabet') {
+          <span>a.</span>
+        }
+      }
     </span>
 
     <span class="text flex-1">&nbsp;</span>

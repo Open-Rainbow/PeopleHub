@@ -1,16 +1,15 @@
 import { CommonModule } from '@angular/common';
-import {
-    Component,
+import { Component,
     EventEmitter,
     HostBinding,
     Input,
     OnChanges,
     Output,
-    SimpleChanges
-} from '@angular/core';
+    SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-check-box',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],

@@ -10,26 +10,23 @@
     [value]="formattedDate"
     [placeholder]="(showCalendar || formattedDate || control?.value) ? 'dd-mm-yyyy' : ''"
     (click)="openDatePicker($event)"
-    style="z-index: 0;"
-    class="w-full h-9 text-xs border rounded-md px-3 pr-9 bg-transparent cursor-pointer outline-none transition-colors duration-200 relative"
-    [ngClass]="{
-      'border-gray-300': !showCalendar && !isInvalid,
-      'border-blue-600': showCalendar && !isInvalid,
-      'border-red-600 !text-red-600': isInvalid
-    }"
+    class="w-full h-9 text-xs border rounded-md px-3 pr-9 bg-transparent cursor-pointer outline-none transition-colors duration-200 relative z-[0]"
+    [class.border-gray-300]="!showCalendar && !isInvalid"
+    [class.border-blue-600]="showCalendar && !isInvalid"
+    [class.border-red-600]="isInvalid"
+    [class.text-red-600]="isInvalid"
   />
 
   <label
     [for]="id"
-    style="background-color: white !important; z-index: 10;"
-    class="absolute left-3 !px-1 transition-all duration-200 ease-out pointer-events-none font-medium whitespace-nowrap"
-    [ngClass]="{
-      '-top-2 text-xs': showCalendar || formattedDate || control?.value,
-      'top-1.5 text-sm': !showCalendar && !formattedDate && !control?.value,
-      'text-blue-600': showCalendar && !isInvalid,
-      'text-gray-500': !showCalendar && !isInvalid,
-      '!text-red-600': isInvalid
-    }"
+    class="absolute left-3 !px-1 transition-all duration-200 ease-out pointer-events-none font-medium whitespace-nowrap !bg-white z-10"
+    [class.-top-2]="showCalendar || formattedDate || control?.value"
+    [class.text-xs]="showCalendar || formattedDate || control?.value"
+    [class.top-1.5]="!showCalendar && !formattedDate && !control?.value"
+    [class.text-sm]="!showCalendar && !formattedDate && !control?.value"
+    [class.text-blue-600]="showCalendar && !isInvalid"
+    [class.text-gray-500]="!showCalendar && !isInvalid"
+    [class.text-red-600]="isInvalid"
   >
     {{ label }}
     @if (isRequired) {
@@ -59,7 +56,7 @@
               <ul class="absolute top-full left-0 bg-white border rounded shadow max-h-60 overflow-auto z-50">
                 @for (month of months; track month; let i = $index) {
                 <li class="px-2 py-1 cursor-pointer hover:bg-gray-100"
-                  [ngClass]="{ 'bg-blue-600 text-white': i === currentMonth }" (click)="selectMonth(i)">
+                  [class.bg-blue-600]="i === currentMonth" [class.text-white]="i === currentMonth" (click)="selectMonth(i)">
                   {{ month }}
                 </li>
                 }
@@ -76,7 +73,7 @@
               <ul class="absolute top-full left-0 bg-white border rounded shadow max-h-60 overflow-auto z-50">
                 @for (year of years; track year) {
                 <li class="px-2 py-1 cursor-pointer hover:bg-gray-100"
-                  [ngClass]="{ 'bg-blue-600 text-white': year === currentYear }" (click)="selectYear(year)">
+                  [class.bg-blue-600]="year === currentYear" [class.text-white]="year === currentYear" (click)="selectYear(year)">
                   {{ year }}
                 </li>
                 }
@@ -110,11 +107,13 @@
           @for (day of calendarDays; track day) {
           <div
             class="flex items-center justify-center h-6 w-6 rounded-full cursor-pointer hover:bg-gray-200 text-[11px] transition-colors"
-            [ngClass]="{
-              'text-gray-300': !day.isCurrentMonth,
-              'border border-blue-600 text-blue-600 font-medium': day.isToday && !day.isSelected,
-              'bg-blue-600 text-white font-medium': day.isSelected 
-            }" (click)="selectDate(day)">
+            [class.text-gray-300]="!day.isCurrentMonth"
+            [class.border]="day.isToday && !day.isSelected"
+            [class.border-blue-600]="day.isToday && !day.isSelected"
+            [class.text-blue-600]="day.isToday && !day.isSelected"
+            [class.font-medium]="day.isToday || day.isSelected"
+            [class.bg-blue-600]="day.isSelected"
+            [class.text-white]="day.isSelected" (click)="selectDate(day)">
             
             {{ day.day }}
           </div>

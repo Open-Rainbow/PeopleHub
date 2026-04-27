@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
+import { AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -8,8 +7,7 @@ import {
   Input,
   OnDestroy,
   Output,
-  Renderer2,
-} from '@angular/core';
+  Renderer2, ChangeDetectionStrategy } from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -25,6 +23,7 @@ import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-multi-select',
   templateUrl: './multi-select.component.html',
   styleUrls: ['./multi-select.component.scss'],

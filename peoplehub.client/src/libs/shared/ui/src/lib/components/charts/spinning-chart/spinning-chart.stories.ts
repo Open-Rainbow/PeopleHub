@@ -62,26 +62,26 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'size': 64,
-    'width': 200,
-    'height': 200,
-    'showData': true,
-    'completedColor': 'rgb(0, 150, 255)',
-    'remainingColor': 'rgb(220, 240, 255)',
-    'textColor': 'rgb(1, 19, 41)',
-    'hoverCompletedColor': 'rgba(8, 116, 194, 1)'
+    size: 64,
+    width: 200,
+    height: 200,
+    showData: true,
+    completedColor: 'rgb(0, 150, 255)',
+    remainingColor: 'rgb(220, 240, 255)',
+    textColor: 'rgb(1, 19, 41)',
+    hoverCompletedColor: 'rgba(8, 116, 194, 1)'
 },
 };
 
 export const Colored: Story = {
   args: {
-    'size': 64,
-    'width': 200,
-    'height': 200,
-    'showData': true,
-    'completedColor': 'rgb(0, 150, 255)',
-    'remainingColor': 'rgb(220, 240, 255)',
-    'textColor': 'rgb(1, 19, 41)',
-    'hoverCompletedColor': 'rgba(8, 116, 194, 1)'
+    size: 64,
+    width: 200,
+    height: 200,
+    showData: true,
+    completedColor: 'rgb(0, 150, 255)',
+    remainingColor: 'rgb(220, 240, 255)',
+    textColor: 'rgb(1, 19, 41)',
+    hoverCompletedColor: 'rgba(8, 116, 194, 1)'
 },
 };

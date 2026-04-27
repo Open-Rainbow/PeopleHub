@@ -13,10 +13,8 @@
    @if(labelPosition === 'left' || labelPosition === 'both'){
     <span
       class="text-sm transition-colors duration-200 cursor-pointer"
-      [ngClass]="{
-        'text-black': !checked || (labelPosition === 'left' && checked && !manualToggle && isDualLabelMode),
-        'text-gray-400': checked && !(labelPosition === 'left' && !manualToggle && isDualLabelMode)
-      }"
+      [class.text-black]="!checked || (labelPosition === 'left' && checked && !manualToggle && isDualLabelMode)"
+      [class.text-gray-400]="checked && !(labelPosition === 'left' && !manualToggle && isDualLabelMode)"
       (click)="!toggleOnlyMode && onLabelClick(false)"
     >
       {{ dynamicLeftLabel }}
@@ -67,10 +65,8 @@
   @if(labelPosition === 'right' || labelPosition === 'both'){
     <span
       class="text-sm transition-colors duration-200 cursor-pointer"
-      [ngClass]="{
-        'text-black': checked || (labelPosition === 'right' && !checked && !manualToggle && isDualLabelMode),
-        'text-gray-400': !checked && !(labelPosition === 'right' && !manualToggle && isDualLabelMode)
-      }"
+      [class.text-black]="checked || (labelPosition === 'right' && !checked && !manualToggle && isDualLabelMode)"
+      [class.text-gray-400]="!checked && !(labelPosition === 'right' && !manualToggle && isDualLabelMode)"
       (click)="!toggleOnlyMode && onLabelClick(true)"
       >
       {{ dynamicRightLabel }}

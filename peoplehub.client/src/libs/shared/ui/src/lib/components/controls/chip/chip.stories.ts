@@ -58,25 +58,25 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'text': 'text',
-    'color': '#6b7280',
-    'activeBGColor': '#7c3aed',
-    'activeColor': 'white',
-    'borderRadius': '9999px',
-    'size': 'extrasmall',
-    'usePointerCursor': true
+    text: 'text',
+    color: '#6b7280',
+    activeBGColor: '#7c3aed',
+    activeColor: 'white',
+    borderRadius: '9999px',
+    size: 'extrasmall',
+    usePointerCursor: true
 },
 };
 
 export const Colored: Story = {
   args: {
-    'text': 'text',
-    'color': '#6b7280',
-    'activeBGColor': '#7c3aed',
-    'activeColor': 'white',
-    'borderRadius': '9999px',
-    'size': 'extrasmall',
-    'usePointerCursor': true,
-    'bgColor': '#FF5733'
+    text: 'text',
+    color: '#6b7280',
+    activeBGColor: '#7c3aed',
+    activeColor: 'white',
+    borderRadius: '9999px',
+    size: 'extrasmall',
+    usePointerCursor: true,
+    bgColor: '#FF5733'
 },
 };

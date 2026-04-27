@@ -34,18 +34,18 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'goalText': '720 to Goal',
-    'progress': 70,
-    'barColor': '#d18238',
-    'bgColor': '#fbe7d2'
+    goalText: '720 to Goal',
+    progress: 70,
+    barColor: '#d18238',
+    bgColor: '#fbe7d2'
 },
 };
 
 export const Colored: Story = {
   args: {
-    'goalText': '720 to Goal',
-    'progress': 70,
-    'barColor': '#d18238',
-    'bgColor': '#FF5733'
+    goalText: '720 to Goal',
+    progress: 70,
+    barColor: '#d18238',
+    bgColor: '#FF5733'
 },
 };

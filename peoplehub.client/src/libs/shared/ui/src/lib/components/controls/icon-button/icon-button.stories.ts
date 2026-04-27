@@ -43,9 +43,9 @@ const meta: Meta<IconButtonComponent> = {
       control: 'boolean',
       description: 'disable property',
     },
-    isExpand: {
+    isExpanded: {
       control: 'boolean',
-      description: 'isExpand property',
+      description: 'isExpanded property',
     },
     iconName: {
       control: 'text',
@@ -74,7 +74,7 @@ export const Default: Story = {
     borderColor: 'blue',
     showBorder: true,
     disable: false,
-    isExpand: false,
+    isExpanded: false,
     iconName: 'home',
 },
 };
@@ -89,7 +89,7 @@ export const Disabled: Story = {
     borderColor: 'blue',
     showBorder: true,
     disable: true,
-    isExpand: false,
+    isExpanded: false,
     iconName: 'home',
 },
 };
@@ -104,7 +104,7 @@ export const Colored: Story = {
     borderColor: 'blue',
     showBorder: true,
     disable: false,
-    isExpand: false,
+    isExpanded: false,
     iconName: 'home',
 },
 };

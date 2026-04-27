@@ -46,20 +46,20 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'tickColor': '#fff',
-    'label': '',
-    'labelPosition': 'right',
-    'isRequired': false,
-    'labelClick': true
+    tickColor: '#fff',
+    label: '',
+    labelPosition: 'right',
+    isRequired: false,
+    labelClick: true
 },
 };
 
 export const Colored: Story = {
   args: {
-    'tickColor': '#fff',
-    'label': '',
-    'labelPosition': 'right',
-    'isRequired': false,
-    'labelClick': true
+    tickColor: '#fff',
+    label: '',
+    labelPosition: 'right',
+    isRequired: false,
+    labelClick: true
 },
 };

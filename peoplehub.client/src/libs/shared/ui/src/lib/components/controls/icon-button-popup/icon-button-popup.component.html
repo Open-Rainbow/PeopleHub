@@ -17,12 +17,12 @@
   ></ui-icon-button>
 
   @if(isHovered){
-    <div [class]="positionClasses" [ngStyle]="{'background-color': popupBgColor, 'color': popupTxtColor}"
+    <div [class]="positionClasses" [style.background-color]="popupBgColor" [style.color]="popupTxtColor"
       role="tooltip">
     
       {{ description }}
     
-      <div [class]="arrowClasses" [ngStyle]="{'background-color': popupBgColor}">
+      <div [class]="arrowClasses" [style.background-color]="popupBgColor">
       </div>
     </div>
   }

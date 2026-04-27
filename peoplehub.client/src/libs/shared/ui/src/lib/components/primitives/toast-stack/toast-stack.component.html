@@ -1,13 +1,11 @@
 <div
   class="fixed z-[9999] flex flex-col gap-3"
-  [ngClass]="{
-    'top-4 right-4': position === 'top-right',
-    'top-4 left-4': position === 'top-left',
-    'top-4 left-1/2 -translate-x-1/2': position === 'top-center',
-    'bottom-4 right-4': position === 'bottom-right',
-    'bottom-4 left-4': position === 'bottom-left',
-    'bottom-4 left-1/2 -translate-x-1/2': position === 'bottom-center'
-  }"
+  [class.top-4]="position === 'top-right' || position === 'top-left' || position === 'top-center'"
+  [class.bottom-4]="position === 'bottom-right' || position === 'bottom-left' || position === 'bottom-center'"
+  [class.right-4]="position === 'top-right' || position === 'bottom-right'"
+  [class.left-4]="position === 'top-left' || position === 'bottom-left'"
+  [class.left-1/2]="position === 'top-center' || position === 'bottom-center'"
+  [class.-translate-x-1/2]="position === 'top-center' || position === 'bottom-center'"
 >
   @for (toast of toasts; track trackById($index, toast)) {
     <ui-toast

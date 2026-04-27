@@ -58,26 +58,26 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'total': 12,
-    'used': 3,
-    'barColor': 'blueviolet',
-    'showBorderRadius': true,
-    'totalTextColor': '#374151',
-    'usedTextColor': '#6b7280',
-    'remainingTextColor': '#4f46e5',
-    'hideDetails': true
+    total: 12,
+    used: 3,
+    barColor: 'blueviolet',
+    showBorderRadius: true,
+    totalTextColor: '#374151',
+    usedTextColor: '#6b7280',
+    remainingTextColor: '#4f46e5',
+    hideDetails: true
 },
 };
 
 export const Colored: Story = {
   args: {
-    'total': 12,
-    'used': 3,
-    'barColor': 'blueviolet',
-    'showBorderRadius': true,
-    'totalTextColor': '#374151',
-    'usedTextColor': '#6b7280',
-    'remainingTextColor': '#4f46e5',
-    'hideDetails': true
+    total: 12,
+    used: 3,
+    barColor: 'blueviolet',
+    showBorderRadius: true,
+    totalTextColor: '#374151',
+    usedTextColor: '#6b7280',
+    remainingTextColor: '#4f46e5',
+    hideDetails: true
 },
 };

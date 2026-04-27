@@ -1,0 +1,32 @@
+import { Meta, Canvas, Controls, Stories } from 'storybook/blocks';
+import * as StoriesRef from './plain-button.stories';
+
+<Meta of={StoriesRef} />
+
+# Plain Button
+
+Text-only button component with composable variant and size inputs.
+
+## Playground
+
+<Canvas of={StoriesRef.Playground} />
+
+## Props
+
+<Controls of={StoriesRef.Playground} />
+
+## All Variants
+
+<Canvas of={StoriesRef.AllVariants} />
+
+## All Sizes
+
+<Canvas of={StoriesRef.AllSizes} />
+
+## Variant + Size Combinations
+
+<Canvas of={StoriesRef.VariantSizeCombinations} />
+
+## Additional Stories
+
+<Stories includePrimary={false} />

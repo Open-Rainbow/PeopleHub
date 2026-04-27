@@ -46,20 +46,20 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'placeholderText': 'Search employees by name, email, position, or department...',
-    'showBorder': true,
-    'borderColor': '#2563eb',
-    'iconPosition': 'right',
-    'showIcon': true
+    placeholderText: 'Search employees by name, email, position, or department...',
+    showBorder: true,
+    borderColor: '#2563eb',
+    iconPosition: 'right',
+    showIcon: true
 },
 };
 
 export const Colored: Story = {
   args: {
-    'placeholderText': 'Search employees by name, email, position, or department...',
-    'showBorder': true,
-    'borderColor': '#2563eb',
-    'iconPosition': 'right',
-    'showIcon': true
+    placeholderText: 'Search employees by name, email, position, or department...',
+    showBorder: true,
+    borderColor: '#2563eb',
+    iconPosition: 'right',
+    showIcon: true
 },
 };

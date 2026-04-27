@@ -30,16 +30,16 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'type': 'spinner',
-    'color': '#1976d2',
-    'size': 50
+    type: 'spinner',
+    color: '#1976d2',
+    size: 50
 },
 };
 
 export const Colored: Story = {
   args: {
-    'type': 'spinner',
-    'color': '#1976d2',
-    'size': 50
+    type: 'spinner',
+    color: '#1976d2',
+    size: 50
 },
 };

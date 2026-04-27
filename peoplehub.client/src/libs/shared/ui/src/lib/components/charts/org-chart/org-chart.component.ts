@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import type { OrgChartPerson } from '../../../models/component-models/org-chart-person.model';
 
 
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-org-chart',
   templateUrl: './org-chart.component.html',
   imports: [CommonModule]

@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ConfirmPopup } from '../../../models/confirm-popup.model';
 import { ConfirmPopupService } from '../../../services/confirm-popup.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-caller',
   standalone: true,
   imports: [CommonModule],

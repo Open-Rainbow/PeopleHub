@@ -47,9 +47,9 @@ const meta: Meta<ButtonComponent> = {
       control: 'boolean',
       description: 'disable property',
     },
-    isExpand: {
+    isExpanded: {
       control: 'boolean',
-      description: 'isExpand property',
+      description: 'isExpanded property',
     },
     iconName: {
       control: 'text',
@@ -78,54 +78,54 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'text': 'text',
-    'bgColor': 'white',
-    'color': 'red',
-    'hoverBgColor': 'red',
-    'hoverColor': 'black',
-    'borderRadius': 8,
-    'borderColor': 'blue',
-    'showBorder': true,
-    'disable': false,
-    'isExpand': false,
-    'iconName': '',
-    'iconPosition': 'left',
-    'borderStyle': 'solid'
+    text: 'text',
+    bgColor: 'white',
+    color: 'red',
+    hoverBgColor: 'red',
+    hoverColor: 'black',
+    borderRadius: 8,
+    borderColor: 'blue',
+    showBorder: true,
+    disable: false,
+    isExpanded: false,
+    iconName: '',
+    iconPosition: 'left',
+    borderStyle: 'solid'
 },
 };
 
 export const Disabled: Story = {
   args: {
-    'text': 'text',
-    'bgColor': 'white',
-    'color': 'red',
-    'hoverBgColor': 'red',
-    'hoverColor': 'black',
-    'borderRadius': 8,
-    'borderColor': 'blue',
-    'showBorder': true,
-    'disable': true,
-    'isExpand': false,
-    'iconName': '',
-    'iconPosition': 'left',
-    'borderStyle': 'solid'
+    text: 'text',
+    bgColor: 'white',
+    color: 'red',
+    hoverBgColor: 'red',
+    hoverColor: 'black',
+    borderRadius: 8,
+    borderColor: 'blue',
+    showBorder: true,
+    disable: true,
+    isExpanded: false,
+    iconName: '',
+    iconPosition: 'left',
+    borderStyle: 'solid'
 },
 };
 
 export const Colored: Story = {
   args: {
-    'text': 'text',
-    'bgColor': '#FF5733',
-    'color': 'red',
-    'hoverBgColor': 'red',
-    'hoverColor': 'black',
-    'borderRadius': 8,
-    'borderColor': 'blue',
-    'showBorder': true,
-    'disable': false,
-    'isExpand': false,
-    'iconName': '',
-    'iconPosition': 'left',
-    'borderStyle': 'solid'
+    text: 'text',
+    bgColor: '#FF5733',
+    color: 'red',
+    hoverBgColor: 'red',
+    hoverColor: 'black',
+    borderRadius: 8,
+    borderColor: 'blue',
+    showBorder: true,
+    disable: false,
+    isExpanded: false,
+    iconName: '',
+    iconPosition: 'left',
+    borderStyle: 'solid'
 },
 };

@@ -1,12 +1,10 @@
 import { CommonModule } from '@angular/common';
-import {
-    Component,
+import { Component,
     ElementRef,
     Input,
     OnDestroy,
     OnInit,
-    ViewChild,
-} from '@angular/core';
+    ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
     ArcElement,
     Chart,
@@ -18,6 +16,7 @@ import {
 } from 'chart.js';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-doughnut-chart',
   templateUrl: './doughnut-chart.component.html',
   styleUrls: ['./doughnut-chart.component.scss'],

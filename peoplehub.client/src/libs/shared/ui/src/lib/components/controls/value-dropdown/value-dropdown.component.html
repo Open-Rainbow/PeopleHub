@@ -13,11 +13,9 @@
     class="relative overflow-hidden py-[0.35rem] px-[0.7rem] text-[0.8125rem] min-h-[36px] w-full
            flex items-left justify-between
            border rounded-lg transition-colors duration-200"
-    [ngStyle]="{
-      color: isOpen ? activeTextColor : textColor,
-      backgroundColor: isOpen ? activeBackgroundColor : backgroundColor,
-      borderColor: borderColor
-    }"
+    [style.color]="isOpen ? activeTextColor : textColor"
+    [style.background-color]="isOpen ? activeBackgroundColor : backgroundColor"
+    [style.border-color]="borderColor"
   >
     <div class="flex items-center gap-2">
       <span>{{ selectedYear }}</span>
@@ -26,7 +24,7 @@
       <ui-icon
         name="icon_park_outline_down"
         class="text-[0.8125rem] transition-transform duration-200"
-        [ngClass]="{ 'rotate-180': isOpen }">
+        [class.rotate-180]="isOpen">
       </ui-icon>
 
       }
@@ -54,11 +52,11 @@
                       rounded-md whitespace-nowrap
                       transition-all duration-200
                       hover:bg-gray-100" [class.opacity-30]="value.isDisabled"
-            [class.cursor-not-allowed]="value.isDisabled" [ngStyle]="{
-                  color: value.value === selectedYear 
+            [class.cursor-not-allowed]="value.isDisabled" [style.color]="
+                  value.value === selectedYear 
                     ? activeTextColor 
                     : value.textColor
-                }" [style.backgroundColor]="
+                " [style.backgroundColor]="
                   value.value === selectedYear 
                     ? value.backgroundColor 
                     : null

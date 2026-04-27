@@ -1,19 +1,18 @@
 import { CommonModule } from '@angular/common';
-import {
-    Component,
+import { Component,
     EventEmitter,
     Input,
     OnChanges,
     OnDestroy,
     OnInit,
     Output,
-    SimpleChanges
-} from '@angular/core';
+    SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-text-area',
   standalone: true,
   templateUrl: './text-area.component.html',

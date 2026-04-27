@@ -1,9 +1,10 @@
 import { CommonModule, } from '@angular/common';
-import { Component, EventEmitter, HostBinding, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnChanges, Output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
  
  
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'ui-toggle',
     imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './toggle.component.html',

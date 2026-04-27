@@ -34,18 +34,18 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'label': '',
-    'labelPosition': 'right',
-    'labelColor': '#333',
-    'size': 'small',
+    label: '',
+    labelPosition: 'right',
+    labelColor: '#333',
+    size: 'small',
 },
 };
 
 export const Colored: Story = {
   args: {
-    'label': '',
-    'labelPosition': 'right',
-    'labelColor': '#333',
-    'size': 'small',
+    label: '',
+    labelPosition: 'right',
+    labelColor: '#333',
+    size: 'small',
 },
 };

@@ -1,7 +1,6 @@
 
 import { CommonModule } from '@angular/common';
-import {
-    AfterViewInit,
+import { AfterViewInit,
     Component,
     EventEmitter,
     Input,
@@ -9,12 +8,12 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    SimpleChanges
-} from '@angular/core';
+    SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-text-box',
   templateUrl: './text-box.component.html',
   styleUrls: ['./text-box.component.scss'],

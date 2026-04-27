@@ -1,17 +1,16 @@
-import {
-    AfterViewInit,
+import { AfterViewInit,
     Component,
     ElementRef,
     Input,
     OnChanges,
     SimpleChanges,
-    ViewChild,
-} from '@angular/core';
+    ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-progress-chart',
   standalone: true,
   templateUrl: './progress-chart.component.html',

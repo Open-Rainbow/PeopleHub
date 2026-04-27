@@ -7,16 +7,13 @@
          flex items-center justify-center
          whitespace-nowrap overflow-hidden"  [class.active]="selectedId === btn.labelId" (mouseenter)="hoverId = btn.labelId" (mouseleave)="hoverId = null" [class.rounded-top]="idx === 0"
     [class.rounded-bottom]="idx === total - 1" 
-    [ngStyle]="{      
-   'background-color': selectedId === btn.labelId
-          ? selectedBgColor
-          : (hoverId === btn.labelId ? hoverBgColor : bgColor),
- 'border-color': selectedId === btn.labelId ? selectedBgColor : '',
-    'color': selectedId === btn.labelId 
-        ? selectedTextColor 
-        : (hoverId === btn.labelId ? hoverTextColor : textColor),
-   
-  }"
+    [style.background-color]="selectedId === btn.labelId
+        ? selectedBgColor
+        : (hoverId === btn.labelId ? hoverBgColor : bgColor)"
+    [style.border-color]="selectedId === btn.labelId ? selectedBgColor : ''"
+    [style.color]="selectedId === btn.labelId
+      ? selectedTextColor
+      : (hoverId === btn.labelId ? hoverTextColor : textColor)"
       (click)="selectButton(btn) ; createRipple($event)">
 
     

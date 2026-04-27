@@ -70,54 +70,54 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'description': 'Description text',
-    'popupPosition': 'bottom',
-    'popupBgColor': '#1f2937',
-    'popupTxtColor': '#ffffff',
-    'iconName': 'info',
-    'bgColor': 'white',
-    'color': 'red',
-    'hoverBgColor': 'red',
-    'hoverColor': 'white',
-    'borderRadius': 8,
-    'borderColor': 'blue',
-    'showBorder': true,
-    'disable': false
+    description: 'Description text',
+    popupPosition: 'bottom',
+    popupBgColor: '#1f2937',
+    popupTxtColor: '#ffffff',
+    iconName: 'info',
+    bgColor: 'white',
+    color: 'red',
+    hoverBgColor: 'red',
+    hoverColor: 'white',
+    borderRadius: 8,
+    borderColor: 'blue',
+    showBorder: true,
+    disable: false
 },
 };
 
 export const Disabled: Story = {
   args: {
-    'description': 'Description text',
-    'popupPosition': 'bottom',
-    'popupBgColor': '#1f2937',
-    'popupTxtColor': '#ffffff',
-    'iconName': 'info',
-    'bgColor': 'white',
-    'color': 'red',
-    'hoverBgColor': 'red',
-    'hoverColor': 'white',
-    'borderRadius': 8,
-    'borderColor': 'blue',
-    'showBorder': true,
-    'disable': true
+    description: 'Description text',
+    popupPosition: 'bottom',
+    popupBgColor: '#1f2937',
+    popupTxtColor: '#ffffff',
+    iconName: 'info',
+    bgColor: 'white',
+    color: 'red',
+    hoverBgColor: 'red',
+    hoverColor: 'white',
+    borderRadius: 8,
+    borderColor: 'blue',
+    showBorder: true,
+    disable: true
 },
 };
 
 export const Colored: Story = {
   args: {
-    'description': 'Description text',
-    'popupPosition': 'bottom',
-    'popupBgColor': '#1f2937',
-    'popupTxtColor': '#ffffff',
-    'iconName': 'info',
-    'bgColor': '#FF5733',
-    'color': 'red',
-    'hoverBgColor': 'red',
-    'hoverColor': 'white',
-    'borderRadius': 8,
-    'borderColor': 'blue',
-    'showBorder': true,
-    'disable': false
+    description: 'Description text',
+    popupPosition: 'bottom',
+    popupBgColor: '#1f2937',
+    popupTxtColor: '#ffffff',
+    iconName: 'info',
+    bgColor: '#FF5733',
+    color: 'red',
+    hoverBgColor: 'red',
+    hoverColor: 'white',
+    borderRadius: 8,
+    borderColor: 'blue',
+    showBorder: true,
+    disable: false
 },
 };

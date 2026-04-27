@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import type { MenuItem } from '../../../models/component-models/menu-item.model';
@@ -7,6 +7,7 @@ import { MenuService } from '../../../services/menu.service';
 import { IconComponent } from "../icon/icon.component";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-menu-bar',
   templateUrl: './menu-bar.component.html',
   styleUrls: ['./menu-bar.component.scss'],

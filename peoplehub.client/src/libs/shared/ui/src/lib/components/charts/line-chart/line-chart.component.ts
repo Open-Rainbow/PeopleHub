@@ -1,13 +1,11 @@
-import {
-    Component,
+import { Component,
     ElementRef,
     Input,
     OnChanges,
     OnDestroy,
     OnInit,
     SimpleChanges,
-    ViewChild,
-} from '@angular/core';
+    ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
     CategoryScale,
     Chart,
@@ -24,6 +22,7 @@ import {
 import type { LegendShape } from '../../../models/component-models/chart-grid-options.model';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-line-chart',
   standalone: true,
   templateUrl: './line-chart.component.html',

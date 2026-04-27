@@ -51,18 +51,20 @@
       </div>
 
       <p>of {{ totalPages }} pages</p>
-      <ui-button 
-        [ngClass]="{ '!pointer-events-none rounded-lg grayscale-[80%] !cursor-not-allowed': isGoDisabled }" 
-        [text]="'Go'" 
-        [bgColor]="'#9eeff2'" 
-        [color]="'#ffffff'"
-        [hoverBgColor]="'#9eeff2'" 
-        [hoverColor]="'#ffffff'" 
-        [borderColor]="'black'" 
-        [isExpand]="false"
-        [showBorder]="false" 
-        (click)="goToPage(goToNumber)">
-      </ui-button>
+      <div [class]="isGoDisabled ? 'pointer-events-none rounded-lg grayscale-[80%] cursor-not-allowed' : ''">
+        <ui-button 
+          [text]="'Go'" 
+          [bgColor]="'#9eeff2'" 
+          [color]="'#ffffff'"
+          [hoverBgColor]="'#9eeff2'" 
+          [hoverColor]="'#ffffff'" 
+          [borderColor]="'black'" 
+          [isExpanded]="false"
+          [showBorder]="false"
+          [disable]="isGoDisabled"
+          (click)="goToPage(goToNumber)">
+        </ui-button>
+      </div>
     </div>
   }
 

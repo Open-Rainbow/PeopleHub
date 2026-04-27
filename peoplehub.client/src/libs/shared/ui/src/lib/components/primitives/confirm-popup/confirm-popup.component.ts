@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { ConfirmPopup, PopupOptions } from '../../../models/confirm-popup.model';
@@ -7,6 +7,7 @@ import { ConfirmPopupService } from '../../../services/confirm-popup.service';
 import { ButtonComponent } from '../../controls/button/button.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-confirm-popup',
   templateUrl: './confirm-popup.component.html',
   styleUrls: ['./confirm-popup.component.scss'],

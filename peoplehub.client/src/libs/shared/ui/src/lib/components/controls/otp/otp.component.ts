@@ -1,17 +1,16 @@
-import {
-    AfterViewInit,
+import { AfterViewInit,
     Component,
     ElementRef,
     EventEmitter,
     Input,
     Output,
     QueryList,
-    ViewChildren
-} from '@angular/core';
+    ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'ui-otp',
     templateUrl: './otp.component.html',
     styleUrls: ['./otp.component.scss'],

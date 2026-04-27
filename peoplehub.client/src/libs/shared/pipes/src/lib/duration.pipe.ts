@@ -1,0 +1,37 @@
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'duration',
+  standalone:true
+})
+export class DurationPipe implements PipeTransform {
+    transform(value: Date | string | number): string {
+    if (!value) return '';
+
+    const inputDate = new Date(value).getTime();
+    const now = new Date().getTime();
+
+    const diffInSeconds = Math.floor((now - inputDate) / 1000);
+    const absDiff = Math.abs(diffInSeconds);
+    const isPast = diffInSeconds >= 0;
+
+    let result = '';
+
+    if (absDiff < 60) {
+      result = `${absDiff} sec${absDiff === 1 ? '' : 's'}`;
+    } else if (absDiff < 3600) {
+      const mins = Math.floor(absDiff / 60);
+      result = `${mins} min${mins === 1 ? '' : 's'}`;
+    } else if (absDiff < 86400) {
+      const hours = Math.floor(absDiff / 3600);
+      result = `${hours} hour${hours === 1 ? '' : 's'}`;
+    } else {
+      const days = Math.floor(absDiff / 86400);
+      result = `${days} day${days === 1 ? '' : 's'}`;
+    }
+
+    return isPast ? `${result} ago` : `in ${result}`;
+  }
+}
+
+

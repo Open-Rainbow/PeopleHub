@@ -38,10 +38,10 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'showLegends': true,
-    'centerText': true,
-    'showAsValue': false,
-    'activeLabel': 'Total Data'
+    showLegends: true,
+    centerText: true,
+    showAsValue: false,
+    activeLabel: 'Total Data'
 },
 };
 

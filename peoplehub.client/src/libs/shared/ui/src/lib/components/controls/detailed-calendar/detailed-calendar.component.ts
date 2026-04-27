@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import type { CalendarPositionedEvent } from '../../../models/component-models/calendar-positioned-event.model';
 import { ButtonListComponent } from '../../primitives/button-list/button-list.component';
@@ -29,6 +29,7 @@ interface CalendarDayItem {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-detailed-calendar',
   standalone: true,
   imports: [ButtonListComponent, ButtonComponent, ReactiveFormsModule,CommonModule],

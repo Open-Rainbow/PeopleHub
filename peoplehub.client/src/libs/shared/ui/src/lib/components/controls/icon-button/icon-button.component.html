@@ -1,27 +1,22 @@
 <button 
   class="p-2.5 shadow-[1px_2px_2px_rgba(0,0,0,0.1)] relative h-[36px] overflow-hidden flex items-center justify-center px-4 transition-transform duration-200 active:scale-95 gap-[3px]"
-  [disabled]="disable" [class.opacity-50]="disable" [class.cursor-not-allowed]="disable" [class.border]="showBorder"
-  [class.error]="isInvalid" [ngStyle]="{
-    backgroundColor: disable
-      ? '#e5e7eb'
-      : isHovered ? hoverBgColor : bgColor,
-    color: disable
-      ? '#9ca3af'
-      : isHovered ? hoverColor : color,
-    borderRadius: borderRadius + 'px',
-    borderColor: borderColor,
-    width: isExpand ? '100%' : 'auto',
-  }"
-  (mouseenter)="!disable && (isHovered = true)"
-  (mouseleave)="!disable && (isHovered = false)"
-  (click)="!disable && createRipple($event)">
+  [disabled]="disable()" [class.opacity-50]="disable()" [class.cursor-not-allowed]="disable()" [class.border]="showBorder()"
+  [class.error]="isInvalid()"
+  [style.background-color]="getBackgroundColor()"
+  [style.color]="getTextColor()"
+  [style.border-radius.px]="borderRadius()"
+  [style.border-color]="borderColor()"
+  [style.width]="isExpanded() ? '100%' : 'auto'"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()"
+  (click)="createRipple($event)">
     
   
   
-    @if(iconName){
+    @if(iconName()){
     <ng-container>
       <span class="flex items-center">
-        <ui-icon class="flex items-center !text-[16px]" [name]="iconName || ''"></ui-icon>
+        <ui-icon class="flex items-center !text-[16px]" [name]="iconName() || ''"></ui-icon>
       </span>
     </ng-container>
   }

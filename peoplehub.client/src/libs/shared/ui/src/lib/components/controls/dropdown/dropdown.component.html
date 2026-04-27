@@ -5,11 +5,12 @@
 <span
   class="absolute left-3 z-10 pointer-events-none transition-all duration-200 ease-out pointer-events-none font-medium
           "
-  [ngClass]="{
-    'top-3 text-gray-500 text-sm': !isActive && !selectedValue,
-    '-top-2 text-xs text-gray-500': isActive || selectedValue,
-    'text-red-600': isInvalid
-  }"
+  [class.top-3]="!isActive && !selectedValue"
+  [class.text-sm]="!isActive && !selectedValue"
+  [class.-top-2]="isActive || selectedValue"
+  [class.text-xs]="isActive || selectedValue"
+  [class.text-gray-500]="!isInvalid"
+  [class.text-red-600]="isInvalid"
 >
   {{ label }}
   @if (isRequired) {
@@ -26,7 +27,7 @@
   <label [for]="uniqueId" class="inputBoxHeight custom-dropdown-selected"
     [class.placeholder]="isActive && !selectedValue" (click)="isActive = true" (blur)="onBlur()">
    {{ isActive && !selectedValue ? placeholder : getSelectedName() }}
-    <ui-icon [name]="'arrow_down'" class="calendar-icon" [ngClass]="{ rotated: isOpen }"></ui-icon>
+    <ui-icon [name]="'arrow_down'" class="calendar-icon" [class.rotated]="isOpen"></ui-icon>
   </label>
  
   <ul class="custom-dropdown-list">

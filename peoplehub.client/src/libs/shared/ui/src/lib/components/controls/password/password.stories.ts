@@ -42,10 +42,10 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'label': 'Temporary Password',
-    'isRequired': true,
-    'placeholder': 'Enter Temporary password',
-    'value': ''
+    label: 'Temporary Password',
+    isRequired: true,
+    placeholder: 'Enter Temporary password',
+    value: ''
 },
 };
 

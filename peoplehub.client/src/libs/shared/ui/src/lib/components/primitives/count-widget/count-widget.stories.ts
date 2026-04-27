@@ -58,30 +58,30 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'label': 'Total',
-    'labelColor': 'gray',
-    'value': 20,
-    'valueColor': 'skyblue',
-    'borderColor': 'gray',
-    'backgroundColor': 'white',
-    'showBorder': true,
-    'labelPosition': 'top',
-    'labelSize': '14px',
-    'valueSize': '24px'
+    label: 'Total',
+    labelColor: 'gray',
+    value: 20,
+    valueColor: 'skyblue',
+    borderColor: 'gray',
+    backgroundColor: 'white',
+    showBorder: true,
+    labelPosition: 'top',
+    labelSize: '14px',
+    valueSize: '24px'
 },
 };
 
 export const Colored: Story = {
   args: {
-    'label': 'Total',
-    'labelColor': 'gray',
-    'value': 20,
-    'valueColor': 'skyblue',
-    'borderColor': 'gray',
-    'backgroundColor': 'white',
-    'showBorder': true,
-    'labelPosition': 'top',
-    'labelSize': '14px',
-    'valueSize': '24px'
+    label: 'Total',
+    labelColor: 'gray',
+    value: 20,
+    valueColor: 'skyblue',
+    borderColor: 'gray',
+    backgroundColor: 'white',
+    showBorder: true,
+    labelPosition: 'top',
+    labelSize: '14px',
+    valueSize: '24px'
 },
 };

@@ -42,12 +42,12 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'type': 'normal',
-    'title': 'Hi',
-    'subtitle': 'Hello, world! This is a Toast message.',
-    'icon': 'home',
-    'position': 'top-center',
-    'duration': 5000
+    type: 'normal',
+    title: 'Hi',
+    subtitle: 'Hello, world! This is a Toast message.',
+    icon: 'home',
+    position: 'top-center',
+    duration: 5000
 },
 };
 

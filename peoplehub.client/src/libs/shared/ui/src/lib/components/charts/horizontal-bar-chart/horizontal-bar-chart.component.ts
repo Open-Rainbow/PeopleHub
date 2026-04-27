@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, SimpleChanges, ViewChild, } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, SimpleChanges, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { BarController, BarElement, CategoryScale, Chart, ChartConfiguration, Legend, LinearScale, Tooltip, } from 'chart.js';
 import type {
     GridDisplayOption,
@@ -7,6 +7,7 @@ import type {
 } from '../../../models/component-models/chart-grid-options.model';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-horizontal-bar-chart',
   standalone: true,
   templateUrl: './horizontal-bar-chart.component.html',

@@ -38,9 +38,9 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'label': 'Government ID',
-    'isRequired': true,
-    'errorNote': 'Please upload jpg, png, mp3 formats only'
+    label: 'Government ID',
+    isRequired: true,
+    errorNote: 'Please upload jpg, png, mp3 formats only'
 },
 };
 

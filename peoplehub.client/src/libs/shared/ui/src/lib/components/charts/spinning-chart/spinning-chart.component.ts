@@ -1,13 +1,11 @@
-import {
-    AfterViewInit,
+import { AfterViewInit,
     Component,
     ElementRef,
     Input,
     OnChanges,
     OnDestroy,
     SimpleChanges,
-    ViewChild,
-} from '@angular/core';
+    ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
     ArcElement,
     Chart,
@@ -20,6 +18,7 @@ import {
 Chart.register(...registerables);
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-spinning-chart',
   templateUrl: './spinning-chart.component.html',
   styleUrls: ['./spinning-chart.component.scss'],

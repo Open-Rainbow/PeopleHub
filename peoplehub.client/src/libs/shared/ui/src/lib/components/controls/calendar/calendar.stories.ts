@@ -38,9 +38,9 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'label': 'Date of Birth',
-    'isRequired': true,
-    'placeholder': 'Select Gender'
+    label: 'Date of Birth',
+    isRequired: true,
+    placeholder: 'Select Gender'
 },
 };
 

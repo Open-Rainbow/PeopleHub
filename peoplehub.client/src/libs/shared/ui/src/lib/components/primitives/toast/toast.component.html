@@ -8,13 +8,13 @@
            rounded-xl overflow-hidden
            transition-all duration-300
            hover:shadow-2xl"
-
-    [ngClass]="{
-      'bg-white text-gray-500': type === 'normal',
-      'bg-yellow-400 text-black': type === 'warning',
-      'bg-red-500 text-black': type === 'alert',
-      'bg-green-600 text-white': type === 'success'
-    }"
+    [class.bg-white]="type === 'normal'"
+    [class.text-gray-500]="type === 'normal'"
+    [class.bg-yellow-400]="type === 'warning'"
+    [class.text-black]="type === 'warning' || type === 'alert'"
+    [class.bg-red-500]="type === 'alert'"
+    [class.bg-green-600]="type === 'success'"
+    [class.text-white]="type === 'success'"
   >
 
     <div class="flex items-center gap-2 flex-grow">
@@ -38,11 +38,9 @@
     <div class="absolute bottom-0 left-0 h-1 w-full">
       <div
         class="h-full transition-all duration-100"
-        [ngClass]="{
-          'bg-gray-500': type === 'normal',
-          'bg-black': type === 'warning' || type === 'alert',
-          'bg-white': type === 'success'
-        }"
+        [class.bg-gray-500]="type === 'normal'"
+        [class.bg-black]="type === 'warning' || type === 'alert'"
+        [class.bg-white]="type === 'success'"
         [style.width.%]="progress"
       ></div>
     </div>

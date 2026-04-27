@@ -33,7 +33,7 @@
             (wheel)="onWheel($event)">
             @for (month of months; track month; let i = $index) {
             <li class="px-3 py-[6px] cursor-pointer hover:bg-[#ffe4d6]"
-              [ngClass]="{'bg-[#ff6b35] text-white': i === currentMonth}"
+              [class]="i === currentMonth ? 'bg-[#ff6b35] text-white' : ''"
               (click)="selectMonth(i); $event.stopPropagation()">
               {{ month }}
             </li>
@@ -55,7 +55,7 @@
             (wheel)="onWheel($event)">
             @for (year of years; track year) {
             <li class="px-3 py-[6px] cursor-pointer hover:bg-[#ffe4d6]"
-              [ngClass]="{'bg-[#ff6b35] text-white':year === currentYear}"
+              [class]="year === currentYear ? 'bg-[#ff6b35] text-white' : ''"
               (click)="selectYear(year); $event.stopPropagation()">
               {{ year }}
             </li>
@@ -113,7 +113,7 @@
         [class.selected]="day.isSelected">
 
         <div class="relative w-full flex flex-col gap-[2px] overflow-visible"
-          [ngClass]="{'many-events': getEventsForDate(day.fullDate).length > 3}">
+          [class.many-events]="getEventsForDate(day.fullDate).length > 3">
           @for (event of getEventsForDate(day.fullDate); track $index) {
           <div
             class="relative z-10 w-full px-[6px] py-[2px] bg-[#ffefe6] text-[#ff6b35] rounded text-[11px] cursor-pointer text-left block truncate overflow-hidden whitespace-nowrap"
@@ -175,10 +175,8 @@
           @for (evt of getEventsForDay(day.date); track evt.original.title) {
           <div
             class="absolute z-20 bg-[#ffefe6] text-[#ff6b35] rounded-md cursor-pointer overflow-hidden whitespace-nowrap text-ellipsis"
-            [ngClass]="{
-    'text-[9px] py-[1px] px-1': getEventsForDate(this.formatDate(day.date)).length > 3,
-    'text-[11px] py-1.5 px-[6px]': getEventsForDate(this.formatDate(day.date)).length <= 3
-  }" [style.top.px]="evt.top" [style.height.px]="evt.height" [style.left.%]="evt.left" [style.width.%]="evt.width"
+            [class]="getEventsForDate(this.formatDate(day.date)).length > 3 ? 'text-[9px] py-[1px] px-1' : 'text-[11px] py-1.5 px-[6px]'"
+            [style.top.px]="evt.top" [style.height.px]="evt.height" [style.left.%]="evt.left" [style.width.%]="evt.width"
             [attr.data-full]="evt.original.startTime + ' - ' + evt.original.endTime + ' • ' + evt.original.title">
             <span class="block whitespace-nowrap overflow-hidden text-ellipsis font-semibold">
               {{ evt.original.startTime }} - {{ evt.original.endTime }} • {{ evt.original.title }}

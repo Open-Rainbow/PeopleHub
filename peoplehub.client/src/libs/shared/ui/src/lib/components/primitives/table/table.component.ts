@@ -1,12 +1,10 @@
 import { CommonModule } from '@angular/common';
-import {
-    Component,
+import { Component,
     EventEmitter,
     HostListener,
     Input,
     Output,
-    SimpleChanges,
-} from '@angular/core';
+    SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     BaseCell,
@@ -32,6 +30,7 @@ import { IconComponent } from '../../primitives/icon/icon.component';
 import { PaginationComponent } from '../pagination/pagination.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],

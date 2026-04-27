@@ -30,16 +30,16 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'name': '',
-    'color': '',
-    'hoverColor': ''
+    name: '',
+    color: '',
+    hoverColor: ''
 },
 };
 
 export const Colored: Story = {
   args: {
-    'name': '',
-    'color': '',
-    'hoverColor': ''
+    name: '',
+    color: '',
+    hoverColor: ''
 },
 };

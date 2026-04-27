@@ -22,7 +22,7 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'mode': 'bullet'
+    mode: 'bullet'
 },
 };
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/internal/Observable';
 import { DropdownOption } from '../../../models/value-configs/dropdown-option.model';
@@ -10,6 +10,7 @@ import { NumberBoxComponent } from '../../controls/number-box/number-box.compone
 import { ButtonListComponent } from '../button-list/button-list.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-pagination',
   standalone: true,
   imports: [

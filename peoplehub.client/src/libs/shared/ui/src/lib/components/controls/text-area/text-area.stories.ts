@@ -54,13 +54,13 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'label': 'Text Area',
-    'placeholder': 'Enter text area',
-    'isRequired': true,
-    'showBorder': true,
-    'maxLength': 20,
-    'minLength': 0,
-    'showCharCount': true
+    label: 'Text Area',
+    placeholder: 'Enter text area',
+    isRequired: true,
+    showBorder: true,
+    maxLength: 20,
+    minLength: 0,
+    showCharCount: true
 },
 };
 

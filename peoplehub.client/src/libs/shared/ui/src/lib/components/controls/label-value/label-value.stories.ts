@@ -42,9 +42,9 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'label': 'Employee ID',
-    'isRequired': false,
-    'isEditMode': false
+    label: 'Employee ID',
+    isRequired: false,
+    isEditMode: false
 },
 };
 

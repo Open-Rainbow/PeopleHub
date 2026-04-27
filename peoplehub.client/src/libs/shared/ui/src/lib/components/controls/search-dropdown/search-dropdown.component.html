@@ -10,13 +10,14 @@
     >
 
       
-      <ui-icon
-        *ngIf="showIcon"
-        class="text-gray-600 text-[18px] min-w-[20px] flex items-center justify-center"
-        [class.mr-2.5]="iconPosition === 'left'"
-        [class.ml-2.5]="iconPosition === 'right'"
-        [name]="'iconamoon:search'">
-      </ui-icon>
+      @if (showIcon) {
+        <ui-icon
+          class="text-gray-600 text-[18px] min-w-[20px] flex items-center justify-center"
+          [class.mr-2.5]="iconPosition === 'left'"
+          [class.ml-2.5]="iconPosition === 'right'"
+          [name]="'iconamoon:search'">
+        </ui-icon>
+      }
 
       
       <input

@@ -17,21 +17,15 @@
     
     <div
       class="w-full h-2 bg-gray-200 transition-all duration-300"
-      [ngClass]="{
-        'rounded-lg': showBorderRadius,
-        'rounded-none': !showBorderRadius
-      }"
+      [class.rounded-lg]="showBorderRadius"
+      [class.rounded-none]="!showBorderRadius"
     >
       <div
         class="h-full transition-all duration-300"
-        [ngStyle]="{
-          width: progressPercentage + '%',
-          background: barColor
-        }"
-        [ngClass]="{
-          'rounded-lg': showBorderRadius,
-          'rounded-none': !showBorderRadius
-        }"
+        [style.width.%]="progressPercentage"
+        [style.background]="barColor"
+        [class.rounded-lg]="showBorderRadius"
+        [class.rounded-none]="!showBorderRadius"
       ></div>
     </div>
 

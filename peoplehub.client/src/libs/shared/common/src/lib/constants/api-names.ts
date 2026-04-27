@@ -1,0 +1,30 @@
+export class ApiNames {
+    static GET_USERS = 'GetUsers';
+    static GET_USERS_PROFILE = 'GetUserProfile';
+    static GET_HOLIDAY_LIST = 'GetHolidayList';
+    static GET_ADD_ANNOUNCEMENT = 'GetAddAnnouncement';
+    static GET_EXPIRED_ANNOUNCEMENT = 'GetExpiredAnnouncement';
+    static GET_ATTENDANCE = 'GetAttendance';
+    static GET_BIRTHDAYS = 'GetBirthdays';
+    static GET_QUICK_ANNOUNCEMENT = 'GetQuickAnnouncement';
+    static GET_QUICK_ACTIVITIES = 'GetQuickActivities';
+    static GET_HOLIDAY_STATISTICS = 'GetHolidayStatistics';
+    static GET_UPCOMING_HOLIDAYS = 'GetUpcomingHolidays';
+    static GET_LEAVE_APPROVALS = 'GetLeaveApprovals';
+    static GET_LEAVE_BALANCE_OVERVIEW = 'GetLeaveBalanceOverview';
+    static GET_RECENT_PAYSLIPS = 'GetRecentPayslips';
+    static GET_MY_REPORTEES = 'GetMyReportees';
+    static GET_TEAM_MEMBERS = 'GetTeamMembers';
+    static GET_EMPLOYEE_LIST = 'GetEmployeeList';
+    static GET_LOGIN_DETAILS = 'GetLoginDetails';
+    static GET_LOGIN = 'GetLogin';
+    static GET_SALARY_DATA = 'GetsalaryData';
+    static GET_SALARY_DETAILS = 'GetSalaryDetails';
+    static ADD_ANNOUNCEMENT= 'AddAnnouncement';
+    static POST_DeleteAnnouncement= 'DeleteAnnouncement';
+    static POST_Submit_Leave= 'SubmitLeave';
+    static POST_Otp= 'PostOtp';
+    static GET_ATTENDANCE_HORIZONTAL_BAR_CHART = 'attendancehorizontalbarchart';
+    static GET_ATTENDANCE_DOUGHNUT_BAR_CHART = 'attendancedoughnutbarchart';
+    static POST_Employee = 'PostAddEmployee';
+}

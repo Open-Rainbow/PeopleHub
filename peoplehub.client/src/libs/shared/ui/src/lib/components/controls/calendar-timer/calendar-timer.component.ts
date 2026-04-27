@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { TimepickerComponent } from '../timepicker/timepicker.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'ui-calendar-timer',
     templateUrl: './calendar-timer.component.html',
     styleUrls: ['./calendar-timer.component.scss'],

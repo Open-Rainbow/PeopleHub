@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { IconButtonComponent } from '../icon-button/icon-button.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-icon-button-popup',
   standalone: true,
   imports: [CommonModule, IconButtonComponent],

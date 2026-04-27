@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, forwardRef } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, forwardRef, ChangeDetectionStrategy } from '@angular/core';
 import { ControlValueAccessor, FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { IconComponent } from '../../primitives/icon/icon.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-calendar',
   standalone: true,
   imports: [CommonModule, FormsModule, IconComponent, ReactiveFormsModule],

@@ -1,10 +1,8 @@
-import {
-    AfterViewInit,
+import { AfterViewInit,
     Component,
     ElementRef,
     Input,
-    ViewChild
-} from '@angular/core';
+    ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 import {
     Chart,
@@ -28,6 +26,7 @@ Chart.register(
 );
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-scatter-chart',
   standalone: true,
   templateUrl: './scatter-chart.component.html',

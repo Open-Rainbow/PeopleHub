@@ -30,8 +30,8 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    'sectionId': '',
-    'isOpen': false
+    sectionId: '',
+    isOpen: false
 },
 };
 
