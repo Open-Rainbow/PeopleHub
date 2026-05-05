@@ -1,87 +1,205 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild, forwardRef } from '@angular/core';
+import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
+import type { FileUploadSelection, UploadedFileData } from '../../../models/component-models/file-upload.model';
+import type { FileUploadValue } from '../../../models/component-models/file-upload.types';
 import { IconComponent } from '../../primitives/icon/icon.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-file-upload',
-  imports: [CommonModule, IconComponent, ReactiveFormsModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.scss'],
-  standalone: true
+  standalone: true,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => FileUploadComponent),
+      multi: true
+    }
+  ]
 })
-export class FileUploadComponent {
+export class FileUploadComponent implements ControlValueAccessor {
   @Input() label: string = 'Government ID';
   @Input() isRequired: boolean = true;
   @Input() errorNote: string = 'Please upload jpg, png, mp3 formats only';
-  @Input() parentFormGroup!: FormGroup;
-  @Input() id!: string;
+  @Input() parentFormGroup?: FormGroup;
+  @Input() id: string = 'fileUpload';
+  @Input() placeholder: string = 'Upload the file';
+  @Input() accept: string = '.jpg,.jpeg,.png,.pdf,.mp3';
+  @Input() multiple: boolean = false;
+  @Input() showRemoveAction: boolean = true;
+  @Output() fileSelectionChange = new EventEmitter<FileUploadSelection>();
 
   @ViewChild('fileInput', { static: false }) fileInputRef!: ElementRef<HTMLInputElement>;
 
-  fileName: string | null = null;
-  isFocused: boolean = false;        
-  isFileDialogOpen: boolean = false; 
+  selectedFiles: UploadedFileData[] = [];
+  isFocused: boolean = false;
+  isFileDialogOpen: boolean = false;
+
+  private disabled = false;
+  private onChange: (value: FileUploadValue) => void = () => {};
+  private onTouched: () => void = () => {};
 
   get control() {
     return this.parentFormGroup?.get(this.id);
   }
 
   get isInvalid() {
-    return this.control?.invalid && (this.control?.dirty || this.control?.touched);
+    return !!(this.control?.invalid && (this.control?.dirty || this.control?.touched));
   }
 
-   onAreaClick() {
-    this.isFileDialogOpen = true; 
+  get hasValue(): boolean {
+    return this.selectedFiles.length > 0;
+  }
+
+  get displayValue(): string {
+    if (this.selectedFiles.length === 0) {
+      return this.placeholder;
+    }
+
+    if (this.selectedFiles.length === 1) {
+      return this.selectedFiles[0].name;
+    }
+
+    return `${this.selectedFiles.length} files selected`;
+  }
+
+  get triggerId(): string {
+    return `${this.id}-trigger`;
+  }
+
+  get inputId(): string {
+    return `${this.id}-native`;
+  }
+
+  get helperId(): string {
+    return `${this.id}-helper`;
+  }
+
+  get isDisabled(): boolean {
+    return this.disabled || !!this.control?.disabled;
+  }
+
+  onAreaClick(): void {
+    if (this.isDisabled) {
+      return;
+    }
+
+    this.isFileDialogOpen = true;
     this.fileInputRef.nativeElement.click();
   }
 
   @HostListener('window:focus')
-  onWindowFocus() {
+  onWindowFocus(): void {
     setTimeout(() => {
       this.isFileDialogOpen = false;
     }, 200);
   }
 
+  async onFileSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const fileList = input.files;
 
-
-
-onFileSelected(event: Event) {
-  const input = event.target as HTMLInputElement;
-  const file = input.files?.[0];
-  if (!file) return;
-
-   const reader = new FileReader();
-
-  reader.onload = () => {
-    const fileObject = {
-      name: file.name,
-      type: file.type,
-      data: reader.result as string
-    };
-    const control = this.parentFormGroup.get(this.id);
-    if (control) {
-      control.setValue(fileObject);
-      control.markAsDirty();
-      control.markAsTouched();
+    if (!fileList || fileList.length === 0) {
+      return;
     }
-    this.fileName = file.name;
-  };
 
-  reader.readAsDataURL(file);
-}
+    const selectedNativeFiles = this.multiple ? Array.from(fileList) : [fileList[0]];
+    const mappedFiles = await Promise.all(selectedNativeFiles.map((file) => this.mapToUploadedFile(file)));
 
+    this.selectedFiles = mappedFiles;
 
+    const nextValue: FileUploadValue = this.multiple ? mappedFiles : mappedFiles[0] ?? null;
+    this.applyValue(nextValue, 'user');
+  }
 
+  clearFiles(event?: Event): void {
+    event?.stopPropagation();
 
-  
-  onFocus() {
+    if (this.isDisabled) {
+      return;
+    }
+
+    this.selectedFiles = [];
+
+    if (this.fileInputRef?.nativeElement) {
+      this.fileInputRef.nativeElement.value = '';
+    }
+
+    this.applyValue(null, 'user');
+  }
+
+  onFocus(): void {
     this.isFocused = true;
     this.control?.markAsTouched();
   }
 
-  onBlur() {
+  onBlur(): void {
     this.isFocused = false;
+    this.onTouched();
+    this.control?.markAsTouched();
+  }
+
+  writeValue(value: FileUploadValue): void {
+    if (!value) {
+      this.selectedFiles = [];
+      if (this.fileInputRef?.nativeElement) {
+        this.fileInputRef.nativeElement.value = '';
+      }
+      return;
+    }
+
+    const files = Array.isArray(value) ? value : [value];
+    this.selectedFiles = files;
+    this.fileSelectionChange.emit({ files, source: 'writeValue' });
+  }
+
+  registerOnChange(fn: (value: FileUploadValue) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  private applyValue(value: FileUploadValue, source: 'user' | 'writeValue'): void {
+    this.onChange(value);
+    this.onTouched();
+
+    if (this.control) {
+      this.control.setValue(value);
+      this.control.markAsDirty();
+      this.control.markAsTouched();
+    }
+
+    this.fileSelectionChange.emit({ files: this.selectedFiles, source });
+  }
+
+  private mapToUploadedFile(file: File): Promise<UploadedFileData> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        resolve({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          lastModified: file.lastModified,
+          data: reader.result as string
+        });
+      };
+
+      reader.onerror = () => {
+        reject(reader.error);
+      };
+
+      reader.readAsDataURL(file);
+    });
   }
 }

@@ -19,13 +19,25 @@ const meta: Meta<FileUploadComponent> = {
       control: 'boolean',
       description: 'isRequired property',
     },
+    placeholder: {
+      control: 'text',
+      description: 'placeholder property',
+    },
+    accept: {
+      control: 'text',
+      description: 'accepted file extensions or MIME types',
+    },
+    multiple: {
+      control: 'boolean',
+      description: 'allow multiple file selection',
+    },
+    showRemoveAction: {
+      control: 'boolean',
+      description: 'show remove action button',
+    },
     errorNote: {
       control: 'text',
       description: 'errorNote property',
-    },
-    parentFormGroup: {
-      control: 'text',
-      description: 'parentFormGroup property',
     },
     id: {
       control: 'text',
@@ -40,10 +52,22 @@ export const Default: Story = {
   args: {
     label: 'Government ID',
     isRequired: true,
-    errorNote: 'Please upload jpg, png, mp3 formats only'
-},
+    placeholder: 'Upload government ID',
+    accept: '.jpg,.jpeg,.png,.pdf',
+    multiple: false,
+    showRemoveAction: true,
+    errorNote: 'Please upload jpg, png, or pdf formats only.',
+    id: 'governmentId'
+  },
 };
 
 export const Alternative: Story = {
-  args: { ...Default.args },
+  args: {
+    ...Default.args,
+    label: 'Attachments',
+    placeholder: 'Upload one or more files',
+    accept: '.jpg,.jpeg,.png,.pdf,.doc,.docx',
+    multiple: true,
+    id: 'attachments'
+  },
 };

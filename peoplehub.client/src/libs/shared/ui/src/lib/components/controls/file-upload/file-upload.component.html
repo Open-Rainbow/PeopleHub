@@ -1,48 +1,58 @@
-<div class="relative" [formGroup]="parentFormGroup">
-  <div class="peer flex items-center justify-between w-full h-9 px-3 bg-white border rounded-md cursor-pointer outline-none transition-all
-           border-slate-300
-           focus:border-blue-600
-           data-[state=active]:border-blue-600
-           data-[state=error]:border-red-600
-           data-[state=save]:border-green-600" [attr.data-state]="
-      isInvalid ? 'error' :
-      (isFocused || isFileDialogOpen || fileName) ? 'active' :
-      null
-    " tabindex="0" (click)="onAreaClick()" (focus)="onFocus()" (blur)="onBlur()">
+<div class="file-upload-container">
+  <div class="input-wrapper">
+    <button
+      [id]="triggerId"
+      type="button"
+      class="file-upload-input inputBoxHeight"
+      [disabled]="isDisabled"
+      [class.border-gray]="!isFocused && !isFileDialogOpen && !isInvalid"
+      [class.border-blue]="(isFocused || isFileDialogOpen) && !isInvalid"
+      [class.border-red]="isInvalid"
+      [attr.aria-required]="isRequired"
+      [attr.aria-invalid]="isInvalid"
+      [attr.aria-describedby]="helperId"
+      [attr.aria-labelledby]="id + '-label ' + triggerId"
+      (click)="onAreaClick()"
+      (focus)="onFocus()"
+      (blur)="onBlur()">
+      <span class="file-upload-value" [class.placeholder]="!hasValue">{{ displayValue }}</span>
+      <ui-icon
+        [name]="hasValue ? 'material-symbols:close-rounded' : 'material-symbols:upload-rounded'"
+        class="upload-icon"
+        [class.actionable]="hasValue && !isDisabled"
+        [attr.aria-label]="hasValue ? 'Remove selected file' : 'Upload file'"
+        (click)="hasValue && !isDisabled ? clearFiles($event) : null"></ui-icon>
+    </button>
 
-    <div class="text-sm text-gray-800 truncate pr-2 select-none opacity-0 transition-opacity duration-200
-             peer-data-[state=active]:opacity-100">
-      {{ fileName || 'Upload the file' }}
-    </div>
-
-    <div class="flex items-center text-gray-400">
-      <ui-icon [name]="'material-symbols:upload-rounded'"></ui-icon>
-    </div>
-
-    <input #fileInput id="fileInput" type="file" class="hidden" (change)="onFileSelected($event)"
+    <input
+      #fileInput
+      [id]="inputId"
+      type="file"
+      class="native-file-input"
+      [attr.accept]="accept"
+      [attr.multiple]="multiple ? '' : null"
+      [disabled]="isDisabled"
+      (change)="onFileSelected($event)"
       (click)="$event.stopPropagation()" />
+
+    <label
+      [id]="id + '-label'"
+      [attr.for]="triggerId"
+      class="input-label"
+      [class.floating]="isFocused || isFileDialogOpen || hasValue"
+      [class.blue]="(isFocused || isFileDialogOpen) && !isInvalid"
+      [class.gray]="!(isFocused || isFileDialogOpen) && !isInvalid"
+      [class.red]="isInvalid">
+      {{ label }}
+      @if (isRequired) {
+        <span class="required-asterisk">*</span>
+      }
+    </label>
   </div>
 
-  
-  <label [for]="id" class="absolute left-3 z-10 px-1 bg-white text-gray-500 font-medium whitespace-nowrap
-           top-1.5 text-sm transition-all duration-200 ease-out pointer-events-none
-           peer-data-[state=active]:-top-2
-           peer-data-[state=active]:text-xs
-           peer-data-[state=active]:leading-[17px]
-           peer-data-[state=active]:text-blue-600
-           peer-data-[state=error]:text-red-600
-           peer-data-[state=save]:text-green-600">
-
-    {{ label }}
-    @if (isRequired) {
-    <span class="text-red-600">*</span>
+  <span [id]="helperId" class="helper-text" [class.error-text]="isInvalid">
+    @if (isInvalid) {
+      {{ errorNote }}
     }
-  </label>
-
-  
-  <span class="text-xs mt-1 text-left block transition-opacity duration-200 opacity-0 pointer-events-none
-           peer-data-[state=active]:opacity-100">
-    {{ errorNote }}
   </span>
-
 </div>
