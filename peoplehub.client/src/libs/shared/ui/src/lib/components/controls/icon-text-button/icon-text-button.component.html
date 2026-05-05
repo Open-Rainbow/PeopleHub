@@ -1,0 +1,20 @@
+<button
+  [attr.type]="type()"
+  [disabled]="disabled()"
+  [class]="buttonClass()"
+  (click)="onButtonClick($event)">
+  @if (iconName() && iconPosition() === 'left') {
+    <span class="ui-icon-text-button__icon" [attr.aria-hidden]="iconAriaHidden() ? 'true' : null">
+      <ui-icon [name]="iconName()"></ui-icon>
+    </span>
+  }
+
+  <span class="ui-icon-text-button__label">{{ text() }}</span>
+
+  @if (iconName() && iconPosition() === 'right') {
+    <span class="ui-icon-text-button__icon" [attr.aria-hidden]="iconAriaHidden() ? 'true' : null">
+      <ui-icon [name]="iconName()"></ui-icon>
+    </span>
+  }
+</button>
+
