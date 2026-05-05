@@ -11,37 +11,19 @@ const meta: Meta<IconButtonComponent> = {
     layout: 'centered',
   },
   argTypes: {
-    bgColor: {
-      control: 'text',
-      description: 'bgColor property',
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark', 'light', 'white', 'link'],
+      description: 'variant property',
     },
-    color: {
-      control: 'text',
-      description: 'color property',
+    size: {
+      control: 'inline-radio',
+      options: ['small', 'medium', 'large'],
+      description: 'size property',
     },
-    hoverBgColor: {
-      control: 'text',
-      description: 'hoverBgColor property',
-    },
-    hoverColor: {
-      control: 'text',
-      description: 'hoverColor property',
-    },
-    borderRadius: {
-      control: 'number',
-      description: 'borderRadius property',
-    },
-    borderColor: {
-      control: 'text',
-      description: 'borderColor property',
-    },
-    showBorder: {
+    disabled: {
       control: 'boolean',
-      description: 'showBorder property',
-    },
-    disable: {
-      control: 'boolean',
-      description: 'disable property',
+      description: 'disabled property',
     },
     isExpanded: {
       control: 'boolean',
@@ -51,13 +33,18 @@ const meta: Meta<IconButtonComponent> = {
       control: 'text',
       description: 'iconName property',
     },
-    parentFormGroup: {
+    ariaLabel: {
       control: 'text',
-      description: 'parentFormGroup property',
+      description: 'accessible button name',
     },
-    id: {
+    type: {
+      control: 'select',
+      options: ['button', 'submit', 'reset'],
+      description: 'native button type',
+    },
+    title: {
       control: 'text',
-      description: 'id property',
+      description: 'tooltip title',
     },
   },
 };
@@ -66,45 +53,30 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    bgColor: 'white',
-    color: 'red',
-    hoverBgColor: 'red',
-    hoverColor: 'black',
-    borderRadius: 6,
-    borderColor: 'blue',
-    showBorder: true,
-    disable: false,
+    variant: 'secondary',
+    size: 'medium',
+    disabled: false,
     isExpanded: false,
-    iconName: 'home',
-},
+    iconName: 'material-symbols:search-rounded',
+    ariaLabel: 'Search',
+    title: 'Search',
+    type: 'button'
+  },
 };
 
 export const Disabled: Story = {
   args: {
-    bgColor: 'white',
-    color: 'red',
-    hoverBgColor: 'red',
-    hoverColor: 'black',
-    borderRadius: 6,
-    borderColor: 'blue',
-    showBorder: true,
-    disable: true,
-    isExpanded: false,
-    iconName: 'home',
-},
+    ...Default.args,
+    disabled: true
+  },
 };
 
-export const Colored: Story = {
+export const DangerAction: Story = {
   args: {
-    bgColor: '#FF5733',
-    color: 'red',
-    hoverBgColor: 'red',
-    hoverColor: 'black',
-    borderRadius: 6,
-    borderColor: 'blue',
-    showBorder: true,
-    disable: false,
-    isExpanded: false,
-    iconName: 'home',
-},
+    ...Default.args,
+    variant: 'danger',
+    iconName: 'material-symbols:delete-rounded',
+    ariaLabel: 'Delete record',
+    title: 'Delete'
+  },
 };
