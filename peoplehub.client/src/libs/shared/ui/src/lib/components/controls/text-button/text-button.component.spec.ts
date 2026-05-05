@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PlainButtonComponent } from './plain-button.component';
+import { TextButtonComponent } from './text-button.component';
 
-describe('PlainButtonComponent', () => {
-  let component: PlainButtonComponent;
-  let fixture: ComponentFixture<PlainButtonComponent>;
+describe('TextButtonComponent', () => {
+  let component: TextButtonComponent;
+  let fixture: ComponentFixture<TextButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PlainButtonComponent],
+      imports: [TextButtonComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PlainButtonComponent);
+    fixture = TestBed.createComponent(TextButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

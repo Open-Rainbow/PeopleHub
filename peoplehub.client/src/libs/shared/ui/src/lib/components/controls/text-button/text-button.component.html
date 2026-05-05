@@ -1,0 +1,15 @@
+<button
+  [attr.type]="type()"
+  [disabled]="disabled()"
+  [class]="buttonClass()"
+  [class.ui-text-button--custom]="hasCustomColors()"
+  [style.background-color]="backgroundColor() || null"
+  [style.color]="textColor() || null"
+  [style.border-color]="borderColor() || null"
+  [style.--ui-text-button-hover-bg]="hoverBackgroundColor() || null"
+  [style.--ui-text-button-hover-color]="hoverTextColor() || null"
+  [style.--ui-text-button-hover-border]="borderColor() || null"
+  (click)="onButtonClick($event)"
+>
+  {{ text() }}
+</button>
