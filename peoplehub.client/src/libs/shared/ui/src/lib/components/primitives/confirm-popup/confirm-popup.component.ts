@@ -4,7 +4,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { ConfirmPopup, PopupOptions } from '../../../models/confirm-popup.model';
 import { ConfirmPopupService } from '../../../services/confirm-popup.service';
-import { ButtonComponent } from '../../controls/button/button.component';
+import { TextButtonComponent } from '../../controls/text-button/text-button.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,7 +12,7 @@ import { ButtonComponent } from '../../controls/button/button.component';
   templateUrl: './confirm-popup.component.html',
   styleUrls: ['./confirm-popup.component.scss'],
   standalone: true,
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule, TextButtonComponent],
 })
 export class ConfirmPopupComponent implements OnInit, OnDestroy {
   title: string = '';

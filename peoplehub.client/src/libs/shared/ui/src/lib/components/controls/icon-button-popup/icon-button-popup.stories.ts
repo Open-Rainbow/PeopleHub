@@ -31,37 +31,23 @@ const meta: Meta<IconButtonPopupComponent> = {
       control: 'text',
       description: 'iconName property',
     },
-    bgColor: {
+    iconAriaLabel: {
       control: 'text',
-      description: 'bgColor property',
+      description: 'accessible label for icon button',
     },
-    color: {
-      control: 'text',
-      description: 'color property',
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark', 'light', 'white', 'link'],
+      description: 'variant property',
     },
-    hoverBgColor: {
-      control: 'text',
-      description: 'hoverBgColor property',
+    size: {
+      control: 'inline-radio',
+      options: ['small', 'medium', 'large'],
+      description: 'size property',
     },
-    hoverColor: {
-      control: 'text',
-      description: 'hoverColor property',
-    },
-    borderRadius: {
-      control: 'number',
-      description: 'borderRadius property',
-    },
-    borderColor: {
-      control: 'text',
-      description: 'borderColor property',
-    },
-    showBorder: {
+    disabled: {
       control: 'boolean',
-      description: 'showBorder property',
-    },
-    disable: {
-      control: 'boolean',
-      description: 'disable property',
+      description: 'disabled property',
     },
   },
 };
@@ -75,14 +61,10 @@ export const Default: Story = {
     popupBgColor: '#1f2937',
     popupTxtColor: '#ffffff',
     iconName: 'info',
-    bgColor: 'white',
-    color: 'red',
-    hoverBgColor: 'red',
-    hoverColor: 'white',
-    borderRadius: 8,
-    borderColor: 'blue',
-    showBorder: true,
-    disable: false
+    iconAriaLabel: 'Show info',
+    variant: 'secondary',
+    size: 'medium',
+    disabled: false
 },
 };
 
@@ -93,14 +75,10 @@ export const Disabled: Story = {
     popupBgColor: '#1f2937',
     popupTxtColor: '#ffffff',
     iconName: 'info',
-    bgColor: 'white',
-    color: 'red',
-    hoverBgColor: 'red',
-    hoverColor: 'white',
-    borderRadius: 8,
-    borderColor: 'blue',
-    showBorder: true,
-    disable: true
+    iconAriaLabel: 'Show info',
+    variant: 'secondary',
+    size: 'medium',
+    disabled: true
 },
 };
 
@@ -111,13 +89,9 @@ export const Colored: Story = {
     popupBgColor: '#1f2937',
     popupTxtColor: '#ffffff',
     iconName: 'info',
-    bgColor: '#FF5733',
-    color: 'red',
-    hoverBgColor: 'red',
-    hoverColor: 'white',
-    borderRadius: 8,
-    borderColor: 'blue',
-    showBorder: true,
-    disable: false
+    iconAriaLabel: 'Show info',
+    variant: 'danger',
+    size: 'medium',
+    disabled: false
 },
 };

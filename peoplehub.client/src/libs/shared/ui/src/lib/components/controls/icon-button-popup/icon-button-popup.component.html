@@ -1,19 +1,14 @@
 <div 
   class="relative inline-flex items-center justify-center"
-  (mouseenter)="!disable && (isHovered = true)"
-  (mouseleave)="!disable && (isHovered = false)"
+  (mouseenter)="!disabled && (isHovered = true)"
+  (mouseleave)="!disabled && (isHovered = false)"
 >
   <ui-icon-button
     [iconName]="iconName"
-    [bgColor]="bgColor"
-    [color]="color"
-    [hoverBgColor]="hoverBgColor"
-    [hoverColor]="hoverColor"
-    [borderRadius]="borderRadius"
-    [borderColor]="borderColor"
-    [showBorder]="showBorder"
-    [disable]="disable"
-    [borderRadius]="6"
+    [variant]="variant"
+    [size]="size"
+    [disabled]="disabled"
+    [ariaLabel]="iconAriaLabel"
   ></ui-icon-button>
 
   @if(isHovered){

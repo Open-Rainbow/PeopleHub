@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import type { ButtonSize, ButtonVariant } from '../../../models/button-control.types';
 import { IconButtonComponent } from '../icon-button/icon-button.component';
 
 @Component({
@@ -19,14 +20,10 @@ export class IconButtonPopupComponent {
  @Input() popupBgColor: string = '#1f2937'; 
   @Input() popupTxtColor: string = '#ffffff';
   @Input() iconName: string = 'info'; 
-  @Input() bgColor: string = 'white';
-  @Input() color: string = 'red';
-  @Input() hoverBgColor: string = 'red';
-  @Input() hoverColor: string = 'white';
-  @Input() borderRadius: number = 8;
-  @Input() borderColor: string = 'blue';
-  @Input() showBorder: boolean = true;
-  @Input() disable: boolean = false;
+  @Input() iconAriaLabel: string = 'More information';
+  @Input() variant: ButtonVariant = 'secondary';
+  @Input() size: ButtonSize = 'medium';
+  @Input() disabled: boolean = false;
   
   isHovered: boolean = false;
   get positionClasses(): string {

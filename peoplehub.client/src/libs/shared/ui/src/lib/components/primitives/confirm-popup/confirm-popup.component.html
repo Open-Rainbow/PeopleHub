@@ -22,16 +22,17 @@
 
       <div class="mt-5 flex justify-center gap-2 flex-wrap">
         @for (item of data; track item.value) {
-          <ui-button 
+          <ui-text-button 
             [text]="item.text"
-            [bgColor]="item.bgColor"
-            [color]="item.color"
-            [hoverBgColor]="item.hoverBgColor"
-            [hoverColor]="item.hoverColor"
+            [variant]="'primary'"
+            [size]="'medium'"
+            [backgroundColor]="item.bgColor"
+            [textColor]="item.color"
             [borderColor]="item.borderColor"
-            [showBorder]="item.showBorder"
+            [hoverBackgroundColor]="item.hoverBgColor"
+            [hoverTextColor]="item.hoverColor"
             (click)="handleButtonClick(item.value)">
-          </ui-button>
+          </ui-text-button>
         }
       </div>
 

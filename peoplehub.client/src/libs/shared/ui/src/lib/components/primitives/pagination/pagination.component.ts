@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/internal/Observable';
 import { DropdownOption } from '../../../models/value-configs/dropdown-option.model';
 import { DropdownConfigService } from '../../../services/dropdown.service';
-import { ButtonComponent } from '../../controls/button/button.component';
+import { TextButtonComponent } from '../../controls/text-button/text-button.component';
 import { DropdownComponent } from '../../controls/dropdown/dropdown.component';
 import { NumberBoxComponent } from '../../controls/number-box/number-box.component';
 import { ButtonListComponent } from '../button-list/button-list.component';
@@ -18,7 +18,7 @@ import { ButtonListComponent } from '../button-list/button-list.component';
     DropdownComponent,
     FormsModule,
     NumberBoxComponent,
-    ButtonComponent,
+    TextButtonComponent,
     ButtonListComponent,
   ],
   templateUrl: './pagination.component.html',

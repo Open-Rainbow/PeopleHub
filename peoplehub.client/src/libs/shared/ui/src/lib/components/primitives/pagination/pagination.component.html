@@ -1,20 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div class="flex items-center justify-between px-2.5 py-[5px] text-[16px] text-gray-500" 
      [style.backgroundColor]="backgroundColor">
   
@@ -52,18 +35,14 @@
 
       <p>of {{ totalPages }} pages</p>
       <div [class]="isGoDisabled ? 'pointer-events-none rounded-lg grayscale-[80%] cursor-not-allowed' : ''">
-        <ui-button 
+        <ui-text-button 
           [text]="'Go'" 
-          [bgColor]="'#9eeff2'" 
-          [color]="'#ffffff'"
-          [hoverBgColor]="'#9eeff2'" 
-          [hoverColor]="'#ffffff'" 
-          [borderColor]="'black'" 
+          [variant]="'info'"
+          [size]="'small'"
           [isExpanded]="false"
-          [showBorder]="false"
-          [disable]="isGoDisabled"
+          [disabled]="isGoDisabled"
           (click)="goToPage(goToNumber)">
-        </ui-button>
+        </ui-text-button>
       </div>
     </div>
   }
