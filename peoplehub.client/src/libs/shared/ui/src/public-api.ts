@@ -1,10 +1,15 @@
 export * from './lib/services/ui.service';
 export * from './lib/ui.component';
-export { ButtonComponent } from './lib/components/controls/button/button.component';
+export type {
+	ButtonSize,
+	ButtonVariant,
+	IconPosition,
+	NativeButtonType,
+} from './lib/models/button-control.types';
+export { IconTextButtonComponent } from './lib/components/controls/icon-text-button/icon-text-button.component';
 export { CalendarComponent } from './lib/components/controls/calendar/calendar.component';
 export { CheckboxComponent } from './lib/components/controls/checkbox/checkbox.component';
 export { ChipComponent } from './lib/components/controls/chip/chip.component';
-export { PlannerCalendarComponent } from './lib/components/controls/planner-calendar/planner-calendar.component';
 export { DropdownComponent } from './lib/components/controls/dropdown/dropdown.component';
 export { FileUploadComponent } from './lib/components/controls/file-upload/file-upload.component';
 export { IconButtonPopupComponent } from './lib/components/controls/icon-button-popup/icon-button-popup.component';
@@ -14,7 +19,8 @@ export { MultiSelectComponent } from './lib/components/controls/multi-select/mul
 export { NumberBoxComponent } from './lib/components/controls/number-box/number-box.component';
 export { OtpComponent } from './lib/components/controls/otp/otp.component';
 export { PasswordComponent } from './lib/components/controls/password/password.component';
-export { PlainButtonComponent } from './lib/components/controls/plain-button/plain-button.component';
+export { TextButtonComponent } from './lib/components/controls/text-button/text-button.component';
+export { PlannerCalendarComponent } from './lib/components/controls/planner-calendar/planner-calendar.component';
 export { ProgressBarComponent } from './lib/components/controls/progress-bar/progress-bar.component';
 export { SearchBarComponent } from './lib/components/controls/search-bar/search-bar.component';
 export { SearchDropdownComponent } from './lib/components/controls/search-dropdown/search-dropdown.component';

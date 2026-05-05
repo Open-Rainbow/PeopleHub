@@ -1,13 +1,1 @@
-export type PlainButtonVariant =
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'danger'
-  | 'warning'
-  | 'info'
-  | 'dark'
-  | 'light'
-  | 'white'
-  | 'link';
-
-export type PlainButtonSize = 'small' | 'medium' | 'large';
+export type { ButtonSize as PlainButtonSize, ButtonVariant as PlainButtonVariant } from './button-control.types';
