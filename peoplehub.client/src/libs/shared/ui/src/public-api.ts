@@ -22,13 +22,13 @@ export { PasswordComponent } from './lib/components/controls/password/password.c
 export { TextButtonComponent } from './lib/components/controls/text-button/text-button.component';
 export { PlannerCalendarComponent } from './lib/components/controls/planner-calendar/planner-calendar.component';
 export { ProgressBarComponent } from './lib/components/controls/progress-bar/progress-bar.component';
-export { SearchBarComponent } from './lib/components/controls/search-bar/search-bar.component';
+export { SearchComponent } from './lib/components/controls/search/search.component';
 export { SearchDropdownComponent } from './lib/components/controls/search-dropdown/search-dropdown.component';
 export { TextAreaComponent } from './lib/components/controls/text-area/text-area.component';
 export { TextBoxComponent } from './lib/components/controls/text-box/text-box.component';
 export { TimepickerComponent } from './lib/components/controls/timepicker/timepicker.component';
 export { ToggleComponent } from './lib/components/controls/toggle/toggle.component';
-export { ValueDropdownComponent } from './lib/components/controls/value-dropdown/value-dropdown.component';
+export { ValueSelectComponent } from './lib/components/controls/value-select/value-select.component';
 export * from './lib/components/primitives/a4-doc/a4-doc.component';
 export * from './lib/components/primitives/accordion/accordion.component';
 export * from './lib/components/primitives/bullet-list/bullet-list.component';

@@ -23,6 +23,14 @@ const meta: Meta<PasswordComponent> = {
       control: 'text',
       description: 'placeholder property',
     },
+    minLength: {
+      control: 'number',
+      description: 'minLength property',
+    },
+    maxLength: {
+      control: 'number',
+      description: 'maxLength property',
+    },
     value: {
       control: 'text',
       description: 'value property',
@@ -45,6 +53,8 @@ export const Default: Story = {
     label: 'Temporary Password',
     isRequired: true,
     placeholder: 'Enter Temporary password',
+    minLength: 0,
+    maxLength: 50,
     value: ''
 },
 };

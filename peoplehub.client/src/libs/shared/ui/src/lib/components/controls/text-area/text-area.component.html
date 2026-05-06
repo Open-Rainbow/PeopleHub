@@ -1,48 +1,47 @@
-<div class="relative w-full" [formGroup]="parentFormGroup">
- 
-  <textarea
-  [formControl]="control"
-  [id]="id"
-  (input)="onInput($event)"
-  [placeholder]="placeholder"
-  [attr.maxlength]="maxLength"
-  [class.border]="showBorder"
-  [class.border-slate-300]="showBorder"
-  [class.border-0]="!showBorder"
-  [class.error]="isInvalid"
-  [style.background-color]="'white'"
-  [style.border]="showBorder ? (isInvalid ? '1px solid #dc2626' : '') : 'none'"
-  [style.box-shadow]="showBorder && isInvalid ? '0 0 0 1px #dc2626' : 'none'"
-  class="peer w-full h-32 p-2 text-[14px] text-gray-800 rounded-md outline-none transition bg-white resize-none
-         placeholder-transparent focus:placeholder-gray-400 border border-slate-300 
-         h-full rounded-[6px] border-[#e2e8f0]"
-  (focus)="onFocus()"
-  (blur)="onBlur($event)">
-</textarea>
- 
-  <label
-  [for]="id"
-  class="absolute left-3 bg-white px-1 transition-all duration-200 ease-out pointer-events-none text-gray-500 font-medium whitespace-nowrap"
-  [class.-top-2.5]="currentValue || isFocused"
-  [class.text-xs]="currentValue || isFocused"
-  [class]="!currentValue && !isFocused ? '!top-[25%] !-translate-y-1/2' : ''"
-  [class.text-sm]="!currentValue && !isFocused"
-  [class.text-blue-600]="isFocused"
->
-  {{ label }}
-  @if (isRequired) {
-    <span class="text-red-500 ml-0.5">*</span>
-  }
-</label>
- 
-  @if (showCharCount) {
-    <p
-      [style.color]="isInvalid ? '#dc2626' : '#000000'"
-      class="text-[11px] font-medium text-left mt-1 transition-opacity duration-200"
-      [class.opacity-100]="shouldShowCount"
-      [class.opacity-0]="!shouldShowCount"
-    >
-      {{ currentCharCount }} of {{ maxLength }} characters left
-    </p>
-  }
+<div class="textarea-container" [attr.data-width-text]="label || placeholder || ''" [formGroup]="parentFormGroup">
+  <div class="input-wrapper">
+    <div
+      #textareaInput
+      class="textarea-input"
+      [class.border-gray]="!isFocused && !isInvalid"
+      [class.border-blue]="isFocused && !isInvalid"
+      [class.border-red]="isInvalid"
+      [style.--border-color]="borderColor">
+      
+      <textarea
+        #textareaField
+        class="textarea-field"
+        [id]="id"
+        [formControl]="control"
+        [placeholder]="placeholder"
+        [attr.maxlength]="maxLength"
+        [rows]="rows"
+        (input)="onInput($event)"
+        (focus)="onFocus()"
+        (blur)="onBlur()">
+      </textarea>
+
+      <label
+        class="textarea-label"
+        [for]="id"
+        [class.floating]="isFocused || hasValue"
+        [class.blue]="isFocused && !isInvalid"
+        [class.gray]="!isFocused && !isInvalid"
+        [class.red]="isInvalid">
+        {{ label }}
+        @if (isRequired) {
+          <span class="required-asterisk">*</span>
+        }
+      </label>
+    </div>
+
+    @if (showCharCount) {
+      <p
+        class="char-count"
+        [class.char-count-active]="isFocused || hasValue"
+        [class.char-count-invalid]="isInvalid">
+        {{ currentCharCount }} of {{ maxLength }} characters left
+      </p>
+    }
+  </div>
 </div>

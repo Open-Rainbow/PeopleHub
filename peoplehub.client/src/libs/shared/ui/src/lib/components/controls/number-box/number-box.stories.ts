@@ -8,7 +8,7 @@ const meta: Meta<NumberBoxComponent> = {
   title: 'UI/Controls/Number Box',
   tags: ['autodocs'],
   parameters: {
-    layout: 'centered',
+    // layout: 'centered',
   },
   argTypes: {
     label: {

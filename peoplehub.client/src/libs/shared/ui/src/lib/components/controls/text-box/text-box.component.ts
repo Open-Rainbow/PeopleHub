@@ -1,16 +1,20 @@
 
 import { CommonModule } from '@angular/common';
-import { AfterViewInit,
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,7 +23,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./text-box.component.scss'],
   imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
-export class TextBoxComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+export class TextBoxComponent implements OnInit, OnChanges, OnDestroy {
   @Input() label?: string = 'Text Box';
   @Input() placeholder?: string = 'Enter here...';
   @Input() isRequired?: boolean = true;
@@ -34,133 +38,96 @@ export class TextBoxComponent implements OnInit, OnChanges, OnDestroy, AfterView
   @Input() isAllowSpecialChars: boolean = true;
   @Input() tabindex?: number;
   @Input() value: string = '';
-  shouldShowCount = false;
   @Input() isFocused: boolean = false;
-  currentValue = '';
 
   @Output() valueChange = new EventEmitter<string>();
 
   currentCharCount: number = 0;
-  private valueChangesSubscription?: Subscription;
+  private destroy$ = new Subject<void>();
 
-  get control() {
-    return this.parentFormGroup?.get(this.id);
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  get control(): FormControl {
+    const ctrl = this.parentFormGroup?.get(this.id);
+    if (!ctrl) {
+      throw new Error(`FormControl with name '${this.id}' not found`);
+    }
+    return ctrl as FormControl;
   }
 
   get isInvalid() {
     return this.control?.invalid && (this.control?.dirty || this.control?.touched);
   }
 
+  get hasValue(): boolean {
+    return (this.control?.value ?? '').trim().length > 0;
+  }
+
   ngOnInit(): void {
-    this.control?.valueChanges.subscribe(() => {
-      this.updateShowCount();
+    const validators = [
+      ...(this.isRequired ? [Validators.required] : []),
+      ...(this.minLength && this.minLength > 0 ? [Validators.minLength(this.minLength)] : []),
+      ...(this.maxLength ? [Validators.maxLength(this.maxLength)] : []),
+    ];
+
+    this.control.setValidators(validators);
+    this.control.updateValueAndValidity();
+
+    this.control.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.updateCharCount();
+      this.cdr.markForCheck();
     });
+
     this.updateCharCount();
   }
 
-  ngAfterViewInit(): void {
-    this.setupSubscription();
-  }
-  private updateShowCount() {
-    const hasValue = this.currentValue.trim().length > 0;
-
-
-    this.shouldShowCount = hasValue || this.isFocused;
-  }
-
-
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['maxLength']) {
+    if (changes['maxLength'] && !changes['maxLength'].firstChange) {
       this.updateCharCount();
-    }
-    if (changes['parentFormGroup'] || changes['id']) {
-      this.setupSubscription();
+      this.cdr.markForCheck();
     }
     if (changes['value'] && !changes['value'].firstChange) {
-      const control = this.control;
-      if (control && control.value !== this.value) {
-        control.setValue(this.value, { emitEvent: false });
+      const isEditingThisInput =
+        this.isFocused && (document.activeElement as HTMLElement | null)?.id === this.id;
+      if (!isEditingThisInput && this.control.value !== this.value) {
+        this.control.setValue(this.value, { emitEvent: false });
         this.updateCharCount();
+        this.cdr.markForCheck();
       }
     }
   }
 
   ngOnDestroy(): void {
-    if (this.valueChangesSubscription) {
-      this.valueChangesSubscription.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  private setupSubscription(): void {
-    if (this.valueChangesSubscription) {
-      this.valueChangesSubscription.unsubscribe();
-    }
-    const control = this.control;
-    if (control) {
-      this.updateCharCount();
-      this.valueChangesSubscription = control.valueChanges.subscribe((newValue: string) => {
-        this.value = newValue ?? '';
-        this.valueChange.emit(this.value);
-        this.updateCharCount();
-      });
-    } else {
-      this.currentCharCount = this.maxLength;
-    }
-  }
-
-  updateCharCount(): void {
+  private updateCharCount(): void {
     const controlValue = this.control?.value as string | null | undefined;
     const currentLength = controlValue?.length ?? 0;
-    this.currentCharCount = this.maxLength - currentLength;
+    this.currentCharCount = Math.max((this.maxLength ?? 0) - currentLength, 0);
   }
 
-  getInputStyle() {
-    const baseStyle = {
-      'background-color': 'white'
-    };
-
-
-    if (!this.showBorder) {
-      return { baseStyle, 'border': 'none' };
-    }
-
-    if (this.isInvalid) {
-      return {
-        baseStyle,
-        'border': '1px solid #dc2626',
-      };
-    }
-
-    return baseStyle;
-  }
-
-
-
-
-  onInput(event: Event) {
+  onInput(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.currentValue = target.value;
-    this.valueChange.emit(this.currentValue);
-
-    this.updateShowCount();
+    const nextValue = target.value;
+    this.value = nextValue;
+    this.valueChange.emit(nextValue);
+    this.updateCharCount();
+    this.cdr.markForCheck();
   }
 
-  onFocus() {
+  onFocus(): void {
     this.isFocused = true;
-    this.updateShowCount();
+    this.cdr.markForCheck();
   }
 
-  onBlur(event: FocusEvent) {
+  onBlur(event: FocusEvent): void {
     this.isFocused = false;
     const target = event.target as HTMLInputElement;
-    this.currentValue = target.value;
-
-    this.updateShowCount();
+    this.value = target.value;
+    this.control.markAsTouched();
+    this.cdr.markForCheck();
   }
-
-
-
-
-
 
 } 

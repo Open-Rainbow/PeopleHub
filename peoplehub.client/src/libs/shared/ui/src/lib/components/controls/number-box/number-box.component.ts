@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { IconComponent } from '../../primitives/icon/icon.component';
 
@@ -11,30 +11,50 @@ import { IconComponent } from '../../primitives/icon/icon.component';
   templateUrl: './number-box.component.html',
   styleUrls: ['./number-box.component.scss'],
 })
-export class NumberBoxComponent {
+export class NumberBoxComponent implements OnInit {
   @Input() label: string = 'Casual';
   @Input() isRequired: boolean = true;
   @Input() placeholder: string = '0';
   @Input() parentFormGroup!: FormGroup;
   @Input() minValue?: number;
   @Input() maxValue?: number;
-  @Input() step: number = 1;
-@Input() id: string = 'casual';
+  @Input() set step(value: number) {
+    this._step = value < 0 ? Math.abs(value) : value || 1;
+  }
+  get step(): number {
+    return this._step;
+  }
+  private _step: number = 1;
+  @Input() id: string = 'casual';
 
   @Output() numberBox = new EventEmitter<number>();
   @Output() blurEvent = new EventEmitter<void>();
-ngOnInit() {
-}
-get activeForm(): FormGroup {
-  return this.parentFormGroup ?? this.localForm;
-}
+
+  localForm: FormGroup = new FormGroup({});
+  isFocused: boolean = false;
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    if (!this.parentFormGroup) {
+      this.localForm = new FormGroup({
+        [this.id]: new FormControl(''),
+      });
+    }
+  }
+
+  get activeForm(): FormGroup {
+    return this.parentFormGroup ?? this.localForm;
+  }
 
   get control() {
-      return this.activeForm.get(this.id);
+    return this.activeForm.get(this.id);
   }
-localForm = new FormGroup({
-  casual: new FormControl(0),
-});
+
+  get hasValue(): boolean {
+    const value = this.control?.value;
+    return value !== null && value !== undefined && value !== '';
+  }
 
   get isInvalid(): boolean {
     return !!(
@@ -46,7 +66,16 @@ localForm = new FormGroup({
 
   onInput(event: Event) {
     const input = event.target as HTMLInputElement;
-    let value = Number(input.value);
+    const rawValue = input.value.trim();
+
+    if (rawValue === '') {
+      this.control?.setValue('', { emitEvent: false });
+      this.cdr.markForCheck();
+      this.cdr.detectChanges();
+      return;
+    }
+
+    let value = Number(rawValue);
     
     if (this.minValue !== undefined && value < this.minValue) {
       value = this.minValue;
@@ -58,10 +87,20 @@ localForm = new FormGroup({
     }
     
     this.control?.setValue(value, { emitEvent: false });
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
     this.numberBox.emit(value);
   }
 
+  onFocus() {
+    this.isFocused = true;
+    this.cdr.markForCheck();
+  }
+
   onBlur() {
+    this.isFocused = false;
+    this.control?.markAsTouched();
+    this.cdr.markForCheck();
     this.blurEvent.emit();
   }
 
@@ -100,9 +139,10 @@ localForm = new FormGroup({
     this.control.setValue(value);
     this.control.markAsDirty();
     this.control.markAsTouched();
-
     this.control.updateValueAndValidity({ onlySelf: false, emitEvent: true });
 
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
     this.numberBox.emit(value);
     
     const inputElement = document.getElementById(this.id) as HTMLInputElement;

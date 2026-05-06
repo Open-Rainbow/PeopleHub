@@ -31,10 +31,6 @@ const meta: Meta<IconButtonPopupComponent> = {
       control: 'text',
       description: 'iconName property',
     },
-    iconAriaLabel: {
-      control: 'text',
-      description: 'accessible label for icon button',
-    },
     variant: {
       control: 'select',
       options: ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark', 'light', 'white', 'link'],
@@ -61,7 +57,6 @@ export const Default: Story = {
     popupBgColor: '#1f2937',
     popupTxtColor: '#ffffff',
     iconName: 'info',
-    iconAriaLabel: 'Show info',
     variant: 'secondary',
     size: 'medium',
     disabled: false
@@ -75,7 +70,6 @@ export const Disabled: Story = {
     popupBgColor: '#1f2937',
     popupTxtColor: '#ffffff',
     iconName: 'info',
-    iconAriaLabel: 'Show info',
     variant: 'secondary',
     size: 'medium',
     disabled: true
@@ -89,7 +83,6 @@ export const Colored: Story = {
     popupBgColor: '#1f2937',
     popupTxtColor: '#ffffff',
     iconName: 'info',
-    iconAriaLabel: 'Show info',
     variant: 'danger',
     size: 'medium',
     disabled: false

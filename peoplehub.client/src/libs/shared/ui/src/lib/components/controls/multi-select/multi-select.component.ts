@@ -1,13 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit,
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   HostListener,
   Input,
   OnDestroy,
+  OnInit,
   Output,
-  Renderer2, ChangeDetectionStrategy } from '@angular/core';
+  Renderer2,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -19,8 +24,7 @@ import {
 import type { DropdownItem } from '../../../models/component-models/dropdown-item.model';
 import { DropdownOption } from '../../../models/value-configs/dropdown-option.model';
 import { IconComponent } from '../../primitives/icon/icon.component';
-import { CheckboxComponent } from '../checkbox/checkbox.component';
-import { SearchBarComponent } from '../search-bar/search-bar.component';
+import { SearchComponent } from '../search/search.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,8 +37,7 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
     IconComponent,
     FormsModule,
     ReactiveFormsModule,
-    CheckboxComponent,
-    SearchBarComponent,
+    SearchComponent,
   ],
   providers: [
     {
@@ -45,34 +48,33 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
   ],
 })
 export class MultiSelectComponent
-  implements AfterViewInit, OnDestroy, ControlValueAccessor
+  implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor
 {
   @Input() label?: string = 'Gender';
   @Input() placeholder?: string = 'Select Gender';
   @Input() isRequired?: boolean = false;
-  @Input() options: DropdownOption[] = [
-    { value: 1, name: 'Male' },
-    { value: 2, name: 'Female' },
-    { value: 3, name: 'Other' },
-    { value: 4, name: 'Other1' },
-    { value: 5, name: 'Other2' },
-    { value: 6, name: 'Other3' },
-    { value: 7, name: 'Other4' },
-    { value: 8, name: 'Other5' },
-  ];
+  @Input() set options(value: DropdownOption[]) {
+    this._options = value;
+    this.filteredOptions = [...value];
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
+  }
+  get options(): DropdownOption[] {
+    return this._options;
+  }
   @Input() parentFormGroup!: FormGroup;
   @Input() id!: string;
   @Output() selectedChange = new EventEmitter<any>();
   @Output() blurEvent = new EventEmitter<void>();
-  @Input() showCheckbox: boolean = true;
+  private _options: DropdownOption[] = [];
+  @Input() dropdownModel: string = '';
   @Input() showSearch: boolean = true;
+  @Input() showSelectAll: boolean = true;
   filteredOptions: DropdownOption[] = [];
   searchControlId = 'search';
   searchForm = new FormGroup({
     search: new FormControl(''),
   });
-
-  @Input() dropdownModel: string = '';
   get hasSelectedValues(): boolean {
     return this.selectedValues.length > 0;
   }
@@ -105,7 +107,7 @@ export class MultiSelectComponent
       height += 56;
     }
 
-    if (this.showCheckbox && this.options.length > 0) {
+    if (this.showSelectAll && this.options.length > 0) {
       height += 46;
     }
 
@@ -125,6 +127,8 @@ export class MultiSelectComponent
       setTimeout(() => {
         this.decideDropdownDirection();
         this.setInitialHeight();
+        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       }, 0);
     }
 
@@ -150,6 +154,7 @@ export class MultiSelectComponent
   constructor(
     private eRef: ElementRef,
     private renderer: Renderer2,
+    private cdr: ChangeDetectorRef,
   ) {
     this.mouseMoveListener = this.handleMouseMove.bind(this);
     this.mouseUpListener = this.handleMouseUp.bind(this);
@@ -158,8 +163,6 @@ export class MultiSelectComponent
   ngOnInit() {
     const randomStr = Math.random().toString(36).substring(2, 9);
     this.uniqueId = `dropdown_${this.id}_${randomStr}`;
-
-    this.filteredOptions = [...this.options];
 
     if (this.parentFormGroup && this.id) {
       this.selectedValues = this.parentFormGroup.get(this.id)?.value || [];
@@ -174,12 +177,13 @@ export class MultiSelectComponent
 
     if (!query) {
       this.filteredOptions = [...this.options];
-      return;
+    } else {
+      this.filteredOptions = this.options.filter((option) =>
+        option.name.toLowerCase().includes(query),
+      );
     }
 
-    this.filteredOptions = this.options.filter((option) =>
-      option.name.toLowerCase().includes(query),
-    );
+    this.cdr.detectChanges();
   }
 
   onCheckboxChange(checked: boolean, option: DropdownOption) {
@@ -224,6 +228,7 @@ export class MultiSelectComponent
   writeValue(obj: any): void {
     this.selectedValues = obj || [];
     this.isActive = this.selectedValues.length > 0;
+    this.cdr.markForCheck();
   }
 
   registerOnChange(fn: any): void {
@@ -236,6 +241,9 @@ export class MultiSelectComponent
 
   deleteOption(option: any) {
     this.filteredOptions = this.filteredOptions.filter((o) => o !== option);
+    this.options = this.options.filter((o) => o !== option);
+    this.selectedValues = this.selectedValues.filter((v) => v !== option.value);
+    this.syncSelectionState();
   }
 
   setDisabledState?(isDisabled: boolean): void {
@@ -345,9 +353,16 @@ export class MultiSelectComponent
 
       this.renderer.setStyle(list, 'height', `${initialHeight}px`);
       this.renderer.setStyle(list, 'max-height', `${maxHeight}px`);
-      this.renderer.setStyle(list, 'overflow-y', 'auto');
+      this.renderer.setStyle(list, 'overflow', 'hidden');
       this.renderer.setStyle(list, 'resize', 'none');
       this.renderer.setStyle(list, 'transform-origin', 'top');
+
+      const optionsDiv = list.querySelector(':scope > div') as HTMLElement;
+      if (optionsDiv) {
+        const optionsDivHeight = Math.max(initialHeight - this.panelHeaderHeight, 0);
+        this.renderer.setStyle(optionsDiv, 'max-height', `${optionsDivHeight}px`);
+        this.renderer.setStyle(optionsDiv, 'overflow-y', 'auto');
+      }
     }
   }
 
@@ -366,13 +381,14 @@ export class MultiSelectComponent
     this.isActive = nextValues.length > 0;
 
     this.onChange(nextValues);
-    this.control?.setValue(nextValues);
 
     if (markControl) {
       this.control?.markAsTouched();
       this.control?.markAsDirty();
     }
 
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
     this.selectedChange.emit(nextValues);
   }
 
@@ -434,10 +450,10 @@ export class MultiSelectComponent
     list.style.minHeight = `${newHeight}px`;
     list.style.maxHeight = `${Math.max(newHeight, totalHeight)}px`;
 
-    if (newHeight >= totalHeight) {
-      this.renderer.setStyle(list, 'overflow-y', 'hidden');
-    } else {
-      this.renderer.setStyle(list, 'overflow-y', 'auto');
+    const optionsDiv = list.querySelector(':scope > div') as HTMLElement;
+    if (optionsDiv) {
+      const optionsDivHeight = Math.max(newHeight - this.panelHeaderHeight, 0);
+      this.renderer.setStyle(optionsDiv, 'max-height', `${optionsDivHeight}px`);
     }
 
     this.adjustDropdownPosition(list);
@@ -502,5 +518,5 @@ export class MultiSelectComponent
     document.removeEventListener('contextmenu', this.preventContextMenu);
   }
 
-  draggable: boolean = false;
+  @Input() draggable: boolean = false;
 }

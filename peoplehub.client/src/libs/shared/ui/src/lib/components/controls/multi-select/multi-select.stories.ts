@@ -8,7 +8,7 @@ const meta: Meta<MultiSelectComponent> = {
   title: 'UI/Controls/Multi Select',
   tags: ['autodocs'],
   parameters: {
-    layout: 'centered',
+    // layout: 'centered',
   },
   argTypes: {
     label: {
@@ -35,13 +35,13 @@ const meta: Meta<MultiSelectComponent> = {
       control: 'text',
       description: 'id property',
     },
-    showCheckbox: {
-      control: 'boolean',
-      description: 'showCheckbox property',
-    },
     showSearch: {
       control: 'boolean',
       description: 'showSearch property',
+    },
+    showSelectAll: {
+      control: 'boolean',
+      description: 'showSelectAll property',
     },
     dropdownModel: {
       control: 'text',
@@ -67,8 +67,8 @@ export const Default: Story = {
       { value: 7, name: 'Other4' },
       { value: 8, name: 'Other5' },
     ],
-    showCheckbox: true,
     showSearch: true,
+    showSelectAll: true,
     dropdownModel: ''
 },
 };

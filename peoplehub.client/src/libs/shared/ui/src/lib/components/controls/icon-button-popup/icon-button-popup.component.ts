@@ -20,7 +20,6 @@ export class IconButtonPopupComponent {
  @Input() popupBgColor: string = '#1f2937'; 
   @Input() popupTxtColor: string = '#ffffff';
   @Input() iconName: string = 'info'; 
-  @Input() iconAriaLabel: string = 'More information';
   @Input() variant: ButtonVariant = 'secondary';
   @Input() size: ButtonSize = 'medium';
   @Input() disabled: boolean = false;

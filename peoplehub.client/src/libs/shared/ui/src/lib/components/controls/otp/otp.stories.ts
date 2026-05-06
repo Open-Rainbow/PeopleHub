@@ -11,6 +11,10 @@ const meta: Meta<OtpComponent> = {
     layout: 'centered',
   },
   argTypes: {
+    label: {
+      control: 'text',
+      description: 'label property',
+    },
     parentFormGroup: {
       control: 'text',
       description: 'parentFormGroup property',
@@ -19,15 +23,25 @@ const meta: Meta<OtpComponent> = {
       control: 'text',
       description: 'id property',
     },
+    otpLength: {
+      control: 'number',
+      description: 'otp length property (example: 4 or 6)',
+    },
   },
 };
 
 export default meta;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    label: 'Enter OTP here',
+    otpLength: 6,
+  },
 };
 
 export const Alternative: Story = {
-  args: { ...Default.args },
+  args: {
+    ...Default.args,
+    otpLength: 4,
+  },
 };

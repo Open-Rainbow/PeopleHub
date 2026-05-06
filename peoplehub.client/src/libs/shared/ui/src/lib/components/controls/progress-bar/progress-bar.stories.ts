@@ -8,7 +8,7 @@ const meta: Meta<ProgressBarComponent> = {
   title: 'UI/Controls/Progress Bar',
   tags: ['autodocs'],
   parameters: {
-    layout: 'centered',
+    // layout: 'centered',
   },
   argTypes: {
     total: {
@@ -18,6 +18,10 @@ const meta: Meta<ProgressBarComponent> = {
     used: {
       control: 'number',
       description: 'used property',
+    },
+    remainingLabel: {
+      control: 'text',
+      description: 'remaining label text (example: days remaining, hours left, items pending)',
     },
     barColor: {
       control: 'text',
@@ -57,27 +61,37 @@ const meta: Meta<ProgressBarComponent> = {
 export default meta;
 
 export const Default: Story = {
+  render: (args) => ({
+    props: args,
+    template: `<div style="width: 320px;"><ui-progress-bar [total]="total" [used]="used" [remainingLabel]="remainingLabel" [barColor]="barColor" [showBorderRadius]="showBorderRadius" [totalTextColor]="totalTextColor" [usedTextColor]="usedTextColor" [remainingTextColor]="remainingTextColor" [hideDetails]="hideDetails"></ui-progress-bar></div>`,
+  }),
   args: {
     total: 12,
     used: 3,
+    remainingLabel: 'days remaining',
     barColor: 'blueviolet',
     showBorderRadius: true,
     totalTextColor: '#374151',
     usedTextColor: '#6b7280',
     remainingTextColor: '#4f46e5',
-    hideDetails: true
-},
+    hideDetails: false,
+  },
 };
 
 export const Colored: Story = {
+  render: (args) => ({
+    props: args,
+    template: `<div style="width: 320px;"><ui-progress-bar [total]="total" [used]="used" [remainingLabel]="remainingLabel" [barColor]="barColor" [showBorderRadius]="showBorderRadius" [totalTextColor]="totalTextColor" [usedTextColor]="usedTextColor" [remainingTextColor]="remainingTextColor" [hideDetails]="hideDetails"></ui-progress-bar></div>`,
+  }),
   args: {
     total: 12,
     used: 3,
+    remainingLabel: 'items pending',
     barColor: 'blueviolet',
     showBorderRadius: true,
     totalTextColor: '#374151',
     usedTextColor: '#6b7280',
     remainingTextColor: '#4f46e5',
-    hideDetails: true
-},
+    hideDetails: false,
+  },
 };

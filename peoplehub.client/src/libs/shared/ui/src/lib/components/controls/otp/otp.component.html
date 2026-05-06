@@ -1,17 +1,19 @@
-<label class="block font-semibold mb-[10px] text-[#1E293B] !text-[#1E293B] text-left w-[300px]">
-  Enter OTP here
+<label
+  class="block font-semibold mb-[10px] text-[#1E293B] !text-[#1E293B] text-left w-[300px]"
+>
+  {{ label }}
 </label>
 
-<div 
-  class="flex justify-between mb-[30px] w-[300px]" 
-  [formGroup]="parentFormGroup" 
+<div
+  class="flex justify-between mb-[30px] w-[300px]"
+  [formGroup]="parentFormGroup"
   [class.error]="isInvalid"
 >
-  @for (digit of otpArray; track digit; let i = $index) {
+  @for (digit of otpArray; track $index; let i = $index) {
     <input
       type="text"
       maxlength="1"
-      [attr.maxlength]="i === 0 ? '6' : '1'"
+      [attr.maxlength]="i === 0 ? otpLength.toString() : '1'"
       (paste)="i === 0 ? handlePaste($event) : null"
       (input)="handleInput($event, i)"
       (keydown)="handleKeyDown($event, i)"

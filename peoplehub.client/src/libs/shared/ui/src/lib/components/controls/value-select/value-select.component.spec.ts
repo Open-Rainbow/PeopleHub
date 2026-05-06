@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SearchBarComponent } from './search-bar.component';
+import { ValueSelectComponent } from './value-select.component';
 
-describe('SearchBarComponent', () => {
-  let component: SearchBarComponent;
-  let fixture: ComponentFixture<SearchBarComponent>;
+describe('ValueSelectComponent', () => {
+  let component: ValueSelectComponent;
+  let fixture: ComponentFixture<ValueSelectComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [SearchBarComponent]
+    imports: [ValueSelectComponent]
 })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SearchBarComponent);
+    fixture = TestBed.createComponent(ValueSelectComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

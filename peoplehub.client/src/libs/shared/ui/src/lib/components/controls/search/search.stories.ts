@@ -1,11 +1,11 @@
 import { Meta, StoryObj } from '@storybook/angular';
-import { SearchBarComponent } from './search-bar.component';
+import { SearchComponent } from './search.component';
 
-type Story = StoryObj<SearchBarComponent>;
+type Story = StoryObj<SearchComponent>;
 
-const meta: Meta<SearchBarComponent> = {
-  component: SearchBarComponent,
-  title: 'UI/Controls/Search Bar',
+const meta: Meta<SearchComponent> = {
+  component: SearchComponent,
+  title: 'UI/Controls/Search',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -23,10 +23,6 @@ const meta: Meta<SearchBarComponent> = {
       control: 'text',
       description: 'borderColor property',
     },
-    iconPosition: {
-      control: 'text',
-      description: 'iconPosition property',
-    },
     showIcon: {
       control: 'boolean',
       description: 'showIcon property',
@@ -39,9 +35,9 @@ const meta: Meta<SearchBarComponent> = {
       control: 'text',
       description: 'id property',
     },
-    enableIntelligenceBox: {
+    displaySuggestions: {
       control: 'boolean',
-      description: 'enableIntelligenceBox property',
+      description: 'displaySuggestions property',
     },
     searchData: {
       control: 'text',
@@ -57,10 +53,9 @@ export const Default: Story = {
     placeholderText: 'Search employees by name, email, position, or department...',
     showBorder: true,
     borderColor: '#2563eb',
-    iconPosition: 'right',
     showIcon: true,
-    enableIntelligenceBox: true,
-    searchData: ['Alice Johnson', 'Bob Smith', 'Charlie Brown', 'David Wilson', 'Eva Green', 'Frank Harris', 'Grace Lee', 'Hannah Martin', 'Ian Clark', 'Jane Doe', 'Alice Johnson', 'Bob Smith', 'Charlie Brown', 'David Wilson', 'Eva Green', 'Frank Harris', 'Grace Lee', 'Hannah Martin', 'Ian Clark', 'Jane Doe']
+    displaySuggestions: true,
+    searchData: ['Alice Johnson', 'Bob Smith', 'Charlie Brown', 'David Wilson', 'Eva Green', 'Frank Harris', 'Grace Lee', 'Hannah Martin']
 },
 };
 
@@ -69,9 +64,8 @@ export const Colored: Story = {
     placeholderText: 'Search employees by name, email, position, or department...',
     showBorder: true,
     borderColor: '#2563eb',
-    iconPosition: 'right',
     showIcon: true,
-    enableIntelligenceBox: true,
-    searchData: ['Alice Johnson', 'Bob Smith', 'Charlie Brown', 'David Wilson', 'Eva Green', 'Frank Harris', 'Grace Lee', 'Hannah Martin', 'Ian Clark', 'Jane Doe', 'Alice Johnson', 'Bob Smith', 'Charlie Brown', 'David Wilson', 'Eva Green', 'Frank Harris', 'Grace Lee', 'Hannah Martin', 'Ian Clark', 'Jane Doe']
+    displaySuggestions: true,
+    searchData: ['Alice Johnson', 'Bob Smith', 'Charlie Brown', 'David Wilson', 'Eva Green', 'Frank Harris', 'Grace Lee', 'Hannah Martin']
 },
 };

@@ -1,77 +1,58 @@
-
- 
- 
-
- 
- 
-
- 
- 
-<div class="flex items-center justify-between gap-2">
- 
-  
-   @if(labelPosition === 'left' || labelPosition === 'both'){
+<div class="toggle-container">
+  @if (labelPosition === "left" || labelPosition === "both") {
     <span
-      class="text-sm transition-colors duration-200 cursor-pointer"
-      [class.text-black]="!checked || (labelPosition === 'left' && checked && !manualToggle && isDualLabelMode)"
-      [class.text-gray-400]="checked && !(labelPosition === 'left' && !manualToggle && isDualLabelMode)"
-      (click)="!toggleOnlyMode && onLabelClick(false)"
+      class="toggle-label"
+      [class.text-black]="
+        !checked ||
+        (labelPosition === 'left' &&
+          checked &&
+          !hasSeparateOnOffLabels)
+      "
+      [class.text-gray-400]="
+        checked &&
+        !(labelPosition === 'left' && !hasSeparateOnOffLabels)
+      "
+      (click)="canToggleFromLabel && onLabelClick(false)"
     >
-      {{ dynamicLeftLabel }}
+      {{ leftLabelText }}
+      @if (isRequired && labelPosition !== 'both') {
+        <span class="required-asterisk">*</span>
+      }
     </span>
-   }
-  
- 
-  
-  <label class="relative inline-flex items-center cursor-pointer">
- 
-    
+  }
+
+  <label class="toggle-wrapper" [ngClass]="'size-' + size">
     <input
       type="checkbox"
       [checked]="checked"
-      (change)="onChange($event)"
-      class="peer sr-only"
+      (change)="onToggleChange($event)"
+      class="toggle-input"
     />
- 
-    
-    <div
-      class="
-        w-[34px] h-[18px]
-        bg-gray-300
-        rounded-full
-        transition-colors duration-300
-        peer-checked:bg-[var(--toggle-active-color)]
-      "
-    ></div>
- 
-    
-    <div
-      class="
-        absolute
-        left-[2px] top-[50%]
-        -translate-y-1/2
-        w-[14px] h-[14px]
-        rounded-full
-        bg-black
-        transition-all duration-300
-        peer-checked:translate-x-[16px]
-        peer-checked:bg-white
-      "
-    ></div>
- 
+
+    <div class="toggle-track"></div>
+
+    <div class="toggle-knob"></div>
   </label>
- 
-  
-  @if(labelPosition === 'right' || labelPosition === 'both'){
+
+  @if (labelPosition === "right" || labelPosition === "both") {
     <span
-      class="text-sm transition-colors duration-200 cursor-pointer"
-      [class.text-black]="checked || (labelPosition === 'right' && !checked && !manualToggle && isDualLabelMode)"
-      [class.text-gray-400]="!checked && !(labelPosition === 'right' && !manualToggle && isDualLabelMode)"
-      (click)="!toggleOnlyMode && onLabelClick(true)"
-      >
-      {{ dynamicRightLabel }}
+      class="toggle-label"
+      [class.text-black]="
+        checked ||
+        (labelPosition === 'right' &&
+          !checked &&
+          !hasSeparateOnOffLabels)
+      "
+      [class.text-gray-400]="
+        !checked &&
+        !(labelPosition === 'right' && !hasSeparateOnOffLabels)
+      "
+      (click)="canToggleFromLabel && onLabelClick(true)"
+    >
+      {{ rightLabelText }}
+      @if (isRequired) {
+        <span class="required-asterisk">*</span>
+      }
     </span>
   }
-  
- 
 </div>

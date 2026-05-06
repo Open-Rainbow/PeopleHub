@@ -1,20 +1,15 @@
-<div class="w-full" [formGroup]="parentFormGroup">
+<div class="w-full">
+  <div
+    class="w-full bg-transparent rounded-lg py-[10px] px-[2px] font-['Inter',sans-serif]"
+  >
+    @if (!hideDetails) {
+      <div class="flex justify-between items-center text-sm mb-2">
+        <span [style.color]="usedTextColor"> Used: {{ used }} </span>
 
-  <div class="w-full bg-transparent rounded-lg py-[10px] px-[2px] font-['Inter',sans-serif]">
-
-    @if(!hideDetails){
-      <div class="flex justify-between items-center text-sm mb-[-6px]">
-        <span [style.color]="usedTextColor">
-          Used: {{ used }}
-        </span>
-
-        <span [style.color]="totalTextColor">
-          Total: {{ total }}
-        </span>
+        <span [style.color]="totalTextColor"> Total: {{ total }} </span>
       </div>
     }
 
-    
     <div
       class="w-full h-2 bg-gray-200 transition-all duration-300"
       [class.rounded-lg]="showBorderRadius"
@@ -29,15 +24,10 @@
       ></div>
     </div>
 
-    @if(!hideDetails){
-      <div
-        class="text-sm mt-2 font-medium"
-        [style.color]="remainingTextColor"
-      >
-        {{ remainingDays }} days remaining
+    @if (!hideDetails) {
+      <div class="text-sm mt-2 font-medium" [style.color]="remainingTextColor">
+        {{ remainingDays }} {{ remainingLabel }}
       </div>
     }
-
   </div>
-
 </div>

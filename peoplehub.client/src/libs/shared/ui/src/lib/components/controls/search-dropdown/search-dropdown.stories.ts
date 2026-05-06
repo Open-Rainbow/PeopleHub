@@ -1,7 +1,26 @@
 import { Meta, StoryObj } from '@storybook/angular';
+import { FormGroup, FormControl } from '@angular/forms';
 import { SearchDropdownComponent } from './search-dropdown.component';
+import type { SearchDropdownOption } from '../../../models/value-configs/search-dropdown-option.model';
 
 type Story = StoryObj<SearchDropdownComponent>;
+
+const employeeData = [
+  { name: 'Sandeep', email: 'sandeep@gmail.com', position: 'Senior Dev', department: 'Developer' },
+  { name: 'Srikant', email: 'srikant@gmail.com', position: 'Junior Dev', department: 'Full Stack' },
+  { name: 'Auro', email: 'auro@gmail.com', position: 'Intern', department: 'Developer' },
+  { name: 'Arobinda', email: 'arobinda@gmail.com', position: 'Trainee', department: 'HR' },
+  { name: 'Bikram', email: 'bikram@gmail.com', position: 'Senior Dev', department: 'Developer' },
+  { name: 'Rajesh', email: 'rajesh@gmail.com', position: 'Intern', department: 'Database' },
+  { name: 'Rakesh', email: 'rakesh@gmail.com', position: 'Trainee', department: 'HR' },
+];
+
+const employeeConfig: SearchDropdownOption = {
+  displayField: 'name',
+  subtitleField: 'email',
+  descriptionField: 'position',
+  searchFields: ['name', 'email', 'position'],
+};
 
 const meta: Meta<SearchDropdownComponent> = {
   component: SearchDropdownComponent,
@@ -11,33 +30,29 @@ const meta: Meta<SearchDropdownComponent> = {
     layout: 'centered',
   },
   argTypes: {
+    label: {
+      control: 'text',
+      description: 'Label text above search input',
+    },
     placeholderText: {
       control: 'text',
-      description: 'placeholderText property',
+      description: 'Placeholder text for search input',
     },
     showBorder: {
       control: 'boolean',
-      description: 'showBorder property',
+      description: 'Show border around search input',
     },
     borderColor: {
-      control: 'text',
-      description: 'borderColor property',
+      control: 'color',
+      description: 'Border color',
     },
-    iconPosition: {
-      control: 'text',
-      description: 'iconPosition property',
+    data: {
+      control: 'object',
+      description: 'Array of items to search',
     },
-    showIcon: {
-      control: 'boolean',
-      description: 'showIcon property',
-    },
-    parentFormGroup: {
-      control: 'text',
-      description: 'parentFormGroup property',
-    },
-    id: {
-      control: 'text',
-      description: 'id property',
+    config: {
+      control: 'object',
+      description: 'SearchDropdownOption - configure which fields to display and search',
     },
   },
 };
@@ -46,20 +61,100 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    placeholderText: 'Search employees by name, email, position, or department...',
+    label: 'Search Employees',
+    placeholderText: 'Search employees by name, email, position...',
     showBorder: true,
     borderColor: '#2563eb',
-    iconPosition: 'right',
-    showIcon: true
-},
+    data: employeeData,
+    config: employeeConfig,
+  },
+  render: (args) => ({
+    props: {
+      ...args,
+      parentFormGroup: new FormGroup({
+        employeeSearch: new FormControl(''),
+      }),
+      id: 'employeeSearch',
+    },
+    template: `
+      <div class="w-96">
+        <ui-search-dropdown
+          [label]="label"
+          [placeholderText]="placeholderText"
+          [showBorder]="showBorder"
+          [borderColor]="borderColor"
+          [data]="data"
+          [config]="config"
+          [parentFormGroup]="parentFormGroup"
+          [id]="id">
+        </ui-search-dropdown>
+      </div>
+    `,
+  }),
+};
+
+export const WithoutConfig: Story = {
+  args: {
+    label: 'Search',
+    placeholderText: 'Search by any field...',
+    showBorder: true,
+    borderColor: '#2563eb',
+    data: employeeData,
+  },
+  render: (args) => ({
+    props: {
+      ...args,
+      parentFormGroup: new FormGroup({
+        search: new FormControl(''),
+      }),
+      id: 'search',
+    },
+    template: `
+      <div class="w-96">
+        <ui-search-dropdown
+          [label]="label"
+          [placeholderText]="placeholderText"
+          [showBorder]="showBorder"
+          [borderColor]="borderColor"
+          [data]="data"
+          [parentFormGroup]="parentFormGroup"
+          [id]="id">
+        </ui-search-dropdown>
+      </div>
+    `,
+  }),
 };
 
 export const Colored: Story = {
   args: {
-    placeholderText: 'Search employees by name, email, position, or department...',
+    label: 'Search Employees',
+    placeholderText: 'Search employees...',
     showBorder: true,
-    borderColor: '#2563eb',
-    iconPosition: 'right',
-    showIcon: true
-},
+    borderColor: '#7c3aed',
+    data: employeeData,
+    config: employeeConfig,
+  },
+  render: (args) => ({
+    props: {
+      ...args,
+      parentFormGroup: new FormGroup({
+        employeeSearch: new FormControl(''),
+      }),
+      id: 'employeeSearch',
+    },
+    template: `
+      <div class="w-96">
+        <ui-search-dropdown
+          [label]="label"
+          [placeholderText]="placeholderText"
+          [showBorder]="showBorder"
+          [borderColor]="borderColor"
+          [data]="data"
+          [config]="config"
+          [parentFormGroup]="parentFormGroup"
+          [id]="id">
+        </ui-search-dropdown>
+      </div>
+    `,
+  }),
 };

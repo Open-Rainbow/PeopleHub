@@ -1,44 +1,64 @@
 import { CommonModule } from '@angular/common';
-import { Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Input,
+  OnInit,
+  OnDestroy,
+  OnChanges,
+  SimpleChanges,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-text-area',
   standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './text-area.component.html',
   styleUrls: ['./text-area.component.scss'],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextAreaComponent implements OnInit, OnDestroy, OnChanges  {
-
+export class TextAreaComponent
+  implements OnInit, AfterViewInit, OnDestroy, OnChanges
+{
   @Input() label?: string = 'Text Area';
-  @Input() placeholder?: string = 'Enter text area';
+  @Input() placeholder?: string = 'Enter text';
   @Input() isRequired?: boolean = true;
-  @Input() showBorder: boolean = true;
-  @Input() maxLength: number = 20;
-  @Input() minLength: number = 0;
-  @Input() showCharCount: boolean = true;
+  @Input() showBorder?: boolean = true;
+  @Input() borderColor?: string = '#2563eb';
+  @Input() maxLength?: number = 500;
+  @Input() minLength?: number = 0;
+  @Input() showCharCount?: boolean = true;
+  @Input() rows?: number = 4;
   @Input() id!: string;
   @Input() parentFormGroup!: FormGroup;
 
   @Output() textValueChange = new EventEmitter<string>();
 
-  currentCharCount = 0;
-  currentValue = '';
-  shouldShowCount = false;
-  isFocused = false;
+  @ViewChild('textareaField') textareaField!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('textareaInput') textareaInput!: ElementRef<HTMLDivElement>;
 
+  isFocused = false;
+  currentCharCount = 0;
   private destroy$ = new Subject<void>();
+  private resizeObserver?: ResizeObserver;
+  private initialWidth = 0;
+  private initialHeight = 0;
+
+  constructor(private cdr: ChangeDetectorRef) {}
 
   get control(): FormControl {
     const ctrl = this.parentFormGroup?.get(this.id);
@@ -48,95 +68,82 @@ export class TextAreaComponent implements OnInit, OnDestroy, OnChanges  {
     return ctrl as FormControl;
   }
 
-  get isInvalid() {
-    return this.control?.invalid && (this.control?.dirty || this.control?.touched);
+  get hasValue() {
+    return (this.control?.value ?? '').trim().length > 0;
+  }
+
+  ngAfterViewInit(): void {
+    const el = this.textareaField.nativeElement;
+    const wrapper = this.textareaInput.nativeElement;
+    this.initialWidth = el.offsetWidth;
+    this.initialHeight = el.offsetHeight;
+
+    this.resizeObserver = new ResizeObserver(() => {
+      const newWidth = el.offsetWidth;
+      const newHeight = el.offsetHeight;
+      if (newWidth !== this.initialWidth || newHeight !== this.initialHeight) {
+        wrapper.style.width = newWidth + 'px';
+        wrapper.style.height = newHeight + 'px';
+      }
+    });
+    this.resizeObserver.observe(el);
   }
 
   ngOnInit(): void {
-  this.control.setValidators([
-    ...(this.isRequired ? [Validators.required] : []),
-    ...(this.minLength > 0 ? [Validators.minLength(this.minLength)] : []),
-    ...(this.maxLength > 0 ? [Validators.maxLength(this.maxLength)] : [])
-  ]);
+    const validators = [
+      ...(this.isRequired ? [Validators.required] : []),
+      ...(this.minLength && this.minLength > 0
+        ? [Validators.minLength(this.minLength)]
+        : []),
+      ...(this.maxLength ? [Validators.maxLength(this.maxLength)] : []),
+    ];
 
-  this.control.updateValueAndValidity();
+    this.control.setValidators(validators);
+    this.control.updateValueAndValidity();
 
-  this.control.valueChanges
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((value: string) => {
-      this.currentValue = value ?? '';
+    this.control.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.updateCharCount();
-      this.updateShowCount();
+      this.cdr.markForCheck();
     });
 
-  this.currentValue = this.control.value ?? '';
-  this.updateCharCount();
-  this.updateShowCount();
-}
+    this.updateCharCount();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['maxLength']) {
+    if (changes['maxLength'] && !changes['maxLength'].firstChange) {
       this.updateCharCount();
+      this.cdr.markForCheck();
     }
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.resizeObserver?.disconnect();
   }
 
-  getTextareaStyle() {
-  if (this.isInvalid) {
-    return {
-      'border': this.showBorder ? '1px solid #dc2626' : 'none',
-      'box-shadow': this.showBorder ? '0 0 0 1px #dc2626' : 'none'
-    };
-  }
-
-  return {
-    'background-color': 'white',
-    'border': this.showBorder ? '' : 'none'
-  };
-}
-
-  onInput(event: Event) {
-  const textarea = event.target as HTMLTextAreaElement;
-  let value = textarea.value;
-  if (value.length > this.maxLength) {
-    value = value.substring(0, this.maxLength);
-    textarea.value = value;
+  onInput(event: Event): void {
+    const textarea = event.target as HTMLTextAreaElement;
+    const value = textarea.value;
     this.control.setValue(value, { emitEvent: false });
+    this.textValueChange.emit(value);
+    this.updateCharCount();
+    this.cdr.markForCheck();
   }
 
-  this.currentValue = value;
-  this.textValueChange.emit(value);
-  this.updateCharCount();
-  this.updateShowCount();
-}
-
-  onFocus() {
+  onFocus(): void {
     this.isFocused = true;
-    this.updateShowCount();
+    this.cdr.markForCheck();
   }
 
-  onBlur(event: FocusEvent) {
-  this.isFocused = false;
-
-  const textarea = event.target as HTMLTextAreaElement;
-  this.currentValue = textarea.value;
-  this.control.markAsTouched();
-  this.control.updateValueAndValidity();
-
-  this.updateShowCount();
-}
-
-  private updateCharCount() {
-    const value = this.currentValue || '';
-    this.currentCharCount = Math.max(this.maxLength - value.length, 0);
+  onBlur(): void {
+    this.isFocused = false;
+    this.control.markAsTouched();
+    this.cdr.markForCheck();
   }
 
-  private updateShowCount() {
-    const hasValue = this.currentValue.trim().length > 0;
-    this.shouldShowCount = hasValue || this.isFocused;
+  private updateCharCount(): void {
+    const value = this.control?.value ?? '';
+    this.currentCharCount = Math.max((this.maxLength ?? 0) - value.length, 0);
   }
 }

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ValueDropdownComponent } from './value-dropdown.component';
+import { SearchComponent } from './search.component';
 
-describe('ValueDropdownComponent', () => {
-  let component: ValueDropdownComponent;
-  let fixture: ComponentFixture<ValueDropdownComponent>;
+describe('SearchComponent', () => {
+  let component: SearchComponent;
+  let fixture: ComponentFixture<SearchComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [ValueDropdownComponent]
+    imports: [SearchComponent]
 })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ValueDropdownComponent);
+    fixture = TestBed.createComponent(SearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

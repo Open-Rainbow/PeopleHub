@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/angular';
+import { FormControl, FormGroup } from '@angular/forms';
 import { TextBoxComponent } from './text-box.component';
 
 type Story = StoryObj<TextBoxComponent>;
@@ -84,10 +85,74 @@ export const Default: Story = {
     showCharCount: true,
     isReadOnly: false,
     isAllowSpecialChars: true,
-    value: ''
-},
+    value: '',
+  },
+  render: (args) => ({
+    props: {
+      ...args,
+      parentFormGroup: new FormGroup({
+        textBox: new FormControl(''),
+      }),
+      id: 'textBox',
+    },
+    template: `
+      <div class="w-96">
+        <ui-text-box
+          [label]="label"
+          [placeholder]="placeholder"
+          [isRequired]="isRequired"
+          [isFocused]="isFocused"
+          [showBorder]="showBorder"
+          [minLength]="minLength"
+          [maxLength]="maxLength"
+          [showCharCount]="showCharCount"
+          [isReadOnly]="isReadOnly"
+          [isAllowSpecialChars]="isAllowSpecialChars"
+          [value]="value"
+          [tabindex]="tabindex"
+          [parentFormGroup]="parentFormGroup"
+          [id]="id">
+        </ui-text-box>
+      </div>
+    `,
+  }),
 };
 
 export const Alternative: Story = {
-  args: { ...Default.args },
+  args: {
+    ...Default.args,
+    label: 'Name',
+    placeholder: 'Enter your name...',
+    isRequired: false,
+    maxLength: 100,
+  },
+  render: (args) => ({
+    props: {
+      ...args,
+      parentFormGroup: new FormGroup({
+        name: new FormControl(''),
+      }),
+      id: 'name',
+    },
+    template: `
+      <div class="w-96">
+        <ui-text-box
+          [label]="label"
+          [placeholder]="placeholder"
+          [isRequired]="isRequired"
+          [isFocused]="isFocused"
+          [showBorder]="showBorder"
+          [minLength]="minLength"
+          [maxLength]="maxLength"
+          [showCharCount]="showCharCount"
+          [isReadOnly]="isReadOnly"
+          [isAllowSpecialChars]="isAllowSpecialChars"
+          [value]="value"
+          [tabindex]="tabindex"
+          [parentFormGroup]="parentFormGroup"
+          [id]="id">
+        </ui-text-box>
+      </div>
+    `,
+  }),
 };
