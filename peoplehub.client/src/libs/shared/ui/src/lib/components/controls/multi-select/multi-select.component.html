@@ -19,60 +19,68 @@
   </span>
 
   <input
-    type="checkbox"
-    [id]="uniqueId"
-    class="dropdown-toggle peer sr-only"
-    (change)="onToggle($event)"
-  />
-  <input
     type="hidden"
-    [formControlName]="dropdownModel"
+    [formControlName]="id"
     [value]="selectedValues"
   />
 
-  <label
-    [for]="uniqueId"
-    class="relative min-h-[48px] h-auto w-full cursor-pointer rounded-lg border bg-white px-3 pr-16 py-3 text-sm flex items-start gap-2 transition-colors duration-200 peer-checked:border-blue-600"
+  <div
+    class="relative min-h-[48px] h-auto w-full rounded-lg border bg-white px-3 pr-12 py-2 text-sm flex items-center gap-2 transition-colors duration-200 flex-wrap content-start"
     [class.border-red-600]="isInvalid"
     [class.border-blue-600]="!isInvalid && isOpen"
     [class.border-gray-300]="!isInvalid && !isOpen"
-    [class.text-gray-400]="isActive && !hasSelectedValues"
-    (click)="isActive = true"
+    (click)="isActive = true; isOpen = true"
     (blur)="onBlur()"
   >
-    <div class="flex flex-col flex-1 items-start gap-2 min-w-0">
-      @if (selectedValues.length > 0) {
-        <div class="flex flex-wrap items-center gap-1.5 w-full max-w-full">
-          @for (option of getSelectedOptions(); track option.value) {
-            <span
-              class="inline-flex max-w-full items-center gap-1.5 whitespace-nowrap rounded-full bg-[#e8f2ff] px-2.5 py-1 text-[13px] text-[#2563eb]"
-            >
-              {{ option.name }}
-              <ui-icon
-                name="cross_2"
-                class="inline-flex items-center justify-center cursor-pointer"
-                (click)="
-                  $event.preventDefault();
-                  $event.stopPropagation();
-                  removeSelected(option.value)
-                "
-              >
-              </ui-icon>
-            </span>
-          }
-        </div>
-      }
+    <!-- Selected chips -->
+    @for (option of getSelectedOptions(); track option.value) {
+      <span
+        class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-md bg-[#e8f2ff] px-2.5 py-1 text-[13px] text-[#2563eb]"
+      >
+        @if (option.avatar) {
+          <img
+            [src]="option.avatar"
+            [alt]="option.name"
+            class="inline-block w-5 h-5 rounded-full object-cover"
+          />
+        }
+        {{ option.name }}
+        <ui-icon
+          name="cross_2"
+          class="inline-flex h-4 w-4 items-center justify-center cursor-pointer hover:text-[#1d47a0]"
+          (click)="
+            $event.preventDefault();
+            $event.stopPropagation();
+            removeSelected(option.value)
+          "
+        >
+        </ui-icon>
+      </span>
+    }
 
-      @if (!hasSelectedValues) {
-        <span class="text-gray-500 font-normal w-full">{{ placeholder }}</span>
-      }
-    </div>
+    <!-- Search input integrated -->
+    @if (isOpen && !areAllOptionsSelected) {
+      <input
+        type="text"
+        placeholder="Type something..."
+        class="flex-1 min-w-[150px] border-none outline-none bg-transparent text-sm"
+        [formControl]="searchForm.get('search')!"
+        (input)="onSearchTextChange($event)"
+        (click)="$event.stopPropagation()"
+      />
+    }
 
-    <div class="absolute right-3 top-3 flex items-center gap-1">
-      @if (selectedValues.length > 1) {
+    @if (!hasSelectedValues && !isOpen) {
+      <span class="text-gray-500 font-normal">{{ placeholder }}</span>
+    }
+
+    <div
+      class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1"
+    >
+      @if (selectedValues.length > 2) {
         <ui-icon
           name="delete"
-          class="w-6 h-6 inline-flex items-center justify-center cursor-pointer text-red-500 hover:text-red-600"
+          class="w-5 h-5 inline-flex items-center justify-center cursor-pointer text-red-500 hover:text-red-600"
           (click)="
             $event.preventDefault(); $event.stopPropagation(); clearAll()
           "
@@ -82,72 +90,62 @@
 
       <ui-icon
         [name]="'arrow_down'"
-        class="inline-flex h-6 w-6 items-center justify-center transition-transform duration-200"
+        class="inline-flex h-5 w-5 items-center justify-center transition-transform duration-200"
         [class.rotate-180]="isOpen"
       >
       </ui-icon>
     </div>
-  </label>
+  </div>
 
+  <!-- Dropdown list - only show unselected items -->
   <ul
-    class="custom-dropdown-list absolute left-0 right-0 z-[1000] hidden w-full max-w-full box-border rounded-lg border border-gray-300 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] peer-checked:block"
+    class="custom-dropdown-list absolute left-0 right-0 z-[1000] hidden w-full max-w-full box-border rounded-lg border border-gray-300 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
+    [class.hidden]="!isOpen"
     [class.top-[calc(100%+4px)]]="!isOpenUp"
     [class.bottom-[calc(100%+4px)]]="isOpenUp"
+    (click)="$event.stopPropagation()"
   >
-    @if (showSearch) {
+    <!-- Select All option -->
+    @if (options.length > 0) {
       <li
-        class="border-b border-gray-200 p-2"
-        (click)="$event.stopPropagation()"
+        class="border-b border-gray-200 px-3 py-2.5 cursor-pointer hover:bg-blue-50 flex items-center justify-between"
+        (click)="toggleSelectAllClick()"
       >
-        <ui-search
-          [placeholderText]="'Search'"
-          [showBorder]="true"
-          [borderColor]="'#d1d5db'"
-          [showIcon]="true"
-          [searchData]="optionNames"
-          [parentFormGroup]="searchForm"
-          [id]="searchControlId"
-          (onSelect)="onSearchTextChange($event)"
-        >
-        </ui-search>
+        <span class="text-sm font-medium">Select All</span>
+        @if (areAllOptionsSelected) {
+          <ui-icon
+            name="mdi:check"
+            class="inline-flex h-4 w-4 items-center justify-center text-blue-600"
+          >
+          </ui-icon>
+        }
       </li>
     }
 
-    @if (showSelectAll && options.length > 0) {
-      <li
-        class="border-b border-gray-200 px-3 py-2 flex items-center gap-2"
-        (click)="$event.stopPropagation()"
-      >
-        <input
-          type="checkbox"
-          [checked]="areAllVisibleOptionsSelected"
-          (change)="toggleSelectAll($event.target.checked)"
-          class="w-4 h-4 cursor-pointer"
-          id="select-all-checkbox"
-        />
-        <label for="select-all-checkbox" class="cursor-pointer text-sm">Select all</label>
-      </li>
-    }
-
-    @if (filteredOptions.length === 0) {
+    @if (getAvailableOptions().length === 0 && selectedValues.length === 0) {
       <li class="px-3 py-2 text-sm text-gray-400 italic">No results found</li>
     }
 
-    <div class="overflow-y-auto">
-      @for (option of filteredOptions; track option.value) {
+    <div class="overflow-y-auto max-h-64">
+      @for (option of getAvailableOptions(); track option.value) {
         <li
-          (click)="!true ? selectOption(option) : null"
-          class="dropdown-option relative flex items-center gap-1 px-3 py-2 cursor-pointer hover:bg-gray-50"
+          (click)="selectOption(option)"
+          class="dropdown-option relative flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-blue-50 transition-colors"
         >
-          <div class="flex items-center gap-2 flex-1">
-            <input
-              type="checkbox"
-              [checked]="selectedValues.includes(option.value)"
-              (change)="onCheckboxChange($event.target.checked, option)"
-              class="w-4 h-4 cursor-pointer"
-              [id]="'option-' + option.value"
+          @if (option.avatar) {
+            <img
+              [src]="option.avatar"
+              [alt]="option.name"
+              class="w-8 h-8 rounded-full object-cover flex-shrink-0"
             />
-            <label [for]="'option-' + option.value" class="cursor-pointer text-sm flex-1">{{ option.name }}</label>
+          }
+          <div class="flex-1">
+            <div class="text-sm font-medium text-gray-900">
+              {{ option.name }}
+            </div>
+            @if (option.email) {
+              <div class="text-xs text-gray-500">{{ option.email }}</div>
+            }
           </div>
         </li>
       }

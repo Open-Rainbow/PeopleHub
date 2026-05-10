@@ -1,7 +1,7 @@
-<iconify-icon class="inline-flex items-center justify-center leading-none align-middle"
+<iconify-icon
+  class="ui-icon"
   [icon]="name"
-  [style.color]="isHovering ? hoverColor : color"
-  (mouseenter)="isHovering = true"
-  (mouseleave)="isHovering = false"
-  class="block">
+  [style.--ui-icon-color]="color"
+  [style.--ui-icon-hover-color]="hoverColor || color"
+  [style.font-size]="size">
 </iconify-icon>

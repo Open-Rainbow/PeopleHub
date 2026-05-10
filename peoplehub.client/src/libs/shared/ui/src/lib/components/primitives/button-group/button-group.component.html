@@ -1,0 +1,16 @@
+<div [class]="getContainerClasses()" role="group" [attr.aria-label]="ariaLabel">
+  @for (item of items; track item.value) {
+    <button
+      type="button"
+      [class]="getButtonClasses(item)"
+      [disabled]="item.disabled || false"
+      [attr.aria-pressed]="selectionMode !== 'none' ? isSelected(item.value) : null"
+      [style.--btn-color]="item.color"
+      (click)="handleClick(item)">
+      @if (item.icon) {
+        <ui-icon [name]="item.icon" class="ui-button-group__btn-icon"></ui-icon>
+      }
+      <span class="ui-button-group__btn-label">{{ item.label }}</span>
+    </button>
+  }
+</div>

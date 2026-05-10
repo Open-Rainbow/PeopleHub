@@ -1,1 +1,363 @@
+// Accordion Component Styles
+// Supports multiple variants: default, primary, secondary, flush, with-icon
 
+.ui-accordion {
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 250ms ease;
+    user-select: none;
+    position: relative;
+
+    &:focus-visible {
+      outline: 2px solid #3f4af8;
+      outline-offset: -2px;
+    }
+
+    &-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    transition: transform 300ms ease;
+  }
+
+  &__title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  &__subtitle {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__edit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+    border-bottom: 2px solid transparent;
+    transition: all 200ms ease;
+    border-radius: 2px;
+
+    &:hover {
+      border-bottom-color: currentColor;
+    }
+
+    &:focus-visible {
+      outline: 1px solid currentColor;
+      outline-offset: 2px;
+    }
+  }
+
+  &__toggle-icon {
+    font-size: 20px;
+    transition: transform 300ms ease;
+
+    &--rotated {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &__body {
+    padding: 20px;
+  }
+
+  // Default Variant
+  &--default {
+    border: 1px solid #e0e0e0;
+
+    .ui-accordion__header {
+      background-color: #f5f5f5;
+      color: #333;
+
+      &:hover {
+        background-color: #ececec;
+      }
+
+      &--active {
+        background-color: #f0f0f0;
+      }
+    }
+
+    .ui-accordion__body {
+      background-color: #ffffff;
+      border-top: 1px solid #e0e0e0;
+    }
+  }
+
+  // Primary Variant (Accent color - typically blue)
+  &--primary {
+    border: 1px solid #3f4af8;
+    border-radius: 6px;
+
+    .ui-accordion__header {
+      background: linear-gradient(135deg, #eef3fe 0%, #f0f5ff 100%);
+      color: #333;
+      border-bottom: 1px solid #e0e7ff;
+
+      &:hover {
+        background: linear-gradient(135deg, #e0ecff 0%, #e8f1ff 100%);
+
+        .ui-accordion__title,
+        .ui-accordion__toggle-icon,
+        .ui-accordion__edit-btn {
+          color: #3f4af8;
+        }
+      }
+
+      &--active {
+        background-color: #3f4af8;
+        color: white;
+        border-bottom-color: #3f4af8;
+
+        .ui-accordion__title,
+        .ui-accordion__subtitle,
+        .ui-accordion__toggle-icon,
+        .ui-accordion__edit-btn {
+          color: white;
+        }
+
+        .ui-accordion__icon {
+          color: white;
+        }
+      }
+    }
+
+    .ui-accordion__body {
+      background-color: #ffffff;
+      border-top: none;
+    }
+  }
+
+  // Secondary Variant (Different accent color - typically teal/green)
+  &--secondary {
+    border: 1px solid #00a870;
+    border-radius: 6px;
+
+    .ui-accordion__header {
+      background: linear-gradient(135deg, #e8faf4 0%, #f0fcf8 100%);
+      color: #333;
+      border-bottom: 1px solid #d4f5e8;
+
+      &:hover {
+        background: linear-gradient(135deg, #d4f5e8 0%, #e0f9f2 100%);
+
+        .ui-accordion__title,
+        .ui-accordion__toggle-icon,
+        .ui-accordion__edit-btn {
+          color: #00a870;
+        }
+      }
+
+      &--active {
+        background-color: #00a870;
+        color: white;
+        border-bottom-color: #00a870;
+
+        .ui-accordion__title,
+        .ui-accordion__subtitle,
+        .ui-accordion__toggle-icon,
+        .ui-accordion__edit-btn {
+          color: white;
+        }
+
+        .ui-accordion__icon {
+          color: white;
+        }
+      }
+    }
+
+    .ui-accordion__body {
+      background-color: #ffffff;
+      border-top: none;
+    }
+  }
+
+  // Flush Variant (No borders, clean look)
+  &--flush {
+    border: none;
+    border-radius: 0;
+
+    .ui-accordion__header {
+      background-color: transparent;
+      color: #333;
+      border-bottom: 2px solid #f0f0f0;
+      padding: 16px 0;
+      border-radius: 0;
+
+      &:hover {
+        background-color: transparent;
+
+        .ui-accordion__title {
+          color: #3f4af8;
+        }
+      }
+
+      &--active {
+        background-color: transparent;
+        border-bottom-color: #3f4af8;
+
+        .ui-accordion__title {
+          color: #3f4af8;
+        }
+      }
+    }
+
+    .ui-accordion__body {
+      background-color: transparent;
+      padding-top: 16px;
+      padding-bottom: 16px;
+      border: none;
+    }
+
+    .ui-accordion__controls {
+      display: flex;
+      align-items: center;
+
+      .ui-accordion__edit-btn {
+        display: none;
+      }
+    }
+  }
+
+  // With Icon Variant
+  &--with-icon {
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+
+    .ui-accordion__header {
+      background-color: #fafafa;
+      color: #333;
+
+      &:hover {
+        background-color: #f0f0f0;
+
+        .ui-accordion__icon {
+          color: #3f4af8;
+        }
+      }
+
+      &--active {
+        background-color: #3f4af8;
+        color: white;
+
+        .ui-accordion__title,
+        .ui-accordion__subtitle,
+        .ui-accordion__toggle-icon,
+        .ui-accordion__icon {
+          color: white;
+        }
+      }
+    }
+
+    .ui-accordion__icon {
+      min-width: 24px;
+      text-align: center;
+      transition: color 250ms ease;
+    }
+
+    .ui-accordion__body {
+      background-color: #ffffff;
+      border-top: 1px solid #e8e8e8;
+    }
+  }
+
+  // Dark Theme Support (optional)
+  @media (prefers-color-scheme: dark) {
+    &--default {
+      border-color: #404040;
+
+      .ui-accordion__header {
+        background-color: #2a2a2a;
+        color: #e0e0e0;
+
+        &:hover {
+          background-color: #333333;
+        }
+
+        &--active {
+          background-color: #383838;
+        }
+      }
+
+      .ui-accordion__body {
+        background-color: #1a1a1a;
+        border-top-color: #404040;
+      }
+    }
+
+    &--flush {
+      .ui-accordion__header {
+        color: #e0e0e0;
+        border-bottom-color: #404040;
+
+        &--active {
+          border-bottom-color: #5a67d8;
+
+          .ui-accordion__title {
+            color: #5a67d8;
+          }
+        }
+      }
+
+      .ui-accordion__body {
+        color: #b0b0b0;
+      }
+    }
+  }
+}
+
+// Accessibility
+.ui-accordion__header {
+  &:focus-visible {
+    outline: 2px solid #3f4af8;
+    outline-offset: -2px;
+  }
+}
+
+// Animation for smooth opening/closing
+@media (prefers-reduced-motion: reduce) {
+  .ui-accordion__content,
+  .ui-accordion__header,
+  .ui-accordion__toggle-icon,
+  .ui-accordion__icon {
+    transition: none;
+  }
+}

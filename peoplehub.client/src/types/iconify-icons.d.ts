@@ -1,0 +1,15 @@
+declare module '@iconify-icons/tabler/*';
+declare module '@iconify/icons-ci/*';
+declare module '@iconify/icons-clarity/*';
+declare module '@iconify/icons-fluent-mdl2/*';
+declare module '@iconify/icons-fluent/*';
+declare module '@iconify/icons-heroicons/*';
+declare module '@iconify/icons-ic/*';
+declare module '@iconify/icons-icon-park-outline/*';
+declare module '@iconify/icons-lucide/*';
+declare module '@iconify/icons-material-symbols/*';
+declare module '@iconify/icons-mdi/*';
+declare module '@iconify/icons-mingcute/*';
+declare module '@iconify/icons-radix-icons/*';
+declare module '@iconify/icons-system-uicons/*';
+declare module '@iconify/icons-uil/*';

@@ -1,67 +1,62 @@
-<div
-  class="w-full
-         px-[15px] py-[10px]
-         bg-[#eef3fe]
-         rounded-tl-[6px] rounded-tr-[6px]
-         flex justify-between items-center
-         cursor-pointer
-         transition-all duration-[250ms] ease-[ease]
-         text-[#222]
+<div [class]="'ui-accordion ui-accordion--' + variant">
+  <div
+    [id]="'accordion-header-' + sectionId"
+    class="ui-accordion__header"
+    [class.ui-accordion__header--active]="isAccordionOpen()"
+    role="button"
+    [attr.aria-expanded]="isAccordionOpen()"
+    [attr.aria-controls]="'accordion-content-' + sectionId"
+    tabindex="0"
+    (click)="toggleSection()"
+    (keydown)="onKeyDown($event)"
+  >
+    <div class="ui-accordion__header-content">
+      @if (icon && variant === 'with-icon') {
+        <div class="ui-accordion__icon" [attr.aria-hidden]="true">
+          <ui-icon [name]="icon"></ui-icon>
+        </div>
+      }
+      <div class="ui-accordion__title-group">
+        <span class="ui-accordion__title">{{ title }}</span>
+        @if (subtitle) {
+          <span class="ui-accordion__subtitle">{{ subtitle }}</span>
+        }
+      </div>
+    </div>
 
-         hover:bg-[#3f4af8]
-         [&:hover_*]:text-white
-         [&:hover_*]:fill-white
+    <div class="ui-accordion__controls">
+      @if (showEditButton && variant !== 'flush') {
+        <span
+          class="ui-accordion__edit-btn"
+          role="button"
+          tabindex="-1"
+          [attr.aria-label]="'Edit ' + title"
+          (click)="onEditClick($event)"
+        >
+          <ui-icon name="edit" [attr.aria-hidden]="true"></ui-icon>
+          <span>Edit</span>
+        </span>
+      }
 
-         [&.active]:bg-[#3f4af8]
-         [&.active_*]:text-white
-         [&.active_*]:fill-white"
-  [class.active]="isOpen"
-  (click)="toggleSection()"
->
-  <div class="flex items-center gap-[8px]">
-    <span class="text-[14px] font-semibold">
-      {{ title }}
-    </span>
-    <span class="text-[12px]">
-      {{ subtitle }}
-    </span>
+      <ui-icon
+        class="ui-accordion__toggle-icon"
+        [class.ui-accordion__toggle-icon--rotated]="isAccordionOpen()"
+        name="material-symbols:keyboard-arrow-down-rounded"
+        [attr.aria-hidden]="true"
+      ></ui-icon>
+    </div>
   </div>
 
-  <div class="flex items-center gap-[10px]">
-    <span
-      class="inline-flex items-center gap-[4px]
-             cursor-pointer
-             leading-[0.5]
-             border-b-[2px] border-transparent
-             hover:border-current"
-      (click)="onEditClick($event)"
-    >
-      <ui-icon name="edit"></ui-icon>
-      <span>Edit</span>
-    </span>
-
-    <ui-icon
-      class="text-[20px]
-             transition-transform duration-[300ms] ease-[ease]
-             [&.rotated]:rotate-180"
-      [class.rotated]="isOpen"
-      name="material-symbols:keyboard-arrow-down-rounded"
-    ></ui-icon>
-  </div>
-</div>
-
-<div
-  #content
-  class="max-h-0
-         overflow-hidden
-         bg-transparent
-         rounded-bl-[6px] rounded-br-[6px]
-         transition-[transform]
-         duration-[350ms]
-         [transition-timing-function:cubic-bezier(0.4,0,0.2,1)]"
-  [style.maxHeight]="isOpen ? contentHeight + 'px' : '0px'"
->
-  <div class="min-h-auto p-[20px] bg-white">
-    <ng-container *ngTemplateOutlet="modalTemplate"></ng-container>
+  <div
+    #content
+    [id]="'accordion-content-' + sectionId"
+    class="ui-accordion__content"
+    [style.maxHeight]="isAccordionOpen() ? contentHeight + 'px' : '0px'"
+    role="region"
+    [attr.aria-labelledby]="'accordion-header-' + sectionId"
+  >
+    <div class="ui-accordion__body">
+      <ng-container *ngTemplateOutlet="modalTemplate"></ng-container>
+    </div>
   </div>
 </div>

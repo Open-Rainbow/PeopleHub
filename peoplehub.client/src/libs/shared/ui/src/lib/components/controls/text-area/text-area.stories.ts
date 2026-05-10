@@ -18,7 +18,7 @@ const meta: Meta<TextAreaComponent> = {
     },
     placeholder: {
       control: 'text',
-      description: 'Placeholder text for the textarea',
+      description: 'placeholder text for the textarea',
     },
     isRequired: {
       control: 'boolean',

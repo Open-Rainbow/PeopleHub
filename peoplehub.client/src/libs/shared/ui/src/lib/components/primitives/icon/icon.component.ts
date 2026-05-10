@@ -11,8 +11,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, ChangeDetectionStrategy } fro
 })
 export class IconComponent {
   @Input() name: string = '';
-  @Input() color: string = '';
+  @Input() color: string = 'currentColor';
   @Input() hoverColor: string = '';
-
-  isHovering = false;
+  @Input() size: string = '1em';
 }

@@ -1,0 +1,130 @@
+.ui-toast {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.75rem 1rem;
+	width: min(320px, calc(100vw - 2rem));
+	max-width: 100%;
+	border-radius: 0.75rem;
+	overflow: hidden;
+	transition: all 300ms ease-in-out;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+	&:hover {
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+	}
+
+	// Type variants
+	&--normal {
+		background-color: #ffffff;
+		color: #6b7280;
+		border: 1px solid #e5e7eb;
+	}
+
+	&--warning {
+		background-color: #fbbf24;
+		color: #1f2937;
+		border: 1px solid #f59e0b;
+	}
+
+	&--alert {
+		background-color: #ef4444;
+		color: #ffffff;
+		border: 1px solid #dc2626;
+	}
+
+	&--success {
+		background-color: #16a34a;
+		color: #ffffff;
+		border: 1px solid #15803d;
+	}
+}
+
+.ui-toast__content {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-grow: 1;
+	min-width: 0;
+}
+
+.ui-toast__icon {
+	font-size: 1.125rem;
+	flex-shrink: 0;
+}
+
+.ui-toast__message {
+	font-size: 0.875rem;
+	line-height: 1.25rem;
+	word-break: break-word;
+	overflow-wrap: break-word;
+	min-width: 0;
+}
+
+.ui-toast__title {
+	font-weight: 700;
+	margin-bottom: 0.125rem;
+}
+
+.ui-toast__subtitle {
+	font-weight: 400;
+	opacity: 0.9;
+}
+
+.ui-toast__close {
+	flex-shrink: 0;
+	background: none;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	font-size: 1.125rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
+	opacity: 0.8;
+	transition: opacity 200ms ease-in-out;
+
+	&:hover {
+		opacity: 1;
+	}
+
+	&:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 2px;
+		border-radius: 0.25rem;
+	}
+}
+
+.ui-toast__progress {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 0.25rem;
+	background-color: rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+}
+
+.ui-toast__progress-bar {
+	height: 100%;
+	transition: none;
+
+	.ui-toast--normal & {
+		background-color: #6b7280;
+	}
+
+	.ui-toast--warning & {
+		background-color: #1f2937;
+	}
+
+	.ui-toast--alert & {
+		background-color: #ffffff;
+	}
+
+	.ui-toast--success & {
+		background-color: #ffffff;
+	}
+}

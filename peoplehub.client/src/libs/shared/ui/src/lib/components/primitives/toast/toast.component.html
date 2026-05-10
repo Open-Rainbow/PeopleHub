@@ -2,48 +2,43 @@
   <div
     (mouseenter)="pauseTimer()"
     (mouseleave)="resumeTimer()"
-    class="relative z-[9999] flex items-center justify-between
-           gap-4 px-4 py-3
-           w-fit max-w-[300px]
-           rounded-xl overflow-hidden
-           transition-all duration-300
-           hover:shadow-2xl"
-    [class.bg-white]="type === 'normal'"
-    [class.text-gray-500]="type === 'normal'"
-    [class.bg-yellow-400]="type === 'warning'"
-    [class.text-black]="type === 'warning' || type === 'alert'"
-    [class.bg-red-500]="type === 'alert'"
-    [class.bg-green-600]="type === 'success'"
-    [class.text-white]="type === 'success'"
+    class="ui-toast"
+    [ngClass]="getPositionClasses()"
+    [class.ui-toast--normal]="type === 'normal'"
+    [class.ui-toast--warning]="type === 'warning'"
+    [class.ui-toast--alert]="type === 'alert'"
+    [class.ui-toast--success]="type === 'success'"
+    role="status"
+    [attr.aria-live]="type === 'alert' || type === 'warning' ? 'assertive' : 'polite'"
+    [attr.aria-label]="title + ' ' + subtitle"
   >
+    <div class="ui-toast__content">
+      <ui-icon class="ui-toast__icon" [name]="icon"></ui-icon>
 
-    <div class="flex items-center gap-2 flex-grow">
-      <ui-icon class="text-lg" [name]="icon"></ui-icon>
-
-      <div class="text-sm break-words min-w-0">
-        <div class="font-bold">{{ title }}</div>
-        <div>{{ subtitle }}</div>
+      <div class="ui-toast__message">
+        <div class="ui-toast__title">{{ title }}</div>
+        <div class="ui-toast__subtitle">{{ subtitle }}</div>
       </div>
     </div>
 
-    
-    <div
-      class="cursor-pointer text-lg flex items-center hover:text-gray-400"
+    <button
+      class="ui-toast__close"
       (click)="closeToast()"
+      aria-label="Close notification"
+      type="button"
     >
       <ui-icon name="mdi:multiply"></ui-icon>
-    </div>
+    </button>
 
-    
-    <div class="absolute bottom-0 left-0 h-1 w-full">
-      <div
-        class="h-full transition-all duration-100"
-        [class.bg-gray-500]="type === 'normal'"
-        [class.bg-black]="type === 'warning' || type === 'alert'"
-        [class.bg-white]="type === 'success'"
-        [style.width.%]="progress"
-      ></div>
+    <div
+      class="ui-toast__progress"
+      role="progressbar"
+      [attr.aria-valuenow]="progress"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.aria-label]="'Progress: ' + (100 - progress) + '% complete'"
+    >
+      <div class="ui-toast__progress-bar" [style.width.%]="progress"></div>
     </div>
-
   </div>
 }

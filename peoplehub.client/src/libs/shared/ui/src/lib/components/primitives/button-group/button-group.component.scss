@@ -1,0 +1,152 @@
+.ui-button-group {
+  display: inline-flex;
+  flex-direction: row;
+
+  &--vertical {
+    flex-direction: column;
+  }
+
+  // ── Buttons ─────────────────────────────────────────────────────────────
+  &__btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    border: 1px solid #d1d5db;
+    background-color: #f9fafb;
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, z-index 0s;
+    outline: none;
+
+    // Collapse shared border between adjacent buttons
+    &:not(:first-child) {
+      margin-left: -1px;
+    }
+
+    .ui-button-group--vertical &:not(:first-child) {
+      margin-left: 0;
+      margin-top: -1px;
+    }
+
+    // Rounded ends – horizontal
+    &:first-child {
+      border-radius: 0.375rem 0 0 0.375rem;
+    }
+
+    &:last-child {
+      border-radius: 0 0.375rem 0.375rem 0;
+    }
+
+    &:only-child {
+      border-radius: 0.375rem;
+    }
+
+    // Rounded ends – vertical
+    .ui-button-group--vertical &:first-child {
+      border-radius: 0.375rem 0.375rem 0 0;
+    }
+
+    .ui-button-group--vertical &:last-child {
+      border-radius: 0 0 0.375rem 0.375rem;
+    }
+
+    // Bring hovered/active buttons to the front so their border renders on top
+    &:hover,
+    &:focus-visible,
+    &--active {
+      z-index: 1;
+    }
+
+    &:hover:not(&--disabled) {
+      background-color: #e5e7eb;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+    }
+
+    // Active / selected state
+    &--active {
+      background-color: #3b82f6;
+      color: #ffffff;
+      border-color: #3b82f6;
+
+      &:hover:not(.ui-button-group__btn--disabled) {
+        background-color: #2563eb;
+        border-color: #2563eb;
+      }
+    }
+
+    // Disabled
+    &--disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    &-icon {
+      flex-shrink: 0;
+      font-size: 1rem;
+    }
+  }
+
+  // ── Sizes ────────────────────────────────────────────────────────────────
+  &--sm &__btn {
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    min-height: 1.75rem;
+  }
+
+  &--md &__btn {
+    padding: 0.4375rem 0.875rem;
+    font-size: 0.875rem;
+    min-height: 2.25rem;
+  }
+
+  &--lg &__btn {
+    padding: 0.625rem 1.125rem;
+    font-size: 1rem;
+    min-height: 2.75rem;
+  }
+
+  // ── Outlined variant ─────────────────────────────────────────────────────
+  &--outlined &__btn {
+    background-color: transparent;
+    color: #374151;
+    border-color: #d1d5db;
+
+    &:hover:not(.ui-button-group__btn--disabled) {
+      background-color: #f3f4f6;
+    }
+
+    &.ui-button-group__btn--active {
+      background-color: transparent;
+      color: #3b82f6;
+      border-color: #3b82f6;
+
+      &:hover:not(.ui-button-group__btn--disabled) {
+        background-color: rgba(59, 130, 246, 0.08);
+      }
+    }
+  }
+
+  // ── Mixed variant ────────────────────────────────────────────────────────
+  // Each button uses its own --btn-color CSS custom property
+  &--mixed &__btn {
+    background-color: var(--btn-color, #6b7280);
+    color: #ffffff;
+    border-color: var(--btn-color, #6b7280);
+
+    &:hover:not(.ui-button-group__btn--disabled) {
+      filter: brightness(0.88);
+    }
+
+    &.ui-button-group__btn--active {
+      filter: brightness(0.78);
+    }
+  }
+}

@@ -35,17 +35,9 @@ const meta: Meta<MultiSelectComponent> = {
       control: 'text',
       description: 'id property',
     },
-    showSearch: {
-      control: 'boolean',
-      description: 'showSearch property',
-    },
     showSelectAll: {
       control: 'boolean',
       description: 'showSelectAll property',
-    },
-    dropdownModel: {
-      control: 'text',
-      description: 'dropdownModel property',
     },
   },
 };
@@ -67,12 +59,51 @@ export const Default: Story = {
       { value: 7, name: 'Other4' },
       { value: 8, name: 'Other5' },
     ],
-    showSearch: true,
     showSelectAll: true,
-    dropdownModel: ''
 },
 };
 
 export const Alternative: Story = {
   args: { ...Default.args },
+};
+
+export const UsersList: Story = {
+  args: {
+    label: 'Select Users',
+    placeholder: 'Select users from the list',
+    isRequired: false,
+    options: [
+      {
+        value: 1,
+        name: 'Sophia Hall',
+        avatar: 'https://gxon.layoutdrop.com/demo/assets/images/avatar/avatar1.webp',
+        email: 'sophia@example.com',
+      },
+      {
+        value: 2,
+        name: 'Emily Johnson',
+        avatar: 'https://gxon.layoutdrop.com/demo/assets/images/avatar/avatar2.webp',
+        email: 'emily@example.com',
+      },
+      {
+        value: 3,
+        name: 'Olivia Clark',
+        avatar: 'https://gxon.layoutdrop.com/demo/assets/images/avatar/avatar3.webp',
+        email: 'olivia@example.com',
+      },
+      {
+        value: 4,
+        name: 'Michael Davis',
+        avatar: 'https://gxon.layoutdrop.com/demo/assets/images/avatar/avatar4.webp',
+        email: 'michael@example.com',
+      },
+      {
+        value: 5,
+        name: 'James Anderson',
+        avatar: 'https://gxon.layoutdrop.com/demo/assets/images/avatar/avatar5.webp',
+        email: 'james@example.com',
+      },
+    ],
+    showSelectAll: true,
+  },
 };

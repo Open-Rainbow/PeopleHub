@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConfirmPopupComponent } from './confirm-popup.component';
+import { ButtonGroupComponent } from './button-group.component';
 
-describe('ConfirmPopupComponent', () => {
-  let component: ConfirmPopupComponent;
-  let fixture: ComponentFixture<ConfirmPopupComponent>;
+describe('ButtonGroupComponent', () => {
+  let component: ButtonGroupComponent;
+  let fixture: ComponentFixture<ButtonGroupComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [ConfirmPopupComponent]
-})
+      imports: [ButtonGroupComponent]
+    })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ConfirmPopupComponent);
+    fixture = TestBed.createComponent(ButtonGroupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

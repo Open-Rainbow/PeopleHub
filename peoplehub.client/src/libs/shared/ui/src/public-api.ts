@@ -32,7 +32,7 @@ export { ValueSelectComponent } from './lib/components/controls/value-select/val
 export * from './lib/components/primitives/a4-doc/a4-doc.component';
 export * from './lib/components/primitives/accordion/accordion.component';
 export * from './lib/components/primitives/bullet-list/bullet-list.component';
-export * from './lib/components/primitives/button-list/button-list.component';
+export * from './lib/components/primitives/button-group/button-group.component';
 export * from './lib/components/primitives/caller/caller.component';
 export * from './lib/components/primitives/confirm-popup/confirm-popup.component';
 export type { ConfirmPopup, PopupOptions } from './lib/models/confirm-popup.model';

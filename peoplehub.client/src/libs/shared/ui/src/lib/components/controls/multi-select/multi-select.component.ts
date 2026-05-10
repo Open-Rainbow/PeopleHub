@@ -67,8 +67,6 @@ export class MultiSelectComponent
   @Output() selectedChange = new EventEmitter<any>();
   @Output() blurEvent = new EventEmitter<void>();
   private _options: DropdownOption[] = [];
-  @Input() dropdownModel: string = '';
-  @Input() showSearch: boolean = true;
   @Input() showSelectAll: boolean = true;
   filteredOptions: DropdownOption[] = [];
   searchControlId = 'search';
@@ -96,16 +94,16 @@ export class MultiSelectComponent
     );
   }
 
+  get areAllOptionsSelected(): boolean {
+    return this.options.length > 0 && this.selectedValues.length === this.options.length;
+  }
+
   get optionLength(): number {
     return this.filteredOptions?.length ?? 0;
   }
 
   get panelHeaderHeight(): number {
-    let height = 0;
-
-    if (this.showSearch) {
-      height += 56;
-    }
+    let height = 56;
 
     if (this.showSelectAll && this.options.length > 0) {
       height += 46;
@@ -117,24 +115,7 @@ export class MultiSelectComponent
   onToggle(event: Event) {
     event.stopPropagation();
     this.hasInteracted = true;
-
-    this.isOpen = !this.isOpen;
-    if (this.isOpen) {
-      this.isActive = true;
-    }
-
-    if (this.isOpen) {
-      setTimeout(() => {
-        this.decideDropdownDirection();
-        this.setInitialHeight();
-        this.cdr.markForCheck();
-        this.cdr.detectChanges();
-      }, 0);
-    }
-
-    if (!this.isOpen && this.selectedValues.length === 0) {
-      this.isActive = false;
-    }
+    // onToggle is no longer needed with new structure
   }
 
   private portalList?: HTMLElement;
@@ -172,15 +153,18 @@ export class MultiSelectComponent
     this.searchControlId = `search_${this.id || randomStr}`;
   }
 
-  onSearchTextChange(searchText: string) {
+  onSearchTextChange(event: Event) {
+    const searchText = (event.target as HTMLInputElement).value;
     const query = searchText.toLowerCase().trim();
 
     if (!query) {
       this.filteredOptions = [...this.options];
     } else {
-      this.filteredOptions = this.options.filter((option) =>
-        option.name.toLowerCase().includes(query),
-      );
+      this.filteredOptions = this.options.filter((option) => {
+        const matchesName = option.name.toLowerCase().includes(query);
+        const matchesEmail = option.email?.toLowerCase().includes(query) || false;
+        return matchesName || matchesEmail;
+      });
     }
 
     this.cdr.detectChanges();
@@ -202,12 +186,22 @@ export class MultiSelectComponent
 
   removeSelected(value: any) {
     this.selectedValues = this.selectedValues.filter((v) => v !== value);
+    // Update filteredOptions to show the removed item in dropdown
+    this.filteredOptions = [...this.options];
     this.syncSelectionState();
+    this.cdr.detectChanges();
   }
 
   getSelectedOptions() {
     return this.options.filter((opt) =>
       this.selectedValues.includes(opt.value),
+    );
+  }
+
+  // Get only options that are NOT selected
+  getAvailableOptions(): DropdownOption[] {
+    return this.filteredOptions.filter(
+      (option) => !this.selectedValues.includes(option.value)
     );
   }
 
@@ -257,28 +251,41 @@ export class MultiSelectComponent
       this.selectedValues.push(option.value);
     }
 
+    this.searchForm.get('search')?.setValue('');
+    this.filteredOptions = [...this.options];
     this.isActive = true;
     this.syncSelectionState(true);
   }
 
   clearAll() {
     this.selectedValues = [];
+    this.filteredOptions = [...this.options];
+    this.searchForm.get('search')?.setValue('');
     this.syncSelectionState();
+    this.cdr.detectChanges();
+  }
+
+  toggleSelectAllClick() {
+    const isAllSelected =
+      this.selectedValues.length === this.options.length && this.options.length > 0;
+
+    this.toggleSelectAll(!isAllSelected);
   }
 
   toggleSelectAll(checked: boolean) {
-    const visibleValues = this.visibleOptionValues;
-
     if (checked) {
-      const nextValues = new Set([...this.selectedValues, ...visibleValues]);
-      this.selectedValues = [...nextValues];
+      // Select all options
+      const allValues = this.options.map(opt => opt.value);
+      this.selectedValues = [...new Set([...this.selectedValues, ...allValues])];
     } else {
-      this.selectedValues = this.selectedValues.filter(
-        (value) => !visibleValues.includes(value),
-      );
+      // Deselect all options
+      this.selectedValues = [];
     }
 
+    this.filteredOptions = [...this.options];
+    this.searchForm.get('search')?.setValue('');
     this.syncSelectionState(true);
+    this.cdr.detectChanges();
   }
 
   onBlur() {

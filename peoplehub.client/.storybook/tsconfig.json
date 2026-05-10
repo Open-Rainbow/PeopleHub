@@ -2,7 +2,10 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "rootDir": "../",
-    "types": ["node"]
+    "types": ["node"],
+    "typeRoots": ["../node_modules/@types", "../node_modules"],
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true
   },
   "include": [
     "./*.ts",

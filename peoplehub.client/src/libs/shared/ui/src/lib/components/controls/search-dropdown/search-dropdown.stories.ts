@@ -36,7 +36,7 @@ const meta: Meta<SearchDropdownComponent> = {
     },
     placeholderText: {
       control: 'text',
-      description: 'Placeholder text for search input',
+      description: 'placeholder text for search input',
     },
     showBorder: {
       control: 'boolean',

@@ -14,6 +14,8 @@ import { ToastComponent } from '../toast/toast.component';
 
 })
 export class ToastStackComponent {
+  private readonly toastInstanceKeys = new WeakMap<ToastMessage, number>();
+  private nextToastInstanceKey = 1;
 
   @Input() position:
     | 'top-left'
@@ -29,7 +31,14 @@ export class ToastStackComponent {
     this.toastClosed.emit(id);
   }
 
-  trackById(_index: number, toast: ToastMessage) {
-    return toast.id;
+  trackByToastInstance(_index: number, toast: ToastMessage) {
+    const existingKey = this.toastInstanceKeys.get(toast);
+    if (existingKey !== undefined) {
+      return existingKey;
+    }
+
+    const newKey = this.nextToastInstanceKey++;
+    this.toastInstanceKeys.set(toast, newKey);
+    return newKey;
   }
 }

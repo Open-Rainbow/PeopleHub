@@ -23,6 +23,10 @@ const meta: Meta<IconComponent> = {
       control: 'text',
       description: 'hoverColor property',
     },
+    size: {
+      control: 'text',
+      description: 'size property',
+    },
   },
 };
 
@@ -30,16 +34,18 @@ export default meta;
 
 export const Default: Story = {
   args: {
-    name: '',
-    color: '',
-    hoverColor: ''
-},
+    name: 'arrow_down',
+    color: '#475569',
+    hoverColor: '#0ea5e9',
+    size: '20px',
+  },
 };
 
 export const Colored: Story = {
   args: {
-    name: '',
-    color: '',
-    hoverColor: ''
-},
+    name: 'delete',
+    color: '#dc2626',
+    hoverColor: '#991b1b',
+    size: '24px',
+  },
 };

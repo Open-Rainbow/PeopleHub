@@ -1,60 +1,65 @@
-<div class="flex items-center justify-between px-2.5 py-[5px] text-[16px] text-gray-500" 
-     [style.backgroundColor]="backgroundColor">
-  
-  @if (isShowingEntries) {
-    <div>
-      <p>Showing {{(currentPage - 1) * pageSize + 1}}
-        to {{(currentPage * pageSize) > totalItems ? totalItems : (currentPage * pageSize) }}
-        of {{ totalItems }} entries
+<div class="ui-pagination" [style.--ui-pagination-bg]="backgroundColor">
+  <div class="ui-pagination__meta">
+    @if (isShowingEntries) {
+      <p class="ui-pagination__summary">
+        Items {{ startEntry }}-{{ endEntry }} of {{ totalItems }}
       </p>
-    </div>
-  }
+    }
 
-  @if (isDropCount) {
-    <div class="flex w-1/5 items-center gap-2.5">
-      <p>Items per page : </p>
-      <div class="!w-[30%]">
-        <ui-dropdown 
-          [label]="''" 
-          [(ngModel)]="pageSize" 
-          [options]="pageSizeOptions$ | async" 
-          [isRequired]="false"
-          (selectedChange)="onPageSizeChange($event)">
-        </ui-dropdown>
+    @if (isDropCount) {
+      <div class="ui-pagination__chunk-size">
+        <p class="ui-pagination__label">Per page:</p>
+        <div class="ui-pagination__control ui-pagination__control--compact">
+          <ui-dropdown
+            [label]="''"
+            [(ngModel)]="pageSize"
+            [options]="pageSizeOptions$ | async"
+            [isRequired]="false"
+            (selectedChange)="onPageSizeChange($event)">
+          </ui-dropdown>
+        </div>
       </div>
-    </div>
-  }
+    }
+  </div>
 
-  @if (isGoto) {
-    <div class="flex items-center gap-2.5">
-      <p>Go to :</p>
-      <div class="w-[15%] cursor-pointer text-center text-xs">
-        <ui-number-box [label]="''" [isRequired]="false" [placeholder]="currentPage.toString()"
-          (numberBox)="onGoToInput($event)"></ui-number-box>
+  <div class="ui-pagination__actions">
+    @if (isGoto) {
+      <div class="ui-pagination__goto">
+        <p class="ui-pagination__label">Page:</p>
+        <div class="ui-pagination__control ui-pagination__control--number">
+          <ui-number-box
+            [label]="''"
+            [isRequired]="false"
+            [placeholder]="currentPage.toString()"
+            (numberBox)="onGoToInput($event)">
+          </ui-number-box>
+        </div>
+        <p class="ui-pagination__hint">/ {{ totalPages }}</p>
+        <div [class]="isGoDisabled ? 'ui-pagination__go-btn-wrapper ui-pagination__go-btn-wrapper--disabled' : 'ui-pagination__go-btn-wrapper'">
+          <ui-text-button
+            [text]="'Go'"
+            [variant]="'info'"
+            [size]="'small'"
+            [isExpanded]="false"
+            [disabled]="isGoDisabled"
+            (click)="goToPage(goToNumber)">
+          </ui-text-button>
+        </div>
       </div>
+    }
 
-      <p>of {{ totalPages }} pages</p>
-      <div [class]="isGoDisabled ? 'pointer-events-none rounded-lg grayscale-[80%] cursor-not-allowed' : ''">
-        <ui-text-button 
-          [text]="'Go'" 
-          [variant]="'info'"
-          [size]="'small'"
-          [isExpanded]="false"
-          [disabled]="isGoDisabled"
-          (click)="goToPage(goToNumber)">
-        </ui-text-button>
+    @if (isPagination && shouldShowPagination) {
+      <div class="ui-pagination__page-nav">
+        <ui-button-group
+          [items]="paginationItems"
+          [variant]="'outlined'"
+          [size]="'sm'"
+          [selectionMode]="'single'"
+          [selectedValues]="[currentPage.toString()]"
+          [ariaLabel]="'Page navigation'"
+          (buttonClick)="onPaginationClick($event)">
+        </ui-button-group>
       </div>
-    </div>
-  }
-
-  @if (isPagination) {
-    <div>
-      @if (shouldShowPagination) {
-        <ui-button-list [buttons]="paginationButtons" [selectedId]="currentPage" [textColor]="'#087ff3'"
-          [bgColor]="'#e5ebf1'" [selectedBgColor]="'#087ff3'" [selectedTextColor]="'white'" [hoverBgColor]="'#087ff3'"
-          [hoverTextColor]="'white'" (buttonClick)="goToPage($any($event).labelId)">
-        </ui-button-list>
-      }
-    </div>
-  }
+    }
+  </div>
 </div>

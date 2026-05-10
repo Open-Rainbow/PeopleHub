@@ -7,4 +7,12 @@ export interface ButtonListItem {
   count?: number;
 }
 
+export interface ButtonGroupItem {
+  label: string;
+  value: string;
+  icon?: string;
+  disabled?: boolean;
+  color?: string;
+}
+
 export type { buttonList } from './button-list-item.types';

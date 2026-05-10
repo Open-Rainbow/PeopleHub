@@ -40,7 +40,8 @@ const meta: Meta<CountWidgetComponent> = {
       description: 'showBorder property',
     },
     labelPosition: {
-      control: 'text',
+      control: 'select',
+      options: ['top', 'bottom', 'before', 'after'],
       description: 'labelPosition property',
     },
     labelSize: {
@@ -51,6 +52,14 @@ const meta: Meta<CountWidgetComponent> = {
       control: 'text',
       description: 'valueSize property',
     },
+    locale: {
+      control: 'text',
+      description: 'locale property',
+    },
+    useGrouping: {
+      control: 'boolean',
+      description: 'useGrouping property',
+    },
   },
 };
 
@@ -59,29 +68,33 @@ export default meta;
 export const Default: Story = {
   args: {
     label: 'Total',
-    labelColor: 'gray',
+    labelColor: '#6b7280',
     value: 20,
-    valueColor: 'skyblue',
-    borderColor: 'gray',
-    backgroundColor: 'white',
+    valueColor: '#0284c7',
+    borderColor: '#d1d5db',
+    backgroundColor: '#ffffff',
     showBorder: true,
     labelPosition: 'top',
     labelSize: '14px',
-    valueSize: '24px'
-},
+    valueSize: '24px',
+    locale: 'en-US',
+    useGrouping: true,
+  },
 };
 
 export const Colored: Story = {
   args: {
-    label: 'Total',
-    labelColor: 'gray',
-    value: 20,
-    valueColor: 'skyblue',
-    borderColor: 'gray',
-    backgroundColor: 'white',
+    label: 'Active users',
+    labelColor: '#1f2937',
+    value: 12500,
+    valueColor: '#16a34a',
+    borderColor: '#86efac',
+    backgroundColor: '#f0fdf4',
     showBorder: true,
-    labelPosition: 'top',
+    labelPosition: 'before',
     labelSize: '14px',
-    valueSize: '24px'
-},
+    valueSize: '26px',
+    locale: 'en-US',
+    useGrouping: true,
+  },
 };
