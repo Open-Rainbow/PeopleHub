@@ -45,10 +45,10 @@
             <div class="item-display">{{ getFieldValue(item, config?.displayField || 'name') }}</div>
             <div class="item-meta">
               @if (config?.subtitleField) {
-                <span>{{ getFieldValue(item, config.subtitleField) }}</span>
+                <span>{{ getFieldValue(item, config!.subtitleField!) }}</span>
               }
               @if (config?.descriptionField) {
-                <span> • {{ getFieldValue(item, config.descriptionField) }}</span>
+                <span> • {{ getFieldValue(item, config!.descriptionField!) }}</span>
               }
             </div>
           </li>

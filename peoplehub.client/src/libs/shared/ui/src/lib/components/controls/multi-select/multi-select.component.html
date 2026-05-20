@@ -64,7 +64,7 @@
         type="text"
         placeholder="Type something..."
         class="flex-1 min-w-[150px] border-none outline-none bg-transparent text-sm"
-        [formControl]="searchForm.get('search')!"
+        [formControl]="searchForm.controls['search']!"
         (input)="onSearchTextChange($event)"
         (click)="$event.stopPropagation()"
       />

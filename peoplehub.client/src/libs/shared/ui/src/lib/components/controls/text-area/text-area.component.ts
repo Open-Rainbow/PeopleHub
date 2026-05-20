@@ -53,6 +53,11 @@ export class TextAreaComponent
 
   isFocused = false;
   currentCharCount = 0;
+
+  get isInvalid(): boolean {
+    const ctrl = this.parentFormGroup?.get(this.id);
+    return !!(ctrl?.invalid && (ctrl?.dirty || ctrl?.touched));
+  }
   private destroy$ = new Subject<void>();
   private resizeObserver?: ResizeObserver;
   private initialWidth = 0;

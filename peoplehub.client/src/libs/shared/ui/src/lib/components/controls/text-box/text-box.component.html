@@ -5,20 +5,22 @@
       [class.border-gray]="!isFocused && !isInvalid"
       [class.border-blue]="isFocused && !isInvalid"
       [class.border-red]="isInvalid"
-      [class.no-border]="!showBorder">
-
+      [class.no-border]="!showBorder"
+    >
       <input
         type="text"
         class="textbox-field"
+        [class.has-value]="hasValue"
         [id]="id"
         [formControlName]="id"
-        [placeholder]="placeholder ?? ''"
+        [placeholder]="isFocused || hasValue ? (placeholder ?? '') : ''"
         [attr.maxlength]="maxLength"
         [readonly]="isReadOnly"
         [tabindex]="tabindex"
         (focus)="onFocus()"
         (blur)="onBlur($event)"
-        (input)="onInput($event)" />
+        (input)="onInput($event)"
+      />
 
       <label
         class="textbox-label"
@@ -26,7 +28,8 @@
         [class.floating]="isFocused || hasValue"
         [class.blue]="isFocused && !isInvalid"
         [class.gray]="!isFocused && !isInvalid"
-        [class.red]="isInvalid">
+        [class.red]="isInvalid"
+      >
         {{ label }}
         @if (isRequired) {
           <span class="required-asterisk">*</span>
@@ -38,7 +41,8 @@
       <p
         class="char-count"
         [class.char-count-active]="isFocused || hasValue"
-        [class.char-count-invalid]="isInvalid">
+        [class.char-count-invalid]="isInvalid"
+      >
         {{ currentCharCount }} of {{ maxLength }} characters left
       </p>
     }
