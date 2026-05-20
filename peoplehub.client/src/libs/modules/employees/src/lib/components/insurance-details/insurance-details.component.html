@@ -1,0 +1,191 @@
+<div class="w-full h-full bg-white rounded-[25px] p-5 border border-gray-400 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
+
+  <p class="m-0 text-[rgb(116,116,216)] font-bold">Father Details</p>
+  <hr class="border-0 border-t-2 border-[#dfe9f1] my-2.5 opacity-60">
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 py-5 pr-5 pl-0">
+    @if (!formConfig.fatherName.isHide) {
+      <ui-text-box
+        [id]="formConfig.fatherName.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.fatherName.label!"
+        [placeholder]="formConfig.fatherName.placeholder ?? ''"
+        [minLength]="formConfig.fatherName.minLength"
+        [maxLength]="formConfig.fatherName.maxLength"
+        [isRequired]="formConfig.fatherName.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.fatherAadharNumber.isHide) {
+      <ui-text-box
+        [id]="formConfig.fatherAadharNumber.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.fatherAadharNumber.label!"
+        [placeholder]="formConfig.fatherAadharNumber.placeholder ?? ''"
+        [minLength]="formConfig.fatherAadharNumber.minLength"
+        [maxLength]="formConfig.fatherAadharNumber.maxLength"
+        [isRequired]="formConfig.fatherAadharNumber.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.aadharUpload.isHide) {
+      <ui-file-upload
+        [id]="formConfig.aadharUpload.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.aadharUpload.label!"
+        [isRequired]="formConfig.aadharUpload.isRequired!"
+      ></ui-file-upload>
+    }
+
+    @if (!formConfig.fatherPanNumber.isHide) {
+      <ui-text-box
+        [id]="formConfig.fatherPanNumber.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.fatherPanNumber.label!"
+        [placeholder]="formConfig.fatherPanNumber.placeholder ?? ''"
+        [minLength]="formConfig.fatherPanNumber.minLength"
+        [maxLength]="formConfig.fatherPanNumber.maxLength"
+        [isRequired]="formConfig.fatherPanNumber.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.panUpload.isHide) {
+      <ui-file-upload
+        [id]="formConfig.panUpload.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.panUpload.label!"
+        [isRequired]="formConfig.panUpload.isRequired!"
+      ></ui-file-upload>
+    }
+
+    @if (!formConfig.dob.isHide) {
+      <ui-calendar
+        [id]="formConfig.dob.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.dob.label!"
+        [isRequired]="formConfig.dob.isRequired!"
+      ></ui-calendar>
+    }
+
+    @if (!formConfig.occupation.isHide) {
+      <ui-text-box
+        [id]="formConfig.occupation.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.occupation.label!"
+        [placeholder]="formConfig.occupation.placeholder ?? ''"
+        [minLength]="formConfig.occupation.minLength"
+        [maxLength]="formConfig.occupation.maxLength"
+        [isRequired]="formConfig.occupation.isRequired!"
+      ></ui-text-box>
+    }
+  </div>
+
+  <p class="m-0 text-[rgb(116,116,216)] font-bold">Mother Details</p>
+  <hr class="border-0 border-t-2 border-[#dfe9f1] my-2.5 opacity-60">
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 py-5 pr-5 pl-0">
+    @if (!formConfig.motherName.isHide) {
+      <ui-text-box
+        [id]="formConfig.motherName.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.motherName.label!"
+        [placeholder]="formConfig.motherName.placeholder ?? ''"
+        [minLength]="formConfig.motherName.minLength"
+        [maxLength]="formConfig.motherName.maxLength"
+        [isRequired]="formConfig.motherName.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.motherAadharNumber.isHide) {
+      <ui-text-box
+        [id]="formConfig.motherAadharNumber.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.motherAadharNumber.label!"
+        [placeholder]="formConfig.motherAadharNumber.placeholder ?? ''"
+        [minLength]="formConfig.motherAadharNumber.minLength"
+        [maxLength]="formConfig.motherAadharNumber.maxLength"
+        [isRequired]="formConfig.motherAadharNumber.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.aadharUpload.isHide) {
+      <ui-file-upload
+        [id]="formConfig.aadharUpload.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.aadharUpload.label!"
+        [isRequired]="formConfig.aadharUpload.isRequired!"
+      ></ui-file-upload>
+    }
+
+    @if (!formConfig.motherPanNumber.isHide) {
+      <ui-text-box
+        [id]="formConfig.motherPanNumber.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.motherPanNumber.label!"
+        [placeholder]="formConfig.motherPanNumber.placeholder ?? ''"
+        [minLength]="formConfig.motherPanNumber.minLength"
+        [maxLength]="formConfig.motherPanNumber.maxLength"
+        [isRequired]="formConfig.motherPanNumber.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.panUpload.isHide) {
+      <ui-file-upload
+        [id]="formConfig.panUpload.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.panUpload.label!"
+        [isRequired]="formConfig.panUpload.isRequired!"
+      ></ui-file-upload>
+    }
+
+    @if (!formConfig.dateofBirth.isHide) {
+      <ui-calendar
+        [id]="formConfig.dateofBirth.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.dateofBirth.label!"
+        [isRequired]="formConfig.dateofBirth.isRequired!"
+      ></ui-calendar>
+    }
+  </div>
+
+  <p class="m-0 text-[rgb(116,116,216)] font-bold">Spouse Details</p>
+  <hr class="border-0 border-t-2 border-[#dfe9f1] my-2.5 opacity-60">
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 py-5 pr-5 pl-0">
+    @if (!formConfig.spouseName.isHide) {
+      <ui-text-box
+        [id]="formConfig.spouseName.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.spouseName.label!"
+        [placeholder]="formConfig.spouseName.placeholder ?? ''"
+        [minLength]="formConfig.spouseName.minLength"
+        [maxLength]="formConfig.spouseName.maxLength"
+        [isRequired]="formConfig.spouseName.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.spouseAadharNumber.isHide) {
+      <ui-text-box
+        [id]="formConfig.spouseAadharNumber.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.spouseAadharNumber.label!"
+        [placeholder]="formConfig.spouseAadharNumber.placeholder ?? ''"
+        [minLength]="formConfig.spouseAadharNumber.minLength"
+        [maxLength]="formConfig.spouseAadharNumber.maxLength"
+        [isRequired]="formConfig.spouseAadharNumber.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.spousePanNumber.isHide) {
+      <ui-text-box
+        [id]="formConfig.spousePanNumber.id"
+        [parentFormGroup]="insuranceDetails"
+        [label]="formConfig.spousePanNumber.label!"
+        [placeholder]="formConfig.spousePanNumber.placeholder ?? ''"
+        [minLength]="formConfig.spousePanNumber.minLength"
+        [maxLength]="formConfig.spousePanNumber.maxLength"
+        [isRequired]="formConfig.spousePanNumber.isRequired!"
+      ></ui-text-box>
+    }
+  </div>
+</div>

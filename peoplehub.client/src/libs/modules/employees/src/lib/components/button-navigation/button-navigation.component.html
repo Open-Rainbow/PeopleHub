@@ -1,0 +1,30 @@
+<div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg shadow-md w-full p-5 mt-8">
+  <div>
+    <ui-icon-text-button
+      text="Previous"
+      iconName="arrow_left"
+      iconPosition="left"
+      variant="secondary"
+      [disabled]="isFirstStep()"
+      (buttonClick)="goPrevious()"
+    ></ui-icon-text-button>
+  </div>
+
+  <div class="flex items-center gap-5">
+    @if (isLastStep()) {
+      <ui-icon-text-button
+        text="Preview"
+        variant="primary"
+        (buttonClick)="goPreview()"
+      ></ui-icon-text-button>
+    }
+
+    <ui-icon-text-button
+      [text]="nextButtonLabel()"
+      iconName="arrow_right"
+      iconPosition="right"
+      variant="primary"
+      (buttonClick)="goNext()"
+    ></ui-icon-text-button>
+  </div>
+</div>

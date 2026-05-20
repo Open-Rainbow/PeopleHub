@@ -1,0 +1,24 @@
+<div class="flex items-stretch w-full min-h-screen bg-[#f9fbfd]">
+  <ui-toast-stack
+    [toasts]="toasts()"
+    position="top-right"
+    (toastClosed)="removeToast($event)"
+  ></ui-toast-stack>
+
+  <aside class="bg-[#f9fbfd] border-r border-gray-200 min-h-full">
+    <employees-stepper></employees-stepper>
+  </aside>
+
+  <main class="flex-1 bg-[#f9fbfd] flex flex-col min-h-full p-0">
+    <section class="flex flex-col w-full px-12 pt-8 pb-10 box-border bg-[#f9fbfd]">
+      <router-outlet (activate)="onComponentActivate($event)"></router-outlet>
+
+      <employees-button-navigation
+        class="mt-8"
+        [activeComponent]="currentComponent()"
+        (stepSaved)="handleStepSuccess($event)"
+        (previewToggle)="togglePreview($event)"
+      ></employees-button-navigation>
+    </section>
+  </main>
+</div>

@@ -1,6 +1,6 @@
 import { IFormFieldConfig } from 'common';
 
-export interface IAddEmployeeFormFields {
+export interface IJobDetailsFormFields {
     officeEmail: IFormFieldConfig;
     department: IFormFieldConfig;
     designation: IFormFieldConfig;

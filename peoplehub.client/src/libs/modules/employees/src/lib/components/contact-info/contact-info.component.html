@@ -1,0 +1,115 @@
+<div class="w-full h-full rounded-[25px] p-5 bg-white shadow-sm transition-shadow duration-200 ease-out hover:shadow-md">
+
+  <div class="grid grid-cols-3 gap-5 my-5">
+    @if (!formConfig.personalMail.isHide) {
+      <ui-text-box
+        [id]="formConfig.personalMail.id"
+        [parentFormGroup]="contactInfo"
+        [label]="formConfig.personalMail.label!"
+        [placeholder]="formConfig.personalMail.placeholder ?? ''"
+        [minLength]="formConfig.personalMail.minLength"
+        [maxLength]="formConfig.personalMail.maxLength"
+        [isRequired]="formConfig.personalMail.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.linkedinUrl.isHide) {
+      <ui-text-box
+        [id]="formConfig.linkedinUrl.id"
+        [parentFormGroup]="contactInfo"
+        [label]="formConfig.linkedinUrl.label!"
+        [placeholder]="formConfig.linkedinUrl.placeholder ?? ''"
+        [minLength]="formConfig.linkedinUrl.minLength"
+        [maxLength]="formConfig.linkedinUrl.maxLength"
+        [isRequired]="formConfig.linkedinUrl.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.contactNo.isHide) {
+      <ui-text-box
+        [id]="formConfig.contactNo.id"
+        [parentFormGroup]="contactInfo"
+        [label]="formConfig.contactNo.label!"
+        [placeholder]="formConfig.contactNo.placeholder ?? ''"
+        [minLength]="formConfig.contactNo.minLength"
+        [maxLength]="formConfig.contactNo.maxLength"
+        [isRequired]="formConfig.contactNo.isRequired!"
+      ></ui-text-box>
+    }
+  </div>
+
+  <p class="flex flex-row items-center gap-2.5 text-[20px] text-[rgb(116,116,216)] mb-1 mt-3.5">Address Details</p>
+  <hr class="border-[#e5e7eb] mb-5">
+
+  <div class="flex flex-col gap-5 my-5">
+    @if (!formConfig.permanentAddress.isHide) {
+      <ui-text-area
+        [id]="formConfig.permanentAddress.id"
+        [parentFormGroup]="contactInfo"
+        [label]="formConfig.permanentAddress.label!"
+        [placeholder]="formConfig.permanentAddress.placeholder ?? ''"
+        [maxLength]="formConfig.permanentAddress.maxLength"
+        [isRequired]="formConfig.permanentAddress.isRequired!"
+      ></ui-text-area>
+    }
+
+    @if (!formConfig.currentAddress.isHide) {
+      <ui-text-area
+        [id]="formConfig.currentAddress.id"
+        [parentFormGroup]="contactInfo"
+        [label]="formConfig.currentAddress.label!"
+        [placeholder]="formConfig.currentAddress.placeholder ?? ''"
+        [maxLength]="formConfig.currentAddress.maxLength"
+        [isRequired]="formConfig.currentAddress.isRequired!"
+      ></ui-text-area>
+    }
+
+    @if (!formConfig.checkToggle.isHide && !formConfig.currentAddress.isHide && !formConfig.permanentAddress.isHide) {
+      <ui-toggle
+        [id]="formConfig.checkToggle.id"
+        [parentFormGroup]="contactInfo"
+        [isRequired]="formConfig.checkToggle.isRequired!"
+        [checked]="false"
+        [label]="formConfig.checkToggle.label!"
+        labelPosition="right"
+        size="medium"
+      ></ui-toggle>
+    }
+  </div>
+
+  <p class="flex flex-row items-center gap-2.5 text-[20px] text-[rgb(116,116,216)] mb-1 mt-3.5">Emergency Contact Details</p>
+  <hr class="border-[#e5e7eb] mb-5">
+
+  <div class="grid grid-cols-3 gap-5 my-5">
+    @if (!formConfig.contactName.isHide) {
+      <ui-text-box
+        [id]="formConfig.contactName.id"
+        [parentFormGroup]="contactInfo"
+        [label]="formConfig.contactName.label!"
+        [placeholder]="formConfig.contactName.placeholder ?? ''"
+        [isRequired]="formConfig.contactName.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.contactNumber.isHide) {
+      <ui-text-box
+        [id]="formConfig.contactNumber.id"
+        [parentFormGroup]="contactInfo"
+        [label]="formConfig.contactNumber.label!"
+        [placeholder]="formConfig.contactNumber.placeholder ?? ''"
+        [isRequired]="formConfig.contactNumber.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.relation.isHide) {
+      <ui-dropdown
+        [id]="formConfig.relation.id"
+        [parentFormGroup]="contactInfo"
+        [label]="formConfig.relation.label!"
+        [placeholder]="formConfig.relation.placeholder ?? ''"
+        [isRequired]="formConfig.relation.isRequired!"
+        [options]="relationOptions$ | async"
+      ></ui-dropdown>
+    }
+  </div>
+</div>

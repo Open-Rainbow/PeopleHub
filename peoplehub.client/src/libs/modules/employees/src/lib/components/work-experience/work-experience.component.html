@@ -1,0 +1,61 @@
+<div class="bg-white rounded-[16px] border border-[#dbeafe] shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in p-8 h-full hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
+  <div class="grid grid-cols-2 gap-[10px] max-[768px]:grid-cols-1">
+
+    @if (!formConfig.previousorganisation.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.previousorganisation.id"
+          [parentFormGroup]="workExperience"
+          [label]="formConfig.previousorganisation.label!"
+          [placeholder]="formConfig.previousorganisation.placeholder ?? ''"
+          [minLength]="formConfig.previousorganisation.minLength"
+          [maxLength]="formConfig.previousorganisation.maxLength"
+          [isRequired]="formConfig.previousorganisation.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.previousdesignation.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.previousdesignation.id"
+          [parentFormGroup]="workExperience"
+          [label]="formConfig.previousdesignation.label!"
+          [placeholder]="formConfig.previousdesignation.placeholder ?? ''"
+          [minLength]="formConfig.previousdesignation.minLength"
+          [maxLength]="formConfig.previousdesignation.maxLength"
+          [isRequired]="formConfig.previousdesignation.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.yearOfExperience.isHide) {
+      <div class="form-group">
+        <ui-number-box
+          [id]="formConfig.yearOfExperience.id"
+          [parentFormGroup]="workExperience"
+          [label]="formConfig.yearOfExperience.label!"
+          [placeholder]="formConfig.yearOfExperience.placeholder ?? '0'"
+          [minValue]="formConfig.yearOfExperience.minLength"
+          [maxValue]="formConfig.yearOfExperience.maxLength"
+          [isRequired]="formConfig.yearOfExperience.isRequired!"
+        ></ui-number-box>
+      </div>
+    }
+
+    @if (!formConfig.organizationLocation.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.organizationLocation.id"
+          [parentFormGroup]="workExperience"
+          [label]="formConfig.organizationLocation.label!"
+          [placeholder]="formConfig.organizationLocation.placeholder ?? ''"
+          [minLength]="formConfig.organizationLocation.minLength"
+          [maxLength]="formConfig.organizationLocation.maxLength"
+          [isRequired]="formConfig.organizationLocation.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+  </div>
+</div>

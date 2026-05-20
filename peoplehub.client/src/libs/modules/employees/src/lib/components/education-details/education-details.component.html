@@ -1,0 +1,68 @@
+<div class="w-full h-full bg-white rounded-[25px] p-5 shadow-sm transition-shadow duration-200 ease-out hover:shadow-md">
+  <div class="grid grid-cols-3 gap-5 mt-5">
+
+    @if (!formConfig.higherQualification.isHide) {
+      <ui-text-box
+        [id]="formConfig.higherQualification.id"
+        [parentFormGroup]="educationDetails"
+        [label]="formConfig.higherQualification.label!"
+        [placeholder]="formConfig.higherQualification.placeholder ?? ''"
+        [minLength]="formConfig.higherQualification.minLength"
+        [maxLength]="formConfig.higherQualification.maxLength"
+        [isRequired]="formConfig.higherQualification.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.specialization.isHide) {
+      <ui-text-box
+        [id]="formConfig.specialization.id"
+        [parentFormGroup]="educationDetails"
+        [label]="formConfig.specialization.label!"
+        [placeholder]="formConfig.specialization.placeholder ?? ''"
+        [minLength]="formConfig.specialization.minLength"
+        [maxLength]="formConfig.specialization.maxLength"
+        [isRequired]="formConfig.specialization.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.yearofPassing.isHide) {
+      <ui-dropdown
+        [id]="formConfig.yearofPassing.id"
+        [parentFormGroup]="educationDetails"
+        [label]="formConfig.yearofPassing.label!"
+        [placeholder]="formConfig.yearofPassing.placeholder ?? ''"
+        [isRequired]="formConfig.yearofPassing.isRequired!"
+        [options]="yearOfPassingOptions$ | async"
+      ></ui-dropdown>
+    }
+
+    @if (!formConfig.universityName.isHide) {
+      <ui-text-box
+        [id]="formConfig.universityName.id"
+        [parentFormGroup]="educationDetails"
+        [label]="formConfig.universityName.label!"
+        [placeholder]="formConfig.universityName.placeholder ?? ''"
+        [minLength]="formConfig.universityName.minLength"
+        [maxLength]="formConfig.universityName.maxLength"
+        [isRequired]="formConfig.universityName.isRequired!"
+      ></ui-text-box>
+    }
+
+    <!-- Empty columns to preserve 3-col grid alignment -->
+    <div></div>
+    <div></div>
+  </div>
+
+  @if (!formConfig.certifications.isHide) {
+    <div class="mt-5">
+      <ui-text-area
+        [id]="formConfig.certifications.id"
+        [parentFormGroup]="educationDetails"
+        [label]="formConfig.certifications.label!"
+        [placeholder]="formConfig.certifications.placeholder ?? ''"
+        [maxLength]="formConfig.certifications.maxLength"
+        [isRequired]="formConfig.certifications.isRequired!"
+      ></ui-text-area>
+    </div>
+  }
+</div>

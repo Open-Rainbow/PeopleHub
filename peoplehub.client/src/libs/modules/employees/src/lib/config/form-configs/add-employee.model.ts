@@ -19,7 +19,7 @@ export interface IContactInfoConfig {
     contactNumber: IFormFieldConfig;
     relation: IFormFieldConfig;
 }
-export interface IDocUploadConfig {
+export interface IDocumentsUploadConfig {
     employeePhoto: IFormFieldConfig;
     employeePanNumber: IFormFieldConfig;
     employeePan: IFormFieldConfig;
@@ -33,14 +33,14 @@ export interface IDocUploadConfig {
     relievingLetter: IFormFieldConfig;
     offerLetter: IFormFieldConfig;
 }
-export interface IEduDetailsConfig {
+export interface IEducationDetailsConfig {
     higherQualification: IFormFieldConfig;
     specialization: IFormFieldConfig;
     yearofPassing: IFormFieldConfig;
     universityName: IFormFieldConfig;
     certifications: IFormFieldConfig;
 }
-export interface IInsuDetailsConfig {
+export interface IInsuranceDetailsConfig {
     fatherName: IFormFieldConfig;
     fatherAadharNumber: IFormFieldConfig;
     aadharUpload: IFormFieldConfig;
@@ -56,7 +56,7 @@ export interface IInsuDetailsConfig {
     spouseAadharNumber: IFormFieldConfig;
     spousePanNumber: IFormFieldConfig;
 }
-export interface IJobInfoConfig {
+export interface IJobDetailsConfig {
     officeEmail: IFormFieldConfig;
     department: IFormFieldConfig;
     designation: IFormFieldConfig;

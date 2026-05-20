@@ -1,6 +1,6 @@
 import { IFormFieldConfig } from 'common';
 
-export interface IAddEmployeeFormFields {
+export interface IContactInfoFormFields {
     personalMail: IFormFieldConfig;
     linkedinUrl: IFormFieldConfig;
     contactNo: IFormFieldConfig;

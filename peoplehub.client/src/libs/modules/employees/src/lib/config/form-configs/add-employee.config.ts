@@ -10,9 +10,9 @@ import { workExperienceForm } from "./work-experience.config";
 export const addEmployeeConfig: IAddEmployeeConfig = {
     basicInfo: basicInfoForm,
     contactInfo: contactInfoForm,
-    docUpload: documentsUploadForm,
-    eduDetails: educationDetailsForm,
-    insuDetails: insuranceDetailsForm,
+    documentsUpload: documentsUploadForm,
+    educationDetails: educationDetailsForm,
+    insuranceDetails: insuranceDetailsForm,
     jobDetails: jobDetailsForm,
     workExperience: workExperienceForm,
 } 

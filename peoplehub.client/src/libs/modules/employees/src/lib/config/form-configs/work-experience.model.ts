@@ -1,6 +1,6 @@
 import { IFormFieldConfig } from 'common';
 
-export interface IAddEmployeeFormFields {
+export interface IWorkExperienceFormFields {
     previousorganisation: IFormFieldConfig;
     organizationLocation: IFormFieldConfig;
     yearOfExperience: IFormFieldConfig;

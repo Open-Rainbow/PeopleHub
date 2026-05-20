@@ -1,0 +1,134 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  OnInit,
+  output,
+  signal,
+} from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { FormGroup } from '@angular/forms';
+import { ConfirmPopupService, IconTextButtonComponent } from 'ui';
+import { Step } from 'ui';
+import { StepperService } from '../../services/stepper.service';
+import { EmployeeDataService } from '../../services/employee-data.service';
+import { EmployeesService } from '../../services/employees.service';
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'employees-button-navigation',
+  standalone: true,
+  imports: [IconTextButtonComponent],
+  templateUrl: './button-navigation.component.html',
+  styleUrls: ['./button-navigation.component.scss'],
+})
+export class ButtonNavigationComponent implements OnInit {
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly stepperService = inject(StepperService);
+  private readonly confirmPopupService = inject(ConfirmPopupService);
+  private readonly dataService = inject(EmployeeDataService);
+  private readonly employeesService = inject(EmployeesService);
+
+  readonly activeComponent = input<unknown>(null);
+
+  readonly stepSaved = output<string>();
+  readonly previewToggle = output<boolean>();
+
+  private readonly steps = signal<Step[]>([]);
+  readonly isFirstStep = computed(() => this.stepperService.getCurrentStep() === 0);
+  readonly isLastStep = computed(() => this.stepperService.getCurrentStep() === this.steps().length - 1);
+  readonly nextButtonLabel = computed(() => (this.isLastStep() ? 'Submit' : 'Next'));
+
+  private isPreviewVisible = false;
+
+  ngOnInit(): void {
+    this.steps.set(this.stepperService.getSteps('addEmployee'));
+
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        const currentRoute = this.stepperService.getLastRouteSegment(this.router.url);
+        const currentIndex = this.steps().findIndex(s => s.route === currentRoute);
+
+        if (currentIndex >= 0) {
+          this.stepperService.setCurrentStep(currentIndex);
+
+          const savedData = this.dataService.getDataByRoute(currentRoute);
+          if (savedData) {
+            this.stepperService.setStepValidity(true);
+          }
+        }
+
+        this.steps.set(this.stepperService.getSteps('addEmployee'));
+      });
+  }
+
+  goNext(): void {
+    const currentIndex = this.stepperService.getCurrentStep();
+    const activeComp = this.activeComponent();
+    const formGroup = this.findFormGroup(activeComp);
+
+    if (formGroup) {
+      if (formGroup.valid) {
+        const currentRoute = this.steps()[currentIndex].route;
+        this.dataService.setDataByRoute(currentRoute, formGroup.value);
+        this.stepperService.setStepValidity(true);
+        this.stepSaved.emit(this.steps()[currentIndex].title);
+        this.steps.set(this.stepperService.getSteps('addEmployee'));
+      } else {
+        formGroup.markAllAsTouched();
+        this.confirmPopupService.showValidation(formGroup as unknown as FormGroup, (activeComp as Record<string, unknown>)['formConfig'] as Record<string, unknown>);
+        return;
+      }
+    }
+
+    if (currentIndex < this.steps().length - 1) {
+      const nextIndex = currentIndex + 1;
+      this.router.navigate([this.steps()[nextIndex].route], { relativeTo: this.route });
+    } else if (currentIndex === this.steps().length - 1) {
+      this.stepperService.validateAllSteps();
+      this.steps.set(this.stepperService.getSteps('addEmployee'));
+
+      const hasErrors = this.steps().some(s => s.status === 'notComplete');
+      if (!hasErrors) {
+        const finalPayload = this.dataService.getAllData();
+        this.employeesService.addEmployee(finalPayload).subscribe({
+          next: () => this.stepSaved.emit('Employee'),
+          error: err => console.error('Failed to submit employee:', err),
+        });
+      }
+    }
+  }
+
+  goPrevious(): void {
+    const currentIndex = this.stepperService.getCurrentStep();
+    if (currentIndex > 0) {
+      const prevIndex = currentIndex - 1;
+      this.router.navigate([this.steps()[prevIndex].route], { relativeTo: this.route });
+      this.stepperService.setCurrentStep(prevIndex);
+      this.steps.set(this.stepperService.getSteps('addEmployee'));
+    }
+  }
+
+  goPreview(): void {
+    this.isPreviewVisible = !this.isPreviewVisible;
+    this.previewToggle.emit(this.isPreviewVisible);
+  }
+
+  private findFormGroup(component: unknown): { valid: boolean; markAllAsTouched(): void; value: unknown } | null {
+    if (!component || typeof component !== 'object') return null;
+
+    const comp = component as Record<string, unknown>;
+    for (const key in comp) {
+      const candidate = comp[key];
+      if (candidate && typeof candidate === 'object' && 'controls' in candidate) {
+          return (candidate as unknown) as { valid: boolean; markAllAsTouched(): void; value: unknown };
+      }
+    }
+    return null;
+  }
+}

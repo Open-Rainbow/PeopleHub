@@ -1,19 +1,19 @@
 import type {
     IBasicInfoConfig,
     IContactInfoConfig,
-    IDocUploadConfig,
-    IEduDetailsConfig,
-    IInsuDetailsConfig,
-    IJobInfoConfig,
+    IDocumentsUploadConfig,
+    IEducationDetailsConfig,
+    IInsuranceDetailsConfig,
+    IJobDetailsConfig,
     IWorkExperienceConfig,
 } from "./add-employee.model";
 
 export type IAddEmployeeConfig = {
     basicInfo: IBasicInfoConfig;
     contactInfo: IContactInfoConfig;
-    docUpload: IDocUploadConfig;
-    eduDetails: IEduDetailsConfig;
-    insuDetails: IInsuDetailsConfig;
-    jobDetails: IJobInfoConfig;
+    documentsUpload: IDocumentsUploadConfig;
+    educationDetails: IEducationDetailsConfig;
+    insuranceDetails: IInsuranceDetailsConfig;
+    jobDetails: IJobDetailsConfig;
     workExperience: IWorkExperienceConfig;
 };

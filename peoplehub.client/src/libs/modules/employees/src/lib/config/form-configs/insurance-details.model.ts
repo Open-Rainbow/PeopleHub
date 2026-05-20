@@ -1,6 +1,6 @@
 import { IFormFieldConfig } from 'common';
 
-export interface IAddEmployeeFormFields {
+export interface IInsuranceDetailsFormFields {
     fatherName: IFormFieldConfig;
     fatherAadharNumber: IFormFieldConfig;
     aadharUpload: IFormFieldConfig;

@@ -1,25 +1,71 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { Step, StepperType } from '../../../../../shared/ui/src/lib/models/common.model';
+import { Step, StepperType } from 'ui';
 import { EmployeeDataService } from './employee-data.service';
 
-export const MENU_CONFIG: Record<StepperType, Step[]> = {
+export const EMPLOYEE_STEPPER_CONFIG: Record<StepperType, Step[]> = {
   addEmployee: [
-    { title: 'Basic Information', route: 'basic-info', status: 'active', isValid: false, icon: 'home' },
-    { title: 'Contact Information', route: 'contact-info', status: 'pending', isValid: false, icon: 'fluent:call-24-regular' },
-    { title: 'Job Details', route: 'job-details', status: 'pending', isValid: false, icon: 'mingcute:suitcase-line' },
-    { title: 'Education Details', route: 'education-details', status: 'pending', isValid: false, icon: 'qlementine-icons:education-16' },
-    { title: 'Salary & Payroll', route: 'salary-structure', status: 'pending', isValid: false, icon: 'bx:dollar' },
-    { title: 'Work & Experience', route: 'work-experience', status: 'pending', isValid: false, icon: 'f7:doc-plaintext' },
-    { title: 'Documents Upload', route: 'document-upload', status: 'pending', isValid: false, icon: 'material-symbols:upload-rounded' },
-    { title: 'Temp Credentials', route: 'templogin', status: 'pending', isValid: false, icon: 'lucide:key' },
-  ]
+    {
+      title: 'Basic Information',
+      route: 'basic-info',
+      status: 'active',
+      isValid: false,
+      icon: 'home',
+    },
+    {
+      title: 'Contact Information',
+      route: 'contact-info',
+      status: 'pending',
+      isValid: false,
+      icon: 'fluent:call-24-regular',
+    },
+    {
+      title: 'Job Details',
+      route: 'job-details',
+      status: 'pending',
+      isValid: false,
+      icon: 'mingcute:suitcase-line',
+    },
+    {
+      title: 'Education Details',
+      route: 'education-details',
+      status: 'pending',
+      isValid: false,
+      icon: 'qlementine-icons:education-16',
+    },
+    {
+      title: 'Salary & Payroll',
+      route: 'salary-structure',
+      status: 'pending',
+      isValid: false,
+      icon: 'bx:dollar',
+    },
+    {
+      title: 'Work & Experience',
+      route: 'work-experience',
+      status: 'pending',
+      isValid: false,
+      icon: 'f7:doc-plaintext',
+    },
+    {
+      title: 'Documents Upload',
+      route: 'documents-upload',
+      status: 'pending',
+      isValid: false,
+      icon: 'material-symbols:upload-rounded',
+    },
+    {
+      title: 'Temp Credentials',
+      route: 'temp-login-credentials',
+      status: 'pending',
+      isValid: false,
+      icon: 'lucide:key',
+    },
+  ],
 };
 
 @Injectable({ providedIn: 'root' })
-
-
 export class StepperService {
   private currentStepIndex = new BehaviorSubject<number>(0);
   currentStep$ = this.currentStepIndex.asObservable();
@@ -27,8 +73,8 @@ export class StepperService {
 
   constructor(
     private route: Router,
-    private dataService: EmployeeDataService
-  ) { }
+    private dataService: EmployeeDataService,
+  ) {}
 
   setCurrentStep(index: number) {
     this.currentStepIndex.next(index);
@@ -39,21 +85,17 @@ export class StepperService {
   }
 
   getSteps(type: StepperType): Step[] {
-    const steps = MENU_CONFIG[type];
+    const steps = EMPLOYEE_STEPPER_CONFIG[type];
     const currentPath = this.getLastRouteSegment(this.route.url);
 
-    return steps.map(step => {
-
-
+    return steps.map((step) => {
       if (step.route === currentPath) {
         step.status = 'active';
       } else if (this.isLast && !step.isValid) {
         step.status = 'notComplete';
-      }
-      else if (step.isValid) {
+      } else if (step.isValid) {
         step.status = 'completed';
-      }
-      else {
+      } else {
         step.status = 'pending';
       }
 
@@ -65,7 +107,7 @@ export class StepperService {
     if (!route) return -1;
     const steps = this.getSteps('addEmployee');
 
-    return steps.findIndex(step => step.route === route);
+    return steps.findIndex((step) => step.route === route);
   }
 
   getLastRouteSegment(path: string): string {
@@ -78,8 +120,6 @@ export class StepperService {
 
     return segments.length ? segments[segments.length - 1] : '';
   }
-
-
 
   setStepValidity(isValid: boolean) {
     const hostConfigPath = this.route.url;
@@ -99,8 +139,6 @@ export class StepperService {
       }
     }
   }
-
-
 
   validateAllSteps(): void {
     const steps = this.getSteps('addEmployee');
@@ -128,6 +166,6 @@ export class StepperService {
   }
 
   getTotalSteps(type: StepperType): number {
-    return MENU_CONFIG[type].length;
+    return EMPLOYEE_STEPPER_CONFIG[type].length;
   }
 }

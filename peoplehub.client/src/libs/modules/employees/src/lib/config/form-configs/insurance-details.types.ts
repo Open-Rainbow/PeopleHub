@@ -1,4 +1,4 @@
-import type { IAddEmployeeFormFields } from "./insurance-details.model";
+import type { IInsuranceDetailsFormFields } from "./insurance-details.model";
 
-export type IInsuranceDetailsForm = IAddEmployeeFormFields;
+export type IInsuranceDetailsForm = IInsuranceDetailsFormFields;
 

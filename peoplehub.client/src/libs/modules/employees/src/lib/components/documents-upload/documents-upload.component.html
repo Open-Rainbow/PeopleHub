@@ -1,0 +1,116 @@
+<div class="w-full h-full bg-white rounded-[25px] p-5 border border-gray-200 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in-out hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 p-5">
+
+    @if (!formConfig.employeePhoto.isHide) {
+      <ui-file-upload
+        [id]="formConfig.employeePhoto.id"
+        [parentFormGroup]="documentsUpload"
+        [label]="formConfig.employeePhoto.label!"
+        [isRequired]="formConfig.employeePhoto.isRequired!"
+      ></ui-file-upload>
+    }
+
+    @if (!formConfig.employeePanNumber.isHide) {
+      <ui-text-box
+        [id]="formConfig.employeePanNumber.id"
+        [parentFormGroup]="documentsUpload"
+        [label]="formConfig.employeePanNumber.label!"
+        [placeholder]="formConfig.employeePanNumber.placeholder ?? ''"
+        [isRequired]="formConfig.employeePanNumber.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.employeePan.isHide) {
+      <ui-file-upload
+        [id]="formConfig.employeePan.id"
+        [parentFormGroup]="documentsUpload"
+        [label]="formConfig.employeePan.label!"
+        [isRequired]="formConfig.employeePan.isRequired!"
+      ></ui-file-upload>
+    }
+
+    @if (!formConfig.employeeAadharNumber.isHide) {
+      <ui-text-box
+        [id]="formConfig.employeeAadharNumber.id"
+        [parentFormGroup]="documentsUpload"
+        [label]="formConfig.employeeAadharNumber.label!"
+        [placeholder]="formConfig.employeeAadharNumber.placeholder ?? ''"
+        [isRequired]="formConfig.employeeAadharNumber.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.employeeAadhar.isHide) {
+      <ui-file-upload
+        [id]="formConfig.employeeAadhar.id"
+        [parentFormGroup]="documentsUpload"
+        [label]="formConfig.employeeAadhar.label!"
+        [isRequired]="formConfig.employeeAadhar.isRequired!"
+      ></ui-file-upload>
+    }
+
+    @if (!formConfig.employeePassportNumber.isHide) {
+      <ui-text-box
+        [id]="formConfig.employeePassportNumber.id"
+        [parentFormGroup]="documentsUpload"
+        [label]="formConfig.employeePassportNumber.label!"
+        [placeholder]="formConfig.employeePassportNumber.placeholder ?? ''"
+        [isRequired]="formConfig.employeePassportNumber.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.employeePassport.isHide) {
+      <ui-file-upload
+        [id]="formConfig.employeePassport.id"
+        [parentFormGroup]="documentsUpload"
+        [label]="formConfig.employeePassport.label!"
+        [isRequired]="formConfig.employeePassport.isRequired!"
+      ></ui-file-upload>
+    }
+
+    @if (!formConfig.last6monthsBankStatements.isHide) {
+      <ui-file-upload
+        [id]="formConfig.last6monthsBankStatements.id"
+        [parentFormGroup]="documentsUpload"
+        [label]="formConfig.last6monthsBankStatements.label!"
+        [isRequired]="formConfig.last6monthsBankStatements.isRequired!"
+      ></ui-file-upload>
+    }
+
+    @if (!formConfig.last3monthsPayslips.isHide) {
+      <ui-file-upload
+        [id]="formConfig.last3monthsPayslips.id"
+        [parentFormGroup]="documentsUpload"
+        [label]="formConfig.last3monthsPayslips.label!"
+        [isRequired]="formConfig.last3monthsPayslips.isRequired!"
+      ></ui-file-upload>
+    }
+
+    @if (!formConfig.experienceLetter.isHide) {
+      <ui-file-upload
+        [id]="formConfig.experienceLetter.id"
+        [parentFormGroup]="documentsUpload"
+        [label]="formConfig.experienceLetter.label!"
+        [isRequired]="formConfig.experienceLetter.isRequired!"
+      ></ui-file-upload>
+    }
+
+    @if (!formConfig.relievingLetter.isHide) {
+      <ui-file-upload
+        [id]="formConfig.relievingLetter.id"
+        [parentFormGroup]="documentsUpload"
+        [label]="formConfig.relievingLetter.label!"
+        [isRequired]="formConfig.relievingLetter.isRequired!"
+      ></ui-file-upload>
+    }
+
+    @if (!formConfig.offerLetter.isHide) {
+      <ui-file-upload
+        [id]="formConfig.offerLetter.id"
+        [parentFormGroup]="documentsUpload"
+        [label]="formConfig.offerLetter.label!"
+        [isRequired]="formConfig.offerLetter.isRequired!"
+      ></ui-file-upload>
+    }
+
+  </div>
+</div>

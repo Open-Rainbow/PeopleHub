@@ -1,4 +1,4 @@
-import type { IAddEmployeeFormFields } from "./education-details.model";
+import type { IEducationDetailsFormFields } from "./education-details.model";
 
-export type IEducationDetailsForm = IAddEmployeeFormFields;
+export type IEducationDetailsForm = IEducationDetailsFormFields;
 

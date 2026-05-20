@@ -1,6 +1,6 @@
 import { IFormFieldConfig } from 'common';
 
-export interface IAddEmployeeFormFields {
+export interface IEducationDetailsFormFields {
     higherQualification: IFormFieldConfig;
     specialization: IFormFieldConfig;
     yearofPassing: IFormFieldConfig;

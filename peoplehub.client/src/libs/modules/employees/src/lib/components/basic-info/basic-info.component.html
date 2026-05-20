@@ -1,0 +1,81 @@
+<div class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md">
+  <div class="grid grid-cols-3 gap-[10px]">
+
+    @if (!formConfig.fullName.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.fullName.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.fullName.label!"
+          [placeholder]="formConfig.fullName.placeholder ?? ''"
+          [minLength]="formConfig.fullName.minLength"
+          [maxLength]="formConfig.fullName.maxLength"
+          [isRequired]="formConfig.fullName.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.employeeId.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.employeeId.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.employeeId.label!"
+          [placeholder]="formConfig.employeeId.placeholder ?? ''"
+          [minLength]="formConfig.employeeId.minLength"
+          [maxLength]="formConfig.employeeId.maxLength"
+          [isRequired]="formConfig.employeeId.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.dateofBirth.isHide) {
+      <div class="form-group">
+        <ui-calendar
+          [id]="formConfig.dateofBirth.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.dateofBirth.label!"
+          [isRequired]="formConfig.dateofBirth.isRequired!"
+        ></ui-calendar>
+      </div>
+    }
+
+    @if (!formConfig.dateofJoining.isHide) {
+      <div class="form-group">
+        <ui-calendar
+          [id]="formConfig.dateofJoining.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.dateofJoining.label!"
+          [isRequired]="formConfig.dateofJoining.isRequired!"
+        ></ui-calendar>
+      </div>
+    }
+
+    @if (!formConfig.gender.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.gender.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.gender.label!"
+          [placeholder]="formConfig.gender.placeholder ?? ''"
+          [isRequired]="formConfig.gender.isRequired!"
+          [options]="genderOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.maritalStatus.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.maritalStatus.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.maritalStatus.label!"
+          [placeholder]="formConfig.maritalStatus.placeholder ?? ''"
+          [isRequired]="formConfig.maritalStatus.isRequired!"
+          [options]="maritalStatusOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+  </div>
+</div>

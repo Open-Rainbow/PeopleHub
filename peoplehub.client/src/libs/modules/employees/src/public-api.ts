@@ -1,4 +1,17 @@
-
-
+export * from './lib/services/stepper.service';
+export * from './lib/components/stepper/stepper.component';
+export * from './lib/components/button-navigation/button-navigation.component';
+export * from './lib/components/basic-info/basic-info.component';
 export * from './lib/employees.component';
 export * from './lib/services/employees.service';
+export * from './lib/services/employee-data.service';
+export * from './lib/components/add-employee/add-employee.component';
+export * from './lib/components/contact-info/contact-info.component';
+export * from './lib/components/job-details/job-details.component';
+export * from './lib/components/education-details/education-details.component';
+export * from './lib/components/documents-upload/documents-upload.component';
+export * from './lib/components/insurance-details/insurance-details.component';
+export * from './lib/components/work-experience/work-experience.component';
+export * from './lib/components/temp-login-credentials/temp-login-credentials.component';
+export * from './lib/components/salary-structure/salary-structure.component';
+export { EMPLOYEES_ROUTES } from './employees.routes';

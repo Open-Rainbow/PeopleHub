@@ -27,6 +27,10 @@ export class EmployeeDataService {
     this.routeData.delete(route);
   }
 
+  getAllData(): Record<string, unknown> {
+    return Object.fromEntries(this.routeData.entries());
+  }
+
   clearAll(): void {
     this.routeData.clear();
   }

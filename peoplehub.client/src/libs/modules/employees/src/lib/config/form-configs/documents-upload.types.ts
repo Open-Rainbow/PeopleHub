@@ -1,4 +1,4 @@
-import type { IAddEmployeeFormFields } from "./documents-upload.model";
+import type { IDocumentsUploadFormFields } from "./documents-upload.model";
 
-export type IDocumentsUploadForm = IAddEmployeeFormFields;
+export type IDocumentsUploadForm = IDocumentsUploadFormFields;
 

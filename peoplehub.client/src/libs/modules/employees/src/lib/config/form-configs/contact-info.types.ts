@@ -1,4 +1,4 @@
-import type { IAddEmployeeFormFields } from "./contact-info.model";
+import type { IContactInfoFormFields } from "./contact-info.model";
 
-export type IContactInfoForm = IAddEmployeeFormFields;
+export type IContactInfoForm = IContactInfoFormFields;
 

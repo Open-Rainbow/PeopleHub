@@ -1,4 +1,4 @@
-import type { IAddEmployeeFormFields } from "./work-experience.model";
+import type { IWorkExperienceFormFields } from "./work-experience.model";
 
-export type IWorkExperienceForm = IAddEmployeeFormFields;
+export type IWorkExperienceForm = IWorkExperienceFormFields;
 

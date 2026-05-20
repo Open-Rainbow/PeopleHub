@@ -1,6 +1,6 @@
 import { IFormFieldConfig } from 'common';
 
-export interface IAddEmployeeFormFields {
+export interface IDocumentsUploadFormFields {
     employeePhoto: IFormFieldConfig;
     employeePanNumber: IFormFieldConfig;
     employeePan: IFormFieldConfig;

@@ -1,4 +1,4 @@
-import type { IAddEmployeeFormFields } from "./basic-info.model";
+import type { IBasicInfoFormFields } from "./basic-info.model";
 
-export type IBasicInfoForm = IAddEmployeeFormFields;
+export type IBasicInfoForm = IBasicInfoFormFields;
 
