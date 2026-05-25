@@ -38,18 +38,21 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Prefer small, reusable components; build reusable components for charts and visible elements.
 - Use `input()` / `output()` functions, not decorators.
 - Use `computed()` for derived state.
-- Prefer inline templates for simple components; external templates for complex UI.
+- Never use inline `template` or inline `styles` in component decorators.
+- Always use `templateUrl` and `styleUrls` with separate `.html` and `.scss` files.
 - Define host bindings inside the `host` property, not decorators.
 
 ## Component Structure
 
 - **Every component must have the following file structure** (do not keep all content in a single `.ts` file):
+  - Place every component inside `src/lib/components/<component-name>/`.
   - `component.ts` — Component logic and class definition.
   - `component.html` — Component template.
   - `component.scss` — Component styles.
   - `component.spec.ts` — Unit tests.
   - `component.stories.ts` — Storybook documentation (required for all components).
 - This separation enables reusability, testability, and documentation.
+- Do not keep HTML/SCSS in a single `.ts` file. Keep template and styles in separate files only.
 
 ## Selector Conventions
 
@@ -129,6 +132,8 @@ margin: var(--space-md);
 - Use `providedIn: 'root'`.
 - Prefer `inject()` over constructor injection.
 - Put all API calls in services.
+- Every `*.service.ts` file must have a corresponding `*.service.spec.ts` file for unit testing.
+- Both the `*.service.ts` and its respective `*.service.spec.ts` file must reside inside a dedicated folder (not loose in the parent directory).
 
 ## Performance
 
