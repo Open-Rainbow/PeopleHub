@@ -1,9 +1,97 @@
 import { Injectable } from '@angular/core';
 
+export interface SubRoute {
+  label: string;
+  route: string;
+}
+
+export interface MenuItem {
+  label: string;
+  icon: string;
+  route?: string;
+  routes?: SubRoute[];
+}
+
+export const MENU_CONFIG: Record<string, MenuItem[]> = {
+  employee: [
+    { label: 'Dashboard', icon: 'view_dashboard_outline', route: 'dashboard' },
+    { label: 'Announcement', icon: 'announcement_megaphone', route: 'announcement-box' },
+    { label: 'Apply Leave', icon: 'leave_user', route: 'apply-leave' },
+    { label: 'Payroll', icon: 'dollar', route: 'payslips' },
+    { label: 'Attendance', icon: 'calendar', route: 'attendance' },
+    { label: 'Holidays', icon: 'suitcase_line', route: 'holiday-calender' },
+    { label: 'Org-Chart', icon: 'chart_growth', route: 'org-chart' },
+    { label: 'Others', icon: 'dots_horizontal', route: 'others' },
+  ],
+
+  admin: [
+    { label: 'Admin Dashboard', icon: 'administrator_line', route: 'dashboard' },
+    {
+      label: 'Employee',
+      icon: 'person',
+      routes: [
+        { label: 'Add Employee', route: 'add-employee' },
+        { label: 'View Employee', route: 'view-employee' },
+        { label: 'EDocs', route: 'offer-letter' },
+      ],
+    },
+    { label: 'Announcement', icon: 'announcement_megaphone', route: 'AddEditAnnouncement' },
+    {
+      label: 'Leave',
+      icon: 'leave_user',
+      routes: [
+        { label: 'Apply Leave', route: 'apply-leave' },
+        { label: 'Leave Approval', route: 'leave-approval' },
+        { label: 'Leave Management', route: 'leave-management' },
+      ],
+    },
+    { label: 'Payroll', icon: 'dollar', route: 'payslips' },
+    { label: 'Attendance', icon: 'calendar', route: 'attendance' },
+    { label: 'Holidays', icon: 'suitcase_line', route: 'holidayList' },
+    { label: 'Org Chart', icon: 'chart_growth', route: 'org-chart' },
+    { label: 'Others', icon: 'dots_horizontal', route: 'others' },
+  ],
+
+  hr: [
+    { label: 'HR Dashboard', icon: 'home', route: 'dashboard' },
+    {
+      label: 'Employee',
+      icon: 'person',
+      routes: [
+        { label: 'Add Employee', route: 'add-employee' },
+        { label: 'View Employee', route: 'view-employee' },
+        { label: 'EDocs', route: 'offer-letter' },
+      ],
+    },
+    { label: 'Announcement', icon: 'announcement_megaphone', route: 'AddEditAnnouncement' },
+    {
+      label: 'Leave',
+      icon: 'leave_user',
+      routes: [
+        { label: 'Apply Leave', route: 'apply-leave' },
+        { label: 'Leave Management', route: 'leave-management' },
+      ],
+    },
+    { label: 'Payroll', icon: 'dollar', route: 'payslips' },
+    { label: 'Attendance', icon: 'calendar', route: 'attendance' },
+    { label: 'Holidays', icon: 'suitcase_line', route: 'holidayList' },
+    { label: 'Org Chart', icon: 'chart_growth', route: 'org-chart' },
+    { label: 'Others', icon: 'dots_horizontal', route: 'others' },
+  ],
+
+  superadmin: [
+    { label: 'Dashboard', icon: 'view_dashboard_outline', route: 'dashboard' },
+    { label: 'Settings', icon: 'settings', route: 'settings' },
+  ],
+};
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SidebarService {
+  constructor() {}
 
-  constructor() { }
+  getMenuByRole(role: string): MenuItem[] {
+    return MENU_CONFIG[role.toLowerCase()] || MENU_CONFIG['employee'];
+  }
 }

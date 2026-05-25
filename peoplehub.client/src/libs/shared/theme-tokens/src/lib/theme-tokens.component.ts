@@ -5,12 +5,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'theme-tokens-root',
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      theme-tokens works!
-    </p>
-  `,
-  styles: ``
+  templateUrl: './theme-tokens.component.html',
+  styleUrls: ['./theme-tokens.component.scss'],
 })
 export class ThemeTokensComponent {
 

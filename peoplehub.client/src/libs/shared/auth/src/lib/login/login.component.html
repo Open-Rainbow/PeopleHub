@@ -1,0 +1,66 @@
+<div class="min-h-[100dvh] grid grid-cols-1 lg:grid-cols-2 bg-[#f4f6fb]">
+  <section
+    class="hidden lg:flex flex-col justify-center px-16 xl:px-20 bg-gradient-to-br from-[#0f172a] via-[#1e3a8a] to-[#2563eb] text-white"
+  >
+    <h1 class="text-4xl xl:text-5xl font-semibold mb-5 tracking-tight">Welcome to </h1>
+    <p class="text-[16px] xl:text-[17px] leading-7 max-w-[560px] text-blue-100/95">
+      Manage employees, attendance, leave, payroll, and organization workflows from one unified workspace.
+    </p>
+    <div class="mt-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm w-fit">
+      <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
+      Secure enterprise access
+    </div>
+  </section>
+
+  <section class="flex items-center justify-center px-5 py-8 sm:px-8 lg:px-10 bg-white">
+    <div class="w-full max-w-[420px] rounded-2xl border border-[#e9edf6] bg-white shadow-[0_18px_45px_rgba(25,35,65,0.12)] p-6 sm:p-8">
+      <h2 class="text-[#6d28d9] text-[24px] font-semibold text-center">USER LOGIN</h2>
+      <hr class="my-4 border-0 h-px bg-[#e4e7ef]" />
+
+      <form [formGroup]="form" (ngSubmit)="login()" class="space-y-4">
+        <div>
+          <label for="username" class="block text-[13px] font-medium text-[#4b5563] mb-1.5">Username</label>
+          <input
+            id="username"
+            type="text"
+            formControlName="username"
+            placeholder="Enter username"
+            class="w-full h-11 rounded-lg border border-[#d8deea] px-3 text-[14px] outline-none transition focus:border-[#6d28d9] focus:ring-2 focus:ring-[#6d28d9]/15"
+          />
+        </div>
+
+        <div>
+          <label for="password" class="block text-[13px] font-medium text-[#4b5563] mb-1.5">Password</label>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            placeholder="Enter password"
+            class="w-full h-11 rounded-lg border border-[#d8deea] px-3 text-[14px] outline-none transition focus:border-[#6d28d9] focus:ring-2 focus:ring-[#6d28d9]/15"
+          />
+        </div>
+
+        <div class="flex items-center justify-between gap-3 pt-1">
+          <label class="inline-flex items-center gap-2 cursor-pointer text-[13px] text-[#6b7280]">
+            <input type="checkbox" formControlName="rememberMe" class="h-4 w-4 rounded border-[#c9d1e1] text-[#6d28d9] focus:ring-[#6d28d9]/30" />
+            <span>Remember me</span>
+          </label>
+          <a href="#" class="text-[13px] text-[#6b7280] hover:text-[#4338ca]">Forgot password?</a>
+        </div>
+
+        @if (showError()) {
+          <div class="rounded-lg border border-[#f6b9b9] bg-[#fff4f4] px-3 py-2.5 text-[13px] text-[#dc2626]">
+            Login ID and Password are required. Please enter valid credentials to continue.
+          </div>
+        }
+
+        <button
+          type="submit"
+          class="w-full h-11 rounded-xl bg-gradient-to-r from-[#a103f6] to-[#7c3aed] text-white text-[15px] font-semibold transition hover:brightness-110 active:translate-y-px"
+        >
+          Login
+        </button>
+      </form>
+    </div>
+  </section>
+</div>

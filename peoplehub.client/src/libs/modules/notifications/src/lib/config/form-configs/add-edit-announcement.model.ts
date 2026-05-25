@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface IAnnouncementFormFields {
     title: IFormFieldConfig;
@@ -12,5 +12,7 @@ export interface IAnnouncementFormFields {
 }
 
 export type { IAddEditAnnouncementForm } from './add-edit-announcement.types';
+
+
 
 

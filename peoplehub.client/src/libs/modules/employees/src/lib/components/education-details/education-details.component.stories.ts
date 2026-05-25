@@ -1,9 +1,9 @@
-import { Meta, StoryObj, moduleMetadata } from '@storybook/angular';
+﻿import { Meta, StoryObj, moduleMetadata } from '@storybook/angular';
 import { EducationDetailsComponent } from './education-details.component';
 import { CommonService } from 'common';
 import { DropdownConfigService } from 'common';
-import { StepperService } from '../../services/stepper.service';
-import { EmployeeDataService } from '../../services/employee-data.service';
+import { StepperService } from '../../services/stepper/stepper.service';
+import { EmployeeDataService } from '../../services/employee-data/employee-data.service';
 
 type Story = StoryObj<EducationDetailsComponent>;
 
@@ -31,3 +31,5 @@ export default meta;
 export const Default: Story = {
   args: {},
 };
+
+

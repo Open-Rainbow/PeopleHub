@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface IDocumentsUploadFormFields {
     employeePhoto: IFormFieldConfig;
@@ -16,5 +16,7 @@ export interface IDocumentsUploadFormFields {
 }
 
 export type { IDocumentsUploadForm } from './documents-upload.types';
+
+
 
 

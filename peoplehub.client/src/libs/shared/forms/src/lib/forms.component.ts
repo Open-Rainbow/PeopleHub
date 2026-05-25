@@ -5,12 +5,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'forms-root',
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      forms works!
-    </p>
-  `,
-  styles: ``
+  templateUrl: './forms.component.html',
+  styleUrls: ['./forms.component.scss'],
 })
 export class FormsComponent {
 

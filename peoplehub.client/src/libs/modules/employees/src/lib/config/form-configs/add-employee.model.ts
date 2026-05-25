@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface IBasicInfoConfig {
     fullName: IFormFieldConfig;
@@ -75,4 +75,6 @@ export interface IWorkExperienceConfig {
 }
 
 export type { IAddEmployeeConfig } from './add-employee.types';
+
+
 

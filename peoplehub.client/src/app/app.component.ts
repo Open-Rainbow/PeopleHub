@@ -1,18 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
-import { IconifyIconComponent } from './iconify-icon.component';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, IconifyIconComponent],
-  templateUrl: './app.component.html',
+  imports: [CommonModule, RouterOutlet],
+  template: `<router-outlet></router-outlet>`,
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   readonly title = 'peoplehub.client';
-
-  ngOnInit() {
-  }
 }

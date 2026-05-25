@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface IContactInfoFormFields {
     personalMail: IFormFieldConfig;
@@ -14,5 +14,7 @@ export interface IContactInfoFormFields {
 }
 
 export type { IContactInfoForm } from './contact-info.types';
+
+
 
 

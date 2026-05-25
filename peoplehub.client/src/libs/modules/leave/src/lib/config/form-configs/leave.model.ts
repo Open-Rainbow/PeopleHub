@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface IDesignationOptionConfig {
     employmentType: IFormFieldConfig;
@@ -48,4 +48,6 @@ export interface ICasualLeaveConfig {
 }
 
 export type { ILeaveManagementConfig } from './leave.types';
+
+
 

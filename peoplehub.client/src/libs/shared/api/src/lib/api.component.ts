@@ -5,12 +5,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'api-root',
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      api works!
-    </p>
-  `,
-  styles: ``
+  templateUrl: './api.component.html',
+  styleUrls: ['./api.component.scss'],
 })
 export class ApiComponent {
 

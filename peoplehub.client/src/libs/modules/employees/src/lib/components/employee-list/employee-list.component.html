@@ -1,0 +1,30 @@
+    <div class="w-full bg-white border border-gray-200 rounded-xl p-5">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Employees</h2>
+        <div class="flex gap-2 items-center">
+          <ui-search [placeholderText]="'Search employee'" [showBorder]="true"></ui-search>
+          <ui-text-button text="Add Employee" variant="secondary"></ui-text-button>
+        </div>
+      </div>
+
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="text-left border-b">
+            <th class="py-2">Employee</th>
+            <th>Designation</th>
+            <th>Department</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (emp of employees; track emp.empId) {
+            <tr class="border-b last:border-0">
+              <td class="py-3 font-medium">{{ emp.name }}</td>
+              <td>{{ emp.designation }}</td>
+              <td>{{ emp.department }}</td>
+              <td>{{ emp.location }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>

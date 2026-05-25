@@ -1,0 +1,19 @@
+    <div class="w-full p-5 bg-white border border-gray-200 rounded-xl">
+      <h2 class="text-xl font-semibold mb-5">Leave Policy Management</h2>
+
+      <form [formGroup]="form" class="grid grid-cols-2 gap-4">
+        <ui-toggle [parentFormGroup]="form" id="isAccrualEnabled" label="Enable accrual" [isRequired]="false"></ui-toggle>
+        <ui-toggle [parentFormGroup]="form" id="isCarryForwardEnabled" label="Allow carry forward" [isRequired]="false"></ui-toggle>
+
+        <ui-number-box [parentFormGroup]="form" id="annualLeave" label="Annual Leave (days)" [minValue]="0" [maxValue]="60"></ui-number-box>
+        <ui-number-box [parentFormGroup]="form" id="sickLeave" label="Sick Leave (days)" [minValue]="0" [maxValue]="60"></ui-number-box>
+
+        <ui-dropdown [parentFormGroup]="form" id="approvalLevel" label="Approval Level" [options]="approvalLevels"></ui-dropdown>
+        <ui-dropdown [parentFormGroup]="form" id="accrualMethod" label="Accrual Method" [options]="accrualMethods"></ui-dropdown>
+      </form>
+
+      <div class="flex justify-end gap-3 mt-6">
+        <ui-text-button text="Reset" variant="secondary" (buttonClick)="reset()"></ui-text-button>
+        <ui-text-button text="Save Policy"></ui-text-button>
+      </div>
+    </div>

@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface IJobDetailsFormFields {
     officeEmail: IFormFieldConfig;
@@ -12,5 +12,7 @@ export interface IJobDetailsFormFields {
 }
 
 export type { IJobDetailsForm } from './job-details.types';
+
+
 
 

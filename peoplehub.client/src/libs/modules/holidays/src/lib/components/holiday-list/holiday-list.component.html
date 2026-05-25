@@ -1,0 +1,21 @@
+    <div class="w-full bg-white p-6 rounded-lg shadow-sm">
+      <h2 class="text-xl font-semibold mb-4">Holiday Calendar</h2>
+      @for (item of holidays; track item.holidayName) {
+        <div class="my-3">
+          <div class="flex items-start gap-4 border border-gray-200 rounded-xl p-4 shadow-sm">
+            <div class="w-[60px] h-[60px] rounded-lg bg-blue-600 text-white flex flex-col items-center justify-center">
+              <span class="text-[10px]">{{ item.holidayMonth }}</span>
+              <span class="text-[18px] font-semibold">{{ item.holidayDate }}</span>
+            </div>
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <h3 class="text-base font-semibold text-gray-900">{{ item.holidayName }}</h3>
+                <ui-chip [text]="item.holidayType" [bgColor]="'#dbeafe'" [color]="'#1d4ed8'"></ui-chip>
+                <ui-chip [text]="item.holidayClassification" [bgColor]="'#dcfce7'" [color]="'#16a34a'"></ui-chip>
+              </div>
+              <p class="text-sm text-gray-500 mt-1">{{ item.holidayCalendar }}</p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>

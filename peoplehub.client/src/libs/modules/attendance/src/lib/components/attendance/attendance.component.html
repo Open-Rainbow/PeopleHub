@@ -1,0 +1,65 @@
+<div class="w-full h-auto bg-white rounded-[12px] p-[30px] border border-gray-400">
+  <div class="flex flex-row">
+    <span class="text-[x-large] font-semibold mb-[25px]">Attendance</span>
+  </div>
+
+  <div class="flex flex-row gap-[20px] mt-[25px] mb-[20px] items-stretch">
+    <div class="flex-1 border border-gray-300 rounded-[12px] p-[20px]">
+      <div class="flex flex-row justify-between mb-[15px]">
+        <span class="text-[20px] font-[400]">Attendance Rate</span>
+        <ui-text-button text="Download Reports" variant="secondary" size="small"></ui-text-button>
+      </div>
+      <ui-horizontal-bar-chart
+        [labels]="['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']"
+        [data]="horizontalChartData"
+        [datasetLabels]="['Present', 'Absent', 'Leave']"
+        [yAxisTicks]="[0, 5, 10, 15, 20, 25, 30]"
+        [dynamicYAxis]="true"
+        [singleLine]="true"
+        [showLegend]="true"
+        [backgroundColors]="['#2166E1', '#FF8800', '#13C9E4']">
+      </ui-horizontal-bar-chart>
+    </div>
+
+    <div class="flex flex-col w-[35%] border border-gray-300 rounded-[12px] p-[20px]">
+      <div class="flex flex-row justify-between items-center w-full mb-[20px]">
+        <span class="text-[20px] font-[400]">Employee Type</span>
+      </div>
+
+      <div class="flex items-center justify-center w-full mt-[15px]">
+        <ui-doughnut-chart [showLegends]="false" [legendData]="doughnutChartData"></ui-doughnut-chart>
+      </div>
+
+      <div class="w-full mt-[40px] grid grid-cols-2 gap-y-[12px] gap-x-[25px] px-[30px]">
+        @for (item of doughnutChartData; track item.label) {
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-[8px]">
+              <span class="w-[10px] h-[10px] rounded-full inline-block" [style.background-color]="item.color"></span>
+              <span class="text-[14px] text-[#666]">{{ item.label }}</span>
+            </div>
+            <span class="font-semibold text-[14px] text-[#111]">{{ item.value }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="border border-gray-300 rounded-[12px] p-[20px]">
+    <div class="flex justify-between gap-[15px] mb-[25px]">
+      <span class="text-[20px] font-[400]">Employee Attendance</span>
+      <div class="flex items-center gap-3">
+        <ui-search [placeholderText]="'Search employee...'" [showBorder]="true"></ui-search>
+        <ui-text-button text="Download Reports" variant="secondary" size="small"></ui-text-button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-4 gap-4 mb-6">
+      @for (stat of attendanceStats; track stat.label) {
+        <div class="rounded-[10px] p-4 border border-gray-200" [style.background]="stat.bg">
+          <p class="text-[13px] text-gray-500">{{ stat.label }}</p>
+          <p class="text-[24px] font-bold" [style.color]="stat.color">{{ stat.value }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

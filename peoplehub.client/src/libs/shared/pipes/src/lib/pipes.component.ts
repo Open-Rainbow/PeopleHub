@@ -5,12 +5,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'pipes-root',
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      pipes works!
-    </p>
-  `,
-  styles: ``
+  templateUrl: './pipes.component.html',
+  styleUrls: ['./pipes.component.scss'],
 })
 export class PipesComponent {
 

@@ -45,6 +45,115 @@ if (!hasTarget) {
 }
 
 const ngCliPath = path.join(process.cwd(), 'node_modules', '@angular', 'cli', 'bin', 'ng.js');
+
+function listTsFiles(rootDir) {
+  if (!rootDir || !fs.existsSync(rootDir)) return [];
+
+  const files = [];
+  const stack = [rootDir];
+
+  while (stack.length > 0) {
+    const current = stack.pop();
+    const entries = fs.readdirSync(current, { withFileTypes: true });
+
+    for (const entry of entries) {
+      const fullPath = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        if (entry.name === 'node_modules' || entry.name === 'dist' || entry.name === 'out-tsc') {
+          continue;
+        }
+        stack.push(fullPath);
+        continue;
+      }
+
+      if (entry.isFile() && entry.name.endsWith('.ts') && !entry.name.endsWith('.spec.ts')) {
+        files.push(fullPath);
+      }
+    }
+  }
+
+  return files;
+}
+
+function extractProjectDeps(projectName, allProjectNames) {
+  const projectConfig = workspace.projects[projectName];
+  const sourceRoot = projectConfig?.sourceRoot;
+  if (!sourceRoot) return [];
+
+  const tsFiles = listTsFiles(path.join(process.cwd(), sourceRoot));
+  const deps = new Set();
+  const importPattern = /(?:from\s+|import\s*\()\s*['\"]([^'\"]+)['\"]/g;
+
+  for (const filePath of tsFiles) {
+    const content = fs.readFileSync(filePath, 'utf8');
+    for (const match of content.matchAll(importPattern)) {
+      const specifier = match[1];
+      if (!specifier || specifier.startsWith('.')) {
+        continue;
+      }
+
+      for (const candidate of allProjectNames) {
+        if (specifier === candidate || specifier.startsWith(`${candidate}/`)) {
+          if (candidate !== projectName) {
+            deps.add(candidate);
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  return [...deps];
+}
+
+function resolveBuildOrder(rootProject) {
+  const projectNames = Object.keys(workspace.projects);
+  const visiting = new Set();
+  const visited = new Set();
+  const order = [];
+
+  function visit(name) {
+    if (visited.has(name)) return;
+    if (visiting.has(name)) {
+      console.error(`Circular dependency detected while resolving project dependencies at: ${name}`);
+      process.exit(1);
+    }
+
+    visiting.add(name);
+    const deps = extractProjectDeps(name, projectNames)
+      .filter((depName) => workspace.projects[depName]?.projectType === 'library')
+      .filter((depName) => !!workspace.projects[depName]?.architect?.[target]);
+
+    for (const dep of deps) {
+      visit(dep);
+      if (!order.includes(dep)) {
+        order.push(dep);
+      }
+    }
+
+    visiting.delete(name);
+    visited.add(name);
+  }
+
+  visit(rootProject);
+  return order;
+}
+
+function runProjectTarget(projectName) {
+  console.log(`\n>> Running ${projectName}:${target}`);
+  const result = spawnSync(process.execPath, [ngCliPath, 'run', `${projectName}:${target}`], { stdio: 'inherit' });
+  if ((result.status ?? 1) !== 0) {
+    process.exit(result.status ?? 1);
+  }
+}
+
+if (target === 'build' && workspace.projects[project]?.projectType === 'library') {
+  const dependencyBuildOrder = resolveBuildOrder(project);
+  for (const depProject of dependencyBuildOrder) {
+    runProjectTarget(depProject);
+  }
+}
+
 const result = spawnSync(process.execPath, [ngCliPath, 'run', `${project}:${target}`], { stdio: 'inherit' });
 
 if (result.error) {

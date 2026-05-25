@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface IBasicInfoFormFields {
   fullName: IFormFieldConfig;
@@ -10,3 +10,5 @@ export interface IBasicInfoFormFields {
 }
 
 export type { IBasicInfoForm } from './basic-info.types';
+
+

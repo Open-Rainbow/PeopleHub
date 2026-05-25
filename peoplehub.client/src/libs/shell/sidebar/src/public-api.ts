@@ -1,4 +1,4 @@
 
 
 export * from './lib/services/sidebar.service';
-export * from './lib/sidebar.component';
+export * from './lib/components/sidebar/sidebar.component';

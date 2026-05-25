@@ -101,6 +101,8 @@ export const iconRegistry: Record<string, IconifyIcon> = {
   'call_24_filled':call_24_filled,
 };
 
-for (const [name, data] of Object.entries(iconRegistry)) {
-  addIcon(name, data);
+export const registerIcons = (): void => {
+  for (const [name, data] of Object.entries(iconRegistry)) {
+    addIcon(name, data);
+  }
 }

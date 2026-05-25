@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface ILeaveFormFields {
     allowUnpaidLeave: IFormFieldConfig;
@@ -7,5 +7,7 @@ export interface ILeaveFormFields {
 }
 
 export type { ILossOfPayForm } from './loss-of-pay-info.types';
+
+
 
 

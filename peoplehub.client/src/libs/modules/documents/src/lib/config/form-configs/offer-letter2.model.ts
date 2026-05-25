@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface IEmployeeEdocsFormFields {
     foodAllowances: IFormFieldConfig;
@@ -13,5 +13,7 @@ export interface IEmployeeEdocsFormFields {
 }
 
 export type { IOfferLetter2Form } from './offer-letter2.types';
+
+
 
 

@@ -1,4 +1,4 @@
 
 
-export * from './lib/app-shell.component';
+export * from './lib/components/app-shell/app-shell.component';
 export * from './lib/services/app-shell.service';

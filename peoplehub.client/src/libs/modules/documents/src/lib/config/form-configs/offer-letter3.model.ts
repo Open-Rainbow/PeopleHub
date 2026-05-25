@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface IEmployeeEdocsFormFields {
     probationPeriod: IFormFieldConfig;
@@ -8,5 +8,7 @@ export interface IEmployeeEdocsFormFields {
 }
 
 export type { IOfferLetter3Form } from './offer-letter3.types';
+
+
 
 

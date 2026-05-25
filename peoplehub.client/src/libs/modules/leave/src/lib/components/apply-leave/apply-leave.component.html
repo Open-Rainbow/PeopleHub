@@ -1,0 +1,50 @@
+    <div class="w-full p-5 rounded-lg bg-white border border-gray-200">
+      <div class="flex justify-between items-center mb-5">
+        <div>
+          <h2 class="text-xl font-semibold">Apply Leave</h2>
+          <p class="text-sm text-gray-500">Submit and track your leave requests</p>
+        </div>
+        <ui-text-button text="New Request" (buttonClick)="openForm.set(!openForm())"></ui-text-button>
+      </div>
+
+      <div class="grid grid-cols-4 gap-3 mb-6">
+        @for (card of leaveCards; track card.label) {
+          <div class="rounded-lg border p-4" [style.background]="card.bg">
+            <div class="text-xs text-gray-500">{{ card.label }}</div>
+            <div class="text-2xl font-semibold" [style.color]="card.color">{{ card.value }}</div>
+          </div>
+        }
+      </div>
+
+      @if (openForm()) {
+        <div class="p-4 rounded-lg border border-gray-200 mb-6 bg-gray-50">
+          <div class="grid grid-cols-2 gap-3">
+            <label class="text-sm">From Date <input type="date" class="w-full border rounded px-3 py-2 mt-1" [(ngModel)]="fromDate"></label>
+            <label class="text-sm">To Date <input type="date" class="w-full border rounded px-3 py-2 mt-1" [(ngModel)]="toDate"></label>
+            <label class="text-sm">Leave Type
+              <select class="w-full border rounded px-3 py-2 mt-1" [(ngModel)]="leaveType">
+                <option>Annual Leave</option>
+                <option>Sick Leave</option>
+                <option>Casual Leave</option>
+              </select>
+            </label>
+            <label class="text-sm">Reason <input type="text" class="w-full border rounded px-3 py-2 mt-1" [(ngModel)]="reason"></label>
+          </div>
+          <div class="flex justify-end gap-2 mt-4">
+            <ui-text-button text="Cancel" variant="secondary" (buttonClick)="openForm.set(false)"></ui-text-button>
+            <ui-text-button text="Submit" (buttonClick)="submitLeave()"></ui-text-button>
+          </div>
+        </div>
+      }
+
+      <h3 class="text-base font-semibold mb-3">Recent Requests</h3>
+      @for (req of requests(); track req.id) {
+        <div class="flex justify-between items-center border rounded-lg px-4 py-3 mb-2">
+          <div>
+            <div class="font-medium">{{ req.leaveType }}: {{ req.fromDate }} to {{ req.toDate }}</div>
+            <div class="text-sm text-gray-500">{{ req.reason }}</div>
+          </div>
+          <ui-chip [text]="req.status" [bgColor]="req.status === 'Approved' ? '#dcfce7' : req.status === 'Rejected' ? '#fee2e2' : '#fef3c7'" [color]="req.status === 'Approved' ? '#166534' : req.status === 'Rejected' ? '#991b1b' : '#92400e'"></ui-chip>
+        </div>
+      }
+    </div>

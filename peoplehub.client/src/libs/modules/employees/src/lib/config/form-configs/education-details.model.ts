@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface IEducationDetailsFormFields {
     higherQualification: IFormFieldConfig;
@@ -9,5 +9,7 @@ export interface IEducationDetailsFormFields {
 }
 
 export type { IEducationDetailsForm } from './education-details.types';
+
+
 
 

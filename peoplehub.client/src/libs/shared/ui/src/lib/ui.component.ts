@@ -5,12 +5,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'ui-root',
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      ui works!
-    </p>
-  `,
-  styles: ``
+  templateUrl: './ui.component.html',
+  styleUrls: ['./ui.component.scss'],
 })
 export class UiComponent {
 

@@ -1,4 +1,4 @@
-import {
+﻿import {
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -13,9 +13,9 @@ import { filter } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 import { ConfirmPopupService, IconTextButtonComponent } from 'ui';
 import { Step } from 'ui';
-import { StepperService } from '../../services/stepper.service';
-import { EmployeeDataService } from '../../services/employee-data.service';
-import { EmployeesService } from '../../services/employees.service';
+import { StepperService } from '../../services/stepper/stepper.service';
+import { EmployeeDataService } from '../../services/employee-data/employee-data.service';
+import { EmployeesService } from '../../services/employees/employees.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -132,3 +132,5 @@ export class ButtonNavigationComponent implements OnInit {
     return null;
   }
 }
+
+

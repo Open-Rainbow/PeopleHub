@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { StepperService } from '../../services/stepper.service';
+import { StepperService } from '../../services/stepper/stepper.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

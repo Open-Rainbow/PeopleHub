@@ -21,13 +21,6 @@ import {
     UserCell,
     ValueDropdownCell,
 } from '../../../models/table.model';
-import { ChipComponent } from '../../controls/chip/chip.component';
-import { IconButtonPopupComponent } from '../../controls/icon-button-popup/icon-button-popup.component';
-import { IconButtonComponent } from '../../controls/icon-button/icon-button.component';
-import { ToggleComponent } from '../../controls/toggle/toggle.component';
-import { ValueSelectComponent } from '../../controls/value-select/value-select.component';
-import { IconComponent } from '../../primitives/icon/icon.component';
-import { PaginationComponent } from '../pagination/pagination.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,13 +31,6 @@ import { PaginationComponent } from '../pagination/pagination.component';
   imports: [
     CommonModule,
     FormsModule,
-    IconComponent,
-    PaginationComponent,
-    ToggleComponent,
-    ValueSelectComponent,
-    IconButtonPopupComponent,
-    IconButtonComponent,
-    ChipComponent,
   ],
 })
 export class TableComponent {

@@ -5,11 +5,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import type { SearchDropdownOption } from '../../../models/value-configs/search-dropdown-option.model';
 import { IconComponent } from '../../primitives/icon/icon.component';
-import { DropdownComponent } from '../dropdown/dropdown.component';
 
 @Component({
   selector: 'ui-search-dropdown',
-  imports: [IconComponent, CommonModule, DropdownComponent, ReactiveFormsModule],
+  imports: [IconComponent, CommonModule, ReactiveFormsModule],
   standalone: true,
   templateUrl: './search-dropdown.component.html',
   styleUrls: ['./search-dropdown.component.scss'],

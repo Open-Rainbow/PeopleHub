@@ -1,7 +1,7 @@
 import { Meta, StoryObj, moduleMetadata } from '@storybook/angular';
 import { TempLoginCredentialsComponent } from './temp-login-credentials.component';
-import { StepperService } from '../../services/stepper.service';
-import { EmployeeDataService } from '../../services/employee-data.service';
+import { StepperService } from '../../services/stepper/stepper.service';
+import { EmployeeDataService } from '../../services/employee-data/employee-data.service';
 
 type Story = StoryObj<TempLoginCredentialsComponent>;
 

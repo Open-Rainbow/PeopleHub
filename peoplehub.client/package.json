@@ -144,7 +144,7 @@
     "start:dashboard": "ng serve dashboard",
     "build:documents": "ng build documents --configuration production",
     "start:documents": "ng serve documents",
-    "build:announcements": "ng build announcements --configuration production",
+    "build:announcements": "node scripts/run-project-target.mjs build announcements",
     "start:announcements": "ng serve announcements",
     "build:employees": "ng build employees --configuration production",
     "start:employees": "ng serve employees",

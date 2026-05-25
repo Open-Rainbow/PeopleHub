@@ -1,0 +1,23 @@
+    <div class="home-layout flex min-h-screen w-full bg-[var(--content-wrapper-bg-color)]">
+      <!-- SIDEBAR -->
+      <sidebar-root
+        class="sidebar shrink-0 bg-[#f9fbfd] border-r border-gray-200"
+        [isSidebarExpanded]="isSidebarExpanded"
+        [hoverEnabled]="isUserCollapsed"
+        (hoverEnter)="onSidebarHoverEnter()"
+        (hoverLeave)="onSidebarHoverLeave()">
+      </sidebar-root>
+
+      <!-- RIGHT -->
+      <div class="right-layout flex-1 flex flex-col min-h-screen">
+        <header-root
+          class="shrink-0"
+          [isUserCollapsed]="isUserCollapsed"
+          (sidebarToggle)="onSidebarToggleByUser()">
+        </header-root>
+
+        <main class="content-area flex-1 p-[32px_48px] overflow-y-auto bg-[#f9fbfd] mt-[60px]">
+          <router-outlet></router-outlet>
+        </main>
+      </div>
+    </div>

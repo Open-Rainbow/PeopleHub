@@ -1,0 +1,19 @@
+    <div class="w-full p-5 bg-white border border-gray-200 rounded-xl">
+      <div class="flex justify-between items-center mb-5">
+        <h2 class="text-xl font-semibold">Recent Payslips</h2>
+        <ui-text-button text="Download Reports" variant="secondary"></ui-text-button>
+      </div>
+
+      @for (payslip of payslips; let i = $index; track payslip.month) {
+        <div class="flex justify-between items-center p-4 rounded-lg border border-gray-100 bg-gray-50 mb-2">
+          <div>
+            <div class="font-medium">{{ payslip.month }}</div>
+            <div class="text-sm text-gray-500">{{ payslip.date }}</div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-semibold">{{ visibleIndex() === i ? payslip.amount : 'Net Pay' }}</span>
+            <button type="button" class="text-sm text-blue-700" (click)="toggle(i)">{{ visibleIndex() === i ? 'Hide' : 'Show' }}</button>
+          </div>
+        </div>
+      }
+    </div>

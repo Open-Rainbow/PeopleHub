@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface ILeaveFormFields {
     totalDuration: IFormFieldConfig;
@@ -8,5 +8,7 @@ export interface ILeaveFormFields {
 }
 
 export type { IPaternityLeaveForm } from './paternity-leave.types';
+
+
 
 

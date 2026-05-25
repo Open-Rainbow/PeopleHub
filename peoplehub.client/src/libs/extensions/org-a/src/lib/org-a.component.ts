@@ -5,12 +5,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'org-a-root',
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      org-a works!
-    </p>
-  `,
-  styles: ``
+  templateUrl: './org-a.component.html',
+  styleUrls: ['./org-a.component.scss'],
 })
 export class OrgAComponent {
 

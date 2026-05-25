@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { IconComponent, IconTextButtonComponent, NoticeBannerComponent, PasswordComponent, TextBoxComponent } from 'ui';
 import { CommonService } from 'common';
-import { StepperService } from '../../services/stepper.service';
-import { EmployeeDataService } from '../../services/employee-data.service';
+import { StepperService } from '../../services/stepper/stepper.service';
+import { EmployeeDataService } from '../../services/employee-data/employee-data.service';
 import { tempLoginForm } from '../../config/form-configs/temp-login.config';
 
 @Component({
@@ -119,3 +119,5 @@ export class TempLoginCredentialsComponent implements OnInit {
     });
   }
 }
+
+

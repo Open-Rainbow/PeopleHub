@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface IInsuranceDetailsFormFields {
     fatherName: IFormFieldConfig;
@@ -18,5 +18,7 @@ export interface IInsuranceDetailsFormFields {
 }
 
 export type { IInsuranceDetailsForm } from './insurance-details.types';
+
+
 
 

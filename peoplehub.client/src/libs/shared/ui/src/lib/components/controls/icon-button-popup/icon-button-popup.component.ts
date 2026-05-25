@@ -9,7 +9,7 @@ import { IconButtonComponent } from '../icon-button/icon-button.component';
   standalone: true,
   imports: [CommonModule, IconButtonComponent],
   templateUrl: './icon-button-popup.component.html',
-  styles: [],
+  styleUrls: ['./icon-button-popup.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class IconButtonPopupComponent {

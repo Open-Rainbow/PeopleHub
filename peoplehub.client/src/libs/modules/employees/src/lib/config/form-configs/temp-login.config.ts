@@ -1,6 +1,6 @@
-import { ITempLoginForm } from './temp-login.model';
+import { ITempLoginConfig } from './temp-login.model';
 
-export const tempLoginForm: ITempLoginForm = {
+export const tempLoginForm: ITempLoginConfig = {
   temporaryUsername: {
     id: 'temporaryUsername',
     isHide: false,

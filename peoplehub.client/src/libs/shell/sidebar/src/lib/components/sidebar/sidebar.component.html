@@ -1,0 +1,74 @@
+<div
+  class="h-screen sticky top-0 z-[3000] transition-[width] duration-300 ease-in-out"
+  [class]="
+    isSidebarExpanded
+      ? 'w-[240px] overflow-hidden'
+      : 'w-[64px] bg-transparent overflow-hidden'
+  "
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()"
+>
+  <div
+    class="bg-[var(--bg-color)] h-full p-4 w-[250px] overflow-visible flex-shrink-0"
+  >
+    <div class="flex items-center gap-[10px] p-[10px]">
+      <img class="w-[32px]" src="assets/logo.png" alt="Logo" />
+
+      @if (isSidebarExpanded) {
+        <div class="flex flex-col gap-[2px]">
+          <span class="text-[var(--text-color)] font-medium"> PeopleHub </span>
+          <span class="text-[9px] text-[var(--text-color)]">
+            Management System
+          </span>
+        </div>
+      }
+    </div>
+    @for (item of menuItems; track item; let i = $index) {
+      <div
+        class="mt-2 relative"
+        [class.menu-item]="isSidebarExpanded"
+        [class.menu-item-small]="!isSidebarExpanded"
+      >
+        <div
+          class="flex items-center p-[10px] px-[14px] rounded-[10px] text-[var(--text-color)] transition-colors duration-200 ease-in-out justify-between gap-3 cursor-pointer hover:bg-blue-600 hover:text-white"
+          [ngClass]="{
+            'bg-blue-600 text-white': activeIndex === i,
+          }"
+          (click)="onClick(i)"
+          [routerLink]="item.route"
+        >
+          <div class="flex items-center gap-2">
+            <iconify-icon [icon]="item.icon" class="text-[20px]"></iconify-icon>
+            @if (isSidebarExpanded) {
+              <span>{{ item.label }}</span>
+            }
+          </div>
+
+          @if (item.routes && item.routes.length > 0) {
+            @if (item.routes && isSidebarExpanded) {
+              <iconify-icon
+                class="text-[18px]"
+                [icon]="
+                  viewSubMenu && activeIndex === i
+                    ? 'mdi:arrow-down'
+                    : 'mdi:arrow-right'
+                "
+              ></iconify-icon>
+            }
+          }
+        </div>
+        @if (viewSubMenu && activeIndex === i && isSidebarExpanded) {
+          @for (route of item.routes; track $index) {
+            <div
+              class="p-2 px-6 mt-1 rounded-lg cursor-pointer transition-all hover:text-blue-600"
+              [class.active-submenu]="activeSubRoute === route.route"
+              (click)="onSubMenuClick(i, route.route)"
+            >
+              {{ route.label }}
+            </div>
+          }
+        }
+      </div>
+    }
+  </div>
+</div>

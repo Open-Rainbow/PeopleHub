@@ -5,12 +5,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'common-root',
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      common works!
-    </p>
-  `,
-  styles: ``
+  templateUrl: './common.component.html',
+  styleUrls: ['./common.component.scss'],
 })
 export class CommonComponent {
 

@@ -1,6 +1,1 @@
 @PeopleHub.Server_HostAddress = http://localhost:5231
-
-GET {{PeopleHub.Server_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

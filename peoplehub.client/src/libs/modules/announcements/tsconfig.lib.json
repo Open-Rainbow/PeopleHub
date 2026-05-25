@@ -4,12 +4,21 @@
     "outDir": "../../../../out-tsc/lib",
     "declaration": true,
     "declarationMap": true,
-    "types": []
+    "types": [],
+    "paths": {
+      "common": [
+        "../../../../dist/common"
+      ],
+      "ui": [
+        "../../../../dist/ui"
+      ]
+    }
   },
   "include": [
     "src/**/*.ts"
   ],
   "exclude": [
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "**/*.stories.ts"
   ]
 }

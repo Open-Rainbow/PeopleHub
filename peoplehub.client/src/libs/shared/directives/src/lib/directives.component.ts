@@ -5,12 +5,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'directives-root',
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      directives works!
-    </p>
-  `,
-  styles: ``
+  templateUrl: './directives.component.html',
+  styleUrls: ['./directives.component.scss'],
 })
 export class DirectivesComponent {
 

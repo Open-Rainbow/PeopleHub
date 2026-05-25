@@ -5,12 +5,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'auth-root',
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      auth works!
-    </p>
-  `,
-  styles: ``
+  templateUrl: './auth.component.html',
+  styleUrls: ['./auth.component.scss'],
 })
 export class AuthComponent {
 

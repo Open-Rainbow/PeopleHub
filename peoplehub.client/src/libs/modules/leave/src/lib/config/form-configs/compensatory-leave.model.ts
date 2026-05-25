@@ -1,4 +1,4 @@
-import { IFormFieldConfig } from 'common';
+﻿import { IFormFieldConfig } from 'common';
 
 export interface ILeaveFormFields {
     enableCompOff: IFormFieldConfig;
@@ -7,5 +7,7 @@ export interface ILeaveFormFields {
 }
 
 export type { ICompensatoryOffForm } from './compensatory-leave.types';
+
+
 
 

@@ -1,1 +1,1 @@
-export type { ITempLoginForm, ITempLoginConfig } from './temp-login.model';
+export type { ITempLoginConfig } from './temp-login.model';

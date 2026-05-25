@@ -1,7 +1,7 @@
-import { EventEmitter, Injectable } from '@angular/core';
+﻿import { EventEmitter, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { ConfirmPopup } from '../../../../../shared/ui/src/lib/models/confirm-popup.model';
+import { ConfirmPopup } from '../../../../../shared/ui/src/src/public-api'confirm-popup.model';
 
 export interface PopupOptions {
   title: string;

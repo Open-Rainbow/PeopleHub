@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FileUploadComponent, TextBoxComponent } from 'ui';
 import { CommonService } from 'common';
-import { StepperService } from '../../services/stepper.service';
-import { EmployeeDataService } from '../../services/employee-data.service';
+import { StepperService } from '../../services/stepper/stepper.service';
+import { EmployeeDataService } from '../../services/employee-data/employee-data.service';
 import { documentsUploadForm } from '../../config/form-configs/documents-upload.config';
 
 @Component({
@@ -38,3 +38,5 @@ export class DocumentsUploadComponent implements OnInit {
     });
   }
 }
+
+

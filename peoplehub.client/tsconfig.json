@@ -3,121 +3,107 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "ignoreDeprecations": "5.0",
     "outDir": "./dist/out-tsc",
     "rootDir": "./src",
     "strict": true,
     "noImplicitOverride": true,
     "paths": {
       "announcements": [
-        "./dist/announcements"
-      ],
-      "api": [
-        "./dist/api"
-      ],
-      "app-shell": [
-        "./dist/app-shell"
+        "./src/libs/modules/announcements/src"
       ],
       "attendance": [
-        "./dist/attendance"
-      ],
-      "auth": [
-        "./dist/auth"
-      ],
-      "branding": [
-        "./dist/branding"
-      ],
-      "breadcrumbs": [
-        "./dist/breadcrumbs"
-      ],
-      "common": [
-        "./dist/common"
+        "./src/libs/modules/attendance/src"
       ],
       "dashboard": [
-        "./dist/dashboard"
-      ],
-      "directives": [
-        "./dist/directives"
+        "./src/libs/modules/dashboard/src"
       ],
       "documents": [
-        "./dist/documents"
+        "./src/libs/modules/documents/src"
       ],
       "employees": [
-        "./dist/employees"
-      ],
-      "feature-flags": [
-        "./dist/feature-flags"
-      ],
-      "forms": [
-        "./dist/forms"
-      ],
-      "header": [
-        "./dist/header"
+        "./src/libs/modules/employees/src"
       ],
       "holidays": [
-        "./dist/holidays"
-      ],
-      "layout": [
-        "./dist/layout"
+        "./src/libs/modules/holidays/src"
       ],
       "leave": [
-        "./dist/leave"
-      ],
-      "navigation": [
-        "./dist/navigation"
+        "./src/libs/modules/leave/src"
       ],
       "notifications": [
-        "./dist/notifications"
-      ],
-      "org-a": [
-        "./dist/org-a"
-      ],
-      "org-b": [
-        "./dist/org-b"
-      ],
-      "org-c": [
-        "./dist/org-c"
+        "./src/libs/modules/notifications/src"
       ],
       "payroll": [
-        "./dist/payroll"
+        "./src/libs/modules/payroll/src"
       ],
       "performance": [
-        "./dist/performance"
-      ],
-      "pipes": [
-        "./dist/pipes"
-      ],
-      "quick-actions": [
-        "./dist/quick-actions"
+        "./src/libs/modules/performance/src"
       ],
       "recruitment": [
-        "./dist/recruitment"
+        "./src/libs/modules/recruitment/src"
       ],
       "reports": [
-        "./dist/reports"
+        "./src/libs/modules/reports/src"
       ],
       "settings": [
-        "./dist/settings"
+        "./src/libs/modules/settings/src"
       ],
-      "sidebar": [
-        "./dist/sidebar"
+      "app-shell": [
+        "./src/libs/base/app-shell/src"
       ],
-      "super-admin": [
-        "./dist/super-admin"
+      "branding": [
+        "./src/libs/base/branding/src"
+      ],
+      "feature-flags": [
+        "./src/libs/base/feature-flags/src"
+      ],
+      "navigation": [
+        "./src/libs/base/navigation/src"
       ],
       "organization-config": [
-        "./dist/organization-config"
+        "./src/libs/base/organization-config/src"
       ],
       "organization-context": [
-        "./dist/organization-context"
+        "./src/libs/base/organization-context/src"
       ],
-      "theme-tokens": [
-        "./dist/theme-tokens"
+      "breadcrumbs": [
+        "./src/libs/shell/breadcrumbs/src"
+      ],
+      "header": [
+        "./src/libs/shell/header/src"
+      ],
+      "layout": [
+        "./src/libs/shell/layout/src"
+      ],
+      "quick-actions": [
+        "./src/libs/shell/quick-actions/src"
+      ],
+      "sidebar": [
+        "./src/libs/shell/sidebar/src"
       ],
       "ui": [
-        "./dist/ui"
+        "./src/libs/shared/ui/src"
       ],
-      "utils": [
-        "./dist/utils"
+      "common": [
+        "./src/libs/shared/common/src"
+      ],
+      "api": [
+        "./src/libs/shared/api/src"
+      ],
+      "directives": [
+        "./src/libs/shared/directives/src"
+      ],
+      "forms": [
+        "./src/libs/shared/forms/src"
+      ],
+      "pipes": [
+        "./src/libs/shared/pipes/src"
+      ],
+      "theme-tokens": [
+        "./src/libs/shared/theme-tokens/src"
+      ],
+      "auth": [
+        "./src/libs/shared/auth/src"
       ]
     },
     "noPropertyAccessFromIndexSignature": true,

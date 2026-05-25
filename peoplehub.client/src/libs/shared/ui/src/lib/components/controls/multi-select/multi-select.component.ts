@@ -24,7 +24,6 @@ import {
 import type { DropdownItem } from '../../../models/component-models/dropdown-item.model';
 import { DropdownOption } from '../../../models/value-configs/dropdown-option.model';
 import { IconComponent } from '../../primitives/icon/icon.component';
-import { SearchComponent } from '../search/search.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,7 +36,6 @@ import { SearchComponent } from '../search/search.component';
     IconComponent,
     FormsModule,
     ReactiveFormsModule,
-    SearchComponent,
   ],
   providers: [
     {

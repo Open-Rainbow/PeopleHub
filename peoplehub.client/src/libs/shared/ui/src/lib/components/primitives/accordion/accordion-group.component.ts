@@ -5,7 +5,7 @@ import { AccordionGroupVariant } from './accordion.types';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Default,
   selector: 'ui-accordion-group',
-  template: '<ng-content></ng-content>',
+  templateUrl: './accordion-group.component.html',
 })
 export class AccordionGroupComponent {
   @Input() variant: AccordionGroupVariant = 'flush';

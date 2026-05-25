@@ -5,12 +5,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'utils-root',
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      utils works!
-    </p>
-  `,
-  styles: ``
+  templateUrl: './utils.component.html',
+  styleUrls: ['./utils.component.scss'],
 })
 export class UtilsComponent {
 

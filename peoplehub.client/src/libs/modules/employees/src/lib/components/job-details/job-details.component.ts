@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DropdownComponent, TextBoxComponent } from 'ui';
 import { DropdownConfigService, CommonService } from 'common';
 import { DropdownOption } from 'common';
-import { StepperService } from '../../services/stepper.service';
-import { EmployeeDataService } from '../../services/employee-data.service';
+import { StepperService } from '../../services/stepper/stepper.service';
+import { EmployeeDataService } from '../../services/employee-data/employee-data.service';
 import { jobDetailsForm } from '../../config/form-configs/job-details.config';
 
 @Component({
@@ -55,3 +55,5 @@ export class JobDetailsComponent implements OnInit {
     });
   }
 }
+
+

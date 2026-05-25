@@ -64,4 +64,62 @@ export const dropdownConfig: Record<string, DropdownOption[]> = {
     const year = new Date().getFullYear() - i;
     return { value: year, name: String(year) };
   }),
+  leaveType: [
+    { value: 1, name: 'Casual Leave' },
+    { value: 2, name: 'Earned Leave' },
+    { value: 3, name: 'Maternity Leave' },
+    { value: 4, name: 'Paternity Leave' },
+    { value: 5, name: 'Comp Off' },
+    { value: 6, name: 'Unpaid Leave' },
+    { value: 7, name: 'Annual Leave' },
+    { value: 8, name: 'Sick Leave' },
+    { value: 9, name: 'Sabbatical' },
+    { value: 10, name: 'Study Leave' },
+  ],
+  severity: [
+    { value: 1, name: 'High' },
+    { value: 2, name: 'Medium' },
+    { value: 3, name: 'Low' },
+  ],
+  category: [
+    { value: 1, name: 'Developer' },
+    { value: 2, name: 'Sales' },
+    { value: 3, name: 'Database' },
+  ],
+  targetAudience: [
+    { value: 1, name: 'All Employees' },
+    { value: 2, name: 'Manager' },
+    { value: 3, name: 'Team Lead' },
+    { value: 4, name: 'Admin' },
+  ],
+  yesNo: [
+    { value: 1, name: 'Yes' },
+    { value: 2, name: 'No' },
+  ],
+  accrualMethod: [
+    { value: 1, name: 'Monthly' },
+    { value: 2, name: 'Yearly' },
+  ],
+  expiryPeriod: [
+    { value: 1, name: '30 Days' },
+    { value: 2, name: '60 Days' },
+  ],
+  approvalLevel: [
+    { value: 1, name: 'Manager' },
+    { value: 2, name: 'HR' },
+  ],
+  calendarMonth: [
+    { value: 1, name: 'Jan' },
+    { value: 2, name: 'Feb' },
+    { value: 3, name: 'Mar' },
+    { value: 4, name: 'Apr' },
+    { value: 5, name: 'May' },
+    { value: 6, name: 'Jun' },
+    { value: 7, name: 'Jul' },
+    { value: 8, name: 'Aug' },
+    { value: 9, name: 'Sep' },
+    { value: 10, name: 'Oct' },
+    { value: 11, name: 'Nov' },
+    { value: 12, name: 'Dec' },
+  ],
 };

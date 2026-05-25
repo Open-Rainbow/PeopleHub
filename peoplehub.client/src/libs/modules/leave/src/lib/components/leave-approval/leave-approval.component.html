@@ -1,0 +1,37 @@
+    <div class="w-full bg-white border border-gray-200 rounded-xl p-5">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Leave Approval</h2>
+        <ui-text-button text="Download" variant="secondary"></ui-text-button>
+      </div>
+      <div class="overflow-auto">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="text-left border-b">
+              <th class="py-2">Employee</th>
+              <th class="py-2">Leave Type</th>
+              <th class="py-2">Duration</th>
+              <th class="py-2">Reason</th>
+              <th class="py-2">Status</th>
+              <th class="py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of rows; track item.id) {
+              <tr class="border-b last:border-0">
+                <td class="py-3">{{ item.employee }}</td>
+                <td>{{ item.type }}</td>
+                <td>{{ item.from }} - {{ item.to }}</td>
+                <td>{{ item.reason }}</td>
+                <td>
+                  <ui-chip [text]="item.status" [bgColor]="item.status === 'Approved' ? '#dcfce7' : '#fef3c7'" [color]="item.status === 'Approved' ? '#166534' : '#92400e'"></ui-chip>
+                </td>
+                <td class="flex gap-2 py-2">
+                  <ui-text-button text="Approve" size="small"></ui-text-button>
+                  <ui-text-button text="Reject" size="small" variant="secondary"></ui-text-button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
