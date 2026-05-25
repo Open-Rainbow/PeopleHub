@@ -69,13 +69,13 @@
       ></ui-dropdown>
     }
 
-    @if (!formConfig.paylevel.isHide) {
+    @if (!formConfig.payLevel.isHide) {
       <ui-dropdown
-        [id]="formConfig.paylevel.id"
+        [id]="formConfig.payLevel.id"
         [parentFormGroup]="jobDetails"
-        [label]="formConfig.paylevel.label!"
-        [placeholder]="formConfig.paylevel.placeholder ?? ''"
-        [isRequired]="formConfig.paylevel.isRequired!"
+        [label]="formConfig.payLevel.label!"
+        [placeholder]="formConfig.payLevel.placeholder ?? ''"
+        [isRequired]="formConfig.payLevel.isRequired!"
         [options]="payLevelOptions$ | async"
       ></ui-dropdown>
     }

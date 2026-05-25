@@ -6,9 +6,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class InitialsPipe implements PipeTransform {
 
-transform(fullName: string | null | undefined): string {
-    if (!fullName) return '';
-    const words = fullName.trim().split(/\s+/);
+transform(firstName: string | null | undefined): string {
+    if (!firstName) return '';
+    const words = firstName.trim().split(/\s+/);
 
     if (words.length === 0) return '';
 

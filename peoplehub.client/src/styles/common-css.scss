@@ -1,6 +1,6 @@
 .inputBoxHeight {
   height: 36px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border);
   width: 100%;
   border-radius: 6px;
   box-shadow: none;
@@ -31,7 +31,7 @@ input.save-state {
 
 
 input:focus {
-  border-color: #2563eb !important;
+  border-color: var(--color-primary) !important;
   border-width: 1px !important;
   box-shadow: none;
 }
@@ -39,24 +39,24 @@ input:focus {
 
 
 input:focus~label {
-  color: #2563eb !important;
+  color: var(--color-primary) !important;
 }
 
 input.error {
-  border-color: #dc2626 !important;
+  border-color: var(--color-danger) !important;
 }
 
 input.error~label {
-  color: #dc2626 !important;
+  color: var(--color-danger) !important;
 }
 
 input.error:focus {
-  border-color: #dc2626 !important;
+  border-color: var(--color-danger) !important;
 }
 
 
 input.error:focus~label {
-  color: #dc2626 !important;
+  color: var(--color-danger) !important;
 }
 
 
@@ -86,39 +86,39 @@ label {
 
 
 .required-star {
-  color: #dc2626;
+  color: var(--color-danger);
   font-weight: 600;
 }
 
 
 textarea.error {
-  border: 1px solid #dc2626 !important;
+  border: 1px solid var(--color-danger) !important;
   box-shadow: none !important;
   background-color: rgba(220, 38, 38, 0.02) !important;
 }
 
 textarea.error~label {
-  color: #dc2626 !important;
+  color: var(--color-danger) !important;
 }
 
 textarea.error:focus {
-  border-color: #dc2626 !important;
+  border-color: var(--color-danger) !important;
 }
 
 textarea.error:focus~label {
-  color: #dc2626 !important;
+  color: var(--color-danger) !important;
 }
 
 textarea:focus {
   outline: none;
-  border-color: #2563eb !important;
+  border-color: var(--color-primary) !important;
   
   box-shadow: none;
-  background-color: #fff !important;
+  background-color: var(--color-surface) !important;
 }
 
 textarea:focus~label {
-  color: #2563eb !important;
+  color: var(--color-primary) !important;
 }
 
 
@@ -137,7 +137,7 @@ textarea.save-state:focus~label {
 
 
 .error-label {
-  color: #e11d48 !important;
+  color: var(--color-danger) !important;
 }
 
 .top-3 {
@@ -147,7 +147,7 @@ textarea.save-state:focus~label {
 
 
 .custom-dropdown.active-border {
-  border-color: #2563eb !important;
+  border-color: var(--color-primary) !important;
 }
 
 .custom-dropdown-selected {
@@ -160,19 +160,19 @@ textarea.save-state:focus~label {
   font-weight: 500;
   min-height: 36px;
 
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-border);
 
 
 }
 
 
 .placeholder {
-  color: #94a3b8;
+  color: var(--color-text-muted);
 }
 
 
 .custom-dropdown.active-border .custom-dropdown-selected {
-  border-color: #2563eb !important;
+  border-color: var(--color-primary) !important;
 }
 
 
@@ -182,8 +182,8 @@ textarea.save-state:focus~label {
   top: 100%;
   left: 0;
   right: 0;
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   list-style: none;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -203,7 +203,7 @@ textarea.save-state:focus~label {
   top: 50% !important;
   display: inline-block;
   transform: translateY(-50%) scale(2.0) rotate(0deg);
-  color: #888;
+  color: var(--color-text-secondary);
   pointer-events: none;
   transition: transform 0.3s ease, color 0.2s ease;
   pointer-events: none;
@@ -217,14 +217,14 @@ textarea.save-state:focus~label {
 }
 
 .dropdown-toggle:focus+.calendar-icon {
-  color: #007BFF;
+  color: var(--color-primary);
 }
 
 .dropdown-toggle:focus {
   outline: none;
-  border-color: #007BFF;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-  background-color: #f0f8ff;
+  background-color: var(--color-surface-muted);
   transition: all 0.3s ease;
 }
 
@@ -236,7 +236,7 @@ textarea.save-state:focus~label {
   width: 40px;
   
   height: 4px;
-  background-color: #9ca3af;
+  background-color: var(--color-text-muted);
   border: none;
   border-radius: 4px;
   
@@ -247,17 +247,17 @@ textarea.save-state:focus~label {
 
 .resize-hr:hover {
   width: 30px;
-  background-color: #6b7280;
+  background-color: var(--color-text-secondary);
 }
 
 
 .dropdown-toggle:focus+.calendar-icon {
-  color: #007BFF;
+  color: var(--color-primary);
 }
 
 .resize-hr.dragging {
   width: 30px;
-  background-color: #4b5563;
+  background-color: var(--color-text-secondary);
 }
 
 
@@ -269,13 +269,13 @@ textarea.save-state:focus~label {
 .label-name {
   display: block;
   font-weight: 500;
-  color: #1f2937;
+  color: var(--color-text-primary);
   margin-bottom: 6px;
   font-size: 14px;
 }
 
 label {
-  color: #1f2937 !important;
+  color: var(--color-text-primary) !important;
   display: block;
 }
 
@@ -293,9 +293,9 @@ label {
   justify-content: space-between;
   align-items: center;
   padding: 10px 14px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  background: #fff;
+  background: var(--color-surface);
   cursor: pointer;
   width: 100%;
   box-sizing: border-box;
@@ -309,7 +309,7 @@ span.absolute {
 }
 
 .custom-dropdown-selected.placeholder {
-  color: #9ca3af;
+  color: var(--color-text-muted);
 }
 
 span.required {
@@ -330,12 +330,12 @@ span.required {
   padding: 8px 12px;
   margin: 3px 5px;
   font-size: 14px;
-  color: #333;
+  color: var(--color-text-primary);
   
 }
 
 .custom-dropdown-list li:hover {
-  background-color: #c7cacf;
+  background-color: var(--color-surface-muted);
   font-weight: bold;
   
 }
@@ -348,7 +348,7 @@ span.required {
 
 
 .custom-dropdown-list li.selected {
-  background-color: #c7cacf;
+  background-color: var(--color-surface-muted);
 }
 
 .custom-dropdown-list.open-up {
@@ -359,12 +359,12 @@ span.required {
 }
 
 .dropdown-toggle:checked+.custom-dropdown-selected {
-  border: 1px solid #007BFF !important;
+  border: 1px solid var(--color-primary) !important;
 
 }
 
 .dropdown-toggle:checked+.custom-dropdown-selected .calendar-icon {
-  color: #007BFF;
+  color: var(--color-primary);
 }
 
 
@@ -376,7 +376,7 @@ span.required {
 
 
 .dob-input {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   padding: 12px;
   font-size: 14px;
@@ -387,22 +387,22 @@ span.required {
 
 .dob-input:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: var(--color-primary-soft);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .error {
-  border: 1px solid #dc2626 !important;
+  border: 1px solid var(--color-danger) !important;
   box-shadow: none !important;
   background-color: rgba(220, 38, 38, 0.02) !important;
-  color: #dc2626 !important;
+  color: var(--color-danger) !important;
 }
 
 .error input,
 .error textarea,
 .error .dob-input,
 .error .custom-dropdown-selected {
-  border-color: #dc2626 !important;
+  border-color: var(--color-danger) !important;
   background-color: rgba(220, 38, 38, 0.02) !important;
   box-shadow: none !important;
   color: black !important;
@@ -411,20 +411,20 @@ span.required {
 
 
 .dob-input.error {
-  border-color: #dc2626 !important;
+  border-color: var(--color-danger) !important;
   background-color: transparent !important;
-  color: #dc2626 !important;
+  color: var(--color-danger) !important;
 }
 
 
 
 .container.active-border .dob-label {
-  color: #2563eb !important;
+  color: var(--color-primary) !important;
   
 }
 
 .container .dob-label.invalid-label {
-  color: #dc2626;
+  color: var(--color-danger);
 }
 
 
@@ -442,18 +442,18 @@ span.required {
 .dob-input:not(:placeholder-shown) + .dob-label {
   top: 0;
   transform: translateY(-50%) scale(0.85);
-  color: #2563eb;
+  color: var(--color-primary);
   transition: all 0.25s ease;
 }
 
 .dob-input:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: var(--color-primary-soft);
   background: none !important;
   box-shadow: none !important;
 }
 .dob-input:not(:placeholder-shown) {
-  background: #fff !important;
+  background: var(--color-surface) !important;
 }
 
 .relative,
@@ -461,7 +461,7 @@ span.required {
 .container,
 .custom-dropdown {
   position: relative;
-  --input-bg: #fff;
+  --input-bg: var(--color-surface);
 }
 .relative label,
 .form-group label,
@@ -504,7 +504,7 @@ textarea:not(:placeholder-shown) ~ label::before {
 }
 
 .dob-input[value]:not([value=""]) {
-  background: #fff !important;
+  background: var(--color-surface) !important;
 }
 .dob-input:focus + .dob-label::before {
   opacity: 1;
@@ -517,7 +517,7 @@ textarea:not(:placeholder-shown) ~ label::before {
   right: 0;
   top: 50%;
   height: 2px;
-  background: #fff;
+  background: var(--color-surface);
   transform: translateY(-50%);
   z-index: -1;
 }
@@ -531,7 +531,7 @@ textarea:not(:placeholder-shown) ~ label::before {
   right: -6px;
   top: 50%;
   height: 2px;
-  background: #fff;     
+  background: var(--color-surface);     
   transform: translateY(-50%);
   z-index: -1;
   opacity: 0;
@@ -548,7 +548,7 @@ textarea:not(:placeholder-shown) ~ label::before {
   opacity: 1;
 }
 .custom-dropdown.active-border > span {
-  color: #2563eb;
+  color: var(--color-primary);
 
 }
 body,

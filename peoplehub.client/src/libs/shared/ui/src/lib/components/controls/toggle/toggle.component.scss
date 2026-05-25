@@ -1,7 +1,7 @@
 :host {
   display: inline-block;
   --toggle-active-color: #4caf50;
-  --toggle-label-color: #333;
+  --toggle-label-color: var(--color-text-primary);
 }
 
 .toggle-container {
@@ -22,7 +22,7 @@
 }
 
 .required-asterisk {
-  color: #dc2626;
+  color: var(--color-danger);
   margin-left: 0.125rem;
 }
 
@@ -69,7 +69,7 @@
   width: var(--toggle-width);
   height: var(--toggle-height);
   border-radius: 9999px;
-  background: #d1d5db;
+  background: var(--color-border);
   transition:
     background-color 0.2s,
     box-shadow 0.2s;
@@ -82,7 +82,7 @@
   width: var(--toggle-knob-size);
   height: var(--toggle-knob-size);
   border-radius: 9999px;
-  background: #111827;
+  background: var(--color-text-primary);
   transform: translateY(-50%);
   transition:
     transform 0.2s,

@@ -101,24 +101,24 @@
 
   // Default Variant
   &--default {
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--color-border);
 
     .ui-accordion__header {
-      background-color: #f5f5f5;
-      color: #333;
+      background-color: var(--color-surface-muted);
+      color: var(--color-text-primary);
 
       &:hover {
-        background-color: #ececec;
+        background-color: var(--color-surface-muted);
       }
 
       &--active {
-        background-color: #f0f0f0;
+        background-color: var(--color-surface-muted);
       }
     }
 
     .ui-accordion__body {
-      background-color: #ffffff;
-      border-top: 1px solid #e0e0e0;
+      background-color: var(--color-surface);
+      border-top: 1px solid var(--color-border);
     }
   }
 
@@ -129,7 +129,7 @@
 
     .ui-accordion__header {
       background: linear-gradient(135deg, #eef3fe 0%, #f0f5ff 100%);
-      color: #333;
+      color: var(--color-text-primary);
       border-bottom: 1px solid #e0e7ff;
 
       &:hover {
@@ -161,7 +161,7 @@
     }
 
     .ui-accordion__body {
-      background-color: #ffffff;
+      background-color: var(--color-surface);
       border-top: none;
     }
   }
@@ -173,7 +173,7 @@
 
     .ui-accordion__header {
       background: linear-gradient(135deg, #e8faf4 0%, #f0fcf8 100%);
-      color: #333;
+      color: var(--color-text-primary);
       border-bottom: 1px solid #d4f5e8;
 
       &:hover {
@@ -205,7 +205,7 @@
     }
 
     .ui-accordion__body {
-      background-color: #ffffff;
+      background-color: var(--color-surface);
       border-top: none;
     }
   }
@@ -217,8 +217,8 @@
 
     .ui-accordion__header {
       background-color: transparent;
-      color: #333;
-      border-bottom: 2px solid #f0f0f0;
+      color: var(--color-text-primary);
+      border-bottom: 2px solid var(--color-surface-muted);
       padding: 16px 0;
       border-radius: 0;
 
@@ -259,15 +259,15 @@
 
   // With Icon Variant
   &--with-icon {
-    border: 1px solid #e8e8e8;
+    border: 1px solid var(--color-border);
     border-radius: 6px;
 
     .ui-accordion__header {
-      background-color: #fafafa;
-      color: #333;
+      background-color: var(--color-surface-elevated);
+      color: var(--color-text-primary);
 
       &:hover {
-        background-color: #f0f0f0;
+        background-color: var(--color-surface-muted);
 
         .ui-accordion__icon {
           color: #3f4af8;
@@ -294,8 +294,8 @@
     }
 
     .ui-accordion__body {
-      background-color: #ffffff;
-      border-top: 1px solid #e8e8e8;
+      background-color: var(--color-surface);
+      border-top: 1px solid var(--color-border);
     }
   }
 
@@ -306,10 +306,10 @@
 
       .ui-accordion__header {
         background-color: #2a2a2a;
-        color: #e0e0e0;
+        color: var(--color-border);
 
         &:hover {
-          background-color: #333333;
+          background-color: var(--color-text-primary);
         }
 
         &--active {
@@ -325,7 +325,7 @@
 
     &--flush {
       .ui-accordion__header {
-        color: #e0e0e0;
+        color: var(--color-border);
         border-bottom-color: #404040;
 
         &--active {

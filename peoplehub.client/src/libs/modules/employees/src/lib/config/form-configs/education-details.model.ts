@@ -3,7 +3,7 @@
 export interface IEducationDetailsFormFields {
     higherQualification: IFormFieldConfig;
     specialization: IFormFieldConfig;
-    yearofPassing: IFormFieldConfig;
+    yearOfPassing: IFormFieldConfig;
     universityName: IFormFieldConfig;
     certifications: IFormFieldConfig;
 }

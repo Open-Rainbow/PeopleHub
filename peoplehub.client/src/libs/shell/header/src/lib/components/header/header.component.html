@@ -3,17 +3,19 @@
     <button
       class="hamburger-btn w-[36px] h-[36px] bg-[var(--bg-color)] rounded-[8px] flex items-center justify-center cursor-pointer hover:bg-[#f3f6fb]"
       (click)="toggleSidebar()">
-      <iconify-icon [icon]="isUserCollapsed ? 'mdi:close' : 'mdi:menu'" class="text-[20px]"></iconify-icon>
+      <iconify-icon [icon]="isUserCollapsed() ? 'mdi:close' : 'mdi:menu'" class="text-[20px]"></iconify-icon>
     </button>
   </div>
 
   <div class="design_3 flex items-center gap-[12px]">
     <div class="header-actions flex items-center relative">
-      <div
-        class="brightness_icon w-[36px] h-[36px] flex items-center justify-center rounded-[8px] cursor-pointer hover:bg-[#F3F3F3] hover:outline hover:outline-2 hover:outline-[#E1E1E1]"
+      <button
+        type="button"
+        class="brightness_icon theme-toggle-btn w-[36px] h-[36px] flex items-center justify-center rounded-[8px] cursor-pointer"
+        aria-label="Toggle theme"
         (click)="toggleTheme()">
-        <iconify-icon [icon]="currentTheme === 'dark' ? 'mdi:moon-waning-crescent' : 'mdi:brightness-7'" class="text-[20px]"></iconify-icon>
-      </div>
+        <iconify-icon [icon]="currentTheme() === 'dark' ? 'mdi:moon-waning-crescent' : 'mdi:brightness-7'" class="text-[20px]"></iconify-icon>
+      </button>
 
       <span class="vertical-divider w-[1px] h-[28px] bg-[#97a1c0] mx-[12px]"></span>
 
@@ -29,36 +31,35 @@
 
     <div
       class="admin_details flex items-center leading-[1.2] cursor-pointer px-[8px] py-[4px] rounded-[6px] hover:bg-[#f3f4f6]"
-      [class.active]="dropdownOpen"
+      [class.active]="dropdownOpen()"
       (click)="toggleDropdown($event)">
       <div class="admin_details_text flex flex-col text-right leading-[1.2] px-[8px] py-[4px]">
-        <div class="admin_name text-[13px] font-[500] text-gray-900">{{ userProfile.userName }}</div>
-        <div class="admin_role text-[10px] text-gray-500">{{ userProfile.userRole }}</div>
+        <div class="admin_name text-[13px] font-[500] text-gray-900">{{ userProfile().userName }}</div>
+        <div class="admin_role text-[10px] text-gray-500">{{ userProfile().userRole }}</div>
       </div>
 
       <div class="design_2 flex items-center justify-center bg-[#2563eb] text-white h-[31px] w-[31px] rounded-full text-[13px] font-[500]">
-        @if (!userProfile.profileUrl) {
-          {{ userProfile.userName | initials }}
+        @if (!userProfile().profileUrl) {
+          {{ userProfile().userName | initials }}
         } @else {
-          <img [src]="userProfile.profileUrl" alt="Profile image" />
+          <img [src]="userProfile().profileUrl" alt="Profile image" />
         }
       </div>
     </div>
 
-    @if (dropdownOpen) {
-      <div class="dropdown-menu absolute top-[66px] right-[16px] w-[180px] bg-white border border-gray-200 rounded-[10px] shadow-md p-[6px] z-[1000]">
-        <div class="profile-info flex text-left pb-[8px]">
+    @if (dropdownOpen()) {
+      <div class="dropdown-menu absolute top-[66px] right-[16px] w-[180px] bg-white border border-gray-200 rounded-[10px] shadow-md p-[6px] z-[1000] text-left">
+        <div class="profile-info flex flex-col text-left pb-[8px]">
           <div>
-            <span class="profile-name block text-[#0c24c3] font-bold">{{ userProfile.userName }}</span>
-            <span class="profile-email block text-[14px] text-[#97a1c0]">{{ userProfile.userId }}</span>
+            <span class="profile-name block text-[#0c24c3] font-bold">{{ userProfile().userName }}</span>
+            <span class="profile-email block text-[14px] text-[#97a1c0]">{{ userProfile().userId }}</span>
           </div>
         </div>
 
         <hr class="horizontal-line w-full h-[0.5px] bg-[#97a1c0] border-none" />
 
         <div
-          class="dropdown-item flex items-center text-[14px] rounded-[8px] px-[4px] py-[2px] my-[3px] cursor-pointer hover:bg-[#e8ebf1]"
-          [style.color]="'#97a1c0'"
+          class="dropdown-item profile-action flex items-center justify-start text-[14px] rounded-[8px] px-[4px] py-[2px] my-[3px] cursor-pointer hover:bg-[#e8ebf1]"
           (click)="profileOpen()">
           <iconify-icon icon="mdi:account" class="mr-[5px]"></iconify-icon>
           <span>View Profile</span>
@@ -67,8 +68,7 @@
         <hr class="horizontal-line w-full h-[0.5px] bg-[#97a1c0] border-none" />
 
         <div
-          class="dropdown-item flex items-center text-[14px] rounded-[8px] px-[4px] py-[2px] my-[3px] cursor-pointer hover:bg-[#e8ebf1]"
-          [style.color]="'#ff4103'"
+          class="dropdown-item logout-action flex items-center justify-start text-[14px] rounded-[8px] px-[4px] py-[2px] my-[3px] cursor-pointer hover:bg-[#e8ebf1]"
           (click)="logOut()">
           <iconify-icon icon="mdi:logout" class="mr-[5px]"></iconify-icon>
           <span>Logout</span>

@@ -1,6 +1,6 @@
 .ui-count-widget {
-	--cw-border-color: #d1d5db;
-	--cw-background-color: #ffffff;
+	--cw-border-color: var(--color-border);
+	--cw-background-color: var(--color-surface);
 
 	width: 100%;
 	height: 100%;

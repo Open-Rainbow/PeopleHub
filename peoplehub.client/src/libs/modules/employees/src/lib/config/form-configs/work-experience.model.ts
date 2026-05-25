@@ -1,10 +1,10 @@
 ﻿import { IFormFieldConfig } from 'common';
 
 export interface IWorkExperienceFormFields {
-    previousorganisation: IFormFieldConfig;
+    previousOrganization: IFormFieldConfig;
     organizationLocation: IFormFieldConfig;
     yearOfExperience: IFormFieldConfig;
-    previousdesignation: IFormFieldConfig;
+    previousDesignation: IFormFieldConfig;
     
 }
 

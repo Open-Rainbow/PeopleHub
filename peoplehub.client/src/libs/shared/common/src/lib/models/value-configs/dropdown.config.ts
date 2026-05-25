@@ -14,6 +14,20 @@ export const dropdownConfig: Record<string, DropdownOption[]> = {
     { value: 3, name: 'Non-binary' },
     { value: 4, name: 'Prefer not to say' },
   ],
+  title: [
+    { value: 1, name: 'Mr.' },
+    { value: 2, name: 'Ms.' },
+  ],
+  bloodGroup: [
+    { value: 1, name: 'O+' },
+    { value: 2, name: 'O-' },
+    { value: 3, name: 'A+' },
+    { value: 4, name: 'A-' },
+    { value: 5, name: 'B+' },
+    { value: 6, name: 'B-' },
+    { value: 7, name: 'AB+' },
+    { value: 8, name: 'AB-' },
+  ],
   maritalStatus: [
     { value: 1, name: 'Single' },
     { value: 2, name: 'Married' },

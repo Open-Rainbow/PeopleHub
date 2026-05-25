@@ -4,8 +4,8 @@ export interface IDocumentsUploadFormFields {
     employeePhoto: IFormFieldConfig;
     employeePanNumber: IFormFieldConfig;
     employeePan: IFormFieldConfig;
-    employeeAadharNumber: IFormFieldConfig;
-    employeeAadhar: IFormFieldConfig;
+    employeeAadhaarNumber: IFormFieldConfig;
+    employeeAadhaar: IFormFieldConfig;
     employeePassportNumber: IFormFieldConfig;
     employeePassport: IFormFieldConfig;
     last6monthsBankStatements: IFormFieldConfig;

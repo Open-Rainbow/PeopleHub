@@ -45,16 +45,16 @@
   box-sizing: border-box;
 
   &.border-gray {
-    border-color: #d1d5db;
+    border-color: var(--color-border);
   }
 
   &.border-blue {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 1px #2563eb;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
   }
 
   &.border-red {
-    border-color: #dc2626;
+    border-color: var(--color-danger);
   }
 }
 
@@ -68,12 +68,12 @@
   padding-top: 1.5rem;
   font-size: 0.875rem;
   font-family: inherit;
-  color: #1f2937;
+  color: var(--color-text-primary);
   resize: both;
   box-sizing: border-box;
 
   &::placeholder {
-    color: #9ca3af;
+    color: var(--color-text-muted);
   }
 
   &:focus {
@@ -85,7 +85,7 @@
   position: absolute;
   left: 0.75rem;
   padding: 0 0.25rem;
-  background-color: var(--textarea-label-bg, white);
+  background-color: var(--textarea-label-bg, var(--input-bg, var(--color-surface)));
   font-weight: 500;
   white-space: nowrap;
   pointer-events: none;
@@ -97,15 +97,15 @@
     font-size: 0.75rem;
 
     &.blue {
-      color: #2563eb;
+      color: var(--color-primary);
     }
 
     &.gray {
-      color: #6b7280;
+      color: var(--color-text-secondary);
     }
 
     &.red {
-      color: #dc2626;
+      color: var(--color-danger);
     }
   }
 
@@ -114,28 +114,28 @@
     font-size: 0.875rem;
 
     &.blue {
-      color: #2563eb;
+      color: var(--color-primary);
     }
 
     &.gray {
-      color: #6b7280;
+      color: var(--color-text-secondary);
     }
 
     &.red {
-      color: #dc2626;
+      color: var(--color-danger);
     }
   }
 
   .required-asterisk {
-    color: #dc2626;
+    color: var(--color-danger);
   }
 }
 
 .char-count {
   margin-top: 0.5rem;
   font-size: 0.75rem;
-  font-weight: 500;
-  color: #6b7280;
+  font-weight: 400;
+  color: var(--color-text-secondary);
   transition: opacity 0.2s;
   opacity: 0;
 
@@ -144,7 +144,7 @@
   }
 
   &.char-count-invalid {
-    color: #dc2626;
+    color: var(--color-danger);
   }
 }
 
@@ -152,5 +152,5 @@
   margin-top: 0.5rem;
   font-size: 0.75rem;
   font-weight: 500;
-  color: #dc2626;
+  color: var(--color-danger);
 }

@@ -29,22 +29,22 @@
       ></ui-file-upload>
     }
 
-    @if (!formConfig.employeeAadharNumber.isHide) {
+    @if (!formConfig.employeeAadhaarNumber.isHide) {
       <ui-text-box
-        [id]="formConfig.employeeAadharNumber.id"
+        [id]="formConfig.employeeAadhaarNumber.id"
         [parentFormGroup]="documentsUpload"
-        [label]="formConfig.employeeAadharNumber.label!"
-        [placeholder]="formConfig.employeeAadharNumber.placeholder ?? ''"
-        [isRequired]="formConfig.employeeAadharNumber.isRequired!"
+        [label]="formConfig.employeeAadhaarNumber.label!"
+        [placeholder]="formConfig.employeeAadhaarNumber.placeholder ?? ''"
+        [isRequired]="formConfig.employeeAadhaarNumber.isRequired!"
       ></ui-text-box>
     }
 
-    @if (!formConfig.employeeAadhar.isHide) {
+    @if (!formConfig.employeeAadhaar.isHide) {
       <ui-file-upload
-        [id]="formConfig.employeeAadhar.id"
+        [id]="formConfig.employeeAadhaar.id"
         [parentFormGroup]="documentsUpload"
-        [label]="formConfig.employeeAadhar.label!"
-        [isRequired]="formConfig.employeeAadhar.isRequired!"
+        [label]="formConfig.employeeAadhaar.label!"
+        [isRequired]="formConfig.employeeAadhaar.isRequired!"
       ></ui-file-upload>
     }
 

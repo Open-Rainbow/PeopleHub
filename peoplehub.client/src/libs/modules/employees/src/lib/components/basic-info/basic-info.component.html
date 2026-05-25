@@ -1,16 +1,44 @@
-<div class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md">
+<div
+  class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md"
+>
   <div class="grid grid-cols-3 gap-[10px]">
+    @if (!formConfig.title.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.title.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.title.label!"
+          [placeholder]="formConfig.title.placeholder ?? ''"
+          [isRequired]="formConfig.title.isRequired!"
+          [options]="titleOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
 
-    @if (!formConfig.fullName.isHide) {
+    @if (!formConfig.firstName.isHide) {
       <div class="form-group">
         <ui-text-box
-          [id]="formConfig.fullName.id"
+          [id]="formConfig.firstName.id"
           [parentFormGroup]="basicInfo"
-          [label]="formConfig.fullName.label!"
-          [placeholder]="formConfig.fullName.placeholder ?? ''"
-          [minLength]="formConfig.fullName.minLength"
-          [maxLength]="formConfig.fullName.maxLength"
-          [isRequired]="formConfig.fullName.isRequired!"
+          [label]="formConfig.firstName.label!"
+          [placeholder]="formConfig.firstName.placeholder ?? ''"
+          [minLength]="formConfig.firstName.minLength"
+          [maxLength]="formConfig.firstName.maxLength"
+          [isRequired]="formConfig.firstName.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.lastName.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.lastName.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.lastName.label!"
+          [placeholder]="formConfig.lastName.placeholder ?? ''"
+          [minLength]="formConfig.lastName.minLength"
+          [maxLength]="formConfig.lastName.maxLength"
+          [isRequired]="formConfig.lastName.isRequired!"
         ></ui-text-box>
       </div>
     }
@@ -29,24 +57,24 @@
       </div>
     }
 
-    @if (!formConfig.dateofBirth.isHide) {
+    @if (!formConfig.dateOfBirth.isHide) {
       <div class="form-group">
         <ui-calendar
-          [id]="formConfig.dateofBirth.id"
+          [id]="formConfig.dateOfBirth.id"
           [parentFormGroup]="basicInfo"
-          [label]="formConfig.dateofBirth.label!"
-          [isRequired]="formConfig.dateofBirth.isRequired!"
+          [label]="formConfig.dateOfBirth.label!"
+          [isRequired]="formConfig.dateOfBirth.isRequired!"
         ></ui-calendar>
       </div>
     }
 
-    @if (!formConfig.dateofJoining.isHide) {
+    @if (!formConfig.dateOfJoining.isHide) {
       <div class="form-group">
         <ui-calendar
-          [id]="formConfig.dateofJoining.id"
+          [id]="formConfig.dateOfJoining.id"
           [parentFormGroup]="basicInfo"
-          [label]="formConfig.dateofJoining.label!"
-          [isRequired]="formConfig.dateofJoining.isRequired!"
+          [label]="formConfig.dateOfJoining.label!"
+          [isRequired]="formConfig.dateOfJoining.isRequired!"
         ></ui-calendar>
       </div>
     }
@@ -77,5 +105,43 @@
       </div>
     }
 
+    @if (!formConfig.bloodGroup.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.bloodGroup.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.bloodGroup.label!"
+          [placeholder]="formConfig.bloodGroup.placeholder ?? ''"
+          [isRequired]="formConfig.bloodGroup.isRequired!"
+          [options]="bloodGroupOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.uanNumber.isHide) {
+      <div class="form-group">
+        <ui-number-box
+          [id]="formConfig.uanNumber.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.uanNumber.label!"
+          [placeholder]="formConfig.uanNumber.placeholder ?? ''"
+          [isRequired]="formConfig.uanNumber.isRequired!"
+        ></ui-number-box>
+      </div>
+    }
+
+    @if (!formConfig.pfAccNo.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.pfAccNo.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.pfAccNo.label!"
+          [placeholder]="formConfig.pfAccNo.placeholder ?? ''"
+          [minLength]="formConfig.pfAccNo.minLength"
+          [maxLength]="formConfig.pfAccNo.maxLength"
+          [isRequired]="formConfig.pfAccNo.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
   </div>
 </div>

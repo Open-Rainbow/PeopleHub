@@ -42,28 +42,28 @@ export const documentsUploadForm: IDocumentsUploadForm =
         tabIndex: 3,
         isDisable: false
     },
-    "employeeAadharNumber": {
-        id:'employeeAadharNumber',
+    "employeeAadhaarNumber": {
+        id:'employeeAadhaarNumber',
         isHide: false,
         readOnly: true,
         minLength: 0,
         maxLength: 50,
         isRequired: true,
-        label: 'Employee Aadhar Number',
+        label: 'Employee Aadhaar Number',
         defaultValue: null,
         fieldValue: null,
         tabIndex: 4,
         isDisable: false,
-        placeholder:'Enter your Aadhar number' 
+        placeholder:'Enter your Aadhaar number' 
     },
-    "employeeAadhar": {
-        id:'employeeAadhar',
+    "employeeAadhaar": {
+        id:'employeeAadhaar',
         isHide: false,
         readOnly: true,
         minLength: 0,
         maxLength: 50,
         isRequired: true,
-        label: 'Employee Aadhar',
+        label: 'Employee Aadhaar',
         defaultValue: null,
         fieldValue: null,
         tabIndex: 5,

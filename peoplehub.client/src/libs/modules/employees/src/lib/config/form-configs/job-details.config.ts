@@ -91,8 +91,8 @@ export const jobDetailsForm: IJobDetailsForm = {
     placeholder: 'Select shift'
   },
 
-  paylevel: {
-    id: 'paylevel',
+  payLevel: {
+    id: 'payLevel',
      isHide: false,
     readOnly: true,
     minLength: 1,

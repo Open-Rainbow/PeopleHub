@@ -25,13 +25,13 @@
       ></ui-text-box>
     }
 
-    @if (!formConfig.yearofPassing.isHide) {
+    @if (!formConfig.yearOfPassing.isHide) {
       <ui-dropdown
-        [id]="formConfig.yearofPassing.id"
+        [id]="formConfig.yearOfPassing.id"
         [parentFormGroup]="educationDetails"
-        [label]="formConfig.yearofPassing.label!"
-        [placeholder]="formConfig.yearofPassing.placeholder ?? ''"
-        [isRequired]="formConfig.yearofPassing.isRequired!"
+        [label]="formConfig.yearOfPassing.label!"
+        [placeholder]="formConfig.yearOfPassing.placeholder ?? ''"
+        [isRequired]="formConfig.yearOfPassing.isRequired!"
         [options]="yearOfPassingOptions$ | async"
       ></ui-dropdown>
     }

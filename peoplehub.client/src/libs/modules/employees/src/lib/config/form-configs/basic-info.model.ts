@@ -1,14 +1,17 @@
 ﻿import { IFormFieldConfig } from 'common';
 
 export interface IBasicInfoFormFields {
-  fullName: IFormFieldConfig;
+  title: IFormFieldConfig;
+  firstName: IFormFieldConfig;
+  lastName: IFormFieldConfig;
   employeeId: IFormFieldConfig;
-  dateofBirth: IFormFieldConfig;
-  dateofJoining: IFormFieldConfig;
+  dateOfBirth: IFormFieldConfig;
+  dateOfJoining: IFormFieldConfig;
   gender: IFormFieldConfig;
   maritalStatus: IFormFieldConfig;
+  bloodGroup: IFormFieldConfig;
+  uanNumber: IFormFieldConfig;
+  pfAccNo: IFormFieldConfig;
 }
 
 export type { IBasicInfoForm } from './basic-info.types';
-
-

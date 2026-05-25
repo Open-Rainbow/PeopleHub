@@ -1,30 +1,30 @@
 <div class="bg-white rounded-[16px] border border-[#dbeafe] shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in p-8 h-full hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
   <div class="grid grid-cols-2 gap-[10px] max-[768px]:grid-cols-1">
 
-    @if (!formConfig.previousorganisation.isHide) {
+    @if (!formConfig.previousOrganization.isHide) {
       <div class="form-group">
         <ui-text-box
-          [id]="formConfig.previousorganisation.id"
+          [id]="formConfig.previousOrganization.id"
           [parentFormGroup]="workExperience"
-          [label]="formConfig.previousorganisation.label!"
-          [placeholder]="formConfig.previousorganisation.placeholder ?? ''"
-          [minLength]="formConfig.previousorganisation.minLength"
-          [maxLength]="formConfig.previousorganisation.maxLength"
-          [isRequired]="formConfig.previousorganisation.isRequired!"
+          [label]="formConfig.previousOrganization.label!"
+          [placeholder]="formConfig.previousOrganization.placeholder ?? ''"
+          [minLength]="formConfig.previousOrganization.minLength"
+          [maxLength]="formConfig.previousOrganization.maxLength"
+          [isRequired]="formConfig.previousOrganization.isRequired!"
         ></ui-text-box>
       </div>
     }
 
-    @if (!formConfig.previousdesignation.isHide) {
+    @if (!formConfig.previousDesignation.isHide) {
       <div class="form-group">
         <ui-text-box
-          [id]="formConfig.previousdesignation.id"
+          [id]="formConfig.previousDesignation.id"
           [parentFormGroup]="workExperience"
-          [label]="formConfig.previousdesignation.label!"
-          [placeholder]="formConfig.previousdesignation.placeholder ?? ''"
-          [minLength]="formConfig.previousdesignation.minLength"
-          [maxLength]="formConfig.previousdesignation.maxLength"
-          [isRequired]="formConfig.previousdesignation.isRequired!"
+          [label]="formConfig.previousDesignation.label!"
+          [placeholder]="formConfig.previousDesignation.placeholder ?? ''"
+          [minLength]="formConfig.previousDesignation.minLength"
+          [maxLength]="formConfig.previousDesignation.maxLength"
+          [isRequired]="formConfig.previousDesignation.isRequired!"
         ></ui-text-box>
       </div>
     }

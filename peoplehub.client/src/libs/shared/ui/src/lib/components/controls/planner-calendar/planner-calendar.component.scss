@@ -1,16 +1,16 @@
 :host {
   --planner-bg: #f7f8fa;
-  --planner-card: #ffffff;
+  --planner-card: var(--color-surface);
   --planner-border: #dce1e8;
   --planner-text: #142236;
   --planner-muted: #5f6f86;
   --planner-accent: #f97316;
   --planner-accent-soft: #fff2e8;
   --planner-focus: #123151;
-  --planner-blue: #2563eb;
-  --planner-green: #16a34a;
-  --planner-amber: #d97706;
-  --planner-rose: #e11d48;
+  --planner-blue: var(--color-primary);
+  --planner-green: var(--color-success);
+  --planner-amber: var(--color-warning);
+  --planner-rose: var(--color-danger);
   --planner-violet: #7c3aed;
 
   display: block;
@@ -112,7 +112,7 @@
 
 .planner-button--primary {
   background: var(--planner-accent);
-  color: #ffffff;
+  color: var(--color-surface);
 }
 
 .planner-button--ghost {
@@ -197,7 +197,7 @@
 
 .planner-day.is-selected .planner-day__date {
   background: var(--planner-accent);
-  color: #ffffff;
+  color: var(--color-surface);
 }
 
 .planner-day.is-today:not(.is-selected) .planner-day__date {

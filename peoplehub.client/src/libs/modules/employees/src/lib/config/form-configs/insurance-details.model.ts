@@ -2,18 +2,18 @@
 
 export interface IInsuranceDetailsFormFields {
     fatherName: IFormFieldConfig;
-    fatherAadharNumber: IFormFieldConfig;
-    aadharUpload: IFormFieldConfig;
+    fatherAadhaarNumber: IFormFieldConfig;
+    aadhaarUpload: IFormFieldConfig;
     fatherPanNumber: IFormFieldConfig;
     panUpload: IFormFieldConfig;
     dob: IFormFieldConfig;
     occupation: IFormFieldConfig;
     motherName: IFormFieldConfig;
-    motherAadharNumber: IFormFieldConfig;
+    motherAadhaarNumber: IFormFieldConfig;
     motherPanNumber: IFormFieldConfig;
-    dateofBirth: IFormFieldConfig;
+    dateOfBirth: IFormFieldConfig;
     spouseName: IFormFieldConfig;
-    spouseAadharNumber: IFormFieldConfig;
+    spouseAadhaarNumber: IFormFieldConfig;
     spousePanNumber: IFormFieldConfig;
 }
 

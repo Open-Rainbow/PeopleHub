@@ -1,27 +1,22 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  EventEmitter,
   HostListener,
-  Input,
+  inject,
+  input,
   OnInit,
-  Output,
+  output,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { InitialsPipe } from 'pipes';
-
-export class UserProfile {
-  userId?: string;
-  userName?: string;
-  userRole?: string;
-  profileUrl?: string;
-}
+import { ThemeTokensService } from 'theme-tokens';
+import { UserProfileModel } from '../../models/user-profile.model';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'header-root',
   standalone: true,
   imports: [CommonModule, InitialsPipe],
@@ -30,31 +25,27 @@ export class UserProfile {
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  @Input() isUserCollapsed = false;
-  @Output() sidebarToggle = new EventEmitter<void>();
+  readonly isUserCollapsed = input(false);
+  readonly sidebarToggle = output<void>();
 
-  dropdownOpen = false;
-  userProfile: UserProfile = new UserProfile();
-  currentTheme: 'light' | 'dark' = 'light';
+  private readonly router = inject(Router);
+  private readonly themeTokensService = inject(ThemeTokensService);
 
-  constructor(
-    private readonly router: Router,
-    private readonly cdr: ChangeDetectorRef,
-  ) {}
+  readonly dropdownOpen = signal(false);
+  readonly currentTheme = signal<'light' | 'dark'>('light');
+  readonly userProfile = signal<UserProfileModel>({});
 
   ngOnInit(): void {
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark';
-    if (savedTheme) {
-      this.currentTheme = savedTheme;
-      document.body.classList.add(`${savedTheme}-theme`);
-    }
+    this.currentTheme.set(this.themeTokensService.initTheme());
 
     const userName = localStorage.getItem('userName');
     const userRole = localStorage.getItem('userRole');
 
-    this.userProfile.userName = userName ?? 'User';
-    this.userProfile.userRole = userRole ?? 'employee';
-    this.userProfile.userId = localStorage.getItem('userEmail') ?? 'user@peoplehub.local';
+    this.userProfile.set({
+      userName: userName ?? 'User',
+      userRole: userRole ?? 'employee',
+      userId: localStorage.getItem('userEmail') ?? 'user@peoplehub.local',
+    });
   }
 
   toggleSidebar(): void {
@@ -63,15 +54,11 @@ export class HeaderComponent implements OnInit {
 
   toggleDropdown(event: MouseEvent): void {
     event.stopPropagation();
-    this.dropdownOpen = !this.dropdownOpen;
+    this.dropdownOpen.update(open => !open);
   }
 
   toggleTheme(): void {
-    this.currentTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
-    document.body.classList.remove('light-theme', 'dark-theme');
-    document.body.classList.add(`${this.currentTheme}-theme`);
-    localStorage.setItem('theme', this.currentTheme);
-    this.cdr.detectChanges();
+    this.currentTheme.set(this.themeTokensService.toggleTheme());
   }
 
   @HostListener('document:click', ['$event'])
@@ -87,7 +74,7 @@ export class HeaderComponent implements OnInit {
       target.closest('.brightness_icon');
 
     if (!clickedInside) {
-      this.dropdownOpen = false;
+      this.dropdownOpen.set(false);
     }
   }
 

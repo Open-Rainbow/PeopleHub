@@ -16,28 +16,28 @@ export const insuranceDetailsForm: IInsuranceDetailsForm =
         isDisable: false,
         placeholder: 'Enter Father Name'
     },
-    fatherAadharNumber: {
-        id: 'fatherAadharNumber',
+    fatherAadhaarNumber: {
+        id: 'fatherAadhaarNumber',
         isHide: false,
         readOnly: true,
         minLength: 0,
         maxLength: 50,
         isRequired: true,
-        label: 'Father Aadhar Number',
+        label: 'Father Aadhaar Number',
         defaultValue: null,
         fieldValue: null,
         tabIndex: 2,
         isDisable: false,
-        placeholder: 'Enter Aadhar Number'
+        placeholder: 'Enter Aadhaar Number'
     },
-    aadharUpload: {
-        id: 'aadharUpload',
+    aadhaarUpload: {
+        id: 'aadhaarUpload',
         isHide: false,
         readOnly: true,
         minLength: 0,
         maxLength: 50,
         isRequired: true,
-        label: 'Aadhar Upload',
+        label: 'Aadhaar Upload',
         defaultValue: null,
         fieldValue: null,
         tabIndex: 3,
@@ -111,14 +111,14 @@ export const insuranceDetailsForm: IInsuranceDetailsForm =
         isDisable: false,
         placeholder: 'Enter Father Name'
     },
-    motherAadharNumber: {
-        id: 'motherAadharNumber',
+    motherAadhaarNumber: {
+        id: 'motherAadhaarNumber',
         isHide: false,
         readOnly: true,
         minLength: 0,
         maxLength: 50,
         isRequired: true,
-        label: 'Mother Aadhar Number',
+        label: 'Mother Aadhaar Number',
         defaultValue: null,
         fieldValue: null,
         tabIndex: 9,
@@ -139,8 +139,8 @@ export const insuranceDetailsForm: IInsuranceDetailsForm =
         isDisable: false,
         placeholder: 'Enter Father Name'
     },
-    dateofBirth: {
-        id: 'dateofBirth',
+    dateOfBirth: {
+        id: 'dateOfBirth',
         isHide: false,
         readOnly: true,
         minLength: 0,
@@ -167,14 +167,14 @@ export const insuranceDetailsForm: IInsuranceDetailsForm =
         isDisable: false,
         placeholder: 'Enter Spouse Name'
     },
-    spouseAadharNumber: {
-        id: 'spouseAadharNumber',
+    spouseAadhaarNumber: {
+        id: 'spouseAadhaarNumber',
         isHide: false,
         readOnly: true,
         minLength: 0,
         maxLength: 50,
         isRequired: true,
-        label: 'Spouse Aadhar Number',
+        label: 'Spouse Aadhaar Number',
         defaultValue: null,
         fieldValue: null,
         tabIndex: 13,

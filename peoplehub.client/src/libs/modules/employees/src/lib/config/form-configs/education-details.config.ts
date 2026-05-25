@@ -32,8 +32,8 @@ export const educationDetailsForm: IEducationDetailsForm = {
     placeholder: 'eg, Computer Science'
   },
 
-  yearofPassing: {
-    id: 'yearofPassing',
+  yearOfPassing: {
+    id: 'yearOfPassing',
      isHide: false,
     readOnly: true,
     minLength: 0,

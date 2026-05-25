@@ -76,108 +76,108 @@
 }
 
 .ui-icon-text-button--primary {
-  background-color: #2563eb;
-  border-color: #2563eb;
-  color: #ffffff;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-surface);
 }
 
 .ui-icon-text-button--primary:hover:not(:disabled) {
-  background-color: #1d4ed8;
-  border-color: #1d4ed8;
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 .ui-icon-text-button--secondary {
-  background-color: #6b7280;
-  border-color: #6b7280;
-  color: #ffffff;
+  background-color: var(--color-text-secondary);
+  border-color: var(--color-text-secondary);
+  color: var(--color-surface);
 }
 
 .ui-icon-text-button--secondary:hover:not(:disabled) {
-  background-color: #4b5563;
-  border-color: #4b5563;
+  background-color: var(--color-text-secondary);
+  border-color: var(--color-text-secondary);
 }
 
 .ui-icon-text-button--success {
-  background-color: #16a34a;
-  border-color: #16a34a;
-  color: #ffffff;
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+  color: var(--color-surface);
 }
 
 .ui-icon-text-button--success:hover:not(:disabled) {
-  background-color: #15803d;
-  border-color: #15803d;
+  background-color: var(--color-success-hover);
+  border-color: var(--color-success-hover);
 }
 
 .ui-icon-text-button--danger {
-  background-color: #dc2626;
-  border-color: #dc2626;
-  color: #ffffff;
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+  color: var(--color-surface);
 }
 
 .ui-icon-text-button--danger:hover:not(:disabled) {
-  background-color: #b91c1c;
-  border-color: #b91c1c;
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
 }
 
 .ui-icon-text-button--warning {
-  background-color: #f59e0b;
-  border-color: #f59e0b;
-  color: #111827;
+  background-color: var(--color-warning);
+  border-color: var(--color-warning);
+  color: var(--color-text-primary);
 }
 
 .ui-icon-text-button--warning:hover:not(:disabled) {
-  background-color: #d97706;
-  border-color: #d97706;
+  background-color: var(--color-warning);
+  border-color: var(--color-warning);
 }
 
 .ui-icon-text-button--info {
-  background-color: #0891b2;
-  border-color: #0891b2;
-  color: #ffffff;
+  background-color: var(--color-primary-soft);
+  border-color: var(--color-primary-soft);
+  color: var(--color-surface);
 }
 
 .ui-icon-text-button--info:hover:not(:disabled) {
-  background-color: #0e7490;
-  border-color: #0e7490;
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 .ui-icon-text-button--dark {
-  background-color: #111827;
-  border-color: #111827;
-  color: #ffffff;
+  background-color: var(--color-text-primary);
+  border-color: var(--color-text-primary);
+  color: var(--color-surface);
 }
 
 .ui-icon-text-button--dark:hover:not(:disabled) {
-  background-color: #030712;
-  border-color: #030712;
+  background-color: var(--color-text-primary);
+  border-color: var(--color-text-primary);
 }
 
 .ui-icon-text-button--light {
-  background-color: #f3f4f6;
-  border-color: #d1d5db;
-  color: #111827;
+  background-color: var(--color-surface-muted);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
 }
 
 .ui-icon-text-button--light:hover:not(:disabled) {
-  background-color: #e5e7eb;
-  border-color: #9ca3af;
+  background-color: var(--color-border);
+  border-color: var(--color-text-muted);
 }
 
 .ui-icon-text-button--white {
-  background-color: #ffffff;
-  border-color: #d1d5db;
-  color: #111827;
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
 }
 
 .ui-icon-text-button--white:hover:not(:disabled) {
-  background-color: #f9fafb;
-  border-color: #9ca3af;
+  background-color: var(--color-surface-elevated);
+  border-color: var(--color-text-muted);
 }
 
 .ui-icon-text-button--link {
   background-color: transparent;
   border-color: transparent;
-  color: #2563eb;
+  color: var(--color-primary);
   text-decoration: underline;
   text-underline-offset: 2px;
   min-width: auto;
@@ -186,5 +186,5 @@
 }
 
 .ui-icon-text-button--link:hover:not(:disabled) {
-  color: #1d4ed8;
+  color: var(--color-primary-hover);
 }

@@ -3,8 +3,8 @@ import { IWorkExperienceForm } from "./work-experience.model";
 export const workExperienceForm: IWorkExperienceForm = {
   
 
-  previousorganisation: {
-        id: 'previousorganisation',
+  previousOrganization: {
+        id: 'previousOrganization',
          isHide: false,
         readOnly: true,
         minLength: 0,
@@ -44,8 +44,8 @@ export const workExperienceForm: IWorkExperienceForm = {
         tabIndex: 3,
         isDisable: false
     },
-    previousdesignation: {
-        id: 'previousdesignation',
+    previousDesignation: {
+        id: 'previousDesignation',
          isHide: false,
         readOnly: true,
         minLength: 0,

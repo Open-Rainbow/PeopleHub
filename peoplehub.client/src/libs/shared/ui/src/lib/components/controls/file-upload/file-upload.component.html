@@ -14,14 +14,22 @@
       [attr.aria-labelledby]="id + '-label ' + triggerId"
       (click)="onAreaClick()"
       (focus)="onFocus()"
-      (blur)="onBlur()">
-      <span class="file-upload-value" [class.placeholder]="!hasValue">{{ displayValue }}</span>
+      (blur)="onBlur()"
+    >
+      <span class="file-upload-value" [class.placeholder]="!hasValue">{{
+        displayValue
+      }}</span>
       <ui-icon
-        [name]="hasValue ? 'material-symbols:close-rounded' : 'material-symbols:upload-rounded'"
+        [name]="
+          hasValue
+            ? 'material-symbols:close-rounded'
+            : 'material-symbols:upload-rounded'
+        "
         class="upload-icon"
         [class.actionable]="hasValue && !isDisabled"
         [attr.aria-label]="hasValue ? 'Remove selected file' : 'Upload file'"
-        (click)="hasValue && !isDisabled ? clearFiles($event) : null"></ui-icon>
+        (click)="hasValue && !isDisabled ? clearFiles($event) : null"
+      ></ui-icon>
     </button>
 
     <input
@@ -33,7 +41,8 @@
       [attr.multiple]="multiple ? '' : null"
       [disabled]="isDisabled"
       (change)="onFileSelected($event)"
-      (click)="$event.stopPropagation()" />
+      (click)="$event.stopPropagation()"
+    />
 
     <label
       [id]="id + '-label'"
@@ -42,7 +51,8 @@
       [class.floating]="isFocused || isFileDialogOpen || hasValue"
       [class.blue]="(isFocused || isFileDialogOpen) && !isInvalid"
       [class.gray]="!(isFocused || isFileDialogOpen) && !isInvalid"
-      [class.red]="isInvalid">
+      [class.red]="isInvalid"
+    >
       {{ label }}
       @if (isRequired) {
         <span class="required-asterisk">*</span>
@@ -50,9 +60,9 @@
     </label>
   </div>
 
-  <span [id]="helperId" class="helper-text" [class.error-text]="isInvalid">
-    @if (isInvalid) {
+  @if (isInvalid) {
+    <span [id]="helperId" class="helper-text error-text">
       {{ errorNote }}
-    }
-  </span>
+    </span>
+  }
 </div>

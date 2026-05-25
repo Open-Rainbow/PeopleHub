@@ -1,3 +1,10 @@
-    <p>
-      theme-tokens works!
-    </p>
+<section class="theme-preview">
+  <h3>Theme Tokens</h3>
+  <p>Active theme: {{ currentTheme }}</p>
+
+  <div class="theme-actions">
+    <button type="button" (click)="setTheme('light')">Light</button>
+    <button type="button" (click)="setTheme('dark')">Dark</button>
+    <button type="button" (click)="toggleTheme()">Toggle</button>
+  </div>
+</section>

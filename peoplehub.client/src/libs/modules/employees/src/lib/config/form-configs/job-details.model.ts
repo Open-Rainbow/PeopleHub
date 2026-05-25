@@ -7,7 +7,7 @@ export interface IJobDetailsFormFields {
     employeeType: IFormFieldConfig;
     workLocation: IFormFieldConfig;
     shiftTimings: IFormFieldConfig;
-    paylevel: IFormFieldConfig;
+    payLevel: IFormFieldConfig;
     reportingManager: IFormFieldConfig;
 }
 
