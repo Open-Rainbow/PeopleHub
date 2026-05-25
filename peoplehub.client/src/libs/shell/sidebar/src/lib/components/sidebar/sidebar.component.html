@@ -63,6 +63,7 @@
               class="p-2 px-6 mt-1 rounded-lg cursor-pointer transition-all hover:text-blue-600"
               [class.active-submenu]="activeSubRoute === route.route"
               (click)="onSubMenuClick(i, route.route)"
+              [routerLink]="route.route"
             >
               {{ route.label }}
             </div>

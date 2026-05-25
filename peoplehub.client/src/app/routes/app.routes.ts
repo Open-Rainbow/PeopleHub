@@ -179,6 +179,72 @@ export const appRoutes: Routes = [
           ),
       },
       {
+        path: 'add-employee',
+        loadComponent: () =>
+          import('../../libs/modules/employees/src/lib/components/add-employee/add-employee.component').then(
+            m => m.AddEmployeeComponent
+          ),
+        children: [
+          { path: '', redirectTo: 'basic-info', pathMatch: 'full' },
+          {
+            path: 'basic-info',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/basic-info/basic-info.component').then(
+                m => m.BasicInfoComponent
+              ),
+          },
+          {
+            path: 'contact-info',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/contact-info/contact-info.component').then(
+                m => m.ContactInfoComponent
+              ),
+          },
+          {
+            path: 'job-details',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/job-details/job-details.component').then(
+                m => m.JobDetailsComponent
+              ),
+          },
+          {
+            path: 'education-details',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/education-details/education-details.component').then(
+                m => m.EducationDetailsComponent
+              ),
+          },
+          {
+            path: 'salary-structure',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/salary-structure/salary-structure.component').then(
+                m => m.SalaryStructureComponent
+              ),
+          },
+          {
+            path: 'work-experience',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/work-experience/work-experience.component').then(
+                m => m.WorkExperienceComponent
+              ),
+          },
+          {
+            path: 'documents-upload',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/documents-upload/documents-upload.component').then(
+                m => m.DocumentsUploadComponent
+              ),
+          },
+          {
+            path: 'temp-login-credentials',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/temp-login-credentials/temp-login-credentials.component').then(
+                m => m.TempLoginCredentialsComponent
+              ),
+          },
+        ],
+      },
+      {
         path: 'offer-letter',
         loadComponent: () =>
           import('../../libs/modules/documents/src/lib/components/offer-letter/offer-letter.component').then(
@@ -271,6 +337,72 @@ export const appRoutes: Routes = [
           import('../../libs/modules/employees/src/lib/components/employee-list/employee-list.component').then(
             m => m.EmployeeListComponent
           ),
+      },
+      {
+        path: 'add-employee',
+        loadComponent: () =>
+          import('../../libs/modules/employees/src/lib/components/add-employee/add-employee.component').then(
+            m => m.AddEmployeeComponent
+          ),
+        children: [
+          { path: '', redirectTo: 'basic-info', pathMatch: 'full' },
+          {
+            path: 'basic-info',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/basic-info/basic-info.component').then(
+                m => m.BasicInfoComponent
+              ),
+          },
+          {
+            path: 'contact-info',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/contact-info/contact-info.component').then(
+                m => m.ContactInfoComponent
+              ),
+          },
+          {
+            path: 'job-details',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/job-details/job-details.component').then(
+                m => m.JobDetailsComponent
+              ),
+          },
+          {
+            path: 'education-details',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/education-details/education-details.component').then(
+                m => m.EducationDetailsComponent
+              ),
+          },
+          {
+            path: 'salary-structure',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/salary-structure/salary-structure.component').then(
+                m => m.SalaryStructureComponent
+              ),
+          },
+          {
+            path: 'work-experience',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/work-experience/work-experience.component').then(
+                m => m.WorkExperienceComponent
+              ),
+          },
+          {
+            path: 'documents-upload',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/documents-upload/documents-upload.component').then(
+                m => m.DocumentsUploadComponent
+              ),
+          },
+          {
+            path: 'temp-login-credentials',
+            loadComponent: () =>
+              import('../../libs/modules/employees/src/lib/components/temp-login-credentials/temp-login-credentials.component').then(
+                m => m.TempLoginCredentialsComponent
+              ),
+          },
+        ],
       },
       {
         path: 'offer-letter',
