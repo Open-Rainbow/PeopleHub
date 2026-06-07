@@ -1,0 +1,294 @@
+<div class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md">
+
+  <!-- Separation Overview -->
+  <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Separation Details</p>
+  <div class="grid grid-cols-3 gap-[10px] mb-6">
+
+    @if (!formConfig.separationType.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.separationType.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.separationType.label!"
+          [placeholder]="formConfig.separationType.placeholder ?? ''"
+          [isRequired]="formConfig.separationType.isRequired!"
+          [options]="separationTypeOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.separationStatus.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.separationStatus.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.separationStatus.label!"
+          [placeholder]="formConfig.separationStatus.placeholder ?? ''"
+          [isRequired]="formConfig.separationStatus.isRequired!"
+          [options]="separationStatusOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.exitReason.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.exitReason.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.exitReason.label!"
+          [placeholder]="formConfig.exitReason.placeholder ?? ''"
+          [minLength]="formConfig.exitReason.minLength"
+          [maxLength]="formConfig.exitReason.maxLength"
+          [isRequired]="formConfig.exitReason.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.initiationDate.isHide) {
+      <div class="form-group">
+        <ui-calendar
+          [id]="formConfig.initiationDate.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.initiationDate.label!"
+          [isRequired]="formConfig.initiationDate.isRequired!"
+        ></ui-calendar>
+      </div>
+    }
+
+    @if (!formConfig.resignationDate.isHide) {
+      <div class="form-group">
+        <ui-calendar
+          [id]="formConfig.resignationDate.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.resignationDate.label!"
+          [isRequired]="formConfig.resignationDate.isRequired!"
+        ></ui-calendar>
+      </div>
+    }
+
+    @if (!formConfig.noticeStartDate.isHide) {
+      <div class="form-group">
+        <ui-calendar
+          [id]="formConfig.noticeStartDate.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.noticeStartDate.label!"
+          [isRequired]="formConfig.noticeStartDate.isRequired!"
+        ></ui-calendar>
+      </div>
+    }
+
+    @if (!formConfig.noticeEndDate.isHide) {
+      <div class="form-group">
+        <ui-calendar
+          [id]="formConfig.noticeEndDate.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.noticeEndDate.label!"
+          [isRequired]="formConfig.noticeEndDate.isRequired!"
+        ></ui-calendar>
+      </div>
+    }
+
+    @if (!formConfig.proposedLastWorkingDay.isHide) {
+      <div class="form-group">
+        <ui-calendar
+          [id]="formConfig.proposedLastWorkingDay.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.proposedLastWorkingDay.label!"
+          [isRequired]="formConfig.proposedLastWorkingDay.isRequired!"
+        ></ui-calendar>
+      </div>
+    }
+
+    @if (!formConfig.finalLastWorkingDay.isHide) {
+      <div class="form-group">
+        <ui-calendar
+          [id]="formConfig.finalLastWorkingDay.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.finalLastWorkingDay.label!"
+          [isRequired]="formConfig.finalLastWorkingDay.isRequired!"
+        ></ui-calendar>
+      </div>
+    }
+
+    @if (!formConfig.rehireEligible.isHide) {
+      <div class="form-group flex items-end pb-2">
+        <ui-checkbox
+          [id]="formConfig.rehireEligible.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.rehireEligible.label!"
+        ></ui-checkbox>
+      </div>
+    }
+
+  </div>
+
+  <!-- Clearance & Workflow -->
+  <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Clearance & Workflow</p>
+  <div class="grid grid-cols-3 gap-[10px] mb-6">
+
+    @if (!formConfig.attritionCategory.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.attritionCategory.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.attritionCategory.label!"
+          [placeholder]="formConfig.attritionCategory.placeholder ?? ''"
+          [isRequired]="formConfig.attritionCategory.isRequired!"
+          [options]="attritionCategoryOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.managerClearanceStatus.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.managerClearanceStatus.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.managerClearanceStatus.label!"
+          [placeholder]="formConfig.managerClearanceStatus.placeholder ?? ''"
+          [isRequired]="formConfig.managerClearanceStatus.isRequired!"
+          [options]="clearanceStatusOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.hrClearanceStatus.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.hrClearanceStatus.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.hrClearanceStatus.label!"
+          [placeholder]="formConfig.hrClearanceStatus.placeholder ?? ''"
+          [isRequired]="formConfig.hrClearanceStatus.isRequired!"
+          [options]="clearanceStatusOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.exitInterviewRequired.isHide) {
+      <div class="form-group flex items-end pb-2">
+        <ui-checkbox
+          [id]="formConfig.exitInterviewRequired.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.exitInterviewRequired.label!"
+        ></ui-checkbox>
+      </div>
+    }
+
+    @if (!formConfig.exitInterviewStatus.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.exitInterviewStatus.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.exitInterviewStatus.label!"
+          [placeholder]="formConfig.exitInterviewStatus.placeholder ?? ''"
+          [isRequired]="formConfig.exitInterviewStatus.isRequired!"
+          [options]="interviewStatusOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.knowledgeTransferRequired.isHide) {
+      <div class="form-group flex items-end pb-2">
+        <ui-checkbox
+          [id]="formConfig.knowledgeTransferRequired.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.knowledgeTransferRequired.label!"
+        ></ui-checkbox>
+      </div>
+    }
+
+    @if (!formConfig.knowledgeTransferStatus.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.knowledgeTransferStatus.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.knowledgeTransferStatus.label!"
+          [placeholder]="formConfig.knowledgeTransferStatus.placeholder ?? ''"
+          [isRequired]="formConfig.knowledgeTransferStatus.isRequired!"
+          [options]="interviewStatusOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+  </div>
+
+  <!-- Settlement & Access -->
+  <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Settlement & Access Closure</p>
+  <div class="grid grid-cols-3 gap-[10px] mb-6">
+
+    @if (!formConfig.leaveBalanceAtExit.isHide) {
+      <div class="form-group">
+        <ui-number-box
+          [id]="formConfig.leaveBalanceAtExit.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.leaveBalanceAtExit.label!"
+          [placeholder]="formConfig.leaveBalanceAtExit.placeholder ?? ''"
+          [isRequired]="formConfig.leaveBalanceAtExit.isRequired!"
+        ></ui-number-box>
+      </div>
+    }
+
+    @if (!formConfig.gratuityEligible.isHide) {
+      <div class="form-group flex items-end pb-2">
+        <ui-checkbox
+          [id]="formConfig.gratuityEligible.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.gratuityEligible.label!"
+        ></ui-checkbox>
+      </div>
+    }
+
+    @if (!formConfig.finalSettlementStatus.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.finalSettlementStatus.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.finalSettlementStatus.label!"
+          [placeholder]="formConfig.finalSettlementStatus.placeholder ?? ''"
+          [isRequired]="formConfig.finalSettlementStatus.isRequired!"
+          [options]="settlementStatusOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.officialEmailDisableDate.isHide) {
+      <div class="form-group">
+        <ui-calendar
+          [id]="formConfig.officialEmailDisableDate.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.officialEmailDisableDate.label!"
+          [isRequired]="formConfig.officialEmailDisableDate.isRequired!"
+        ></ui-calendar>
+      </div>
+    }
+
+    @if (!formConfig.applicationAccessRevokeStatus.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.applicationAccessRevokeStatus.id"
+          [parentFormGroup]="separation"
+          [label]="formConfig.applicationAccessRevokeStatus.label!"
+          [placeholder]="formConfig.applicationAccessRevokeStatus.placeholder ?? ''"
+          [isRequired]="formConfig.applicationAccessRevokeStatus.isRequired!"
+          [options]="revokeStatusOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+  </div>
+
+  @if (!formConfig.detailedExitRemarks.isHide) {
+    <div class="mt-2">
+      <ui-text-area
+        [id]="formConfig.detailedExitRemarks.id"
+        [parentFormGroup]="separation"
+        [label]="formConfig.detailedExitRemarks.label!"
+        [placeholder]="formConfig.detailedExitRemarks.placeholder ?? ''"
+        [maxLength]="formConfig.detailedExitRemarks.maxLength"
+        [isRequired]="formConfig.detailedExitRemarks.isRequired!"
+      ></ui-text-area>
+    </div>
+  }
+
+</div>

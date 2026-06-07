@@ -1,24 +1,42 @@
 ﻿import { IFormFieldConfig } from 'common';
 
-export interface IInsuranceDetailsFormFields {
-    fatherName: IFormFieldConfig;
-    fatherAadhaarNumber: IFormFieldConfig;
-    aadhaarUpload: IFormFieldConfig;
-    fatherPanNumber: IFormFieldConfig;
-    panUpload: IFormFieldConfig;
-    dob: IFormFieldConfig;
-    occupation: IFormFieldConfig;
-    motherName: IFormFieldConfig;
-    motherAadhaarNumber: IFormFieldConfig;
-    motherPanNumber: IFormFieldConfig;
-    dateOfBirth: IFormFieldConfig;
-    spouseName: IFormFieldConfig;
-    spouseAadhaarNumber: IFormFieldConfig;
-    spousePanNumber: IFormFieldConfig;
+export interface IInsurancePolicyFormFields {
+  benefitType: IFormFieldConfig;
+  providerName: IFormFieldConfig;
+  policyNumber: IFormFieldConfig;
+  coverageStartDate: IFormFieldConfig;
+  coverageEndDate: IFormFieldConfig;
+  employeeCovered: IFormFieldConfig;
+  premiumSharingType: IFormFieldConfig;
+  coverageAmount: IFormFieldConfig;
+  policyStatus: IFormFieldConfig;
+  insuranceRemarks: IFormFieldConfig;
+  coveredMemberName: IFormFieldConfig;
+  coveredMemberRelationship: IFormFieldConfig;
+  sumInsuredAllocation: IFormFieldConfig;
+  memberCoverageFrom: IFormFieldConfig;
+  memberCoverageTo: IFormFieldConfig;
 }
 
-export type { IInsuranceDetailsForm } from './insurance-details.types';
+export interface INomineeFormFields {
+  nomineeBenefitType: IFormFieldConfig;
+  nomineeName: IFormFieldConfig;
+  nomineeRelationship: IFormFieldConfig;
+  nomineeDateOfBirth: IFormFieldConfig;
+  nomineeContactNumber: IFormFieldConfig;
+  minorFlag: IFormFieldConfig;
+  guardianName: IFormFieldConfig;
+  sharePercentage: IFormFieldConfig;
+  priorityOrder: IFormFieldConfig;
+  nomineeActive: IFormFieldConfig;
+  nomineeEffectiveFrom: IFormFieldConfig;
+  nomineeEffectiveTo: IFormFieldConfig;
+  nomineeBankName: IFormFieldConfig;
+  nomineeAccountNumber: IFormFieldConfig;
+  nomineeIfscCode: IFormFieldConfig;
+  nomineeAadhaarNumber: IFormFieldConfig;
+  nomineePanNumber: IFormFieldConfig;
+}
 
-
-
+export type { IInsurancePolicyForm, INomineeForm } from './insurance-details.types';
 

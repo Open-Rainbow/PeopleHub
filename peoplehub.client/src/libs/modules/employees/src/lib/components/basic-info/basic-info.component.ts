@@ -48,6 +48,8 @@ export class BasicInfoComponent implements OnInit {
   genderOptions$!: Observable<DropdownOption[]>;
   maritalStatusOptions$!: Observable<DropdownOption[]>;
   bloodGroupOptions$!: Observable<DropdownOption[]>;
+  nationalityOptions$!: Observable<DropdownOption[]>;
+  categoryOptions$!: Observable<DropdownOption[]>;
 
   ngOnInit(): void {
     this.titleOptions$ = this.dropdownService.getOptions('title');
@@ -55,6 +57,8 @@ export class BasicInfoComponent implements OnInit {
     this.maritalStatusOptions$ =
       this.dropdownService.getOptions('maritalStatus');
     this.bloodGroupOptions$ = this.dropdownService.getOptions('bloodGroup');
+    this.nationalityOptions$ = this.dropdownService.getOptions('nationality');
+    this.categoryOptions$ = this.dropdownService.getOptions('category');
 
     this.basicInfo = this.commonService.createForm(this.formConfig);
 

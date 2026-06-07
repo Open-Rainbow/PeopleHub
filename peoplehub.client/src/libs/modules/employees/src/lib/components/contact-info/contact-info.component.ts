@@ -2,9 +2,8 @@
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DropdownComponent, TextAreaComponent, TextBoxComponent, ToggleComponent } from 'ui';
-import { DropdownConfigService, CommonService } from 'common';
-import { DropdownOption } from 'common';
+import { CheckboxComponent, DropdownComponent, TextBoxComponent } from 'ui';
+import { DropdownConfigService, CommonService, DropdownOption } from 'common';
 import { StepperService } from '../../services/stepper/stepper.service';
 import { EmployeeDataService } from '../../services/employee-data/employee-data.service';
 import { contactInfoForm } from '../../config/form-configs/contact-info.config';
@@ -13,7 +12,7 @@ import { contactInfoForm } from '../../config/form-configs/contact-info.config';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'employees-contact-info',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TextBoxComponent, TextAreaComponent, DropdownComponent, ToggleComponent],
+  imports: [CommonModule, ReactiveFormsModule, TextBoxComponent, DropdownComponent, CheckboxComponent],
   templateUrl: './contact-info.component.html',
   styleUrls: ['./contact-info.component.scss'],
 })
@@ -27,9 +26,13 @@ export class ContactInfoComponent implements OnInit {
   contactInfo!: FormGroup;
 
   relationOptions$!: Observable<DropdownOption[]>;
+  countryOptions$!: Observable<DropdownOption[]>;
+  addressTypeOptions$!: Observable<DropdownOption[]>;
 
   ngOnInit(): void {
     this.relationOptions$ = this.dropdownService.getOptions('relation');
+    this.countryOptions$ = this.dropdownService.getOptions('country');
+    this.addressTypeOptions$ = this.dropdownService.getOptions('addressType');
 
     this.contactInfo = this.commonService.createForm(this.formConfig);
 
@@ -45,5 +48,6 @@ export class ContactInfoComponent implements OnInit {
     });
   }
 }
+
 
 

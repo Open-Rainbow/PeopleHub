@@ -2,9 +2,8 @@
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DropdownComponent, TextBoxComponent } from 'ui';
-import { DropdownConfigService, CommonService } from 'common';
-import { DropdownOption } from 'common';
+import { DropdownComponent, TextBoxComponent, CalendarComponent } from 'ui';
+import { DropdownConfigService, CommonService, DropdownOption } from 'common';
 import { StepperService } from '../../services/stepper/stepper.service';
 import { EmployeeDataService } from '../../services/employee-data/employee-data.service';
 import { jobDetailsForm } from '../../config/form-configs/job-details.config';
@@ -13,7 +12,7 @@ import { jobDetailsForm } from '../../config/form-configs/job-details.config';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'employees-job-details',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TextBoxComponent, DropdownComponent],
+  imports: [CommonModule, ReactiveFormsModule, TextBoxComponent, DropdownComponent, CalendarComponent],
   templateUrl: './job-details.component.html',
   styleUrls: ['./job-details.component.scss'],
 })
@@ -32,6 +31,13 @@ export class JobDetailsComponent implements OnInit {
   shiftTimingOptions$!: Observable<DropdownOption[]>;
   payLevelOptions$!: Observable<DropdownOption[]>;
   reportingManagerOptions$!: Observable<DropdownOption[]>;
+  businessUnitOptions$!: Observable<DropdownOption[]>;
+  employeeCategoryOptions$!: Observable<DropdownOption[]>;
+  workScheduleOptions$!: Observable<DropdownOption[]>;
+  dottedLineManagerOptions$!: Observable<DropdownOption[]>;
+  costCenterOptions$!: Observable<DropdownOption[]>;
+  hrOwnerOptions$!: Observable<DropdownOption[]>;
+  employmentStatusOptions$!: Observable<DropdownOption[]>;
 
   ngOnInit(): void {
     this.departmentOptions$ = this.dropdownService.getOptions('department');
@@ -40,6 +46,13 @@ export class JobDetailsComponent implements OnInit {
     this.shiftTimingOptions$ = this.dropdownService.getOptions('shiftTiming');
     this.payLevelOptions$ = this.dropdownService.getOptions('payLevel');
     this.reportingManagerOptions$ = this.dropdownService.getOptions('reportingManager');
+    this.businessUnitOptions$ = this.dropdownService.getOptions('businessUnit');
+    this.employeeCategoryOptions$ = this.dropdownService.getOptions('employeeCategory');
+    this.workScheduleOptions$ = this.dropdownService.getOptions('workSchedule');
+    this.dottedLineManagerOptions$ = this.dropdownService.getOptions('dottedLineManager');
+    this.costCenterOptions$ = this.dropdownService.getOptions('costCenter');
+    this.hrOwnerOptions$ = this.dropdownService.getOptions('hrOwner');
+    this.employmentStatusOptions$ = this.dropdownService.getOptions('employmentStatus');
 
     this.jobDetails = this.commonService.createForm(this.formConfig);
 

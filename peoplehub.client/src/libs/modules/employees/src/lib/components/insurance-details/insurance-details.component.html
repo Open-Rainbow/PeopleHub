@@ -1,191 +1,458 @@
-<div class="w-full h-full bg-white rounded-[25px] p-5 border border-gray-400 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
+﻿<div class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md">
 
-  <p class="m-0 text-[rgb(116,116,216)] font-bold">Father Details</p>
-  <hr class="border-0 border-t-2 border-[#dfe9f1] my-2.5 opacity-60">
-
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 py-5 pr-5 pl-0">
-    @if (!formConfig.fatherName.isHide) {
-      <ui-text-box
-        [id]="formConfig.fatherName.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.fatherName.label!"
-        [placeholder]="formConfig.fatherName.placeholder ?? ''"
-        [minLength]="formConfig.fatherName.minLength"
-        [maxLength]="formConfig.fatherName.maxLength"
-        [isRequired]="formConfig.fatherName.isRequired!"
-      ></ui-text-box>
-    }
-
-    @if (!formConfig.fatherAadhaarNumber.isHide) {
-      <ui-text-box
-        [id]="formConfig.fatherAadhaarNumber.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.fatherAadhaarNumber.label!"
-        [placeholder]="formConfig.fatherAadhaarNumber.placeholder ?? ''"
-        [minLength]="formConfig.fatherAadhaarNumber.minLength"
-        [maxLength]="formConfig.fatherAadhaarNumber.maxLength"
-        [isRequired]="formConfig.fatherAadhaarNumber.isRequired!"
-      ></ui-text-box>
-    }
-
-    @if (!formConfig.aadhaarUpload.isHide) {
-      <ui-file-upload
-        [id]="formConfig.aadhaarUpload.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.aadhaarUpload.label!"
-        [isRequired]="formConfig.aadhaarUpload.isRequired!"
-      ></ui-file-upload>
-    }
-
-    @if (!formConfig.fatherPanNumber.isHide) {
-      <ui-text-box
-        [id]="formConfig.fatherPanNumber.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.fatherPanNumber.label!"
-        [placeholder]="formConfig.fatherPanNumber.placeholder ?? ''"
-        [minLength]="formConfig.fatherPanNumber.minLength"
-        [maxLength]="formConfig.fatherPanNumber.maxLength"
-        [isRequired]="formConfig.fatherPanNumber.isRequired!"
-      ></ui-text-box>
-    }
-
-    @if (!formConfig.panUpload.isHide) {
-      <ui-file-upload
-        [id]="formConfig.panUpload.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.panUpload.label!"
-        [isRequired]="formConfig.panUpload.isRequired!"
-      ></ui-file-upload>
-    }
-
-    @if (!formConfig.dob.isHide) {
-      <ui-calendar
-        [id]="formConfig.dob.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.dob.label!"
-        [isRequired]="formConfig.dob.isRequired!"
-      ></ui-calendar>
-    }
-
-    @if (!formConfig.occupation.isHide) {
-      <ui-text-box
-        [id]="formConfig.occupation.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.occupation.label!"
-        [placeholder]="formConfig.occupation.placeholder ?? ''"
-        [minLength]="formConfig.occupation.minLength"
-        [maxLength]="formConfig.occupation.maxLength"
-        [isRequired]="formConfig.occupation.isRequired!"
-      ></ui-text-box>
-    }
+  <!-- Tab Header -->
+  <div class="flex gap-2 border-b border-gray-200 mb-6">
+    <button
+      type="button"
+      class="px-5 py-2 text-sm font-medium rounded-t-lg transition-colors duration-150"
+      [class.text-blue-600]="isInsuranceTab()"
+      [class.border-b-2]="isInsuranceTab()"
+      [class.border-blue-600]="isInsuranceTab()"
+      [class.text-gray-500]="!isInsuranceTab()"
+      (click)="switchTab('insurance')"
+    >
+      Insurance
+    </button>
+    <button
+      type="button"
+      class="px-5 py-2 text-sm font-medium rounded-t-lg transition-colors duration-150"
+      [class.text-blue-600]="!isInsuranceTab()"
+      [class.border-b-2]="!isInsuranceTab()"
+      [class.border-blue-600]="!isInsuranceTab()"
+      [class.text-gray-500]="isInsuranceTab()"
+      (click)="switchTab('nominee')"
+    >
+      Nominees
+    </button>
   </div>
 
-  <p class="m-0 text-[rgb(116,116,216)] font-bold">Mother Details</p>
-  <hr class="border-0 border-t-2 border-[#dfe9f1] my-2.5 opacity-60">
+  <!-- Tab A: Insurance Policy -->
+  @if (isInsuranceTab()) {
+    <form [formGroup]="insurance">
+      <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Policy Information</p>
+      <div class="grid grid-cols-3 gap-[10px] mb-4">
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 py-5 pr-5 pl-0">
-    @if (!formConfig.motherName.isHide) {
-      <ui-text-box
-        [id]="formConfig.motherName.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.motherName.label!"
-        [placeholder]="formConfig.motherName.placeholder ?? ''"
-        [minLength]="formConfig.motherName.minLength"
-        [maxLength]="formConfig.motherName.maxLength"
-        [isRequired]="formConfig.motherName.isRequired!"
-      ></ui-text-box>
-    }
+        @if (!insurancePolicyConfig.benefitType.isHide) {
+          <div class="form-group">
+            <ui-dropdown
+              [id]="insurancePolicyConfig.benefitType.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.benefitType.label!"
+              [placeholder]="insurancePolicyConfig.benefitType.placeholder ?? ''"
+              [isRequired]="insurancePolicyConfig.benefitType.isRequired!"
+              [options]="benefitTypeOptions$ | async"
+            ></ui-dropdown>
+          </div>
+        }
 
-    @if (!formConfig.motherAadhaarNumber.isHide) {
-      <ui-text-box
-        [id]="formConfig.motherAadhaarNumber.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.motherAadhaarNumber.label!"
-        [placeholder]="formConfig.motherAadhaarNumber.placeholder ?? ''"
-        [minLength]="formConfig.motherAadhaarNumber.minLength"
-        [maxLength]="formConfig.motherAadhaarNumber.maxLength"
-        [isRequired]="formConfig.motherAadhaarNumber.isRequired!"
-      ></ui-text-box>
-    }
+        @if (!insurancePolicyConfig.providerName.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="insurancePolicyConfig.providerName.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.providerName.label!"
+              [placeholder]="insurancePolicyConfig.providerName.placeholder ?? ''"
+              [minLength]="insurancePolicyConfig.providerName.minLength"
+              [maxLength]="insurancePolicyConfig.providerName.maxLength"
+              [isRequired]="insurancePolicyConfig.providerName.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
 
-    @if (!formConfig.aadhaarUpload.isHide) {
-      <ui-file-upload
-        [id]="formConfig.aadhaarUpload.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.aadhaarUpload.label!"
-        [isRequired]="formConfig.aadhaarUpload.isRequired!"
-      ></ui-file-upload>
-    }
+        @if (!insurancePolicyConfig.policyNumber.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="insurancePolicyConfig.policyNumber.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.policyNumber.label!"
+              [placeholder]="insurancePolicyConfig.policyNumber.placeholder ?? ''"
+              [minLength]="insurancePolicyConfig.policyNumber.minLength"
+              [maxLength]="insurancePolicyConfig.policyNumber.maxLength"
+              [isRequired]="insurancePolicyConfig.policyNumber.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
 
-    @if (!formConfig.motherPanNumber.isHide) {
-      <ui-text-box
-        [id]="formConfig.motherPanNumber.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.motherPanNumber.label!"
-        [placeholder]="formConfig.motherPanNumber.placeholder ?? ''"
-        [minLength]="formConfig.motherPanNumber.minLength"
-        [maxLength]="formConfig.motherPanNumber.maxLength"
-        [isRequired]="formConfig.motherPanNumber.isRequired!"
-      ></ui-text-box>
-    }
+        @if (!insurancePolicyConfig.coverageStartDate.isHide) {
+          <div class="form-group">
+            <ui-calendar
+              [id]="insurancePolicyConfig.coverageStartDate.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.coverageStartDate.label!"
+              [isRequired]="insurancePolicyConfig.coverageStartDate.isRequired!"
+            ></ui-calendar>
+          </div>
+        }
 
-    @if (!formConfig.panUpload.isHide) {
-      <ui-file-upload
-        [id]="formConfig.panUpload.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.panUpload.label!"
-        [isRequired]="formConfig.panUpload.isRequired!"
-      ></ui-file-upload>
-    }
+        @if (!insurancePolicyConfig.coverageEndDate.isHide) {
+          <div class="form-group">
+            <ui-calendar
+              [id]="insurancePolicyConfig.coverageEndDate.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.coverageEndDate.label!"
+              [isRequired]="insurancePolicyConfig.coverageEndDate.isRequired!"
+            ></ui-calendar>
+          </div>
+        }
 
-    @if (!formConfig.dateOfBirth.isHide) {
-      <ui-calendar
-        [id]="formConfig.dateOfBirth.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.dateOfBirth.label!"
-        [isRequired]="formConfig.dateOfBirth.isRequired!"
-      ></ui-calendar>
-    }
-  </div>
+        @if (!insurancePolicyConfig.premiumSharingType.isHide) {
+          <div class="form-group">
+            <ui-dropdown
+              [id]="insurancePolicyConfig.premiumSharingType.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.premiumSharingType.label!"
+              [placeholder]="insurancePolicyConfig.premiumSharingType.placeholder ?? ''"
+              [isRequired]="insurancePolicyConfig.premiumSharingType.isRequired!"
+              [options]="premiumSharingOptions$ | async"
+            ></ui-dropdown>
+          </div>
+        }
 
-  <p class="m-0 text-[rgb(116,116,216)] font-bold">Spouse Details</p>
-  <hr class="border-0 border-t-2 border-[#dfe9f1] my-2.5 opacity-60">
+        @if (!insurancePolicyConfig.coverageAmount.isHide) {
+          <div class="form-group">
+            <ui-number-box
+              [id]="insurancePolicyConfig.coverageAmount.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.coverageAmount.label!"
+              [placeholder]="insurancePolicyConfig.coverageAmount.placeholder ?? ''"
+              [isRequired]="insurancePolicyConfig.coverageAmount.isRequired!"
+            ></ui-number-box>
+          </div>
+        }
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 py-5 pr-5 pl-0">
-    @if (!formConfig.spouseName.isHide) {
-      <ui-text-box
-        [id]="formConfig.spouseName.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.spouseName.label!"
-        [placeholder]="formConfig.spouseName.placeholder ?? ''"
-        [minLength]="formConfig.spouseName.minLength"
-        [maxLength]="formConfig.spouseName.maxLength"
-        [isRequired]="formConfig.spouseName.isRequired!"
-      ></ui-text-box>
-    }
+        @if (!insurancePolicyConfig.policyStatus.isHide) {
+          <div class="form-group">
+            <ui-dropdown
+              [id]="insurancePolicyConfig.policyStatus.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.policyStatus.label!"
+              [placeholder]="insurancePolicyConfig.policyStatus.placeholder ?? ''"
+              [isRequired]="insurancePolicyConfig.policyStatus.isRequired!"
+              [options]="policyStatusOptions$ | async"
+            ></ui-dropdown>
+          </div>
+        }
 
-    @if (!formConfig.spouseAadhaarNumber.isHide) {
-      <ui-text-box
-        [id]="formConfig.spouseAadhaarNumber.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.spouseAadhaarNumber.label!"
-        [placeholder]="formConfig.spouseAadhaarNumber.placeholder ?? ''"
-        [minLength]="formConfig.spouseAadhaarNumber.minLength"
-        [maxLength]="formConfig.spouseAadhaarNumber.maxLength"
-        [isRequired]="formConfig.spouseAadhaarNumber.isRequired!"
-      ></ui-text-box>
-    }
+        @if (!insurancePolicyConfig.employeeCovered.isHide) {
+          <div class="form-group flex items-end pb-2">
+            <ui-checkbox
+              [id]="insurancePolicyConfig.employeeCovered.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.employeeCovered.label!"
+            ></ui-checkbox>
+          </div>
+        }
 
-    @if (!formConfig.spousePanNumber.isHide) {
-      <ui-text-box
-        [id]="formConfig.spousePanNumber.id"
-        [parentFormGroup]="insuranceDetails"
-        [label]="formConfig.spousePanNumber.label!"
-        [placeholder]="formConfig.spousePanNumber.placeholder ?? ''"
-        [minLength]="formConfig.spousePanNumber.minLength"
-        [maxLength]="formConfig.spousePanNumber.maxLength"
-        [isRequired]="formConfig.spousePanNumber.isRequired!"
-      ></ui-text-box>
-    }
-  </div>
+      </div>
+
+      <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Covered Member</p>
+      <div class="grid grid-cols-3 gap-[10px] mb-4">
+
+        @if (!insurancePolicyConfig.coveredMemberName.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="insurancePolicyConfig.coveredMemberName.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.coveredMemberName.label!"
+              [placeholder]="insurancePolicyConfig.coveredMemberName.placeholder ?? ''"
+              [minLength]="insurancePolicyConfig.coveredMemberName.minLength"
+              [maxLength]="insurancePolicyConfig.coveredMemberName.maxLength"
+              [isRequired]="insurancePolicyConfig.coveredMemberName.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!insurancePolicyConfig.coveredMemberRelationship.isHide) {
+          <div class="form-group">
+            <ui-dropdown
+              [id]="insurancePolicyConfig.coveredMemberRelationship.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.coveredMemberRelationship.label!"
+              [placeholder]="insurancePolicyConfig.coveredMemberRelationship.placeholder ?? ''"
+              [isRequired]="insurancePolicyConfig.coveredMemberRelationship.isRequired!"
+              [options]="relationOptions$ | async"
+            ></ui-dropdown>
+          </div>
+        }
+
+        @if (!insurancePolicyConfig.sumInsuredAllocation.isHide) {
+          <div class="form-group">
+            <ui-number-box
+              [id]="insurancePolicyConfig.sumInsuredAllocation.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.sumInsuredAllocation.label!"
+              [placeholder]="insurancePolicyConfig.sumInsuredAllocation.placeholder ?? ''"
+              [isRequired]="insurancePolicyConfig.sumInsuredAllocation.isRequired!"
+            ></ui-number-box>
+          </div>
+        }
+
+        @if (!insurancePolicyConfig.memberCoverageFrom.isHide) {
+          <div class="form-group">
+            <ui-calendar
+              [id]="insurancePolicyConfig.memberCoverageFrom.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.memberCoverageFrom.label!"
+              [isRequired]="insurancePolicyConfig.memberCoverageFrom.isRequired!"
+            ></ui-calendar>
+          </div>
+        }
+
+        @if (!insurancePolicyConfig.memberCoverageTo.isHide) {
+          <div class="form-group">
+            <ui-calendar
+              [id]="insurancePolicyConfig.memberCoverageTo.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.memberCoverageTo.label!"
+              [isRequired]="insurancePolicyConfig.memberCoverageTo.isRequired!"
+            ></ui-calendar>
+          </div>
+        }
+
+      </div>
+
+      @if (!insurancePolicyConfig.insuranceRemarks.isHide) {
+        <ui-text-area
+          [id]="insurancePolicyConfig.insuranceRemarks.id"
+          [parentFormGroup]="insurance"
+          [label]="insurancePolicyConfig.insuranceRemarks.label!"
+          [placeholder]="insurancePolicyConfig.insuranceRemarks.placeholder ?? ''"
+          [maxLength]="insurancePolicyConfig.insuranceRemarks.maxLength"
+          [isRequired]="insurancePolicyConfig.insuranceRemarks.isRequired!"
+        ></ui-text-area>
+      }
+    </form>
+  }
+
+  <!-- Tab B: Nominees -->
+  @if (!isInsuranceTab()) {
+    <form [formGroup]="nominee">
+      <div class="grid grid-cols-3 gap-[10px] mb-4">
+
+        @if (!nomineeConfig.nomineeBenefitType.isHide) {
+          <div class="form-group">
+            <ui-dropdown
+              [id]="nomineeConfig.nomineeBenefitType.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.nomineeBenefitType.label!"
+              [placeholder]="nomineeConfig.nomineeBenefitType.placeholder ?? ''"
+              [isRequired]="nomineeConfig.nomineeBenefitType.isRequired!"
+              [options]="benefitTypeOptions$ | async"
+            ></ui-dropdown>
+          </div>
+        }
+
+        @if (!nomineeConfig.nomineeName.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="nomineeConfig.nomineeName.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.nomineeName.label!"
+              [placeholder]="nomineeConfig.nomineeName.placeholder ?? ''"
+              [minLength]="nomineeConfig.nomineeName.minLength"
+              [maxLength]="nomineeConfig.nomineeName.maxLength"
+              [isRequired]="nomineeConfig.nomineeName.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!nomineeConfig.nomineeRelationship.isHide) {
+          <div class="form-group">
+            <ui-dropdown
+              [id]="nomineeConfig.nomineeRelationship.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.nomineeRelationship.label!"
+              [placeholder]="nomineeConfig.nomineeRelationship.placeholder ?? ''"
+              [isRequired]="nomineeConfig.nomineeRelationship.isRequired!"
+              [options]="relationOptions$ | async"
+            ></ui-dropdown>
+          </div>
+        }
+
+        @if (!nomineeConfig.nomineeDateOfBirth.isHide) {
+          <div class="form-group">
+            <ui-calendar
+              [id]="nomineeConfig.nomineeDateOfBirth.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.nomineeDateOfBirth.label!"
+              [isRequired]="nomineeConfig.nomineeDateOfBirth.isRequired!"
+            ></ui-calendar>
+          </div>
+        }
+
+        @if (!nomineeConfig.nomineeContactNumber.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="nomineeConfig.nomineeContactNumber.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.nomineeContactNumber.label!"
+              [placeholder]="nomineeConfig.nomineeContactNumber.placeholder ?? ''"
+              [minLength]="nomineeConfig.nomineeContactNumber.minLength"
+              [maxLength]="nomineeConfig.nomineeContactNumber.maxLength"
+              [isRequired]="nomineeConfig.nomineeContactNumber.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!nomineeConfig.sharePercentage.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="nomineeConfig.sharePercentage.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.sharePercentage.label!"
+              [placeholder]="nomineeConfig.sharePercentage.placeholder ?? ''"
+              [minLength]="nomineeConfig.sharePercentage.minLength"
+              [maxLength]="nomineeConfig.sharePercentage.maxLength"
+              [isRequired]="nomineeConfig.sharePercentage.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!nomineeConfig.priorityOrder.isHide) {
+          <div class="form-group">
+            <ui-number-box
+              [id]="nomineeConfig.priorityOrder.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.priorityOrder.label!"
+              [placeholder]="nomineeConfig.priorityOrder.placeholder ?? ''"
+              [isRequired]="nomineeConfig.priorityOrder.isRequired!"
+            ></ui-number-box>
+          </div>
+        }
+
+        @if (!nomineeConfig.nomineeEffectiveFrom.isHide) {
+          <div class="form-group">
+            <ui-calendar
+              [id]="nomineeConfig.nomineeEffectiveFrom.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.nomineeEffectiveFrom.label!"
+              [isRequired]="nomineeConfig.nomineeEffectiveFrom.isRequired!"
+            ></ui-calendar>
+          </div>
+        }
+
+        @if (!nomineeConfig.nomineeEffectiveTo.isHide) {
+          <div class="form-group">
+            <ui-calendar
+              [id]="nomineeConfig.nomineeEffectiveTo.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.nomineeEffectiveTo.label!"
+              [isRequired]="nomineeConfig.nomineeEffectiveTo.isRequired!"
+            ></ui-calendar>
+          </div>
+        }
+
+        @if (!nomineeConfig.minorFlag.isHide) {
+          <div class="form-group flex items-end pb-2">
+            <ui-checkbox
+              [id]="nomineeConfig.minorFlag.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.minorFlag.label!"
+            ></ui-checkbox>
+          </div>
+        }
+
+        @if (!nomineeConfig.guardianName.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="nomineeConfig.guardianName.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.guardianName.label!"
+              [placeholder]="nomineeConfig.guardianName.placeholder ?? ''"
+              [minLength]="nomineeConfig.guardianName.minLength"
+              [maxLength]="nomineeConfig.guardianName.maxLength"
+              [isRequired]="nomineeConfig.guardianName.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!nomineeConfig.nomineeActive.isHide) {
+          <div class="form-group flex items-end pb-2">
+            <ui-checkbox
+              [id]="nomineeConfig.nomineeActive.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.nomineeActive.label!"
+            ></ui-checkbox>
+          </div>
+        }
+
+      </div>
+
+      <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Nominee Bank Details</p>
+      <div class="grid grid-cols-3 gap-[10px]">
+
+        @if (!nomineeConfig.nomineeBankName.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="nomineeConfig.nomineeBankName.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.nomineeBankName.label!"
+              [placeholder]="nomineeConfig.nomineeBankName.placeholder ?? ''"
+              [minLength]="nomineeConfig.nomineeBankName.minLength"
+              [maxLength]="nomineeConfig.nomineeBankName.maxLength"
+              [isRequired]="nomineeConfig.nomineeBankName.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!nomineeConfig.nomineeAccountNumber.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="nomineeConfig.nomineeAccountNumber.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.nomineeAccountNumber.label!"
+              [placeholder]="nomineeConfig.nomineeAccountNumber.placeholder ?? ''"
+              [minLength]="nomineeConfig.nomineeAccountNumber.minLength"
+              [maxLength]="nomineeConfig.nomineeAccountNumber.maxLength"
+              [isRequired]="nomineeConfig.nomineeAccountNumber.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!nomineeConfig.nomineeIfscCode.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="nomineeConfig.nomineeIfscCode.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.nomineeIfscCode.label!"
+              [placeholder]="nomineeConfig.nomineeIfscCode.placeholder ?? ''"
+              [minLength]="nomineeConfig.nomineeIfscCode.minLength"
+              [maxLength]="nomineeConfig.nomineeIfscCode.maxLength"
+              [isRequired]="nomineeConfig.nomineeIfscCode.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!nomineeConfig.nomineeAadhaarNumber.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="nomineeConfig.nomineeAadhaarNumber.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.nomineeAadhaarNumber.label!"
+              [placeholder]="nomineeConfig.nomineeAadhaarNumber.placeholder ?? ''"
+              [minLength]="nomineeConfig.nomineeAadhaarNumber.minLength"
+              [maxLength]="nomineeConfig.nomineeAadhaarNumber.maxLength"
+              [isRequired]="nomineeConfig.nomineeAadhaarNumber.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!nomineeConfig.nomineePanNumber.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="nomineeConfig.nomineePanNumber.id"
+              [parentFormGroup]="nominee"
+              [label]="nomineeConfig.nomineePanNumber.label!"
+              [placeholder]="nomineeConfig.nomineePanNumber.placeholder ?? ''"
+              [minLength]="nomineeConfig.nomineePanNumber.minLength"
+              [maxLength]="nomineeConfig.nomineePanNumber.maxLength"
+              [isRequired]="nomineeConfig.nomineePanNumber.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+      </div>
+    </form>
+  }
+
 </div>

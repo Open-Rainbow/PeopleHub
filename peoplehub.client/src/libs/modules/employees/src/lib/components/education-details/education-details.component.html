@@ -13,6 +13,30 @@
       ></ui-text-box>
     }
 
+    @if (!formConfig.board.isHide) {
+      <ui-text-box
+        [id]="formConfig.board.id"
+        [parentFormGroup]="educationDetails"
+        [label]="formConfig.board.label!"
+        [placeholder]="formConfig.board.placeholder ?? ''"
+        [minLength]="formConfig.board.minLength"
+        [maxLength]="formConfig.board.maxLength"
+        [isRequired]="formConfig.board.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.courseType.isHide) {
+      <ui-text-box
+        [id]="formConfig.courseType.id"
+        [parentFormGroup]="educationDetails"
+        [label]="formConfig.courseType.label!"
+        [placeholder]="formConfig.courseType.placeholder ?? ''"
+        [minLength]="formConfig.courseType.minLength"
+        [maxLength]="formConfig.courseType.maxLength"
+        [isRequired]="formConfig.courseType.isRequired!"
+      ></ui-text-box>
+    }
+
     @if (!formConfig.specialization.isHide) {
       <ui-text-box
         [id]="formConfig.specialization.id"
@@ -22,6 +46,42 @@
         [minLength]="formConfig.specialization.minLength"
         [maxLength]="formConfig.specialization.maxLength"
         [isRequired]="formConfig.specialization.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.percentageScore.isHide) {
+      <ui-text-box
+        [id]="formConfig.percentageScore.id"
+        [parentFormGroup]="educationDetails"
+        [label]="formConfig.percentageScore.label!"
+        [placeholder]="formConfig.percentageScore.placeholder ?? ''"
+        [minLength]="formConfig.percentageScore.minLength"
+        [maxLength]="formConfig.percentageScore.maxLength"
+        [isRequired]="formConfig.percentageScore.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.scoringMethod.isHide) {
+      <ui-text-box
+        [id]="formConfig.scoringMethod.id"
+        [parentFormGroup]="educationDetails"
+        [label]="formConfig.scoringMethod.label!"
+        [placeholder]="formConfig.scoringMethod.placeholder ?? ''"
+        [minLength]="formConfig.scoringMethod.minLength"
+        [maxLength]="formConfig.scoringMethod.maxLength"
+        [isRequired]="formConfig.scoringMethod.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.monthOfPassing.isHide) {
+      <ui-text-box
+        [id]="formConfig.monthOfPassing.id"
+        [parentFormGroup]="educationDetails"
+        [label]="formConfig.monthOfPassing.label!"
+        [placeholder]="formConfig.monthOfPassing.placeholder ?? ''"
+        [minLength]="formConfig.monthOfPassing.minLength"
+        [maxLength]="formConfig.monthOfPassing.maxLength"
+        [isRequired]="formConfig.monthOfPassing.isRequired!"
       ></ui-text-box>
     }
 

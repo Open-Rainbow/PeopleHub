@@ -1,5 +1,147 @@
 import { Routes } from '@angular/router';
 
+const addEmployeeSectionRoutes = [
+  'basic-info',
+  'contact-info',
+  'family-details',
+  'job-details',
+  'education-details',
+  'skills',
+  'salary-structure',
+  'identity-statutory',
+  'work-experience',
+  'insurance-details',
+  'documents-upload',
+  'temp-login-credentials',
+  'separation',
+  'assets',
+  'custom-fields-additional',
+  'change-requests-audit',
+];
+
+const legacyAddEmployeeRedirectRoutes: Routes = addEmployeeSectionRoutes.map(stepRoute => ({
+  path: stepRoute,
+  redirectTo: `add-employee/${stepRoute}`,
+  pathMatch: 'full',
+}));
+
+const addEmployeeChildRoutes: Routes = [
+  { path: '', redirectTo: 'basic-info', pathMatch: 'full' },
+  {
+    path: 'basic-info',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/basic-info/basic-info.component').then(
+        m => m.BasicInfoComponent
+      ),
+  },
+  {
+    path: 'contact-info',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/contact-info/contact-info.component').then(
+        m => m.ContactInfoComponent
+      ),
+  },
+  {
+    path: 'family-details',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/family-details/family-details.component').then(
+        m => m.FamilyDetailsComponent
+      ),
+  },
+  {
+    path: 'job-details',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/job-details/job-details.component').then(
+        m => m.JobDetailsComponent
+      ),
+  },
+  {
+    path: 'education-details',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/education-details/education-details.component').then(
+        m => m.EducationDetailsComponent
+      ),
+  },
+  {
+    path: 'skills',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/skills/skills.component').then(
+        m => m.SkillsComponent
+      ),
+  },
+  {
+    path: 'salary-structure',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/salary-structure/salary-structure.component').then(
+        m => m.SalaryStructureComponent
+      ),
+  },
+  {
+    path: 'identity-statutory',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/identity-statutory/identity-statutory.component').then(
+        m => m.IdentityStatutoryComponent
+      ),
+  },
+  {
+    path: 'work-experience',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/work-experience/work-experience.component').then(
+        m => m.WorkExperienceComponent
+      ),
+  },
+  {
+    path: 'insurance-details',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/insurance-details/insurance-details.component').then(
+        m => m.InsuranceDetailsComponent
+      ),
+  },
+  {
+    path: 'documents-upload',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/documents-upload/documents-upload.component').then(
+        m => m.DocumentsUploadComponent
+      ),
+  },
+  {
+    path: 'temp-login-credentials',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/temp-login-credentials/temp-login-credentials.component').then(
+        m => m.TempLoginCredentialsComponent
+      ),
+  },
+  {
+    path: 'separation',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/separation/separation.component').then(
+        m => m.SeparationComponent
+      ),
+  },
+  {
+    path: 'assets',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/assets/assets.component').then(
+        m => m.AssetsComponent
+      ),
+  },
+  {
+    path: 'custom-fields-additional',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/custom-fields-additional/custom-fields-additional.component').then(
+        m => m.CustomFieldsAdditionalComponent
+      ),
+  },
+  {
+    path: 'change-requests-audit',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/change-requests-audit/change-requests-audit.component').then(
+        m => m.ChangeRequestsAuditComponent
+      ),
+  },
+  { path: '**', redirectTo: 'basic-info' },
+];
+
 export const appRoutes: Routes = [
   {
     path: '',
@@ -84,7 +226,24 @@ export const appRoutes: Routes = [
             m => m.EmployeeOverviewComponent
           ),
       },
+      {
+        path: 'add-employee',
+        loadComponent: () =>
+          import('../../libs/modules/employees/src/lib/components/add-employee/add-employee.component').then(
+            m => m.AddEmployeeComponent
+          ),
+        children: addEmployeeChildRoutes,
+      },
+      ...legacyAddEmployeeRedirectRoutes,
     ],
+  },
+  {
+    path: 'add-employee',
+    loadComponent: () =>
+      import('../../libs/modules/employees/src/lib/components/add-employee/add-employee.component').then(
+        m => m.AddEmployeeComponent
+      ),
+    children: addEmployeeChildRoutes,
   },
   {
     path: 'admin',
@@ -184,66 +343,9 @@ export const appRoutes: Routes = [
           import('../../libs/modules/employees/src/lib/components/add-employee/add-employee.component').then(
             m => m.AddEmployeeComponent
           ),
-        children: [
-          { path: '', redirectTo: 'basic-info', pathMatch: 'full' },
-          {
-            path: 'basic-info',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/basic-info/basic-info.component').then(
-                m => m.BasicInfoComponent
-              ),
-          },
-          {
-            path: 'contact-info',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/contact-info/contact-info.component').then(
-                m => m.ContactInfoComponent
-              ),
-          },
-          {
-            path: 'job-details',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/job-details/job-details.component').then(
-                m => m.JobDetailsComponent
-              ),
-          },
-          {
-            path: 'education-details',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/education-details/education-details.component').then(
-                m => m.EducationDetailsComponent
-              ),
-          },
-          {
-            path: 'salary-structure',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/salary-structure/salary-structure.component').then(
-                m => m.SalaryStructureComponent
-              ),
-          },
-          {
-            path: 'work-experience',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/work-experience/work-experience.component').then(
-                m => m.WorkExperienceComponent
-              ),
-          },
-          {
-            path: 'documents-upload',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/documents-upload/documents-upload.component').then(
-                m => m.DocumentsUploadComponent
-              ),
-          },
-          {
-            path: 'temp-login-credentials',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/temp-login-credentials/temp-login-credentials.component').then(
-                m => m.TempLoginCredentialsComponent
-              ),
-          },
-        ],
+        children: addEmployeeChildRoutes,
       },
+      ...legacyAddEmployeeRedirectRoutes,
       {
         path: 'offer-letter',
         loadComponent: () =>
@@ -344,66 +446,9 @@ export const appRoutes: Routes = [
           import('../../libs/modules/employees/src/lib/components/add-employee/add-employee.component').then(
             m => m.AddEmployeeComponent
           ),
-        children: [
-          { path: '', redirectTo: 'basic-info', pathMatch: 'full' },
-          {
-            path: 'basic-info',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/basic-info/basic-info.component').then(
-                m => m.BasicInfoComponent
-              ),
-          },
-          {
-            path: 'contact-info',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/contact-info/contact-info.component').then(
-                m => m.ContactInfoComponent
-              ),
-          },
-          {
-            path: 'job-details',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/job-details/job-details.component').then(
-                m => m.JobDetailsComponent
-              ),
-          },
-          {
-            path: 'education-details',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/education-details/education-details.component').then(
-                m => m.EducationDetailsComponent
-              ),
-          },
-          {
-            path: 'salary-structure',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/salary-structure/salary-structure.component').then(
-                m => m.SalaryStructureComponent
-              ),
-          },
-          {
-            path: 'work-experience',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/work-experience/work-experience.component').then(
-                m => m.WorkExperienceComponent
-              ),
-          },
-          {
-            path: 'documents-upload',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/documents-upload/documents-upload.component').then(
-                m => m.DocumentsUploadComponent
-              ),
-          },
-          {
-            path: 'temp-login-credentials',
-            loadComponent: () =>
-              import('../../libs/modules/employees/src/lib/components/temp-login-credentials/temp-login-credentials.component').then(
-                m => m.TempLoginCredentialsComponent
-              ),
-          },
-        ],
+        children: addEmployeeChildRoutes,
       },
+      ...legacyAddEmployeeRedirectRoutes,
       {
         path: 'offer-letter',
         loadComponent: () =>

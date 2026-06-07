@@ -2,13 +2,16 @@
 
 export interface IEducationDetailsFormFields {
     higherQualification: IFormFieldConfig;
+    board: IFormFieldConfig;
+    courseType: IFormFieldConfig;
     specialization: IFormFieldConfig;
+    percentageScore: IFormFieldConfig;
+    scoringMethod: IFormFieldConfig;
+    monthOfPassing: IFormFieldConfig;
     yearOfPassing: IFormFieldConfig;
     universityName: IFormFieldConfig;
     certifications: IFormFieldConfig;
 }
-
-export type { IEducationDetailsForm } from './education-details.types';
 
 
 

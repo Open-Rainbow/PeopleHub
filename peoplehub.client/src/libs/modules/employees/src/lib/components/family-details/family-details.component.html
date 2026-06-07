@@ -1,0 +1,268 @@
+<div class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md">
+
+  <!-- Tab Header -->
+  <div class="flex gap-2 border-b border-gray-200 mb-6">
+    <button
+      type="button"
+      class="px-5 py-2 text-sm font-medium rounded-t-lg transition-colors duration-150"
+      [class.text-blue-600]="isFamilyTab()"
+      [class.border-b-2]="isFamilyTab()"
+      [class.border-blue-600]="isFamilyTab()"
+      [class.text-gray-500]="!isFamilyTab()"
+      (click)="switchTab('family')"
+    >
+      Family Members
+    </button>
+    <button
+      type="button"
+      class="px-5 py-2 text-sm font-medium rounded-t-lg transition-colors duration-150"
+      [class.text-blue-600]="!isFamilyTab()"
+      [class.border-b-2]="!isFamilyTab()"
+      [class.border-blue-600]="!isFamilyTab()"
+      [class.text-gray-500]="isFamilyTab()"
+      (click)="switchTab('dependent')"
+    >
+      Dependents
+    </button>
+  </div>
+
+  <!-- Tab A: Family Members -->
+  @if (isFamilyTab()) {
+    <form [formGroup]="familyMember">
+      <div class="grid grid-cols-3 gap-[10px]">
+
+        @if (!familyMemberConfig.memberName.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="familyMemberConfig.memberName.id"
+              [parentFormGroup]="familyMember"
+              [label]="familyMemberConfig.memberName.label!"
+              [placeholder]="familyMemberConfig.memberName.placeholder ?? ''"
+              [minLength]="familyMemberConfig.memberName.minLength"
+              [maxLength]="familyMemberConfig.memberName.maxLength"
+              [isRequired]="familyMemberConfig.memberName.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!familyMemberConfig.memberRelationship.isHide) {
+          <div class="form-group">
+            <ui-dropdown
+              [id]="familyMemberConfig.memberRelationship.id"
+              [parentFormGroup]="familyMember"
+              [label]="familyMemberConfig.memberRelationship.label!"
+              [placeholder]="familyMemberConfig.memberRelationship.placeholder ?? ''"
+              [isRequired]="familyMemberConfig.memberRelationship.isRequired!"
+              [options]="relationOptions$ | async"
+            ></ui-dropdown>
+          </div>
+        }
+
+        @if (!familyMemberConfig.memberGender.isHide) {
+          <div class="form-group">
+            <ui-dropdown
+              [id]="familyMemberConfig.memberGender.id"
+              [parentFormGroup]="familyMember"
+              [label]="familyMemberConfig.memberGender.label!"
+              [placeholder]="familyMemberConfig.memberGender.placeholder ?? ''"
+              [isRequired]="familyMemberConfig.memberGender.isRequired!"
+              [options]="genderOptions$ | async"
+            ></ui-dropdown>
+          </div>
+        }
+
+        @if (!familyMemberConfig.memberDateOfBirth.isHide) {
+          <div class="form-group">
+            <ui-calendar
+              [id]="familyMemberConfig.memberDateOfBirth.id"
+              [parentFormGroup]="familyMember"
+              [label]="familyMemberConfig.memberDateOfBirth.label!"
+              [isRequired]="familyMemberConfig.memberDateOfBirth.isRequired!"
+            ></ui-calendar>
+          </div>
+        }
+
+        @if (!familyMemberConfig.memberMaritalStatus.isHide) {
+          <div class="form-group">
+            <ui-dropdown
+              [id]="familyMemberConfig.memberMaritalStatus.id"
+              [parentFormGroup]="familyMember"
+              [label]="familyMemberConfig.memberMaritalStatus.label!"
+              [placeholder]="familyMemberConfig.memberMaritalStatus.placeholder ?? ''"
+              [isRequired]="familyMemberConfig.memberMaritalStatus.isRequired!"
+              [options]="maritalStatusOptions$ | async"
+            ></ui-dropdown>
+          </div>
+        }
+
+        @if (!familyMemberConfig.memberOccupation.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="familyMemberConfig.memberOccupation.id"
+              [parentFormGroup]="familyMember"
+              [label]="familyMemberConfig.memberOccupation.label!"
+              [placeholder]="familyMemberConfig.memberOccupation.placeholder ?? ''"
+              [minLength]="familyMemberConfig.memberOccupation.minLength"
+              [maxLength]="familyMemberConfig.memberOccupation.maxLength"
+              [isRequired]="familyMemberConfig.memberOccupation.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!familyMemberConfig.memberContactNumber.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="familyMemberConfig.memberContactNumber.id"
+              [parentFormGroup]="familyMember"
+              [label]="familyMemberConfig.memberContactNumber.label!"
+              [placeholder]="familyMemberConfig.memberContactNumber.placeholder ?? ''"
+              [minLength]="familyMemberConfig.memberContactNumber.minLength"
+              [maxLength]="familyMemberConfig.memberContactNumber.maxLength"
+              [isRequired]="familyMemberConfig.memberContactNumber.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!familyMemberConfig.livesWithEmployee.isHide) {
+          <div class="form-group flex items-end pb-2">
+            <ui-checkbox
+              [id]="familyMemberConfig.livesWithEmployee.id"
+              [parentFormGroup]="familyMember"
+              [label]="familyMemberConfig.livesWithEmployee.label!"
+            ></ui-checkbox>
+          </div>
+        }
+
+      </div>
+
+      @if (!familyMemberConfig.memberNotes.isHide) {
+        <div class="mt-4">
+          <ui-text-area
+            [id]="familyMemberConfig.memberNotes.id"
+            [parentFormGroup]="familyMember"
+            [label]="familyMemberConfig.memberNotes.label!"
+            [placeholder]="familyMemberConfig.memberNotes.placeholder ?? ''"
+            [maxLength]="familyMemberConfig.memberNotes.maxLength"
+            [isRequired]="familyMemberConfig.memberNotes.isRequired!"
+          ></ui-text-area>
+        </div>
+      }
+    </form>
+  }
+
+  <!-- Tab B: Dependents -->
+  @if (!isFamilyTab()) {
+    <form [formGroup]="dependent">
+      <div class="grid grid-cols-3 gap-[10px]">
+
+        @if (!dependentConfig.dependentName.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="dependentConfig.dependentName.id"
+              [parentFormGroup]="dependent"
+              [label]="dependentConfig.dependentName.label!"
+              [placeholder]="dependentConfig.dependentName.placeholder ?? ''"
+              [minLength]="dependentConfig.dependentName.minLength"
+              [maxLength]="dependentConfig.dependentName.maxLength"
+              [isRequired]="dependentConfig.dependentName.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!dependentConfig.dependentRelationship.isHide) {
+          <div class="form-group">
+            <ui-dropdown
+              [id]="dependentConfig.dependentRelationship.id"
+              [parentFormGroup]="dependent"
+              [label]="dependentConfig.dependentRelationship.label!"
+              [placeholder]="dependentConfig.dependentRelationship.placeholder ?? ''"
+              [isRequired]="dependentConfig.dependentRelationship.isRequired!"
+              [options]="relationOptions$ | async"
+            ></ui-dropdown>
+          </div>
+        }
+
+        @if (!dependentConfig.dependentDateOfBirth.isHide) {
+          <div class="form-group">
+            <ui-calendar
+              [id]="dependentConfig.dependentDateOfBirth.id"
+              [parentFormGroup]="dependent"
+              [label]="dependentConfig.dependentDateOfBirth.label!"
+              [isRequired]="dependentConfig.dependentDateOfBirth.isRequired!"
+            ></ui-calendar>
+          </div>
+        }
+
+        @if (!dependentConfig.dependentGender.isHide) {
+          <div class="form-group">
+            <ui-dropdown
+              [id]="dependentConfig.dependentGender.id"
+              [parentFormGroup]="dependent"
+              [label]="dependentConfig.dependentGender.label!"
+              [placeholder]="dependentConfig.dependentGender.placeholder ?? ''"
+              [isRequired]="dependentConfig.dependentGender.isRequired!"
+              [options]="genderOptions$ | async"
+            ></ui-dropdown>
+          </div>
+        }
+
+        @if (!dependentConfig.dependencyStartDate.isHide) {
+          <div class="form-group">
+            <ui-calendar
+              [id]="dependentConfig.dependencyStartDate.id"
+              [parentFormGroup]="dependent"
+              [label]="dependentConfig.dependencyStartDate.label!"
+              [isRequired]="dependentConfig.dependencyStartDate.isRequired!"
+            ></ui-calendar>
+          </div>
+        }
+
+        <div class="form-group flex flex-col gap-2 pt-2">
+          @if (!dependentConfig.financiallyDependent.isHide) {
+            <ui-checkbox
+              [id]="dependentConfig.financiallyDependent.id"
+              [parentFormGroup]="dependent"
+              [label]="dependentConfig.financiallyDependent.label!"
+            ></ui-checkbox>
+          }
+          @if (!dependentConfig.studentStatus.isHide) {
+            <ui-checkbox
+              [id]="dependentConfig.studentStatus.id"
+              [parentFormGroup]="dependent"
+              [label]="dependentConfig.studentStatus.label!"
+            ></ui-checkbox>
+          }
+          @if (!dependentConfig.disabilityStatus.isHide) {
+            <ui-checkbox
+              [id]="dependentConfig.disabilityStatus.id"
+              [parentFormGroup]="dependent"
+              [label]="dependentConfig.disabilityStatus.label!"
+            ></ui-checkbox>
+          }
+          @if (!dependentConfig.eligibleForBenefits.isHide) {
+            <ui-checkbox
+              [id]="dependentConfig.eligibleForBenefits.id"
+              [parentFormGroup]="dependent"
+              [label]="dependentConfig.eligibleForBenefits.label!"
+            ></ui-checkbox>
+          }
+        </div>
+
+      </div>
+
+      @if (!dependentConfig.dependentRemarks.isHide) {
+        <div class="mt-4">
+          <ui-text-area
+            [id]="dependentConfig.dependentRemarks.id"
+            [parentFormGroup]="dependent"
+            [label]="dependentConfig.dependentRemarks.label!"
+            [placeholder]="dependentConfig.dependentRemarks.placeholder ?? ''"
+            [maxLength]="dependentConfig.dependentRemarks.maxLength"
+            [isRequired]="dependentConfig.dependentRemarks.isRequired!"
+          ></ui-text-area>
+        </div>
+      }
+    </form>
+  }
+
+</div>

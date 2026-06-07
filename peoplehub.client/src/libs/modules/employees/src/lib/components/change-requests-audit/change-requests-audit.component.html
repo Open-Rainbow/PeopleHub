@@ -1,0 +1,52 @@
+<div class="bg-white rounded-[16px] border border-[#dbeafe] shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in p-8 h-full hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
+  <div class="grid grid-cols-3 gap-[10px] max-[768px]:grid-cols-1">
+    @if (!formConfig.changeRequestType.isHide) {
+      <ui-text-box
+        [id]="formConfig.changeRequestType.id"
+        [parentFormGroup]="changeRequestsAudit"
+        [label]="formConfig.changeRequestType.label!"
+        [placeholder]="formConfig.changeRequestType.placeholder ?? ''"
+        [minLength]="formConfig.changeRequestType.minLength"
+        [maxLength]="formConfig.changeRequestType.maxLength"
+        [isRequired]="formConfig.changeRequestType.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.requestedBy.isHide) {
+      <ui-text-box
+        [id]="formConfig.requestedBy.id"
+        [parentFormGroup]="changeRequestsAudit"
+        [label]="formConfig.requestedBy.label!"
+        [placeholder]="formConfig.requestedBy.placeholder ?? ''"
+        [minLength]="formConfig.requestedBy.minLength"
+        [maxLength]="formConfig.requestedBy.maxLength"
+        [isRequired]="formConfig.requestedBy.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.auditReference.isHide) {
+      <ui-text-box
+        [id]="formConfig.auditReference.id"
+        [parentFormGroup]="changeRequestsAudit"
+        [label]="formConfig.auditReference.label!"
+        [placeholder]="formConfig.auditReference.placeholder ?? ''"
+        [minLength]="formConfig.auditReference.minLength"
+        [maxLength]="formConfig.auditReference.maxLength"
+        [isRequired]="formConfig.auditReference.isRequired!"
+      ></ui-text-box>
+    }
+  </div>
+
+  @if (!formConfig.auditRemarks.isHide) {
+    <div class="mt-5">
+      <ui-text-area
+        [id]="formConfig.auditRemarks.id"
+        [parentFormGroup]="changeRequestsAudit"
+        [label]="formConfig.auditRemarks.label!"
+        [placeholder]="formConfig.auditRemarks.placeholder ?? ''"
+        [maxLength]="formConfig.auditRemarks.maxLength"
+        [isRequired]="formConfig.auditRemarks.isRequired!"
+      ></ui-text-area>
+    </div>
+  }
+</div>

@@ -1,18 +1,38 @@
-import { IAddEmployeeConfig } from "./add-employee.model";
-import { basicInfoForm } from "./basic-info.config";
-import { contactInfoForm } from "./contact-info.config";
-import { documentsUploadForm } from "./documents-upload.config";
-import { educationDetailsForm } from "./education-details.config";
-import { insuranceDetailsForm } from "./insurance-details.config";
-import { jobDetailsForm } from "./job-details.config";
-import { workExperienceForm } from "./work-experience.config";
+import { IAddEmployeeConfig } from './add-employee.types';
+import { assetsForm } from './assets.config';
+import { basicInfoForm } from './basic-info.config';
+import { changeRequestsAuditForm } from './change-requests-audit.config';
+import { contactInfoForm } from './contact-info.config';
+import { customFieldsAdditionalForm } from './custom-fields-additional.config';
+import { documentsUploadForm } from './documents-upload.config';
+import { educationDetailsForm } from './education-details.config';
+import { familyMemberForm, dependentForm } from './family-details.config';
+import { identityStatutoryForm } from './identity-statutory.config';
+import { insurancePolicyForm, nomineeForm } from './insurance-details.config';
+import { jobDetailsForm } from './job-details.config';
+import { salaryStructureForm } from './salary-structure.config';
+import { separationForm } from './separation.config';
+import { skillsForm } from './skills.config';
+import { tempLoginForm } from './temp-login.config';
+import { workExperienceForm } from './work-experience.config';
 
 export const addEmployeeConfig: IAddEmployeeConfig = {
     basicInfo: basicInfoForm,
     contactInfo: contactInfoForm,
-    documentsUpload: documentsUploadForm,
-    educationDetails: educationDetailsForm,
-    insuranceDetails: insuranceDetailsForm,
+    familyMember: familyMemberForm,
+    dependent: dependentForm,
     jobDetails: jobDetailsForm,
+    educationDetails: educationDetailsForm,
+    skills: skillsForm,
+    salaryStructure: salaryStructureForm,
+    identityStatutory: identityStatutoryForm,
     workExperience: workExperienceForm,
-} 
+    insurancePolicy: insurancePolicyForm,
+    insuranceNominee: nomineeForm,
+    documentsUpload: documentsUploadForm,
+    tempLoginCredentials: tempLoginForm,
+    separation: separationForm,
+    assets: assetsForm,
+    customFieldsAdditional: customFieldsAdditionalForm,
+    changeRequestsAudit: changeRequestsAuditForm,
+};

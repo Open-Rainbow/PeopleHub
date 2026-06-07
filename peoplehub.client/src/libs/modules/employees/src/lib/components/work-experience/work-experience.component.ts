@@ -1,7 +1,7 @@
 ﻿import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { NumberBoxComponent, TextBoxComponent } from 'ui';
+import { TextBoxComponent, CalendarComponent } from 'ui';
 import { CommonService } from 'common';
 import { StepperService } from '../../services/stepper/stepper.service';
 import { EmployeeDataService } from '../../services/employee-data/employee-data.service';
@@ -11,7 +11,7 @@ import { workExperienceForm } from '../../config/form-configs/work-experience.co
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'employees-work-experience',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TextBoxComponent, NumberBoxComponent],
+  imports: [CommonModule, ReactiveFormsModule, TextBoxComponent, CalendarComponent],
   templateUrl: './work-experience.component.html',
   styleUrls: ['./work-experience.component.scss'],
 })

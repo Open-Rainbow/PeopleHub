@@ -36,9 +36,9 @@ export class LoginComponent {
 
     const payload = this.form.getRawValue();
     const isKnownCredential =
-      (payload.username === 'Employee' && payload.password === 'Employee@123') ||
+      (payload.username === 'employee' && payload.password === '123') ||
       (payload.username === 'hr' && payload.password === '123') ||
-      (payload.username === 'Admin' && payload.password === 'Admin@123');
+      (payload.username === 'admin' && payload.password === '123');
 
     if (!isKnownCredential) {
       this.showError.set(true);

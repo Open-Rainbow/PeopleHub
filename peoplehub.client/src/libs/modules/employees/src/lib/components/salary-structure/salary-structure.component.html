@@ -1,3 +1,214 @@
-<div class="w-full bg-white rounded-[25px] p-8 border border-gray-200 shadow-[0_4px_10px_rgba(0,0,0,0.05)] flex flex-col items-center justify-center min-h-[200px]">
-  <p class="text-gray-400 text-[16px]">Salary &amp; Payroll configuration coming soon.</p>
+<div class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md">
+
+  <!-- Payroll Configuration -->
+  <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Payroll Configuration</p>
+  <div class="grid grid-cols-3 gap-[10px] mb-6">
+
+    @if (!formConfig.payrollGroup.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.payrollGroup.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.payrollGroup.label!"
+          [placeholder]="formConfig.payrollGroup.placeholder ?? ''"
+          [isRequired]="formConfig.payrollGroup.isRequired!"
+          [options]="payrollGroupOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.salaryStructure.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.salaryStructure.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.salaryStructure.label!"
+          [placeholder]="formConfig.salaryStructure.placeholder ?? ''"
+          [isRequired]="formConfig.salaryStructure.isRequired!"
+          [options]="salaryStructureOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.payGrade.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.payGrade.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.payGrade.label!"
+          [placeholder]="formConfig.payGrade.placeholder ?? ''"
+          [minLength]="formConfig.payGrade.minLength"
+          [maxLength]="formConfig.payGrade.maxLength"
+          [isRequired]="formConfig.payGrade.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.taxRegime.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.taxRegime.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.taxRegime.label!"
+          [placeholder]="formConfig.taxRegime.placeholder ?? ''"
+          [isRequired]="formConfig.taxRegime.isRequired!"
+          [options]="taxRegimeOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.salaryPaymentMode.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.salaryPaymentMode.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.salaryPaymentMode.label!"
+          [placeholder]="formConfig.salaryPaymentMode.placeholder ?? ''"
+          [isRequired]="formConfig.salaryPaymentMode.isRequired!"
+          [options]="paymentModeOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.payrollEffectiveFrom.isHide) {
+      <div class="form-group">
+        <ui-calendar
+          [id]="formConfig.payrollEffectiveFrom.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.payrollEffectiveFrom.label!"
+          [isRequired]="formConfig.payrollEffectiveFrom.isRequired!"
+        ></ui-calendar>
+      </div>
+    }
+
+  </div>
+
+  <!-- Bank Details -->
+  <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Bank Details</p>
+  <div class="grid grid-cols-3 gap-[10px] mb-4">
+
+    @if (!formConfig.bankName.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.bankName.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.bankName.label!"
+          [placeholder]="formConfig.bankName.placeholder ?? ''"
+          [minLength]="formConfig.bankName.minLength"
+          [maxLength]="formConfig.bankName.maxLength"
+          [isRequired]="formConfig.bankName.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.accountHolderName.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.accountHolderName.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.accountHolderName.label!"
+          [placeholder]="formConfig.accountHolderName.placeholder ?? ''"
+          [minLength]="formConfig.accountHolderName.minLength"
+          [maxLength]="formConfig.accountHolderName.maxLength"
+          [isRequired]="formConfig.accountHolderName.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.bankAccountNumber.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.bankAccountNumber.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.bankAccountNumber.label!"
+          [placeholder]="formConfig.bankAccountNumber.placeholder ?? ''"
+          [minLength]="formConfig.bankAccountNumber.minLength"
+          [maxLength]="formConfig.bankAccountNumber.maxLength"
+          [isRequired]="formConfig.bankAccountNumber.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.reEnterAccountNumber.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.reEnterAccountNumber.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.reEnterAccountNumber.label!"
+          [placeholder]="formConfig.reEnterAccountNumber.placeholder ?? ''"
+          [minLength]="formConfig.reEnterAccountNumber.minLength"
+          [maxLength]="formConfig.reEnterAccountNumber.maxLength"
+          [isRequired]="formConfig.reEnterAccountNumber.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.branchName.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.branchName.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.branchName.label!"
+          [placeholder]="formConfig.branchName.placeholder ?? ''"
+          [minLength]="formConfig.branchName.minLength"
+          [maxLength]="formConfig.branchName.maxLength"
+          [isRequired]="formConfig.branchName.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.ifscCode.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.ifscCode.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.ifscCode.label!"
+          [placeholder]="formConfig.ifscCode.placeholder ?? ''"
+          [minLength]="formConfig.ifscCode.minLength"
+          [maxLength]="formConfig.ifscCode.maxLength"
+          [isRequired]="formConfig.ifscCode.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.micrNumber.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.micrNumber.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.micrNumber.label!"
+          [placeholder]="formConfig.micrNumber.placeholder ?? ''"
+          [minLength]="formConfig.micrNumber.minLength"
+          [maxLength]="formConfig.micrNumber.maxLength"
+          [isRequired]="formConfig.micrNumber.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.accountType.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.accountType.id"
+          [parentFormGroup]="salaryStructure"
+          [label]="formConfig.accountType.label!"
+          [placeholder]="formConfig.accountType.placeholder ?? ''"
+          [isRequired]="formConfig.accountType.isRequired!"
+          [options]="accountTypeOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+  </div>
+
+  @if (!formConfig.bankAddress.isHide) {
+    <ui-text-area
+      [id]="formConfig.bankAddress.id"
+      [parentFormGroup]="salaryStructure"
+      [label]="formConfig.bankAddress.label!"
+      [placeholder]="formConfig.bankAddress.placeholder ?? ''"
+      [maxLength]="formConfig.bankAddress.maxLength"
+      [isRequired]="formConfig.bankAddress.isRequired!"
+    ></ui-text-area>
+  }
+
 </div>

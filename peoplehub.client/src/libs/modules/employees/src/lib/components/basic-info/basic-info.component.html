@@ -29,6 +29,20 @@
       </div>
     }
 
+    @if (!formConfig.middleName.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.middleName.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.middleName.label!"
+          [placeholder]="formConfig.middleName.placeholder ?? ''"
+          [minLength]="formConfig.middleName.minLength"
+          [maxLength]="formConfig.middleName.maxLength"
+          [isRequired]="formConfig.middleName.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
     @if (!formConfig.lastName.isHide) {
       <div class="form-group">
         <ui-text-box
@@ -39,6 +53,20 @@
           [minLength]="formConfig.lastName.minLength"
           [maxLength]="formConfig.lastName.maxLength"
           [isRequired]="formConfig.lastName.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.preferredName.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.preferredName.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.preferredName.label!"
+          [placeholder]="formConfig.preferredName.placeholder ?? ''"
+          [minLength]="formConfig.preferredName.minLength"
+          [maxLength]="formConfig.preferredName.maxLength"
+          [isRequired]="formConfig.preferredName.isRequired!"
         ></ui-text-box>
       </div>
     }
@@ -114,6 +142,60 @@
           [placeholder]="formConfig.bloodGroup.placeholder ?? ''"
           [isRequired]="formConfig.bloodGroup.isRequired!"
           [options]="bloodGroupOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.nationality.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.nationality.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.nationality.label!"
+          [placeholder]="formConfig.nationality.placeholder ?? ''"
+          [isRequired]="formConfig.nationality.isRequired!"
+          [options]="nationalityOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.placeOfBirth.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.placeOfBirth.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.placeOfBirth.label!"
+          [placeholder]="formConfig.placeOfBirth.placeholder ?? ''"
+          [minLength]="formConfig.placeOfBirth.minLength"
+          [maxLength]="formConfig.placeOfBirth.maxLength"
+          [isRequired]="formConfig.placeOfBirth.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.religion.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.religion.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.religion.label!"
+          [placeholder]="formConfig.religion.placeholder ?? ''"
+          [minLength]="formConfig.religion.minLength"
+          [maxLength]="formConfig.religion.maxLength"
+          [isRequired]="formConfig.religion.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.category.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.category.id"
+          [parentFormGroup]="basicInfo"
+          [label]="formConfig.category.label!"
+          [placeholder]="formConfig.category.placeholder ?? ''"
+          [isRequired]="formConfig.category.isRequired!"
+          [options]="categoryOptions$ | async"
         ></ui-dropdown>
       </div>
     }

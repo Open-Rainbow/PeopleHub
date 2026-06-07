@@ -1,60 +1,120 @@
 <div class="bg-white rounded-[16px] border border-[#dbeafe] shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in p-8 h-full hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
-  <div class="grid grid-cols-2 gap-[10px] max-[768px]:grid-cols-1">
+  <div class="grid grid-cols-3 gap-[10px] max-[768px]:grid-cols-1">
 
     @if (!formConfig.previousOrganization.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.previousOrganization.id"
-          [parentFormGroup]="workExperience"
-          [label]="formConfig.previousOrganization.label!"
-          [placeholder]="formConfig.previousOrganization.placeholder ?? ''"
-          [minLength]="formConfig.previousOrganization.minLength"
-          [maxLength]="formConfig.previousOrganization.maxLength"
-          [isRequired]="formConfig.previousOrganization.isRequired!"
-        ></ui-text-box>
-      </div>
+      <ui-text-box
+        [id]="formConfig.previousOrganization.id"
+        [parentFormGroup]="workExperience"
+        [label]="formConfig.previousOrganization.label!"
+        [placeholder]="formConfig.previousOrganization.placeholder ?? ''"
+        [minLength]="formConfig.previousOrganization.minLength"
+        [maxLength]="formConfig.previousOrganization.maxLength"
+        [isRequired]="formConfig.previousOrganization.isRequired!"
+      ></ui-text-box>
     }
 
     @if (!formConfig.previousDesignation.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.previousDesignation.id"
-          [parentFormGroup]="workExperience"
-          [label]="formConfig.previousDesignation.label!"
-          [placeholder]="formConfig.previousDesignation.placeholder ?? ''"
-          [minLength]="formConfig.previousDesignation.minLength"
-          [maxLength]="formConfig.previousDesignation.maxLength"
-          [isRequired]="formConfig.previousDesignation.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
-
-    @if (!formConfig.yearOfExperience.isHide) {
-      <div class="form-group">
-        <ui-number-box
-          [id]="formConfig.yearOfExperience.id"
-          [parentFormGroup]="workExperience"
-          [label]="formConfig.yearOfExperience.label!"
-          [placeholder]="formConfig.yearOfExperience.placeholder ?? '0'"
-          [minValue]="formConfig.yearOfExperience.minLength"
-          [maxValue]="formConfig.yearOfExperience.maxLength"
-          [isRequired]="formConfig.yearOfExperience.isRequired!"
-        ></ui-number-box>
-      </div>
+      <ui-text-box
+        [id]="formConfig.previousDesignation.id"
+        [parentFormGroup]="workExperience"
+        [label]="formConfig.previousDesignation.label!"
+        [placeholder]="formConfig.previousDesignation.placeholder ?? ''"
+        [minLength]="formConfig.previousDesignation.minLength"
+        [maxLength]="formConfig.previousDesignation.maxLength"
+        [isRequired]="formConfig.previousDesignation.isRequired!"
+      ></ui-text-box>
     }
 
     @if (!formConfig.organizationLocation.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.organizationLocation.id"
-          [parentFormGroup]="workExperience"
-          [label]="formConfig.organizationLocation.label!"
-          [placeholder]="formConfig.organizationLocation.placeholder ?? ''"
-          [minLength]="formConfig.organizationLocation.minLength"
-          [maxLength]="formConfig.organizationLocation.maxLength"
-          [isRequired]="formConfig.organizationLocation.isRequired!"
-        ></ui-text-box>
-      </div>
+      <ui-text-box
+        [id]="formConfig.organizationLocation.id"
+        [parentFormGroup]="workExperience"
+        [label]="formConfig.organizationLocation.label!"
+        [placeholder]="formConfig.organizationLocation.placeholder ?? ''"
+        [minLength]="formConfig.organizationLocation.minLength"
+        [maxLength]="formConfig.organizationLocation.maxLength"
+        [isRequired]="formConfig.organizationLocation.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.reportingTo.isHide) {
+      <ui-text-box
+        [id]="formConfig.reportingTo.id"
+        [parentFormGroup]="workExperience"
+        [label]="formConfig.reportingTo.label!"
+        [placeholder]="formConfig.reportingTo.placeholder ?? ''"
+        [minLength]="formConfig.reportingTo.minLength"
+        [maxLength]="formConfig.reportingTo.maxLength"
+        [isRequired]="formConfig.reportingTo.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.companyType.isHide) {
+      <ui-text-box
+        [id]="formConfig.companyType.id"
+        [parentFormGroup]="workExperience"
+        [label]="formConfig.companyType.label!"
+        [placeholder]="formConfig.companyType.placeholder ?? ''"
+        [minLength]="formConfig.companyType.minLength"
+        [maxLength]="formConfig.companyType.maxLength"
+        [isRequired]="formConfig.companyType.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.employmentType.isHide) {
+      <ui-text-box
+        [id]="formConfig.employmentType.id"
+        [parentFormGroup]="workExperience"
+        [label]="formConfig.employmentType.label!"
+        [placeholder]="formConfig.employmentType.placeholder ?? ''"
+        [minLength]="formConfig.employmentType.minLength"
+        [maxLength]="formConfig.employmentType.maxLength"
+        [isRequired]="formConfig.employmentType.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.startDate.isHide) {
+      <ui-calendar
+        [id]="formConfig.startDate.id"
+        [parentFormGroup]="workExperience"
+        [label]="formConfig.startDate.label!"
+        [placeholder]="formConfig.startDate.placeholder ?? ''"
+        [isRequired]="formConfig.startDate.isRequired!"
+      ></ui-calendar>
+    }
+
+    @if (!formConfig.endDate.isHide) {
+      <ui-calendar
+        [id]="formConfig.endDate.id"
+        [parentFormGroup]="workExperience"
+        [label]="formConfig.endDate.label!"
+        [placeholder]="formConfig.endDate.placeholder ?? ''"
+        [isRequired]="formConfig.endDate.isRequired!"
+      ></ui-calendar>
+    }
+
+    @if (!formConfig.yearsOfExperience.isHide) {
+      <ui-text-box
+        [id]="formConfig.yearsOfExperience.id"
+        [parentFormGroup]="workExperience"
+        [label]="formConfig.yearsOfExperience.label!"
+        [placeholder]="formConfig.yearsOfExperience.placeholder ?? ''"
+        [minLength]="formConfig.yearsOfExperience.minLength"
+        [maxLength]="formConfig.yearsOfExperience.maxLength"
+        [isRequired]="formConfig.yearsOfExperience.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.currentlyWorking.isHide) {
+      <ui-text-box
+        [id]="formConfig.currentlyWorking.id"
+        [parentFormGroup]="workExperience"
+        [label]="formConfig.currentlyWorking.label!"
+        [placeholder]="formConfig.currentlyWorking.placeholder ?? ''"
+        [minLength]="formConfig.currentlyWorking.minLength"
+        [maxLength]="formConfig.currentlyWorking.maxLength"
+        [isRequired]="formConfig.currentlyWorking.isRequired!"
+      ></ui-text-box>
     }
 
   </div>

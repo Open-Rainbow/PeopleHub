@@ -8,7 +8,7 @@
   output,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 import { ConfirmPopupService, IconTextButtonComponent } from 'ui';
@@ -27,7 +27,6 @@ import { EmployeesService } from '../../services/employees/employees.service';
 })
 export class ButtonNavigationComponent implements OnInit {
   private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
   private readonly stepperService = inject(StepperService);
   private readonly confirmPopupService = inject(ConfirmPopupService);
   private readonly dataService = inject(EmployeeDataService);
@@ -88,7 +87,7 @@ export class ButtonNavigationComponent implements OnInit {
 
     if (currentIndex < this.steps().length - 1) {
       const nextIndex = currentIndex + 1;
-      this.router.navigate([this.steps()[nextIndex].route], { relativeTo: this.route });
+      this.navigateToStep(this.steps()[nextIndex].route);
     } else if (currentIndex === this.steps().length - 1) {
       this.stepperService.validateAllSteps();
       this.steps.set(this.stepperService.getSteps('addEmployee'));
@@ -108,7 +107,7 @@ export class ButtonNavigationComponent implements OnInit {
     const currentIndex = this.stepperService.getCurrentStep();
     if (currentIndex > 0) {
       const prevIndex = currentIndex - 1;
-      this.router.navigate([this.steps()[prevIndex].route], { relativeTo: this.route });
+      this.navigateToStep(this.steps()[prevIndex].route);
       this.stepperService.setCurrentStep(prevIndex);
       this.steps.set(this.stepperService.getSteps('addEmployee'));
     }
@@ -130,6 +129,23 @@ export class ButtonNavigationComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  private navigateToStep(targetRoute: string): void {
+    const currentPath = this.router.url.split('?')[0].split('#')[0];
+    const segments = currentPath.split('/').filter(Boolean);
+
+    if (segments.length === 0) {
+      return;
+    }
+
+    const addEmployeeIndex = segments.lastIndexOf('add-employee');
+    if (addEmployeeIndex === -1) {
+      return;
+    }
+
+    const baseSegments = segments.slice(0, addEmployeeIndex + 1);
+    this.router.navigateByUrl(`/${[...baseSegments, targetRoute].join('/')}`);
   }
 }
 

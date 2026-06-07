@@ -75,6 +75,10 @@ export class CheckboxComponent implements ControlValueAccessor, OnChanges {
         this.cdr.markForCheck();
       }
     }
+
+    if ('disabled' in changes || 'parentFormGroup' in changes || 'id' in changes) {
+      this.syncDisabledState();
+    }
   }
 
   get control() {
@@ -104,6 +108,7 @@ export class CheckboxComponent implements ControlValueAccessor, OnChanges {
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+    this.syncDisabledState();
     this.cdr.markForCheck();
   }
 
@@ -146,5 +151,21 @@ export class CheckboxComponent implements ControlValueAccessor, OnChanges {
 
   private coerceBoolean(value: unknown): boolean {
     return value === true || value === 'true';
+  }
+
+  private syncDisabledState(): void {
+    const formControl = this.control;
+    if (!formControl) {
+      return;
+    }
+
+    if (this.disabled && formControl.enabled) {
+      formControl.disable({ emitEvent: false });
+      return;
+    }
+
+    if (!this.disabled && formControl.disabled) {
+      formControl.enable({ emitEvent: false });
+    }
   }
 }

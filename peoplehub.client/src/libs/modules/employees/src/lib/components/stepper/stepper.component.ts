@@ -1,5 +1,5 @@
 ﻿import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { IconComponent } from 'ui';
@@ -19,7 +19,6 @@ export class StepperComponent implements OnInit {
   private readonly stepperService = inject(StepperService);
   private readonly dataService = inject(EmployeeDataService);
   private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
 
   steps = signal<Step[]>([]);
 
@@ -49,12 +48,29 @@ export class StepperComponent implements OnInit {
 
   onStepClick(step: Step, index: number): void {
     this.stepperService.setCurrentStep(index);
-    this.router.navigate([step.route], { relativeTo: this.route });
+    this.navigateToStep(step.route);
     
     if (this.stepperService.isEntered()) {
       this.stepperService.validateAllSteps();
     }
     this.steps.set(this.stepperService.getSteps('addEmployee'));
+  }
+
+  private navigateToStep(targetRoute: string): void {
+    const currentPath = this.router.url.split('?')[0].split('#')[0];
+    const segments = currentPath.split('/').filter(Boolean);
+
+    if (segments.length === 0) {
+      return;
+    }
+
+    const addEmployeeIndex = segments.lastIndexOf('add-employee');
+    if (addEmployeeIndex === -1) {
+      return;
+    }
+
+    const baseSegments = segments.slice(0, addEmployeeIndex + 1);
+    this.router.navigateByUrl(`/${[...baseSegments, targetRoute].join('/')}`);
   }
 }
 

@@ -8,6 +8,14 @@ import { SalaryStructureComponent } from './lib/components/salary-structure/sala
 import { WorkExperienceComponent } from './lib/components/work-experience/work-experience.component';
 import { DocumentsUploadComponent } from './lib/components/documents-upload/documents-upload.component';
 import { TempLoginCredentialsComponent } from './lib/components/temp-login-credentials/temp-login-credentials.component';
+import { FamilyDetailsComponent } from './lib/components/family-details/family-details.component';
+import { SkillsComponent } from './lib/components/skills/skills.component';
+import { IdentityStatutoryComponent } from './lib/components/identity-statutory/identity-statutory.component';
+import { SeparationComponent } from './lib/components/separation/separation.component';
+import { AssetsComponent } from './lib/components/assets/assets.component';
+import { InsuranceDetailsComponent } from './lib/components/insurance-details/insurance-details.component';
+import { CustomFieldsAdditionalComponent } from './lib/components/custom-fields-additional/custom-fields-additional.component';
+import { ChangeRequestsAuditComponent } from './lib/components/change-requests-audit/change-requests-audit.component';
 
 export const EMPLOYEES_ROUTES: Routes = [
   {
@@ -17,15 +25,20 @@ export const EMPLOYEES_ROUTES: Routes = [
       { path: '', redirectTo: 'basic-info', pathMatch: 'full' },
       { path: 'basic-info', component: BasicInfoComponent },
       { path: 'contact-info', component: ContactInfoComponent },
+      { path: 'family-details', component: FamilyDetailsComponent },
       { path: 'job-details', component: JobDetailsComponent },
       { path: 'education-details', component: EducationDetailsComponent },
+      { path: 'skills', component: SkillsComponent },
       { path: 'salary-structure', component: SalaryStructureComponent },
+      { path: 'identity-statutory', component: IdentityStatutoryComponent },
       { path: 'work-experience', component: WorkExperienceComponent },
+      { path: 'insurance-details', component: InsuranceDetailsComponent },
       { path: 'documents-upload', component: DocumentsUploadComponent },
-      {
-        path: 'temp-login-credentials',
-        component: TempLoginCredentialsComponent,
-      },
+      { path: 'temp-login-credentials', component: TempLoginCredentialsComponent },
+      { path: 'separation', component: SeparationComponent },
+      { path: 'assets', component: AssetsComponent },
+      { path: 'custom-fields-additional', component: CustomFieldsAdditionalComponent },
+      { path: 'change-requests-audit', component: ChangeRequestsAuditComponent },
     ],
   },
 ];

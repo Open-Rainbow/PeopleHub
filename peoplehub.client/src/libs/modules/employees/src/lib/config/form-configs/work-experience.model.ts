@@ -3,12 +3,15 @@
 export interface IWorkExperienceFormFields {
     previousOrganization: IFormFieldConfig;
     organizationLocation: IFormFieldConfig;
-    yearOfExperience: IFormFieldConfig;
     previousDesignation: IFormFieldConfig;
-    
+    reportingTo: IFormFieldConfig;
+    companyType: IFormFieldConfig;
+    employmentType: IFormFieldConfig;
+    yearsOfExperience: IFormFieldConfig;
+    currentlyWorking: IFormFieldConfig;
+    startDate: IFormFieldConfig;
+    endDate: IFormFieldConfig;
 }
-
-export type { IWorkExperienceForm } from './work-experience.types';
 
 
 

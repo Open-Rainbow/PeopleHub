@@ -1,4 +1,5 @@
-import type { IInsuranceDetailsFormFields } from "./insurance-details.model";
+import type { IInsurancePolicyFormFields, INomineeFormFields } from './insurance-details.model';
 
-export type IInsuranceDetailsForm = IInsuranceDetailsFormFields;
+export type IInsurancePolicyForm = IInsurancePolicyFormFields;
+export type INomineeForm = INomineeFormFields;
 

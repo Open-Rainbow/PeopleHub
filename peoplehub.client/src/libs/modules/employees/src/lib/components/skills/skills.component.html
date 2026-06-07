@@ -1,0 +1,94 @@
+<div class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md">
+  <div class="grid grid-cols-3 gap-[10px]">
+
+    @if (!formConfig.skillName.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.skillName.id"
+          [parentFormGroup]="skills"
+          [label]="formConfig.skillName.label!"
+          [placeholder]="formConfig.skillName.placeholder ?? ''"
+          [minLength]="formConfig.skillName.minLength"
+          [maxLength]="formConfig.skillName.maxLength"
+          [isRequired]="formConfig.skillName.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.skillCategory.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.skillCategory.id"
+          [parentFormGroup]="skills"
+          [label]="formConfig.skillCategory.label!"
+          [placeholder]="formConfig.skillCategory.placeholder ?? ''"
+          [isRequired]="formConfig.skillCategory.isRequired!"
+          [options]="skillCategoryOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.proficiencyLevel.isHide) {
+      <div class="form-group">
+        <ui-dropdown
+          [id]="formConfig.proficiencyLevel.id"
+          [parentFormGroup]="skills"
+          [label]="formConfig.proficiencyLevel.label!"
+          [placeholder]="formConfig.proficiencyLevel.placeholder ?? ''"
+          [isRequired]="formConfig.proficiencyLevel.isRequired!"
+          [options]="proficiencyOptions$ | async"
+        ></ui-dropdown>
+      </div>
+    }
+
+    @if (!formConfig.yearsOfExperience.isHide) {
+      <div class="form-group">
+        <ui-number-box
+          [id]="formConfig.yearsOfExperience.id"
+          [parentFormGroup]="skills"
+          [label]="formConfig.yearsOfExperience.label!"
+          [placeholder]="formConfig.yearsOfExperience.placeholder ?? ''"
+          [isRequired]="formConfig.yearsOfExperience.isRequired!"
+        ></ui-number-box>
+      </div>
+    }
+
+    @if (!formConfig.lastUsedYear.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.lastUsedYear.id"
+          [parentFormGroup]="skills"
+          [label]="formConfig.lastUsedYear.label!"
+          [placeholder]="formConfig.lastUsedYear.placeholder ?? ''"
+          [minLength]="formConfig.lastUsedYear.minLength"
+          [maxLength]="formConfig.lastUsedYear.maxLength"
+          [isRequired]="formConfig.lastUsedYear.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+
+    @if (!formConfig.primarySkill.isHide) {
+      <div class="form-group flex items-end pb-2">
+        <ui-checkbox
+          [id]="formConfig.primarySkill.id"
+          [parentFormGroup]="skills"
+          [label]="formConfig.primarySkill.label!"
+        ></ui-checkbox>
+      </div>
+    }
+
+  </div>
+
+  @if (!formConfig.remarks.isHide) {
+    <div class="mt-4">
+      <ui-text-area
+        [id]="formConfig.remarks.id"
+        [parentFormGroup]="skills"
+        [label]="formConfig.remarks.label!"
+        [placeholder]="formConfig.remarks.placeholder ?? ''"
+        [maxLength]="formConfig.remarks.maxLength"
+        [isRequired]="formConfig.remarks.isRequired!"
+      ></ui-text-area>
+    </div>
+  }
+</div>

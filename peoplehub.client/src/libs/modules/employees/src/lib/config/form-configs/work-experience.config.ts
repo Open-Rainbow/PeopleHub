@@ -1,4 +1,4 @@
-import { IWorkExperienceForm } from "./work-experience.model";
+import { IWorkExperienceForm } from './work-experience.types';
 
 export const workExperienceForm: IWorkExperienceForm = {
   
@@ -8,41 +8,28 @@ export const workExperienceForm: IWorkExperienceForm = {
          isHide: false,
         readOnly: true,
         minLength: 0,
-        maxLength: 50,
+        maxLength: 100,
         isRequired: true,
-        label: 'Organisation Name',
+        label: 'Company Name',
         defaultValue: null,
         fieldValue: null,
         tabIndex: 1,
         isDisable: false,
-        placeholder: 'Enter Organisation Name'
+        placeholder: 'Enter company name'
     },
     organizationLocation: {
         id: 'organizationLocation',
          isHide: false,
         readOnly: true,
         minLength: 0,
-        maxLength: 50,
-        isRequired: true,
-        label: 'Organisation Location',
+        maxLength: 100,
+        isRequired: false,
+        label: 'Organization Location',
         defaultValue: null,
         fieldValue: null,
         tabIndex: 2,
         isDisable: false,
-        placeholder:'HYD'
-    },
-    yearOfExperience: {
-        id: 'yearOfExperience',
-         isHide: false,
-        readOnly: true,
-        minLength: 0,
-        maxLength: 50,
-        isRequired: true,
-        label: 'Years Of Experience',
-        defaultValue: null,
-        fieldValue: null,
-        tabIndex: 3,
-        isDisable: false
+        placeholder:'Enter location'
     },
     previousDesignation: {
         id: 'previousDesignation',
@@ -51,11 +38,110 @@ export const workExperienceForm: IWorkExperienceForm = {
         minLength: 0,
         maxLength: 50,
         isRequired: true,
-        label: 'Previous Designation',
+        label: 'Designation',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 3,
+        isDisable: false,
+        placeholder: 'Enter designation'
+    },
+    reportingTo: {
+        id: 'reportingTo',
+        isHide: false,
+        readOnly: false,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: false,
+        label: 'Reporting To',
         defaultValue: null,
         fieldValue: null,
         tabIndex: 4,
-        isDisable: false
+        isDisable: false,
+        placeholder: 'Enter reporting manager'
+    },
+    companyType: {
+        id: 'companyType',
+        isHide: false,
+        readOnly: false,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: false,
+        label: 'Company Type',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 5,
+        isDisable: false,
+        placeholder: 'Select company type'
+    },
+    employmentType: {
+        id: 'employmentType',
+        isHide: false,
+        readOnly: false,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: false,
+        label: 'Employment Type',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 6,
+        isDisable: false,
+        placeholder: 'Full-time, Part-time, Contract'
+    },
+    startDate: {
+        id: 'startDate',
+        isHide: false,
+        readOnly: false,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: true,
+        label: 'Start Date',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 7,
+        isDisable: false,
+        placeholder: 'Select start date'
+    },
+    endDate: {
+        id: 'endDate',
+        isHide: false,
+        readOnly: false,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: false,
+        label: 'End Date',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 8,
+        isDisable: false,
+        placeholder: 'Select end date'
+    },
+    yearsOfExperience: {
+        id: 'yearsOfExperience',
+         isHide: false,
+        readOnly: true,
+        minLength: 0,
+        maxLength: 5,
+        isRequired: false,
+        label: 'Years Of Experience',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 9,
+        isDisable: false,
+        placeholder: 'Auto-calculated'
+    },
+    currentlyWorking: {
+        id: 'currentlyWorking',
+        isHide: false,
+        readOnly: false,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: false,
+        label: 'Currently Working',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 10,
+        isDisable: false,
+        placeholder: 'Yes/No'
     },
     
 };
