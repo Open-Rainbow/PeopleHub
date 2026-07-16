@@ -10,11 +10,10 @@
   </aside>
 
   <main class="flex-1 bg-[#f9fbfd] flex flex-col min-h-full p-0">
-    <section class="flex flex-col w-full px-12 pt-8 pb-10 box-border bg-[#f9fbfd]">
+    <section class="flex flex-col w-full p-4 box-border bg-[#f9fbfd]">
       <router-outlet (activate)="onComponentActivate($event)"></router-outlet>
 
       <employees-button-navigation
-        class="mt-8"
         [activeComponent]="currentComponent()"
         (stepSaved)="handleStepSuccess($event)"
         (previewToggle)="togglePreview($event)"

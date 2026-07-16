@@ -119,7 +119,7 @@ export interface HolidayList {
   holidayCalendar: string;
 }
 
-export interface BasicInformation {
+export interface PersonalInformation {
   dateOfJoining?: string;
   employeeName?: string;
   employeeId?: string;
@@ -241,7 +241,7 @@ export interface InsuranceDetails {
 }
 
 export interface EmployeeDetails {
-  basicInformation?: BasicInformation;
+  PersonalInformation?: PersonalInformation;
   contactInformation?: ContactInformation;
   jobDetails?: JobDetails;
   educationDetails?: EducationDetails;
@@ -308,4 +308,9 @@ export interface ToastMessage {
   icon?: string;
 }
 
-export type { LegendShape, GridLineStyle, GridDisplayOption, StepperType } from './common.types';
+export type {
+  LegendShape,
+  GridLineStyle,
+  GridDisplayOption,
+  StepperType,
+} from './common.types';

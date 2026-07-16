@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { AddEmployeeComponent } from './lib/components/add-employee/add-employee.component';
-import { BasicInfoComponent } from './lib/components/basic-info/basic-info.component';
+import { PersonalInfoComponent } from './lib/components/personal-info/personal-info.component';
 import { ContactInfoComponent } from './lib/components/contact-info/contact-info.component';
 import { JobDetailsComponent } from './lib/components/job-details/job-details.component';
 import { EducationDetailsComponent } from './lib/components/education-details/education-details.component';
@@ -22,8 +22,8 @@ export const EMPLOYEES_ROUTES: Routes = [
     path: 'add-employee',
     component: AddEmployeeComponent,
     children: [
-      { path: '', redirectTo: 'basic-info', pathMatch: 'full' },
-      { path: 'basic-info', component: BasicInfoComponent },
+      { path: '', redirectTo: 'personal-info', pathMatch: 'full' },
+      { path: 'personal-info', component: PersonalInfoComponent },
       { path: 'contact-info', component: ContactInfoComponent },
       { path: 'family-details', component: FamilyDetailsComponent },
       { path: 'job-details', component: JobDetailsComponent },
@@ -34,11 +34,20 @@ export const EMPLOYEES_ROUTES: Routes = [
       { path: 'work-experience', component: WorkExperienceComponent },
       { path: 'insurance-details', component: InsuranceDetailsComponent },
       { path: 'documents-upload', component: DocumentsUploadComponent },
-      { path: 'temp-login-credentials', component: TempLoginCredentialsComponent },
+      {
+        path: 'temp-login-credentials',
+        component: TempLoginCredentialsComponent,
+      },
       { path: 'separation', component: SeparationComponent },
       { path: 'assets', component: AssetsComponent },
-      { path: 'custom-fields-additional', component: CustomFieldsAdditionalComponent },
-      { path: 'change-requests-audit', component: ChangeRequestsAuditComponent },
+      {
+        path: 'custom-fields-additional',
+        component: CustomFieldsAdditionalComponent,
+      },
+      {
+        path: 'change-requests-audit',
+        component: ChangeRequestsAuditComponent,
+      },
     ],
   },
 ];

@@ -1,13 +1,32 @@
 ﻿import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CalendarComponent, DropdownComponent, TextAreaComponent, TextBoxComponent, TextButtonComponent } from 'ui';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  CalendarComponent,
+  DropdownComponent,
+  TextAreaComponent,
+  TextBoxComponent,
+  TextButtonComponent,
+} from 'ui';
 import { CommonService } from 'common';
 
 @Component({
   selector: 'add-edit-announcement-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TextBoxComponent, TextAreaComponent, DropdownComponent, CalendarComponent, TextButtonComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TextBoxComponent,
+    TextAreaComponent,
+    DropdownComponent,
+    CalendarComponent,
+    TextButtonComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './add-edit-announcement.component.html',
 })
@@ -16,7 +35,7 @@ export class AddEditAnnouncementComponent {
   private readonly commonService = inject(CommonService);
 
   readonly form: FormGroup = this.fb.group({
-    title: ['', [Validators.required, Validators.maxLength(100)]],
+    salutation: ['', [Validators.required, Validators.maxLength(100)]],
     date: ['', Validators.required],
     priority: [1, Validators.required],
     category: [1, Validators.required],
@@ -50,7 +69,12 @@ export class AddEditAnnouncementComponent {
   ];
 
   onClear(): void {
-    this.form.reset({ priority: 1, category: 1, department: 1, targetAudience: 1 });
+    this.form.reset({
+      priority: 1,
+      category: 1,
+      department: 1,
+      targetAudience: 1,
+    });
   }
 
   onSubmit(): void {
@@ -60,19 +84,27 @@ export class AddEditAnnouncementComponent {
     }
 
     const raw = this.form.getRawValue();
-    this.commonService.addAnnouncement({
-      Title: raw.title,
-      Date: new Date(raw.date),
-      Priority: this.priorityOptions.find(x => x.value === raw.priority)?.name ?? 'Medium',
-      Description: raw.description,
-      OrgId: 1,
-      Category: this.categoryOptions.find(x => x.value === raw.category)?.name ?? 'General',
-      Department: this.departmentOptions.find(x => x.value === raw.department)?.name ?? 'IT',
-      TargetAudience: this.audienceOptions.find(x => x.value === raw.targetAudience)?.name ?? 'All Employees',
-    }).subscribe();
+    this.commonService
+      .addAnnouncement({
+        Title: raw.title,
+        Date: new Date(raw.date),
+        Priority:
+          this.priorityOptions.find((x) => x.value === raw.priority)?.name ??
+          'Medium',
+        Description: raw.description,
+        OrgId: 1,
+        Category:
+          this.categoryOptions.find((x) => x.value === raw.category)?.name ??
+          'General',
+        Department:
+          this.departmentOptions.find((x) => x.value === raw.department)
+            ?.name ?? 'IT',
+        TargetAudience:
+          this.audienceOptions.find((x) => x.value === raw.targetAudience)
+            ?.name ?? 'All Employees',
+      })
+      .subscribe();
 
     this.onClear();
   }
 }
-
-

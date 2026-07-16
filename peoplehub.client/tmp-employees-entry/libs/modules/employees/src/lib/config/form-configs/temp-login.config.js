@@ -1,0 +1,31 @@
+export const tempLoginForm = {
+    temporaryUsername: {
+        id: 'temporaryUsername',
+        isHide: false,
+        readOnly: false,
+        minLength: 0,
+        maxLength: 50,
+        isRequired: true,
+        label: 'Temporary Username',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 1,
+        isDisable: false,
+        placeholder: 'Enter temporary username',
+    },
+    temporaryPassword: {
+        id: 'temporaryPassword',
+        isHide: false,
+        readOnly: false,
+        minLength: 12,
+        maxLength: 50,
+        isRequired: true,
+        label: 'Temporary Password',
+        defaultValue: null,
+        fieldValue: null,
+        tabIndex: 2,
+        isDisable: false,
+        placeholder: 'Enter temporary password',
+    },
+};
+//# sourceMappingURL=temp-login.config.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"dropdown-item.model.js","sourceRoot":"","sources":["../../../../../../../../src/libs/shared/ui/src/lib/models/component-models/dropdown-item.model.ts"],"names":[],"mappings":"","sourcesContent":["export interface DropdownItem {\r\n  name: string;\r\n  value: any;\r\n}\r\n\r\nexport type { DropDown } from './dropdown-item.types';\r\n"]}

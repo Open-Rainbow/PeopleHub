@@ -1,6 +1,6 @@
 import { IAddEmployeeConfig } from './add-employee.types';
 import { assetsForm } from './assets.config';
-import { basicInfoForm } from './basic-info.config';
+import { personalInfoForm } from './personal-info.config';
 import { changeRequestsAuditForm } from './change-requests-audit.config';
 import { contactInfoForm } from './contact-info.config';
 import { customFieldsAdditionalForm } from './custom-fields-additional.config';
@@ -17,22 +17,22 @@ import { tempLoginForm } from './temp-login.config';
 import { workExperienceForm } from './work-experience.config';
 
 export const addEmployeeConfig: IAddEmployeeConfig = {
-    basicInfo: basicInfoForm,
-    contactInfo: contactInfoForm,
-    familyMember: familyMemberForm,
-    dependent: dependentForm,
-    jobDetails: jobDetailsForm,
-    educationDetails: educationDetailsForm,
-    skills: skillsForm,
-    salaryStructure: salaryStructureForm,
-    identityStatutory: identityStatutoryForm,
-    workExperience: workExperienceForm,
-    insurancePolicy: insurancePolicyForm,
-    insuranceNominee: nomineeForm,
-    documentsUpload: documentsUploadForm,
-    tempLoginCredentials: tempLoginForm,
-    separation: separationForm,
-    assets: assetsForm,
-    customFieldsAdditional: customFieldsAdditionalForm,
-    changeRequestsAudit: changeRequestsAuditForm,
+  personalInfo: personalInfoForm,
+  contactInfo: contactInfoForm,
+  familyMember: familyMemberForm,
+  dependent: dependentForm,
+  jobDetails: jobDetailsForm,
+  educationDetails: educationDetailsForm,
+  skills: skillsForm,
+  salaryStructure: salaryStructureForm,
+  identityStatutory: identityStatutoryForm,
+  workExperience: workExperienceForm,
+  insurancePolicy: insurancePolicyForm,
+  insuranceNominee: nomineeForm,
+  documentsUpload: documentsUploadForm,
+  tempLoginCredentials: tempLoginForm,
+  separation: separationForm,
+  assets: assetsForm,
+  customFieldsAdditional: customFieldsAdditionalForm,
+  changeRequestsAudit: changeRequestsAuditForm,
 };

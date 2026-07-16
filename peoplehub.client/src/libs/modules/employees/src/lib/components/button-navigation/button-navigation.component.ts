@@ -38,9 +38,15 @@ export class ButtonNavigationComponent implements OnInit {
   readonly previewToggle = output<boolean>();
 
   private readonly steps = signal<Step[]>([]);
-  readonly isFirstStep = computed(() => this.stepperService.getCurrentStep() === 0);
-  readonly isLastStep = computed(() => this.stepperService.getCurrentStep() === this.steps().length - 1);
-  readonly nextButtonLabel = computed(() => (this.isLastStep() ? 'Submit' : 'Next'));
+  readonly isFirstStep = computed(
+    () => this.stepperService.getCurrentStep() === 0,
+  );
+  readonly isLastStep = computed(
+    () => this.stepperService.getCurrentStep() === this.steps().length - 1,
+  );
+  readonly nextButtonLabel = computed(() =>
+    this.isLastStep() ? 'Submit' : 'Next',
+  );
 
   private isPreviewVisible = false;
 
@@ -48,10 +54,14 @@ export class ButtonNavigationComponent implements OnInit {
     this.steps.set(this.stepperService.getSteps('addEmployee'));
 
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        const currentRoute = this.stepperService.getLastRouteSegment(this.router.url);
-        const currentIndex = this.steps().findIndex(s => s.route === currentRoute);
+        const currentRoute = this.stepperService.getLastRouteSegment(
+          this.router.url,
+        );
+        const currentIndex = this.steps().findIndex(
+          (s) => s.route === currentRoute,
+        );
 
         if (currentIndex >= 0) {
           this.stepperService.setCurrentStep(currentIndex);
@@ -80,7 +90,13 @@ export class ButtonNavigationComponent implements OnInit {
         this.steps.set(this.stepperService.getSteps('addEmployee'));
       } else {
         formGroup.markAllAsTouched();
-        this.confirmPopupService.showValidation(formGroup as unknown as FormGroup, (activeComp as Record<string, unknown>)['formConfig'] as Record<string, unknown>);
+        this.confirmPopupService.showValidation(
+          formGroup as unknown as FormGroup,
+          (activeComp as Record<string, unknown>)['formConfig'] as Record<
+            string,
+            unknown
+          >,
+        );
         return;
       }
     }
@@ -92,12 +108,12 @@ export class ButtonNavigationComponent implements OnInit {
       this.stepperService.validateAllSteps();
       this.steps.set(this.stepperService.getSteps('addEmployee'));
 
-      const hasErrors = this.steps().some(s => s.status === 'notComplete');
+      const hasErrors = this.steps().some((s) => s.status === 'notComplete');
       if (!hasErrors) {
         const finalPayload = this.dataService.getAllData();
         this.employeesService.addEmployee(finalPayload).subscribe({
           next: () => this.stepSaved.emit('Employee'),
-          error: err => console.error('Failed to submit employee:', err),
+          error: (err) => console.error('Failed to submit employee:', err),
         });
       }
     }
@@ -118,14 +134,41 @@ export class ButtonNavigationComponent implements OnInit {
     this.previewToggle.emit(this.isPreviewVisible);
   }
 
-  private findFormGroup(component: unknown): { valid: boolean; markAllAsTouched(): void; value: unknown } | null {
+  private findFormGroup(
+    component: unknown,
+  ): { valid: boolean; markAllAsTouched(): void; value: unknown } | null {
     if (!component || typeof component !== 'object') return null;
 
     const comp = component as Record<string, unknown>;
+
+    const activeFormGroupGetter = comp['getActiveFormGroup'];
+    if (typeof activeFormGroupGetter === 'function') {
+      const candidate = activeFormGroupGetter.call(comp);
+      if (
+        candidate &&
+        typeof candidate === 'object' &&
+        'controls' in candidate
+      ) {
+        return candidate as {
+          valid: boolean;
+          markAllAsTouched(): void;
+          value: unknown;
+        };
+      }
+    }
+
     for (const key in comp) {
       const candidate = comp[key];
-      if (candidate && typeof candidate === 'object' && 'controls' in candidate) {
-          return (candidate as unknown) as { valid: boolean; markAllAsTouched(): void; value: unknown };
+      if (
+        candidate &&
+        typeof candidate === 'object' &&
+        'controls' in candidate
+      ) {
+        return candidate as unknown as {
+          valid: boolean;
+          markAllAsTouched(): void;
+          value: unknown;
+        };
       }
     }
     return null;
@@ -148,5 +191,3 @@ export class ButtonNavigationComponent implements OnInit {
     this.router.navigateByUrl(`/${[...baseSegments, targetRoute].join('/')}`);
   }
 }
-
-

@@ -441,7 +441,7 @@ export const FlushMutualExclusion: Story = {
         <p class="text-sm text-gray-600 mb-4">In flush variant, when you open one accordion, others automatically close.</p>
         <ui-accordion-group variant="flush">
           <ui-accordion 
-            [title]="'Basic Information'" 
+            [title]="'Personal Information'" 
             variant="flush" 
             [sectionId]="'flush-basic'"
             [showEditButton]="false">

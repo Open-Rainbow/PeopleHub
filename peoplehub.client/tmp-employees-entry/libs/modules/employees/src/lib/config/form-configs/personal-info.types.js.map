@@ -1,0 +1,1 @@
+{"version":3,"file":"personal-info.types.js","sourceRoot":"","sources":["../../../../../../../../src/libs/modules/employees/src/lib/config/form-configs/personal-info.types.ts"],"names":[],"mappings":"","sourcesContent":["import type { IPersonalInfoFormFields } from \"./personal-info.model\";\r\n\r\nexport type IPersonalInfoForm = IPersonalInfoFormFields;\r\n\r\n"]}

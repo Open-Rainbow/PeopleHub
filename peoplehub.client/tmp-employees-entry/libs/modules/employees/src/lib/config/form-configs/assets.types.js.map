@@ -1,0 +1,1 @@
+{"version":3,"file":"assets.types.js","sourceRoot":"","sources":["../../../../../../../../src/libs/modules/employees/src/lib/config/form-configs/assets.types.ts"],"names":[],"mappings":"","sourcesContent":["import type { IAssetsFormFields } from './assets.model';\r\n\r\nexport type IAssetsForm = IAssetsFormFields;\r\n"]}

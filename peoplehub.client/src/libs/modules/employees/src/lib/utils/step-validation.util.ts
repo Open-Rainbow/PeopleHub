@@ -1,5 +1,5 @@
 // Central step config map (route -> config)
-import { basicInfoForm } from '../config/form-configs/basic-info.config';
+import { personalInfoForm } from '../config/form-configs/personal-info.config';
 import { contactInfoForm } from '../config/form-configs/contact-info.config';
 import { familyMemberForm } from '../config/form-configs/family-details.config';
 import { jobDetailsForm } from '../config/form-configs/job-details.config';
@@ -17,20 +17,20 @@ import { customFieldsAdditionalForm } from '../config/form-configs/custom-fields
 import { changeRequestsAuditForm } from '../config/form-configs/change-requests-audit.config';
 
 export const STEP_FORM_CONFIG_MAP: Record<string, any> = {
-  'basic-info': basicInfoForm,
+  'personal-info': personalInfoForm,
   'contact-info': contactInfoForm,
   'family-details': familyMemberForm,
   'job-details': jobDetailsForm,
   'education-details': educationDetailsForm,
-  'skills': skillsForm,
+  skills: skillsForm,
   'salary-structure': salaryStructureForm,
   'identity-statutory': identityStatutoryForm,
   'work-experience': workExperienceForm,
   'insurance-details': insurancePolicyForm,
   'documents-upload': documentsUploadForm,
   'temp-login-credentials': tempLoginForm,
-  'separation': separationForm,
-  'assets': assetsForm,
+  separation: separationForm,
+  assets: assetsForm,
   'custom-fields-additional': customFieldsAdditionalForm,
   'change-requests-audit': changeRequestsAuditForm,
 };
@@ -42,7 +42,7 @@ export function validateStepRequiredFields(
 ): { valid: boolean; invalidFields: string[] } {
   const config = STEP_FORM_CONFIG_MAP[stepRoute];
   if (!config) return { valid: true, invalidFields: [] };
-  
+
   const invalidFields: string[] = [];
   Object.keys(config).forEach((key) => {
     const fieldCfg = config[key];

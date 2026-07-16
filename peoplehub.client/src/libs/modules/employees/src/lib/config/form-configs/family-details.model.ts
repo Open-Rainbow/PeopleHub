@@ -25,4 +25,5 @@ export interface IDependentFormFields {
   dependentRemarks: IFormFieldConfig;
 }
 
-export type { IFamilyMemberForm, IDependentForm } from './family-details.types';
+export type IFamilyMemberForm = IFamilyMemberFormFields;
+export type IDependentForm = IDependentFormFields;

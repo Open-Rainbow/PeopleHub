@@ -150,7 +150,7 @@ addOtp(payload: any) {
     if (parameters.username == "Employee" && parameters.password == "Employee@123") {
       return of("employee");
     }
-    else if (parameters.username == "HRHR" && parameters.password == "Hr@123") {
+    else if (parameters.username == "HR" && parameters.password == "Hr@123") {
       return of("hr");
     }
     else {//if (data.username == "Admin" && data.password == "Admin@123") {
@@ -175,14 +175,14 @@ addOtp(payload: any) {
   );
 
 }
-getAttendanceHorizontalbarChart(parameters: any): Observable<any>{
+getAttendanceHorizontalBarChart(parameters: any): Observable<any>{
   return this.requesterService.get(
     this.apiUrl + ApiNames.GET_ATTENDANCE_HORIZONTAL_BAR_CHART, 
     parameters
   );
 }
 
-getAttendanceDoughnutbarChart(parameters: any): Observable<any>{
+getAttendanceDoughnutBarChart(parameters: any): Observable<any>{
   return this.requesterService.get(
     this.apiUrl + ApiNames.GET_ATTENDANCE_DOUGHNUT_BAR_CHART, 
     parameters

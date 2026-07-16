@@ -1,0 +1,1 @@
+{"version":3,"file":"separation.types.js","sourceRoot":"","sources":["../../../../../../../../src/libs/modules/employees/src/lib/config/form-configs/separation.types.ts"],"names":[],"mappings":"","sourcesContent":["import type { ISeparationFormFields } from './separation.model';\r\n\r\nexport type ISeparationForm = ISeparationFormFields;\r\n"]}

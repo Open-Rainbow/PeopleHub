@@ -1,7 +1,6 @@
 export * from './lib/services/stepper/stepper.service';
 export * from './lib/components/stepper/stepper.component';
 export * from './lib/components/button-navigation/button-navigation.component';
-export * from './lib/components/basic-info/basic-info.component';
 export * from './lib/components/employees/employees.component';
 export * from './lib/services/employees/employees.service';
 export * from './lib/services/employee-data/employee-data.service';

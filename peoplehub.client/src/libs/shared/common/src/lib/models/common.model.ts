@@ -120,7 +120,7 @@ export interface HolidayList {
   holidayCalendar: string;
 }
 
-export interface BasicInformation {
+export interface PersonalInformation {
   dateOfJoining?: string;
   employeeName?: string;
   employeeId?: string;

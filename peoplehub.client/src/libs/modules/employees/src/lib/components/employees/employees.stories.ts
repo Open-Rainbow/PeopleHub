@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AddEmployeeComponent } from '../add-employee/add-employee.component';
-import { BasicInfoComponent } from '../basic-info/basic-info.component';
+import { PersonalInfoComponent } from '../personal-info/personal-info.component';
 import { ContactInfoComponent } from '../contact-info/contact-info.component';
 import { FamilyDetailsComponent } from '../family-details/family-details.component';
 import { JobDetailsComponent } from '../job-details/job-details.component';
@@ -32,15 +32,15 @@ class AddEmployeeWrapperComponent implements OnInit {
   private router = inject(Router);
 
   ngOnInit() {
-    this.router.navigate(['/add-employee/basic-info']);
+    this.router.navigate(['/add-employee/personal-info']);
   }
 }
 
 type Story = StoryObj<AddEmployeeWrapperComponent>;
 
 const childRoutes: Routes = [
-  { path: '', redirectTo: 'basic-info', pathMatch: 'full' },
-  { path: 'basic-info', component: BasicInfoComponent },
+  { path: '', redirectTo: 'personal-info', pathMatch: 'full' },
+  { path: 'personal-info', component: PersonalInfoComponent },
   { path: 'contact-info', component: ContactInfoComponent },
   { path: 'family-details', component: FamilyDetailsComponent },
   { path: 'job-details', component: JobDetailsComponent },
@@ -54,7 +54,10 @@ const childRoutes: Routes = [
   { path: 'temp-login-credentials', component: TempLoginCredentialsComponent },
   { path: 'separation', component: SeparationComponent },
   { path: 'assets', component: AssetsComponent },
-  { path: 'custom-fields-additional', component: CustomFieldsAdditionalComponent },
+  {
+    path: 'custom-fields-additional',
+    component: CustomFieldsAdditionalComponent,
+  },
   { path: 'change-requests-audit', component: ChangeRequestsAuditComponent },
 ];
 
@@ -66,7 +69,11 @@ const meta: Meta<AddEmployeeWrapperComponent> = {
     moduleMetadata({
       imports: [
         RouterTestingModule.withRoutes([
-          { path: 'add-employee', component: AddEmployeeComponent, children: childRoutes },
+          {
+            path: 'add-employee',
+            component: AddEmployeeComponent,
+            children: childRoutes,
+          },
         ]),
         AddEmployeeWrapperComponent,
       ],
@@ -84,4 +91,3 @@ export const AddEmployee: Story = {
     template: `<router-outlet></router-outlet>`,
   }),
 };
-

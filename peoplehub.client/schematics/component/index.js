@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-const { chain, externalSchematic } = require('@angular-devkit/schematics');
-const { strings } = require('@angular-devkit/core');
-const nodePath = require('path');
+const { chain, externalSchematic } = require("@angular-devkit/schematics");
+const { strings } = require("@angular-devkit/core");
+const nodePath = require("path");
 
 /**
  * Custom PeopleHub component schematic.
@@ -14,11 +14,11 @@ const nodePath = require('path');
 function component(options) {
   // Enforce standalone components for all future generation.
   options.standalone = true;
-  options.style = options.style || 'scss';
-  options.type = options.type || 'component';
+  options.style = options.style || "scss";
+  options.type = options.type || "component";
 
   return chain([
-    externalSchematic('@schematics/angular', 'component', options),
+    externalSchematic("@schematics/angular", "component", options),
     generateStoryFile(options),
   ]);
 }
@@ -40,7 +40,7 @@ function generateStoryFile(options) {
     // This is the most reliable approach – it only targets files that were
     // just staged by the preceding externalSchematic() call.
     for (const action of tree.actions) {
-      if (action.kind !== 'c') {
+      if (action.kind !== "c") {
         continue;
       }
 

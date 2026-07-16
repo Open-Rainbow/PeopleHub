@@ -8,7 +8,7 @@ export const EMPLOYEE_STEPPER_CONFIG: Record<StepperType, Step[]> = {
   addEmployee: [
     {
       title: 'Personal Information',
-      route: 'basic-info',
+      route: 'personal-info',
       status: 'active',
       isValid: false,
       icon: 'home',
@@ -21,7 +21,7 @@ export const EMPLOYEE_STEPPER_CONFIG: Record<StepperType, Step[]> = {
       icon: 'fluent:call-24-regular',
     },
     {
-      title: 'Family Details',
+      title: 'Family Details & Dependents',
       route: 'family-details',
       status: 'pending',
       isValid: false,

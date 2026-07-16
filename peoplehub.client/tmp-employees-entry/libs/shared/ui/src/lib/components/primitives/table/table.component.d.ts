@@ -1,0 +1,97 @@
+import { EventEmitter, SimpleChanges } from '@angular/core';
+import { BaseCell, FontProperties, IconCell, IconPanelCell, IconPopoverCell, ImageCell, TableCell, TableCellType, TableData, TableRow, TextCell, UserCell, ValueDropdownCell } from '../../../models/table.model';
+import * as i0 from "@angular/core";
+export declare class TableComponent {
+    searchText: string;
+    currentPage: number;
+    itemsPerPage: number;
+    nameSortState: number;
+    draggedRowIndex: number;
+    historyStack: {
+        data: TableData;
+        index: number;
+    }[];
+    redoStack: {
+        data: TableData;
+        index: number;
+    }[];
+    daySortDirection: {
+        [key: number]: number;
+    };
+    leaveSortState: number;
+    topPagination: boolean;
+    bottomPagination: boolean;
+    showSerialNo: boolean;
+    showUndoRedo: boolean;
+    canDrag: boolean;
+    showCheckbox: boolean;
+    alternateRowColor: boolean;
+    customRowColor: string;
+    thRadius: string;
+    trRadius: string;
+    dragOverIndex: number;
+    selectedRows: Set<BaseCell[]>;
+    rowSelected: EventEmitter<BaseCell[]>;
+    linkClick: EventEmitter<any>;
+    editClicked: EventEmitter<BaseCell[]>;
+    deleteClicked: EventEmitter<BaseCell[]>;
+    dropdownChanged: EventEmitter<{
+        row: TableRow;
+        cell: ValueDropdownCell;
+        newValue: any;
+    }>;
+    originalTable: TableData;
+    readonly CellType: typeof TableCellType;
+    tableData: TableData;
+    tableHeaders: any;
+    tableRows: any;
+    totalItems: number;
+    count: number;
+    sortedTable: TableData;
+    hoveredHeaderIndex: number | null;
+    currentSortColIndex: number;
+    colSortState: number;
+    ngOnInit(): void;
+    ngOnChanges(changes: SimpleChanges): void;
+    private updateTable;
+    processTableData(): void;
+    activePanelCell: any;
+    onClickOutside(event?: Event): void;
+    asImage(cell: TableCell): ImageCell;
+    asText(cell: TableCell): TextCell;
+    asUser(cell: TableCell): UserCell;
+    asDropdown(cell: TableCell): ValueDropdownCell;
+    asIcon(cell: TableCell): IconCell;
+    asIconPopover(cell: TableCell): IconPopoverCell;
+    asIconPanel(cell: TableCell): IconPanelCell;
+    sortEmployeeName(): void;
+    sortColumn(colIndex: number): void;
+    parseDateValue(dateStr: string): number;
+    get isCurrentPageSelected(): boolean;
+    thCheck(): void;
+    check(row: TableRow): void;
+    lastDroppedIndex: number;
+    undo(): void;
+    redo(): void;
+    isDragging: boolean;
+    onDragStart(event: DragEvent, index: number): void;
+    onDragOver(event: DragEvent, overIndex: number): void;
+    onDragEnd(): void;
+    private getDeepCopy;
+    getFontStyles(font?: FontProperties): any;
+    pageChange(event: any): void;
+    trackByFn(index: number): number;
+    getDefaultDropdownValue(cell: ValueDropdownCell): any;
+    onDropdownChange(row: TableRow, cell: ValueDropdownCell, newValue: any): void;
+    mapToDropdownValues(options: any[]): {
+        label: any;
+        value: any;
+        isDefault: any;
+        textColor: string;
+        backgroundColor: string;
+        isDisabled: boolean;
+    }[];
+    static ɵfac: i0.ɵɵFactoryDeclaration<TableComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<TableComponent, "ui-table", never, { "topPagination": { "alias": "topPagination"; "required": false; }; "bottomPagination": { "alias": "bottomPagination"; "required": false; }; "showSerialNo": { "alias": "showSerialNo"; "required": false; }; "showUndoRedo": { "alias": "showUndoRedo"; "required": false; }; "canDrag": { "alias": "canDrag"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "alternateRowColor": { "alias": "alternateRowColor"; "required": false; }; "customRowColor": { "alias": "customRowColor"; "required": false; }; "thRadius": { "alias": "thRadius"; "required": false; }; "trRadius": { "alias": "trRadius"; "required": false; }; "tableData": { "alias": "tableData"; "required": false; }; }, { "rowSelected": "rowSelected"; "linkClick": "linkClick"; "editClicked": "editClicked"; "deleteClicked": "deleteClicked"; "dropdownChanged": "dropdownChanged"; }, never, never, true, never>;
+}
+//# sourceMappingURL=table.component.d.ts.map
