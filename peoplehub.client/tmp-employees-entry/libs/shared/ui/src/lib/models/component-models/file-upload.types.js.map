@@ -1,1 +1,0 @@
-{"version":3,"file":"file-upload.types.js","sourceRoot":"","sources":["../../../../../../../../src/libs/shared/ui/src/lib/models/component-models/file-upload.types.ts"],"names":[],"mappings":"","sourcesContent":["import type { UploadedFileData } from './file-upload.model';\r\n\r\nexport type FileUploadValue = UploadedFileData | UploadedFileData[] | null;\r\n"]}

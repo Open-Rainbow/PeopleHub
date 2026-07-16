@@ -1,1 +1,0 @@
-{"version":3,"file":"dropdown-item.types.js","sourceRoot":"","sources":["../../../../../../../../src/libs/shared/ui/src/lib/models/component-models/dropdown-item.types.ts"],"names":[],"mappings":"","sourcesContent":["import type { DropdownItem } from './dropdown-item.model';\r\n\r\nexport type DropDown = DropdownItem;\r\n\r\n"]}

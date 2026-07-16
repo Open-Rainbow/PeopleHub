@@ -1,1 +1,0 @@
-{"version":3,"file":"time-state.model.js","sourceRoot":"","sources":["../../../../../../../../src/libs/shared/ui/src/lib/models/component-models/time-state.model.ts"],"names":[],"mappings":"","sourcesContent":["export interface TimeState {\r\n  hours: number;\r\n  minutes: number;\r\n  seconds: number;\r\n  ampm: 'AM' | 'PM';\r\n}\r\n"]}

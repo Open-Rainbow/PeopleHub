@@ -1,1 +1,0 @@
-{"version":3,"file":"dropdown-item.model.d.ts","sourceRoot":"","sources":["../../../../../../../../src/libs/shared/ui/src/lib/models/component-models/dropdown-item.model.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,YAAY;IAC3B,IAAI,EAAE,MAAM,CAAC;IACb,KAAK,EAAE,GAAG,CAAC;CACZ;AAED,YAAY,EAAE,QAAQ,EAAE,MAAM,uBAAuB,CAAC"}

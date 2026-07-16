@@ -1,3 +1,0 @@
-import type { ISeparationFormFields } from './separation.model';
-export type ISeparationForm = ISeparationFormFields;
-//# sourceMappingURL=separation.types.d.ts.map

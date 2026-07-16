@@ -1,1 +1,0 @@
-{"version":3,"file":"dropdown.service.d.ts","sourceRoot":"","sources":["../../../../../../../src/libs/shared/ui/src/lib/services/dropdown.service.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,UAAU,EAAM,MAAM,MAAM,CAAC;AACtC,OAAO,EAAE,cAAc,EAAE,MAAM,+CAA+C,CAAC;;AAG/E,qBAGa,qBAAqB;IAChC,UAAU,CAAC,GAAG,EAAE,MAAM,GAAG,UAAU,CAAC,cAAc,EAAE,CAAC;yCAD1C,qBAAqB;6CAArB,qBAAqB;CAKjC"}

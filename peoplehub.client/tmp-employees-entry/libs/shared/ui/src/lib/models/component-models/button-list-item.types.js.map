@@ -1,1 +1,0 @@
-{"version":3,"file":"button-list-item.types.js","sourceRoot":"","sources":["../../../../../../../../src/libs/shared/ui/src/lib/models/component-models/button-list-item.types.ts"],"names":[],"mappings":"","sourcesContent":["import type { ButtonListItem } from './button-list-item.model';\r\n\r\nexport type buttonList = ButtonListItem;\r\n\r\n"]}

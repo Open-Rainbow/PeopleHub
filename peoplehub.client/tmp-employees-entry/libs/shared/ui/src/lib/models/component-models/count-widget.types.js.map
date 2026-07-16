@@ -1,1 +1,0 @@
-{"version":3,"file":"count-widget.types.js","sourceRoot":"","sources":["../../../../../../../../src/libs/shared/ui/src/lib/models/component-models/count-widget.types.ts"],"names":[],"mappings":"","sourcesContent":["export type CountWidgetLabelPosition = 'top' | 'bottom' | 'before' | 'after';\r\n"]}

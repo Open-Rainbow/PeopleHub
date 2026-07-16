@@ -1,1 +1,0 @@
-{"version":3,"file":"contact-info.types.js","sourceRoot":"","sources":["../../../../../../../../src/libs/modules/employees/src/lib/config/form-configs/contact-info.types.ts"],"names":[],"mappings":"","sourcesContent":["import type { IContactInfoFormFields } from \"./contact-info.model\";\r\n\r\nexport type IContactInfoForm = IContactInfoFormFields;\r\n\r\n"]}
