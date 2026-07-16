@@ -22,8 +22,8 @@ component-name/
 ## Story File Template
 
 ```typescript
-import { Meta, StoryObj } from '@storybook/angular';
-import { MyComponent } from './my.component';
+import { Meta, StoryObj } from "@storybook/angular";
+import { MyComponent } from "./my.component";
 
 // TypeScript type for strongly-typed stories
 type Story = StoryObj<MyComponent>;
@@ -31,31 +31,31 @@ type Story = StoryObj<MyComponent>;
 // Meta configuration - defines component in Storybook
 export const meta: Meta<MyComponent> = {
   component: MyComponent,
-  title: 'ui-my-component',              // Selector name
-  tags: ['autodocs'],                    // Auto-generate docs from JSDoc
+  title: "ui-my-component", // Selector name
+  tags: ["autodocs"], // Auto-generate docs from JSDoc
   parameters: {
-    layout: 'centered',                  // Storybook canvas layout
+    layout: "centered", // Storybook canvas layout
   },
-  
+
   // Define all @Input() properties here
   argTypes: {
     label: {
-      control: 'text',
-      description: 'Button label text',
+      control: "text",
+      description: "Button label text",
     },
     disabled: {
-      control: 'boolean',
-      description: 'Disable the button',
+      control: "boolean",
+      description: "Disable the button",
     },
     size: {
-      control: 'radio',
-      options: ['small', 'medium', 'large'],
-      description: 'Button size variant',
-      defaultValue: 'medium',
+      control: "radio",
+      options: ["small", "medium", "large"],
+      description: "Button size variant",
+      defaultValue: "medium",
     },
     onClick: {
-      action: 'clicked',
-      description: 'Callback when button is clicked',
+      action: "clicked",
+      description: "Callback when button is clicked",
     },
   },
 };
@@ -63,27 +63,27 @@ export const meta: Meta<MyComponent> = {
 // Default story - shows typical usage
 export const Default: Story = {
   args: {
-    label: 'Click me',
+    label: "Click me",
     disabled: false,
-    size: 'medium',
+    size: "medium",
   },
 };
 
 // Alternative story - shows variant
 export const Disabled: Story = {
   args: {
-    label: 'Disabled button',
+    label: "Disabled button",
     disabled: true,
-    size: 'medium',
+    size: "medium",
   },
 };
 
 // Another variant
 export const Large: Story = {
   args: {
-    label: 'Large button',
+    label: "Large button",
     disabled: false,
-    size: 'large',
+    size: "large",
   },
 };
 ```
@@ -99,14 +99,14 @@ Understand all `@Input()` properties and their types:
 ```typescript
 // my.component.ts
 @Component({
-  selector: 'ui-my-component',
+  selector: "ui-my-component",
   standalone: true,
 })
 export class MyComponent {
-  @Input() label: string = '';
+  @Input() label: string = "";
   @Input() disabled: boolean = false;
-  @Input() size: 'small' | 'medium' | 'large' = 'medium';
-  @Input() variant: 'primary' | 'secondary' = 'primary';
+  @Input() size: "small" | "medium" | "large" = "medium";
+  @Input() variant: "primary" | "secondary" = "primary";
   @Output() onClick = new EventEmitter<void>();
 }
 ```
@@ -145,10 +145,10 @@ Show typical/recommended usage:
 ```typescript
 export const Default: Story = {
   args: {
-    label: 'Click me',
+    label: "Click me",
     disabled: false,
-    size: 'medium',
-    variant: 'primary',
+    size: "medium",
+    variant: "primary",
   },
 };
 ```
@@ -160,22 +160,22 @@ Show different states/configurations:
 ```typescript
 export const Disabled: Story = {
   args: {
-    ...Default.args,        // Inherit defaults
-    disabled: true,         // Override specific prop
+    ...Default.args, // Inherit defaults
+    disabled: true, // Override specific prop
   },
 };
 
 export const Secondary: Story = {
   args: {
     ...Default.args,
-    variant: 'secondary',
+    variant: "secondary",
   },
 };
 
 export const Large: Story = {
   args: {
     ...Default.args,
-    size: 'large',
+    size: "large",
   },
 };
 ```
@@ -184,17 +184,17 @@ export const Large: Story = {
 
 ## Control Types Reference
 
-| Control | Use For | Example |
-|---------|---------|---------|
-| `text` | String inputs | label, placeholder, title |
-| `number` | Numeric values | borderRadius, padding, z-index |
-| `boolean` | True/false flags | disabled, showIcon, isRequired |
-| `radio` | Union types (few options) | size ('small'\|'medium'\|'large') |
-| `select` | Enums or lists | color, variant, alignment |
-| `date` | Date values | startDate, endDate |
-| `color` | Color hex values | bgColor, textColor |
-| `object` | Complex objects | config, data {...} |
-| `array` | Lists | items, options, labels |
+| Control   | Use For                   | Example                           |
+| --------- | ------------------------- | --------------------------------- |
+| `text`    | String inputs             | label, placeholder, salutation    |
+| `number`  | Numeric values            | borderRadius, padding, z-index    |
+| `boolean` | True/false flags          | disabled, showIcon, isRequired    |
+| `radio`   | Union types (few options) | size ('small'\|'medium'\|'large') |
+| `select`  | Enums or lists            | color, variant, alignment         |
+| `date`    | Date values               | startDate, endDate                |
+| `color`   | Color hex values          | bgColor, textColor                |
+| `object`  | Complex objects           | config, data {...}                |
+| `array`   | Lists                     | items, options, labels            |
 
 ---
 
@@ -295,6 +295,7 @@ argTypes: {
 ```
 
 **Solution:** Use actual arrays
+
 ```typescript
 items: {
   control: 'object',
@@ -306,13 +307,14 @@ items: {
 
 ```typescript
 export const meta: Meta<ButtonComponent> = {
-  component: ButtonComponent,  // ❌ Not imported
-}
+  component: ButtonComponent, // ❌ Not imported
+};
 ```
 
 **Solution:** Import the component
+
 ```typescript
-import { ButtonComponent } from './button.component';
+import { ButtonComponent } from "./button.component";
 ```
 
 ---
@@ -335,18 +337,19 @@ npm run storybook -- --host 0.0.0.0
 ## Storybook Configuration
 
 **storybook/main.ts** - Main Storybook config:
+
 ```typescript
-import type { StorybookConfig } from '@storybook/angular';
+import type { StorybookConfig } from "@storybook/angular";
 
 const config: StorybookConfig = {
   stories: [
-    '../src/libs/**/*.stories.ts',    // Find all stories
+    "../src/libs/**/*.stories.ts", // Find all stories
   ],
   addons: [
-    '@storybook/addon-essentials',
-    '@storybook/addon-a11y',          // Accessibility checks
+    "@storybook/addon-essentials",
+    "@storybook/addon-a11y", // Accessibility checks
   ],
-  framework: '@storybook/angular',
+  framework: "@storybook/angular",
 };
 
 export default config;
@@ -400,11 +403,13 @@ Storybook Sidebar:
 ## Running & Viewing Stories
 
 1. **Start Storybook:**
+
    ```bash
    npm run storybook
    ```
 
 2. **Open in browser:**
+
    ```
    http://localhost:6006
    ```
