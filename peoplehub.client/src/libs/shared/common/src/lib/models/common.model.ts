@@ -132,16 +132,44 @@ export interface PersonalInformation {
 
 export interface ContactInformation {
   personalEmail?: string;
+  alternatePersonalEmail?: string;
+  mobileNumber?: string;
+  alternateMobileNumber?: string;
+  landlineNumber?: string;
+  officialEmail?: string;
   linkedInUrl?: string;
+  addresses?: AddressInformation[];
+  emergencyContacts?: EmergencyContact[];
+}
+
+export interface AddressInformation {
+  addressType?: string;
+  houseNumber?: string;
+  streetName?: string;
+  landmark?: string;
+  colony?: string;
+  area?: string;
+  city?: string;
+  district?: string;
+  stateProvince?: string;
+  country?: string;
+  pincode?: string;
+  sameAsAnotherAddress?: boolean;
+  effectiveFrom?: string;
+  effectiveTo?: string;
+  addressProofLink?: string;
+}
+
+export interface EmergencyContact {
+  contactName?: string;
+  relationship?: string;
   contactNumber?: string;
-  permanentAddress?: string;
-  presentAddress?: string;
-  employeeContactName1?: string;
-  employeeContactName2?: string;
-  employeeContactNumber1?: string;
-  employeeContactNumber2?: string;
-  emergencyContactRelation1?: string;
-  employeeContactRelation2?: string;
+  alternateContactNumber?: string;
+  email?: string;
+  address?: string;
+  priorityOrder?: number;
+  primaryEmergencyContact?: boolean;
+  remarks?: string;
 }
 
 export interface UserProfile {

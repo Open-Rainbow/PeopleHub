@@ -19,8 +19,15 @@ export interface IContactInfoFormFields {
   stateProvince: IFormFieldConfig;
   country: IFormFieldConfig;
   pincode: IFormFieldConfig;
-  permanentAddress: IFormFieldConfig;
-  currentAddress: IFormFieldConfig;
+  // permanentAddress: IFormFieldConfig;
+  // currentAddress: IFormFieldConfig;
+  effectiveFrom: IFormFieldConfig;
+  effectiveTo: IFormFieldConfig;
+  addressProofLink: IFormFieldConfig;
+  emergencyAddress: IFormFieldConfig;
+  priorityOrder: IFormFieldConfig;
+  remarks: IFormFieldConfig;
+
   checkToggle: IFormFieldConfig;
   contactName: IFormFieldConfig;
   contactNumber: IFormFieldConfig;

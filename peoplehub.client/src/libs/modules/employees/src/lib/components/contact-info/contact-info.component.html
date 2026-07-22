@@ -1,7 +1,33 @@
 ﻿<div class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md">
 
+ <div class="flex gap-2 border-b border-gray-200 mb-6">
+  <button
+    type="button"
+    class="px-5 py-2 text-sm font-medium rounded-t-lg transition-colors duration-150"
+    [class.text-blue-600]="isContactTab()"
+    [class.border-b-2]="isContactTab()"
+    [class.border-blue-600]="isContactTab()"
+    [class.text-gray-500]="!isContactTab()"
+    (click)="switchTab('Contact')"
+  >
+    Contact Members
+  </button>
+  <button
+    type="button"
+    class="px-5 py-2 text-sm font-medium rounded-t-lg transition-colors duration-150"
+    [class.text-blue-600]="isEmergencyTab()"
+    [class.border-b-2]="isEmergencyTab()"
+    [class.border-blue-600]="isEmergencyTab()"
+    [class.text-gray-500]="!isEmergencyTab()"
+    (click)="switchTab('Emergency')"
+  >
+    Emergency
+  </button>
+</div>
   <!-- Contact Information -->
+   @if (isContactTab()) {
   <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Contact Information</p>
+  <hr class="mb-[15px]">
   <div class="grid grid-cols-3 gap-[10px] mb-6">
 
     @if (!formConfig.personalMail.isHide) {
@@ -103,11 +129,37 @@
     }
 
   </div>
-
+   
   <!-- Address -->
   <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Address</p>
-  <div class="grid grid-cols-3 gap-[10px] mb-6">
+ @for (address  of addressForms; track $index) {
 
+<section class="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm">
+
+  <div class="mb-4 flex items-center justify-between gap-4">
+
+    <div>
+      <p class="text-sm font-semibold text-slate-700">
+        Address {{ $index + 1 }}
+      </p>
+    </div>
+
+    @if (addresses.length > 1) {
+      <button
+        type="button"
+        class="text-sm font-medium text-red-600 hover:text-red-700"
+        (click)="removeAddress($index)">
+        Remove
+      </button>
+    }
+
+  </div>
+
+  <form [formGroup]="$any(contactInfo)">
+
+    <div class="grid grid-cols-3 gap-[10px]">
+
+      
     @if (!formConfig.addressType.isHide) {
       <div class="form-group">
         <ui-dropdown
@@ -270,91 +322,157 @@
       </div>
     }
 
-  </div>
+    </div>
 
+  </form>
+
+</section>
+
+}
+<div class="flex items-center justify-between pt-1">
+       <p class="text-xs text-slate-500">
+    {{ addresses.length }} / {{ maxAddresses }} addresses
+  </p>
+
+  <ui-text-button
+    text="Add Address"
+    variant="secondary"
+    [disabled]="!canAddAddress()"
+    (buttonClick)="addAddress()">
+  </ui-text-button>
+      </div>
+   }
   <!-- Emergency Contact -->
-  <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Emergency Contact</p>
-  <div class="grid grid-cols-3 gap-[10px]">
+      @if (isEmergencyTab()) {
+ <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">
+  Emergency Contact
+</p>
 
-    @if (!formConfig.contactName.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.contactName.id"
-          [parentFormGroup]="contactInfo"
-          [label]="formConfig.contactName.label!"
-          [placeholder]="formConfig.contactName.placeholder ?? ''"
-          [minLength]="formConfig.contactName.minLength"
-          [maxLength]="formConfig.contactName.maxLength"
-          [isRequired]="formConfig.contactName.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
+@for (contactInfo of emergencyForms; track $index) {
 
-    @if (!formConfig.relation.isHide) {
-      <div class="form-group">
-        <ui-dropdown
-          [id]="formConfig.relation.id"
-          [parentFormGroup]="contactInfo"
-          [label]="formConfig.relation.label!"
-          [placeholder]="formConfig.relation.placeholder ?? ''"
-          [isRequired]="formConfig.relation.isRequired!"
-          [options]="relationOptions$ | async"
-        ></ui-dropdown>
-      </div>
-    }
+<section class="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm">
 
-    @if (!formConfig.contactNumber.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.contactNumber.id"
-          [parentFormGroup]="contactInfo"
-          [label]="formConfig.contactNumber.label!"
-          [placeholder]="formConfig.contactNumber.placeholder ?? ''"
-          [minLength]="formConfig.contactNumber.minLength"
-          [maxLength]="formConfig.contactNumber.maxLength"
-          [isRequired]="formConfig.contactNumber.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
+  <div class="mb-4 flex items-center justify-between gap-4">
 
-    @if (!formConfig.emergencyAlternateNumber.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.emergencyAlternateNumber.id"
-          [parentFormGroup]="contactInfo"
-          [label]="formConfig.emergencyAlternateNumber.label!"
-          [placeholder]="formConfig.emergencyAlternateNumber.placeholder ?? ''"
-          [minLength]="formConfig.emergencyAlternateNumber.minLength"
-          [maxLength]="formConfig.emergencyAlternateNumber.maxLength"
-          [isRequired]="formConfig.emergencyAlternateNumber.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
+    <div>
+      <p class="text-sm font-semibold text-slate-700">
+        Emergency Contact {{ $index + 1 }}
+      </p>
+    </div>
 
-    @if (!formConfig.emergencyEmail.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.emergencyEmail.id"
-          [parentFormGroup]="contactInfo"
-          [label]="formConfig.emergencyEmail.label!"
-          [placeholder]="formConfig.emergencyEmail.placeholder ?? ''"
-          [minLength]="formConfig.emergencyEmail.minLength"
-          [maxLength]="formConfig.emergencyEmail.maxLength"
-          [isRequired]="formConfig.emergencyEmail.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
-
-    @if (!formConfig.primaryEmergencyContact.isHide) {
-      <div class="form-group flex items-end pb-2">
-        <ui-checkbox
-          [id]="formConfig.primaryEmergencyContact.id"
-          [parentFormGroup]="contactInfo"
-          [label]="formConfig.primaryEmergencyContact.label!"
-        ></ui-checkbox>
-      </div>
+    @if (emergencyContacts.length > 1) {
+      <button
+        type="button"
+        class="text-sm font-medium text-red-600 hover:text-red-700"
+        (click)="removeEmergencyContact($index)">
+        Remove
+      </button>
     }
 
   </div>
 
+  <form [formGroup]="$any(contactInfo)">
+
+    <div class="grid grid-cols-3 gap-[10px]">
+
+      @if (!formConfig.contactName.isHide) {
+        <div class="form-group">
+          <ui-text-box
+            [id]="formConfig.contactName.id"
+            [parentFormGroup]="contactInfo"
+            [label]="formConfig.contactName.label!"
+            [placeholder]="formConfig.contactName.placeholder ?? ''"
+            [minLength]="formConfig.contactName.minLength"
+            [maxLength]="formConfig.contactName.maxLength"
+            [isRequired]="formConfig.contactName.isRequired!"
+          ></ui-text-box>
+        </div>
+      }
+
+      @if (!formConfig.relation.isHide) {
+        <div class="form-group">
+          <ui-dropdown
+            [id]="formConfig.relation.id"
+            [parentFormGroup]="contactInfo"
+            [label]="formConfig.relation.label!"
+            [placeholder]="formConfig.relation.placeholder ?? ''"
+            [isRequired]="formConfig.relation.isRequired!"
+            [options]="relationOptions$ | async"
+          ></ui-dropdown>
+        </div>
+      }
+
+      @if (!formConfig.contactNumber.isHide) {
+        <div class="form-group">
+          <ui-text-box
+            [id]="formConfig.contactNumber.id"
+            [parentFormGroup]="contactInfo"
+            [label]="formConfig.contactNumber.label!"
+            [placeholder]="formConfig.contactNumber.placeholder ?? ''"
+            [minLength]="formConfig.contactNumber.minLength"
+            [maxLength]="formConfig.contactNumber.maxLength"
+            [isRequired]="formConfig.contactNumber.isRequired!"
+          ></ui-text-box>
+        </div>
+      }
+
+      @if (!formConfig.emergencyAlternateNumber.isHide) {
+        <div class="form-group">
+          <ui-text-box
+            [id]="formConfig.emergencyAlternateNumber.id"
+            [parentFormGroup]="contactInfo"
+            [label]="formConfig.emergencyAlternateNumber.label!"
+            [placeholder]="formConfig.emergencyAlternateNumber.placeholder ?? ''"
+            [minLength]="formConfig.emergencyAlternateNumber.minLength"
+            [maxLength]="formConfig.emergencyAlternateNumber.maxLength"
+            [isRequired]="formConfig.emergencyAlternateNumber.isRequired!"
+          ></ui-text-box>
+        </div>
+      }
+
+      @if (!formConfig.emergencyEmail.isHide) {
+        <div class="form-group">
+          <ui-text-box
+            [id]="formConfig.emergencyEmail.id"
+            [parentFormGroup]="contactInfo"
+            [label]="formConfig.emergencyEmail.label!"
+            [placeholder]="formConfig.emergencyEmail.placeholder ?? ''"
+            [minLength]="formConfig.emergencyEmail.minLength"
+            [maxLength]="formConfig.emergencyEmail.maxLength"
+            [isRequired]="formConfig.emergencyEmail.isRequired!"
+          ></ui-text-box>
+        </div>
+      }
+
+      @if (!formConfig.primaryEmergencyContact.isHide) {
+        <div class="form-group flex items-end pb-2">
+          <ui-checkbox
+            [id]="formConfig.primaryEmergencyContact.id"
+            [parentFormGroup]="contactInfo"
+            [label]="formConfig.primaryEmergencyContact.label!"
+          ></ui-checkbox>
+        </div>
+      }
+
+    </div>
+
+  </form>
+
+</section>
+
+}
+
+<div class="flex items-center justify-between pt-1">
+  <p class="text-xs text-slate-500">
+    {{ emergencyContacts.length }} / {{ maxEmergencyContacts }} emergency contacts
+  </p>
+
+  <ui-text-button
+    text="Add Emergency Contact"
+    variant="secondary"
+    [disabled]="!canAddEmergencyContact()"
+    (buttonClick)="addEmergencyContact()">
+  </ui-text-button>
+</div>
+}
 </div>
