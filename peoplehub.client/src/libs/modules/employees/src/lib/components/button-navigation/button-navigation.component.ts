@@ -31,7 +31,6 @@ export class ButtonNavigationComponent implements OnInit {
   private readonly confirmPopupService = inject(ConfirmPopupService);
   private readonly dataService = inject(EmployeeDataService);
   private readonly employeesService = inject(EmployeesService);
-
   readonly activeComponent = input<unknown>(null);
 
   readonly stepSaved = output<string>();
@@ -84,7 +83,32 @@ export class ButtonNavigationComponent implements OnInit {
     if (formGroup) {
       if (formGroup.valid) {
         const currentRoute = this.steps()[currentIndex].route;
-        this.dataService.setDataByRoute(currentRoute, formGroup.value);
+        const formValue = formGroup.value as Record<string, unknown>;
+
+        if (currentRoute === 'personal-info') {
+          this.employeesService.savePersonalInfo(formValue).subscribe({
+            next: (response) => {
+              this.dataService.setDataByRoute(currentRoute, {
+                ...formValue,
+                ...(response as Record<string, unknown>),
+              });
+              this.stepperService.setStepValidity(true);
+              this.stepSaved.emit(this.steps()[currentIndex].title);
+              this.steps.set(this.stepperService.getSteps('addEmployee'));
+
+              if (currentIndex < this.steps().length - 1) {
+                const nextIndex = currentIndex + 1;
+                this.navigateToStep(this.steps()[nextIndex].route);
+              }
+            },
+            error: (err: unknown) =>
+              console.error('Failed to save personal info:', err),
+          });
+
+          return;
+        }
+
+        this.dataService.setDataByRoute(currentRoute, formValue);
         this.stepperService.setStepValidity(true);
         this.stepSaved.emit(this.steps()[currentIndex].title);
         this.steps.set(this.stepperService.getSteps('addEmployee'));

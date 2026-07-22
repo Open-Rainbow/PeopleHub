@@ -14,14 +14,14 @@
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>10.*-*</Version>
     </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\core\PeopleHub.Infrastructure\PeopleHub.Infrastructure.csproj" />
     <ProjectReference Include="..\peoplehub.client\peoplehub.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\core\PeopleHub.Application\PeopleHub.Application.csproj" />
-    <ProjectReference Include="..\core\PeopleHub.Infrastructure\PeopleHub.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

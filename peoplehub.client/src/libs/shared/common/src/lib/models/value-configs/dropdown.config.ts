@@ -14,7 +14,7 @@ export const dropdownConfig: Record<string, DropdownOption[]> = {
     { value: 3, name: 'Non-binary' },
     { value: 4, name: 'Prefer not to say' },
   ],
-  title: [
+  salutation: [
     { value: 1, name: 'Mr.' },
     { value: 2, name: 'Ms.' },
   ],

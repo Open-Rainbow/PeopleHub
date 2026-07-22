@@ -8,7 +8,11 @@ import { Observable } from 'rxjs';
 export class EmployeesService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiBase = '/api/employees';
+  private readonly apiBase = 'https://localhost:7252' + '/api/employees';
+
+  savePersonalInfo(payload: Record<string, unknown>): Observable<unknown> {
+    return this.http.post(`${this.apiBase}/personal-info`, payload);
+  }
 
   addEmployee(payload: Record<string, unknown>): Observable<unknown> {
     return this.http.post(this.apiBase, payload);
