@@ -1,6 +1,16 @@
 <div class="w-full bg-white p-5 rounded-[25px] border border-gray-300 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in-out hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
   <div class="grid grid-cols-3 gap-5 mt-[3%]">
-
+    @if (!formConfig.employeeId.isHide) {
+      <ui-text-box
+        [id]="formConfig.employeeId.id"
+        [parentFormGroup]="jobDetails"
+        [label]="formConfig.employeeId.label!"
+        [placeholder]="formConfig.employeeId.placeholder ?? ''"
+        [minLength]="formConfig.employeeId.minLength"
+        [maxLength]="formConfig.employeeId.maxLength"
+        [isRequired]="formConfig.employeeId.isRequired!"
+      ></ui-text-box>
+    }
     @if (!formConfig.officeEmail.isHide) {
       <ui-text-box
         [id]="formConfig.officeEmail.id"
@@ -12,7 +22,35 @@
         [isRequired]="formConfig.officeEmail.isRequired!"
       ></ui-text-box>
     }
-
+    @if (!formConfig.dateOfJoining.isHide) {
+      <ui-calendar
+        [id]="formConfig.dateOfJoining.id"
+        [parentFormGroup]="jobDetails"
+        [label]="formConfig.dateOfJoining.label!"
+        [isRequired]="formConfig.dateOfJoining.isRequired!"
+      ></ui-calendar>
+    }
+   @if (!formConfig.employmentStatus.isHide) {
+      <ui-dropdown
+        [id]="formConfig.employmentStatus.id"
+        [parentFormGroup]="jobDetails"
+        [label]="formConfig.employmentStatus.label!"
+        [placeholder]="formConfig.employmentStatus.placeholder ?? ''"
+        [isRequired]="formConfig.employmentStatus.isRequired!"
+        [options]="employmentStatusOptions$ | async"
+      ></ui-dropdown>
+    }
+        @if (!formConfig.employeeType.isHide) {
+      <ui-dropdown
+        [id]="formConfig.employeeType.id"
+        [parentFormGroup]="jobDetails"
+        [label]="formConfig.employeeType.label!"
+        [placeholder]="formConfig.employeeType.placeholder ?? ''"
+        [isRequired]="formConfig.employeeType.isRequired!"
+        [options]="employeeTypeOptions$ | async"
+      ></ui-dropdown>
+    }
+    
     @if (!formConfig.department.isHide) {
       <ui-dropdown
         [id]="formConfig.department.id"
@@ -21,6 +59,16 @@
         [placeholder]="formConfig.department.placeholder ?? ''"
         [isRequired]="formConfig.department.isRequired!"
         [options]="departmentOptions$ | async"
+      ></ui-dropdown>
+    }
+       @if (!formConfig.businessUnit.isHide) {
+      <ui-dropdown
+        [id]="formConfig.businessUnit.id"
+        [parentFormGroup]="jobDetails"
+        [label]="formConfig.businessUnit.label!"
+        [placeholder]="formConfig.businessUnit.placeholder ?? ''"
+        [isRequired]="formConfig.businessUnit.isRequired!"
+        [options]="businessUnitOptions$ | async"
       ></ui-dropdown>
     }
 
@@ -36,14 +84,14 @@
       ></ui-text-box>
     }
 
-    @if (!formConfig.employeeType.isHide) {
+   @if (!formConfig.payLevel.isHide) {
       <ui-dropdown
-        [id]="formConfig.employeeType.id"
+        [id]="formConfig.payLevel.id"
         [parentFormGroup]="jobDetails"
-        [label]="formConfig.employeeType.label!"
-        [placeholder]="formConfig.employeeType.placeholder ?? ''"
-        [isRequired]="formConfig.employeeType.isRequired!"
-        [options]="employeeTypeOptions$ | async"
+        [label]="formConfig.payLevel.label!"
+        [placeholder]="formConfig.payLevel.placeholder ?? ''"
+        [isRequired]="formConfig.payLevel.isRequired!"
+        [options]="payLevelOptions$ | async"
       ></ui-dropdown>
     }
 
@@ -58,28 +106,7 @@
       ></ui-dropdown>
     }
 
-    @if (!formConfig.shiftTimings.isHide) {
-      <ui-dropdown
-        [id]="formConfig.shiftTimings.id"
-        [parentFormGroup]="jobDetails"
-        [label]="formConfig.shiftTimings.label!"
-        [placeholder]="formConfig.shiftTimings.placeholder ?? ''"
-        [isRequired]="formConfig.shiftTimings.isRequired!"
-        [options]="shiftTimingOptions$ | async"
-      ></ui-dropdown>
-    }
-
-    @if (!formConfig.payLevel.isHide) {
-      <ui-dropdown
-        [id]="formConfig.payLevel.id"
-        [parentFormGroup]="jobDetails"
-        [label]="formConfig.payLevel.label!"
-        [placeholder]="formConfig.payLevel.placeholder ?? ''"
-        [isRequired]="formConfig.payLevel.isRequired!"
-        [options]="payLevelOptions$ | async"
-      ></ui-dropdown>
-    }
-
+    
     @if (!formConfig.reportingManager.isHide) {
       <ui-dropdown
         [id]="formConfig.reportingManager.id"
@@ -91,25 +118,24 @@
       ></ui-dropdown>
     }
 
-    @if (!formConfig.businessUnit.isHide) {
+     @if (!formConfig.dottedLineManager.isHide) {
       <ui-dropdown
-        [id]="formConfig.businessUnit.id"
+        [id]="formConfig.dottedLineManager.id"
         [parentFormGroup]="jobDetails"
-        [label]="formConfig.businessUnit.label!"
-        [placeholder]="formConfig.businessUnit.placeholder ?? ''"
-        [isRequired]="formConfig.businessUnit.isRequired!"
-        [options]="businessUnitOptions$ | async"
+        [label]="formConfig.dottedLineManager.label!"
+        [placeholder]="formConfig.dottedLineManager.placeholder ?? ''"
+        [isRequired]="formConfig.dottedLineManager.isRequired!"
+        [options]="dottedLineManagerOptions$ | async"
       ></ui-dropdown>
     }
-
-    @if (!formConfig.employeeCategory.isHide) {
+    @if (!formConfig.shiftTimings.isHide) {
       <ui-dropdown
-        [id]="formConfig.employeeCategory.id"
+        [id]="formConfig.shiftTimings.id"
         [parentFormGroup]="jobDetails"
-        [label]="formConfig.employeeCategory.label!"
-        [placeholder]="formConfig.employeeCategory.placeholder ?? ''"
-        [isRequired]="formConfig.employeeCategory.isRequired!"
-        [options]="employeeCategoryOptions$ | async"
+        [label]="formConfig.shiftTimings.label!"
+        [placeholder]="formConfig.shiftTimings.placeholder ?? ''"
+        [isRequired]="formConfig.shiftTimings.isRequired!"
+        [options]="shiftTimingOptions$ | async"
       ></ui-dropdown>
     }
 
@@ -124,49 +150,6 @@
       ></ui-dropdown>
     }
 
-    @if (!formConfig.dottedLineManager.isHide) {
-      <ui-dropdown
-        [id]="formConfig.dottedLineManager.id"
-        [parentFormGroup]="jobDetails"
-        [label]="formConfig.dottedLineManager.label!"
-        [placeholder]="formConfig.dottedLineManager.placeholder ?? ''"
-        [isRequired]="formConfig.dottedLineManager.isRequired!"
-        [options]="dottedLineManagerOptions$ | async"
-      ></ui-dropdown>
-    }
-
-    @if (!formConfig.costCenter.isHide) {
-      <ui-dropdown
-        [id]="formConfig.costCenter.id"
-        [parentFormGroup]="jobDetails"
-        [label]="formConfig.costCenter.label!"
-        [placeholder]="formConfig.costCenter.placeholder ?? ''"
-        [isRequired]="formConfig.costCenter.isRequired!"
-        [options]="costCenterOptions$ | async"
-      ></ui-dropdown>
-    }
-
-    @if (!formConfig.hrOwner.isHide) {
-      <ui-dropdown
-        [id]="formConfig.hrOwner.id"
-        [parentFormGroup]="jobDetails"
-        [label]="formConfig.hrOwner.label!"
-        [placeholder]="formConfig.hrOwner.placeholder ?? ''"
-        [isRequired]="formConfig.hrOwner.isRequired!"
-        [options]="hrOwnerOptions$ | async"
-      ></ui-dropdown>
-    }
-
-    @if (!formConfig.employmentStatus.isHide) {
-      <ui-dropdown
-        [id]="formConfig.employmentStatus.id"
-        [parentFormGroup]="jobDetails"
-        [label]="formConfig.employmentStatus.label!"
-        [placeholder]="formConfig.employmentStatus.placeholder ?? ''"
-        [isRequired]="formConfig.employmentStatus.isRequired!"
-        [options]="employmentStatusOptions$ | async"
-      ></ui-dropdown>
-    }
 
     @if (!formConfig.probationStartDate.isHide) {
       <ui-calendar
@@ -186,7 +169,7 @@
       ></ui-calendar>
     }
 
-    @if (!formConfig.confirmationDate.isHide) {
+      @if (!formConfig.confirmationDate.isHide) {
       <ui-calendar
         [id]="formConfig.confirmationDate.id"
         [parentFormGroup]="jobDetails"
@@ -195,5 +178,37 @@
       ></ui-calendar>
     }
 
+     @if (!formConfig.costCenter.isHide) {
+      <ui-dropdown
+        [id]="formConfig.costCenter.id"
+        [parentFormGroup]="jobDetails"
+        [label]="formConfig.costCenter.label!"
+        [placeholder]="formConfig.costCenter.placeholder ?? ''"
+        [isRequired]="formConfig.costCenter.isRequired!"
+        [options]="costCenterOptions$ | async"
+      ></ui-dropdown>
+    }
+
+    @if (!formConfig.employeeCategory.isHide) {
+      <ui-dropdown
+        [id]="formConfig.employeeCategory.id"
+        [parentFormGroup]="jobDetails"
+        [label]="formConfig.employeeCategory.label!"
+        [placeholder]="formConfig.employeeCategory.placeholder ?? ''"
+        [isRequired]="formConfig.employeeCategory.isRequired!"
+        [options]="employeeCategoryOptions$ | async"
+      ></ui-dropdown>
+    }
+
+    @if (!formConfig.hrOwner.isHide) {
+      <ui-dropdown
+        [id]="formConfig.hrOwner.id"
+        [parentFormGroup]="jobDetails"
+        [label]="formConfig.hrOwner.label!"
+        [placeholder]="formConfig.hrOwner.placeholder ?? ''"
+        [isRequired]="formConfig.hrOwner.isRequired!"
+        [options]="hrOwnerOptions$ | async"
+      ></ui-dropdown>
+    }
   </div>
 </div>

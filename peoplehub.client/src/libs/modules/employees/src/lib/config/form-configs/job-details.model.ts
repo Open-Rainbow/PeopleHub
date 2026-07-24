@@ -1,7 +1,9 @@
 ﻿import { IFormFieldConfig } from 'common';
 
 export interface IJobDetailsFormFields {
+    employeeId: IFormFieldConfig;
     officeEmail: IFormFieldConfig;
+    dateOfJoining: IFormFieldConfig;
     department: IFormFieldConfig;
     businessUnit: IFormFieldConfig;
     designation: IFormFieldConfig;
@@ -20,7 +22,3 @@ export interface IJobDetailsFormFields {
     confirmationDate: IFormFieldConfig;
     employmentStatus: IFormFieldConfig;
 }
-
-
-
-
