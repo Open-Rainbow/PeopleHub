@@ -6,6 +6,7 @@ export interface ISkillsFormFields {
   proficiencyLevel: IFormFieldConfig;
   yearsOfExperience: IFormFieldConfig;
   lastUsedYear: IFormFieldConfig;
+  linkedCertification: IFormFieldConfig;
   primarySkill: IFormFieldConfig;
   remarks: IFormFieldConfig;
 }

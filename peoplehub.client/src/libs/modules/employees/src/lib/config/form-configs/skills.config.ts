@@ -71,6 +71,21 @@ export const skillsForm: ISkillsForm = {
     isDisable: false,
     placeholder: 'e.g. 2024',
   },
+
+  linkedCertification: {
+  id: 'linkedCertification',
+  isHide: false,
+  readOnly: false,
+  minLength: 0,
+  maxLength: 100,
+  isRequired: false,
+  label: 'Linked Certification',
+  defaultValue: null,
+  fieldValue: null,
+  tabIndex: 6,
+  isDisable: false,
+  placeholder: 'Select linked certification',
+},
   primarySkill: {
     id: 'primarySkill',
     isHide: false,
@@ -85,7 +100,7 @@ export const skillsForm: ISkillsForm = {
     isDisable: false,
   },
   remarks: {
-    id: 'skillRemarks',
+    id: 'remarks',
     isHide: false,
     readOnly: false,
     minLength: 0,

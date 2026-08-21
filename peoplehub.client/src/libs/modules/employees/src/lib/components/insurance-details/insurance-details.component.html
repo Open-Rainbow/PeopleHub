@@ -208,6 +208,41 @@
             ></ui-calendar>
           </div>
         }
+         @if (!insurancePolicyConfig.linkedFamilyOrDependentRecord.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="insurancePolicyConfig.linkedFamilyOrDependentRecord.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.linkedFamilyOrDependentRecord.label!"
+              [placeholder]="insurancePolicyConfig.linkedFamilyOrDependentRecord.placeholder ?? ''"
+              [minLength]="insurancePolicyConfig.linkedFamilyOrDependentRecord.minLength"
+              [maxLength]="insurancePolicyConfig.linkedFamilyOrDependentRecord.maxLength"
+              [isRequired]="insurancePolicyConfig.linkedFamilyOrDependentRecord.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+         @if (!insurancePolicyConfig.insuranceCardProofLink.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="insurancePolicyConfig.insuranceCardProofLink.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.insuranceCardProofLink.label!"
+              [placeholder]="insurancePolicyConfig.insuranceCardProofLink.placeholder ?? ''"
+              [minLength]="insurancePolicyConfig.insuranceCardProofLink.minLength"
+              [maxLength]="insurancePolicyConfig.insuranceCardProofLink.maxLength"
+              [isRequired]="insurancePolicyConfig.insuranceCardProofLink.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+         @if (!insurancePolicyConfig.coveredUnderPolicy.isHide) {
+          <div class="form-group flex items-end pb-2">
+            <ui-checkbox
+              [id]="insurancePolicyConfig.coveredUnderPolicy.id"
+              [parentFormGroup]="insurance"
+              [label]="insurancePolicyConfig.coveredUnderPolicy.label!"
+            ></ui-checkbox>
+          </div>
+        }
 
       </div>
 
@@ -451,6 +486,43 @@
           </div>
         }
 
+@if (!nomineeConfig.linkedFamilyOrDependentRecord.isHide) {
+        <div class="form-group">
+          <ui-text-box
+            [id]="nomineeConfig.linkedFamilyOrDependentRecord.id"
+            [parentFormGroup]="nominee"
+            [label]="nomineeConfig.linkedFamilyOrDependentRecord.label!"
+            [placeholder]="nomineeConfig.linkedFamilyOrDependentRecord.placeholder ?? ''"
+            [minLength]="nomineeConfig.linkedFamilyOrDependentRecord.minLength"
+            [maxLength]="nomineeConfig.linkedFamilyOrDependentRecord.maxLength"
+            [isRequired]="nomineeConfig.linkedFamilyOrDependentRecord.isRequired!"
+          ></ui-text-box>
+        </div>}
+@if (!nomineeConfig.nomineePanNumber.isHide) {
+        <div class="form-group">
+          <ui-text-box
+            [id]="nomineeConfig.proofDocumentLink.id"
+            [parentFormGroup]="nominee"
+            [label]="nomineeConfig.proofDocumentLink.label!"
+            [placeholder]="nomineeConfig.proofDocumentLink.placeholder ?? ''"
+            [minLength]="nomineeConfig.proofDocumentLink.minLength"
+            [maxLength]="nomineeConfig.proofDocumentLink.maxLength"
+            [isRequired]="nomineeConfig.proofDocumentLink.isRequired!"
+          ></ui-text-box>
+        </div>}
+        @if (!nomineeConfig.address.isHide) {
+        <div class="form-group">
+          <ui-text-area
+            [id]="nomineeConfig.address.id"
+            [parentFormGroup]="nominee"
+            [label]="nomineeConfig.address.label!"
+            [placeholder]="nomineeConfig.address.placeholder ?? ''"
+            [minLength]="nomineeConfig.address.minLength"
+            [maxLength]="nomineeConfig.address.maxLength"
+            [isRequired]="nomineeConfig.address.isRequired!"
+          ></ui-text-area>
+        </div>
+      }
       </div>
     </form>
   }

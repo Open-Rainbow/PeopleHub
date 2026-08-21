@@ -15,8 +15,8 @@ export const salaryStructureForm: ISalaryStructureForm = {
     isDisable: false,
     placeholder: 'Select payroll group',
   },
-  salaryStructure: {
-    id: 'salaryStructure',
+  salaryStructurePlan: {
+    id: 'salaryStructurePlan',
     isHide: false,
     readOnly: false,
     minLength: 0,
@@ -210,4 +210,33 @@ export const salaryStructureForm: ISalaryStructureForm = {
     tabIndex: 15,
     isDisable: false,
   },
+
+  bankProofLink: {
+    id: 'bankProofLink',
+    isHide: false,
+    readOnly: false,
+    minLength: 0,
+    maxLength: 255,
+    isRequired: false,
+    label: 'Bank Proof Link',
+    defaultValue: null,
+    fieldValue: null,
+    tabIndex: 16,
+    isDisable: false,
+    placeholder: 'Enter bank proof link',
+  },
+  salaryStructure: {
+    id: 'salaryStructure',
+    isHide: false,
+    readOnly: false,
+    minLength: 0,
+    maxLength: 100,
+    isRequired: false,
+    label: 'Salary Structure',
+    defaultValue: null,
+    fieldValue: null,
+    tabIndex: 17,
+    isDisable: false,
+    placeholder: 'Enter salary structure',
+  }
 };

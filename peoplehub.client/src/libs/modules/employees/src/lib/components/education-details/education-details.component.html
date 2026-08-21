@@ -1,128 +1,348 @@
-<div class="w-full h-full bg-white rounded-[25px] p-5 shadow-sm transition-shadow duration-200 ease-out hover:shadow-md">
-  <div class="grid grid-cols-3 gap-5 mt-5">
+<div class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md">
 
-    @if (!formConfig.higherQualification.isHide) {
-      <ui-text-box
-        [id]="formConfig.higherQualification.id"
-        [parentFormGroup]="educationDetails"
-        [label]="formConfig.higherQualification.label!"
-        [placeholder]="formConfig.higherQualification.placeholder ?? ''"
-        [minLength]="formConfig.higherQualification.minLength"
-        [maxLength]="formConfig.higherQualification.maxLength"
-        [isRequired]="formConfig.higherQualification.isRequired!"
-      ></ui-text-box>
-    }
+  <div class="flex gap-2 border-b border-gray-200 mb-6">
+    <button
+      type="button"
+      class="px-5 py-2 text-sm font-medium rounded-t-lg transition-colors duration-150"
+      [class.text-blue-600]="isEducationTab()"
+      [class.border-b-2]="isEducationTab()"
+      [class.border-blue-600]="isEducationTab()"
+      [class.text-gray-500]="!isEducationTab()"
+      (click)="switchTab('education')">
+      Education
+    </button>
 
-    @if (!formConfig.board.isHide) {
-      <ui-text-box
-        [id]="formConfig.board.id"
-        [parentFormGroup]="educationDetails"
-        [label]="formConfig.board.label!"
-        [placeholder]="formConfig.board.placeholder ?? ''"
-        [minLength]="formConfig.board.minLength"
-        [maxLength]="formConfig.board.maxLength"
-        [isRequired]="formConfig.board.isRequired!"
-      ></ui-text-box>
-    }
+    <button
+      type="button"
+      class="px-5 py-2 text-sm font-medium rounded-t-lg transition-colors duration-150"
+      [class.text-blue-600]="!isEducationTab()"
+      [class.border-b-2]="!isEducationTab()"
+      [class.border-blue-600]="!isEducationTab()"
+      [class.text-gray-500]="isEducationTab()"
+      (click)="switchTab('certification')">
+      Certification
+    </button>
+  </div>
 
-    @if (!formConfig.courseType.isHide) {
-      <ui-text-box
-        [id]="formConfig.courseType.id"
-        [parentFormGroup]="educationDetails"
-        [label]="formConfig.courseType.label!"
-        [placeholder]="formConfig.courseType.placeholder ?? ''"
-        [minLength]="formConfig.courseType.minLength"
-        [maxLength]="formConfig.courseType.maxLength"
-        [isRequired]="formConfig.courseType.isRequired!"
-      ></ui-text-box>
-    }
+  @if (isEducationTab()) {
+    <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">
+      Education Information
+    </p>
+     @for (education of educationForms; track $index) {
+      <section
+        class="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm mb-4"
+      >
+        <div class="mb-4 flex items-center justify-between gap-4">
+          <div>
+            <p class="text-sm font-semibold text-slate-700">
+              Education {{ $index + 1 }}
+            </p>
+          </div>
+          @if (educations.length > 1) {
+           <button
+  type="button"
+  class="text-sm font-medium text-red-600 hover:text-red-700"
+  (click)="removeEducation($index)"
+>
+  Remove
+</button>
+          }
+        </div>
 
-    @if (!formConfig.specialization.isHide) {
-      <ui-text-box
-        [id]="formConfig.specialization.id"
-        [parentFormGroup]="educationDetails"
-        [label]="formConfig.specialization.label!"
-        [placeholder]="formConfig.specialization.placeholder ?? ''"
-        [minLength]="formConfig.specialization.minLength"
-        [maxLength]="formConfig.specialization.maxLength"
-        [isRequired]="formConfig.specialization.isRequired!"
-      ></ui-text-box>
-    }
-
-    @if (!formConfig.percentageScore.isHide) {
-      <ui-text-box
-        [id]="formConfig.percentageScore.id"
-        [parentFormGroup]="educationDetails"
-        [label]="formConfig.percentageScore.label!"
-        [placeholder]="formConfig.percentageScore.placeholder ?? ''"
-        [minLength]="formConfig.percentageScore.minLength"
-        [maxLength]="formConfig.percentageScore.maxLength"
-        [isRequired]="formConfig.percentageScore.isRequired!"
-      ></ui-text-box>
-    }
-
-    @if (!formConfig.scoringMethod.isHide) {
-      <ui-text-box
-        [id]="formConfig.scoringMethod.id"
-        [parentFormGroup]="educationDetails"
-        [label]="formConfig.scoringMethod.label!"
-        [placeholder]="formConfig.scoringMethod.placeholder ?? ''"
-        [minLength]="formConfig.scoringMethod.minLength"
-        [maxLength]="formConfig.scoringMethod.maxLength"
-        [isRequired]="formConfig.scoringMethod.isRequired!"
-      ></ui-text-box>
-    }
-
-    @if (!formConfig.monthOfPassing.isHide) {
-      <ui-text-box
-        [id]="formConfig.monthOfPassing.id"
-        [parentFormGroup]="educationDetails"
-        [label]="formConfig.monthOfPassing.label!"
-        [placeholder]="formConfig.monthOfPassing.placeholder ?? ''"
-        [minLength]="formConfig.monthOfPassing.minLength"
-        [maxLength]="formConfig.monthOfPassing.maxLength"
-        [isRequired]="formConfig.monthOfPassing.isRequired!"
-      ></ui-text-box>
-    }
-
-    @if (!formConfig.yearOfPassing.isHide) {
+        <form [formGroup]="$any(education)">
+    <hr class="mb-5">
+    <div class="grid grid-cols-3 gap-[10px]">
+       @if (!formConfig.QualificationLevel.isHide) {
       <ui-dropdown
-        [id]="formConfig.yearOfPassing.id"
-        [parentFormGroup]="educationDetails"
-        [label]="formConfig.yearOfPassing.label!"
-        [placeholder]="formConfig.yearOfPassing.placeholder ?? ''"
-        [isRequired]="formConfig.yearOfPassing.isRequired!"
+        [id]="formConfig.QualificationLevel.id"
+        [parentFormGroup]="education"
+        [label]="formConfig.QualificationLevel.label!"
+        [placeholder]="formConfig.QualificationLevel.placeholder ?? ''"
+        [isRequired]="formConfig.QualificationLevel.isRequired!"
+      ></ui-dropdown>
+    }
+    @if (!formConfig.DegreeorCourseName.isHide) {
+      <ui-text-box
+        [id]="formConfig.DegreeorCourseName.id"
+        [parentFormGroup]="education"
+        [label]="formConfig.DegreeorCourseName.label!"
+        [placeholder]="formConfig.DegreeorCourseName.placeholder ?? ''"
+        [minLength]="formConfig.DegreeorCourseName.minLength"
+        [maxLength]="formConfig.DegreeorCourseName.maxLength"
+        [isRequired]="formConfig.DegreeorCourseName.isRequired!"
+      ></ui-text-box>
+    }
+    @if (!formConfig.SpecializationorMajor.isHide) {
+      <ui-text-box
+        [id]="formConfig.SpecializationorMajor.id"
+        [parentFormGroup]="education"
+        [label]="formConfig.SpecializationorMajor.label!"
+        [placeholder]="formConfig.SpecializationorMajor.placeholder ?? ''"
+        [minLength]="formConfig.SpecializationorMajor.minLength"
+        [maxLength]="formConfig.SpecializationorMajor.maxLength"
+        [isRequired]="formConfig.SpecializationorMajor.isRequired!"
+      ></ui-text-box>
+    }
+    @if (!formConfig.InstitutionorCollegeName.isHide) {
+      <ui-text-box
+        [id]="formConfig.InstitutionorCollegeName.id"
+        [parentFormGroup]="education"
+        [label]="formConfig.InstitutionorCollegeName.label!"
+        [placeholder]="formConfig.InstitutionorCollegeName.placeholder ?? ''"
+        [minLength]="formConfig.InstitutionorCollegeName.minLength"
+        [maxLength]="formConfig.InstitutionorCollegeName.maxLength"
+        [isRequired]="formConfig.InstitutionorCollegeName.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.UniversityorBoardName.isHide) {
+      <ui-text-box
+        [id]="formConfig.UniversityorBoardName.id"
+        [parentFormGroup]="education"
+        [label]="formConfig.UniversityorBoardName.label!"
+        [placeholder]="formConfig.UniversityorBoardName.placeholder ?? ''"
+        [minLength]="formConfig.UniversityorBoardName.minLength"
+        [maxLength]="formConfig.UniversityorBoardName.maxLength"
+        [isRequired]="formConfig.UniversityorBoardName.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.ModeofStudy.isHide) {
+      <ui-dropdown
+        [id]="formConfig.ModeofStudy.id"
+        [parentFormGroup]="education"
+        [label]="formConfig.ModeofStudy.label!"
+        [placeholder]="formConfig.ModeofStudy.placeholder ?? ''"
+        [isRequired]="formConfig.ModeofStudy.isRequired!"
+      ></ui-dropdown>
+    }
+    @if (!formConfig.StartDate.isHide) {
+      <ui-calendar
+        [id]="formConfig.StartDate.id"
+        [parentFormGroup]="education"
+        [label]="formConfig.StartDate.label!"
+        [placeholder]="formConfig.StartDate.placeholder ?? ''"
+        [isRequired]="formConfig.StartDate.isRequired!"
+      ></ui-calendar>
+    }
+    @if (!formConfig.EndDate.isHide) {
+      <ui-calendar
+        [id]="formConfig.EndDate.id"
+        [parentFormGroup]="education"
+        [label]="formConfig.EndDate.label!"
+        [placeholder]="formConfig.EndDate.placeholder ?? ''"
+        [isRequired]="formConfig.EndDate.isRequired!"
+      ></ui-calendar>
+    }
+    @if (!formConfig.YearofPassing.isHide) {
+      <ui-dropdown
+        [id]="formConfig.YearofPassing.id"
+        [parentFormGroup]="education"
+        [label]="formConfig.YearofPassing.label!"
+        [placeholder]="formConfig.YearofPassing.placeholder ?? ''"
+        [isRequired]="formConfig.YearofPassing.isRequired!"
         [options]="yearOfPassingOptions$ | async"
       ></ui-dropdown>
     }
-
-    @if (!formConfig.universityName.isHide) {
+    @if (!formConfig.GradePercentageorCGPA.isHide) {
       <ui-text-box
-        [id]="formConfig.universityName.id"
-        [parentFormGroup]="educationDetails"
-        [label]="formConfig.universityName.label!"
-        [placeholder]="formConfig.universityName.placeholder ?? ''"
-        [minLength]="formConfig.universityName.minLength"
-        [maxLength]="formConfig.universityName.maxLength"
-        [isRequired]="formConfig.universityName.isRequired!"
+        [id]="formConfig.GradePercentageorCGPA.id"
+        [parentFormGroup]="education"
+        [label]="formConfig.GradePercentageorCGPA.label!"
+        [placeholder]="formConfig.GradePercentageorCGPA.placeholder ?? ''"
+        [minLength]="formConfig.GradePercentageorCGPA.minLength"
+        [maxLength]="formConfig.GradePercentageorCGPA.maxLength"
+        [isRequired]="formConfig.GradePercentageorCGPA.isRequired!"
       ></ui-text-box>
     }
 
-    <!-- Empty columns to preserve 3-col grid alignment -->
-    <div></div>
-    <div></div>
-  </div>
-
-  @if (!formConfig.certifications.isHide) {
-    <div class="mt-5">
-      <ui-text-area
-        [id]="formConfig.certifications.id"
-        [parentFormGroup]="educationDetails"
-        [label]="formConfig.certifications.label!"
-        [placeholder]="formConfig.certifications.placeholder ?? ''"
-        [maxLength]="formConfig.certifications.maxLength"
-        [isRequired]="formConfig.certifications.isRequired!"
-      ></ui-text-area>
+    @if (!formConfig.HighestQualificationFlag.isHide) {
+      <ui-dropdown
+        [id]="formConfig.HighestQualificationFlag.id"
+        [parentFormGroup]="education"
+        [label]="formConfig.HighestQualificationFlag.label!"
+        [placeholder]="formConfig.HighestQualificationFlag.placeholder ?? ''"
+        [isRequired]="formConfig.HighestQualificationFlag.isRequired!"
+      ></ui-dropdown>
+    }
+    @if (!formConfig.EducationDocumentLink.isHide) {
+      <ui-text-box
+        [id]="formConfig.EducationDocumentLink.id"
+        [parentFormGroup]="education"
+        [label]="formConfig.EducationDocumentLink.label!"
+        [placeholder]="formConfig.EducationDocumentLink.placeholder ?? ''"
+        [minLength]="formConfig.EducationDocumentLink.minLength"
+        [maxLength]="formConfig.EducationDocumentLink.maxLength"
+        [isRequired]="formConfig.EducationDocumentLink.isRequired!"
+      ></ui-text-box>
+    }
+    </div>
+        </form>
+      </section>
+    }
+     <div class="flex items-center justify-between pt-1">
+      <p class="text-xs text-slate-500">
+        {{ educations.length }} / {{ maxEducations }} education records
+      </p>
+      <ui-text-button
+        text="Add Education"
+        variant="secondary"
+        [disabled]="!canAddEducation()"
+        (buttonClick)="addEducation()"
+      >
+      </ui-text-button>
     </div>
   }
+
+ @if (isCertificationTab()) {
+    <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">
+      Certification Information
+    </p>
+     @for (certification of certificationForms; track $index) {
+      <section
+        class="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm mb-4"
+      >
+       <div class="mb-4 flex items-center justify-between gap-4">
+    <div>
+      <p class="text-sm font-semibold text-slate-700">
+        Certification {{ $index + 1 }}
+      </p>
+    </div>
+    @if (certifications.length > 1) {
+      <ui-text-button
+  text="Remove"
+  variant="danger"
+  size="small"
+  type="button"
+  (buttonClick)="removeCertification($index)"
+></ui-text-button>
+    }
+  </div>
+   <form [formGroup]="$any(certification)">
+    <hr class="mb-5">
+    <div class="grid grid-cols-3 gap-[10px]">
+       @if (!formConfig.certificationName.isHide) {
+      <ui-text-box
+        [id]="formConfig.certificationName.id"
+        [parentFormGroup]="certification"
+        [label]="formConfig.certificationName.label!"
+        [placeholder]="formConfig.certificationName.placeholder ?? ''"
+        [minLength]="formConfig.certificationName.minLength"
+        [maxLength]="formConfig.certificationName.maxLength"
+        [isRequired]="formConfig.certificationName.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.issuingOrganization.isHide) {
+      <ui-text-box
+        [id]="formConfig.issuingOrganization.id"
+        [parentFormGroup]="certification"
+        [label]="formConfig.issuingOrganization.label!"
+        [placeholder]="formConfig.issuingOrganization.placeholder ?? ''"
+        [minLength]="formConfig.issuingOrganization.minLength"
+        [maxLength]="formConfig.issuingOrganization.maxLength"
+        [isRequired]="formConfig.issuingOrganization.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.credentialId.isHide) {
+      <ui-text-box
+        [id]="formConfig.credentialId.id"
+        [parentFormGroup]="certification"
+        [label]="formConfig.credentialId.label!"
+        [placeholder]="formConfig.credentialId.placeholder ?? ''"
+        [minLength]="formConfig.credentialId.minLength"
+        [maxLength]="formConfig.credentialId.maxLength"
+        [isRequired]="formConfig.credentialId.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.issueDate.isHide) {
+      <ui-calendar
+        [id]="formConfig.issueDate.id"
+        [parentFormGroup]="certification"
+        [label]="formConfig.issueDate.label!"
+        [placeholder]="formConfig.issueDate.placeholder ?? ''"
+        [isRequired]="formConfig.issueDate.isRequired!"
+      ></ui-calendar>
+    }
+    @if (!formConfig.validFrom.isHide) {
+      <ui-calendar
+        [id]="formConfig.validFrom.id"
+        [parentFormGroup]="certification"
+        [label]="formConfig.validFrom.label!"
+        [placeholder]="formConfig.validFrom.placeholder ?? ''"
+        [isRequired]="formConfig.validFrom.isRequired!"
+      ></ui-calendar>
+    }
+    @if (!formConfig.validTo.isHide) {
+      <ui-calendar
+        [id]="formConfig.validTo.id"
+        [parentFormGroup]="certification"
+        [label]="formConfig.validTo.label!"
+        [placeholder]="formConfig.validTo.placeholder ?? ''"
+        [isRequired]="formConfig.validTo.isRequired!"
+      ></ui-calendar>
+    }
+    @if (!formConfig.certificationScoreOrGrade.isHide) {
+      <ui-text-box
+        [id]="formConfig.certificationScoreOrGrade.id"
+        [parentFormGroup]="certification"
+        [label]="formConfig.certificationScoreOrGrade.label!"
+        [placeholder]="formConfig.certificationScoreOrGrade.placeholder ?? ''"
+        [minLength]="formConfig.certificationScoreOrGrade.minLength"
+        [maxLength]="formConfig.certificationScoreOrGrade.maxLength"
+        [isRequired]="formConfig.certificationScoreOrGrade.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.verificationUrl.isHide) {
+      <ui-text-box
+        [id]="formConfig.verificationUrl.id"
+        [parentFormGroup]="certification"
+        [label]="formConfig.verificationUrl.label!"
+        [placeholder]="formConfig.verificationUrl.placeholder ?? ''"
+        [minLength]="formConfig.verificationUrl.minLength"
+        [maxLength]="formConfig.verificationUrl.maxLength"
+        [isRequired]="formConfig.verificationUrl.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.attachmentLink.isHide) {
+      <ui-text-box
+        [id]="formConfig.attachmentLink.id"
+        [parentFormGroup]="certification"
+        [label]="formConfig.attachmentLink.label!"
+        [placeholder]="formConfig.attachmentLink.placeholder ?? ''"
+        [minLength]="formConfig.attachmentLink.minLength"
+        [maxLength]="formConfig.attachmentLink.maxLength"
+        [isRequired]="formConfig.attachmentLink.isRequired!"
+      ></ui-text-box>
+    }
+
+    @if (!formConfig.activeExpiredStatus.isHide) {
+      <ui-dropdown
+        [id]="formConfig.activeExpiredStatus.id"
+        [parentFormGroup]="certification"
+        [label]="formConfig.activeExpiredStatus.label!"
+        [placeholder]="formConfig.activeExpiredStatus.placeholder ?? ''"
+        [isRequired]="formConfig.activeExpiredStatus.isRequired!"
+      ></ui-dropdown>
+    }
+</div>
+</form></section>
+  }
+<div class="flex items-center justify-between pt-1">
+      <p class="text-xs text-slate-500">
+  {{ certifications.length }} / {{ maxCertifications }} certification records
+      </p>
+       <ui-text-button
+    text="Add Certification"
+    variant="secondary"
+    [disabled]="!canAddCertification()"
+    (buttonClick)="addCertification()"
+  >
+      </ui-text-button>
+    </div>
+    }
 </div>

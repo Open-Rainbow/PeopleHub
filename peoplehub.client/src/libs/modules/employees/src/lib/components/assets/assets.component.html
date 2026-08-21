@@ -1,403 +1,563 @@
 <div class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md">
-
+  
   <!-- Asset Assignment -->
-  <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Asset Assignment</p>
-  <div class="grid grid-cols-3 gap-[10px] mb-6">
+    <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">System Access and Assets</p>
+  <!-- <div class="flex items-center gap-1 border-b border-gray-200 mb-6">
+   
+    <button
+      type="button"
+      class="px-5 py-3 text-sm font-medium border-b-2 transition-colors duration-200"
+      [class.text-blue-600]="activeTab() === 'systemAccess'"
+      [class.border-blue-600]="activeTab() === 'systemAccess'"
+      [class.text-gray-500]="activeTab() !== 'systemAccess'"
+      [class.border-transparent]="activeTab() !== 'systemAccess'"
+      (click)="switchTab('systemAccess')"
+    >
+      System Access
+    </button>
 
-    @if (!formConfig.assetType.isHide) {
-      <div class="form-group">
-        <ui-dropdown
-          [id]="formConfig.assetType.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.assetType.label!"
-          [placeholder]="formConfig.assetType.placeholder ?? ''"
-          [isRequired]="formConfig.assetType.isRequired!"
-          [options]="assetTypeOptions$ | async"
-        ></ui-dropdown>
-      </div>
-    }
+    <button
+      type="button"
+      class="px-5 py-3 text-sm font-medium border-b-2 transition-colors duration-200"
+      [class.text-blue-600]="activeTab() === 'assetsCompliance'"
+      [class.border-blue-600]="activeTab() === 'assetsCompliance'"
+      [class.text-gray-500]="activeTab() !== 'assetsCompliance'"
+      [class.border-transparent]="activeTab() !== 'assetsCompliance'"
+      (click)="switchTab('assetsCompliance')"
+    >
+      Assets and Compliance
+    </button>
+  </div> -->
 
-    @if (!formConfig.assetCategory.isHide) {
-      <div class="form-group">
-        <ui-dropdown
-          [id]="formConfig.assetCategory.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.assetCategory.label!"
-          [placeholder]="formConfig.assetCategory.placeholder ?? ''"
-          [isRequired]="formConfig.assetCategory.isRequired!"
-          [options]="assetCategoryOptions$ | async"
-        ></ui-dropdown>
-      </div>
-    }
 
-    @if (!formConfig.assetName.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.assetName.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.assetName.label!"
-          [placeholder]="formConfig.assetName.placeholder ?? ''"
-          [minLength]="formConfig.assetName.minLength"
-          [maxLength]="formConfig.assetName.maxLength"
-          [isRequired]="formConfig.assetName.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
+<div class="mb-6">
+  <ui-tab-button
+    [tabs]="tabs"
+    [activeTab]="activeTab()"
+    (tabChange)="switchTab($event)"
+  ></ui-tab-button>
+</div>
 
-    @if (!formConfig.assetSerialNumber.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.assetSerialNumber.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.assetSerialNumber.label!"
-          [placeholder]="formConfig.assetSerialNumber.placeholder ?? ''"
-          [minLength]="formConfig.assetSerialNumber.minLength"
-          [maxLength]="formConfig.assetSerialNumber.maxLength"
-          [isRequired]="formConfig.assetSerialNumber.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
 
-    @if (!formConfig.makeBrand.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.makeBrand.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.makeBrand.label!"
-          [placeholder]="formConfig.makeBrand.placeholder ?? ''"
-          [minLength]="formConfig.makeBrand.minLength"
-          [maxLength]="formConfig.makeBrand.maxLength"
-          [isRequired]="formConfig.makeBrand.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
-
-    @if (!formConfig.model.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.model.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.model.label!"
-          [placeholder]="formConfig.model.placeholder ?? ''"
-          [minLength]="formConfig.model.minLength"
-          [maxLength]="formConfig.model.maxLength"
-          [isRequired]="formConfig.model.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
-
-    @if (!formConfig.tagNumber.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.tagNumber.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.tagNumber.label!"
-          [placeholder]="formConfig.tagNumber.placeholder ?? ''"
-          [minLength]="formConfig.tagNumber.minLength"
-          [maxLength]="formConfig.tagNumber.maxLength"
-          [isRequired]="formConfig.tagNumber.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
-
-    @if (!formConfig.ownershipType.isHide) {
-      <div class="form-group">
-        <ui-dropdown
-          [id]="formConfig.ownershipType.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.ownershipType.label!"
-          [placeholder]="formConfig.ownershipType.placeholder ?? ''"
-          [isRequired]="formConfig.ownershipType.isRequired!"
-          [options]="ownershipTypeOptions$ | async"
-        ></ui-dropdown>
-      </div>
-    }
-
-    @if (!formConfig.issuedDate.isHide) {
-      <div class="form-group">
-        <ui-calendar
-          [id]="formConfig.issuedDate.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.issuedDate.label!"
-          [isRequired]="formConfig.issuedDate.isRequired!"
-        ></ui-calendar>
-      </div>
-    }
-
-    @if (!formConfig.assetConditionAtIssue.isHide) {
-      <div class="form-group">
-        <ui-dropdown
-          [id]="formConfig.assetConditionAtIssue.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.assetConditionAtIssue.label!"
-          [placeholder]="formConfig.assetConditionAtIssue.placeholder ?? ''"
-          [isRequired]="formConfig.assetConditionAtIssue.isRequired!"
-          [options]="conditionOptions$ | async"
-        ></ui-dropdown>
-      </div>
-    }
-
-    @if (!formConfig.warrantyStartDate.isHide) {
-      <div class="form-group">
-        <ui-calendar
-          [id]="formConfig.warrantyStartDate.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.warrantyStartDate.label!"
-          [isRequired]="formConfig.warrantyStartDate.isRequired!"
-        ></ui-calendar>
-      </div>
-    }
-
-    @if (!formConfig.warrantyEndDate.isHide) {
-      <div class="form-group">
-        <ui-calendar
-          [id]="formConfig.warrantyEndDate.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.warrantyEndDate.label!"
-          [isRequired]="formConfig.warrantyEndDate.isRequired!"
-        ></ui-calendar>
-      </div>
-    }
-
-    @if (!formConfig.assetValue.isHide) {
-      <div class="form-group">
-        <ui-number-box
-          [id]="formConfig.assetValue.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.assetValue.label!"
-          [placeholder]="formConfig.assetValue.placeholder ?? ''"
-          [isRequired]="formConfig.assetValue.isRequired!"
-        ></ui-number-box>
-      </div>
-    }
-
-    @if (!formConfig.employeeAcknowledgement.isHide) {
-      <div class="form-group flex items-end pb-2">
-        <ui-checkbox
-          [id]="formConfig.employeeAcknowledgement.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.employeeAcknowledgement.label!"
-        ></ui-checkbox>
-      </div>
-    }
-
-    @if (!formConfig.acknowledgementDate.isHide) {
-      <div class="form-group">
-        <ui-calendar
-          [id]="formConfig.acknowledgementDate.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.acknowledgementDate.label!"
-          [isRequired]="formConfig.acknowledgementDate.isRequired!"
-        ></ui-calendar>
-      </div>
-    }
-
-  </div>
-
-  @if (!formConfig.configurationDetails.isHide) {
-    <div class="mb-4">
-      <ui-text-area
-        [id]="formConfig.configurationDetails.id"
-        [parentFormGroup]="assets"
-        [label]="formConfig.configurationDetails.label!"
-        [placeholder]="formConfig.configurationDetails.placeholder ?? ''"
-        [maxLength]="formConfig.configurationDetails.maxLength"
-        [isRequired]="formConfig.configurationDetails.isRequired!"
-      ></ui-text-area>
-    </div>
-  }
-
-  <!-- Return & Recovery -->
-  <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Return & Recovery</p>
-  <div class="grid grid-cols-3 gap-[10px] mb-6">
-
-    @if (!formConfig.returnRequired.isHide) {
-      <div class="form-group flex items-end pb-2">
-        <ui-checkbox
-          [id]="formConfig.returnRequired.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.returnRequired.label!"
-        ></ui-checkbox>
-      </div>
-    }
-
-    @if (!formConfig.expectedReturnDate.isHide) {
-      <div class="form-group">
-        <ui-calendar
-          [id]="formConfig.expectedReturnDate.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.expectedReturnDate.label!"
-          [isRequired]="formConfig.expectedReturnDate.isRequired!"
-        ></ui-calendar>
-      </div>
-    }
-
-    @if (!formConfig.actualReturnDate.isHide) {
-      <div class="form-group">
-        <ui-calendar
-          [id]="formConfig.actualReturnDate.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.actualReturnDate.label!"
-          [isRequired]="formConfig.actualReturnDate.isRequired!"
-        ></ui-calendar>
-      </div>
-    }
-
-    @if (!formConfig.returnCondition.isHide) {
-      <div class="form-group">
-        <ui-dropdown
-          [id]="formConfig.returnCondition.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.returnCondition.label!"
-          [placeholder]="formConfig.returnCondition.placeholder ?? ''"
-          [isRequired]="formConfig.returnCondition.isRequired!"
-          [options]="conditionOptions$ | async"
-        ></ui-dropdown>
-      </div>
-    }
-
-    @if (!formConfig.recoveryRequired.isHide) {
-      <div class="form-group flex items-end pb-2">
-        <ui-checkbox
-          [id]="formConfig.recoveryRequired.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.recoveryRequired.label!"
-        ></ui-checkbox>
-      </div>
-    }
-
-    @if (!formConfig.recoveryAmount.isHide) {
-      <div class="form-group">
-        <ui-number-box
-          [id]="formConfig.recoveryAmount.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.recoveryAmount.label!"
-          [placeholder]="formConfig.recoveryAmount.placeholder ?? ''"
-          [isRequired]="formConfig.recoveryAmount.isRequired!"
-        ></ui-number-box>
-      </div>
-    }
-
-    @if (!formConfig.recoveryStatus.isHide) {
-      <div class="form-group">
-        <ui-dropdown
-          [id]="formConfig.recoveryStatus.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.recoveryStatus.label!"
-          [placeholder]="formConfig.recoveryStatus.placeholder ?? ''"
-          [isRequired]="formConfig.recoveryStatus.isRequired!"
-          [options]="recoveryStatusOptions$ | async"
-        ></ui-dropdown>
-      </div>
-    }
-
-    @if (!formConfig.assetClosureStatus.isHide) {
-      <div class="form-group">
-        <ui-dropdown
-          [id]="formConfig.assetClosureStatus.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.assetClosureStatus.label!"
-          [placeholder]="formConfig.assetClosureStatus.placeholder ?? ''"
-          [isRequired]="formConfig.assetClosureStatus.isRequired!"
-          [options]="assetClosureStatusOptions$ | async"
-        ></ui-dropdown>
-      </div>
-    }
-
-  </div>
-
-  @if (!formConfig.damageNotes.isHide) {
-    <div class="mb-4">
-      <ui-text-area
-        [id]="formConfig.damageNotes.id"
-        [parentFormGroup]="assets"
-        [label]="formConfig.damageNotes.label!"
-        [placeholder]="formConfig.damageNotes.placeholder ?? ''"
-        [maxLength]="formConfig.damageNotes.maxLength"
-        [isRequired]="formConfig.damageNotes.isRequired!"
-      ></ui-text-area>
-    </div>
-  }
-
-  <!-- Compliance & Policy -->
-  <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Compliance & Policy Acknowledgement</p>
-  <div class="grid grid-cols-3 gap-[10px] mb-4">
-
-    @if (!formConfig.policyName.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.policyName.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.policyName.label!"
-          [placeholder]="formConfig.policyName.placeholder ?? ''"
-          [minLength]="formConfig.policyName.minLength"
-          [maxLength]="formConfig.policyName.maxLength"
-          [isRequired]="formConfig.policyName.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
-
-    @if (!formConfig.acknowledgedOn.isHide) {
-      <div class="form-group">
-        <ui-calendar
-          [id]="formConfig.acknowledgedOn.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.acknowledgedOn.label!"
-          [isRequired]="formConfig.acknowledgedOn.isRequired!"
-        ></ui-calendar>
-      </div>
-    }
-
-    @if (!formConfig.acknowledgedFlag.isHide) {
-      <div class="form-group flex items-end pb-2">
-        <ui-checkbox
-          [id]="formConfig.acknowledgedFlag.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.acknowledgedFlag.label!"
-        ></ui-checkbox>
-      </div>
-    }
-
-    @if (!formConfig.complianceTrainingName.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.complianceTrainingName.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.complianceTrainingName.label!"
-          [placeholder]="formConfig.complianceTrainingName.placeholder ?? ''"
-          [minLength]="formConfig.complianceTrainingName.minLength"
-          [maxLength]="formConfig.complianceTrainingName.maxLength"
-          [isRequired]="formConfig.complianceTrainingName.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
-
-    @if (!formConfig.complianceStatus.isHide) {
-      <div class="form-group">
-        <ui-dropdown
-          [id]="formConfig.complianceStatus.id"
-          [parentFormGroup]="assets"
-          [label]="formConfig.complianceStatus.label!"
-          [placeholder]="formConfig.complianceStatus.placeholder ?? ''"
-          [isRequired]="formConfig.complianceStatus.isRequired!"
-          [options]="complianceStatusOptions$ | async"
-        ></ui-dropdown>
-      </div>
-    }
-
-  </div>
-
-  @if (!formConfig.assetRemarks.isHide) {
+  @if (activeTab() === 'systemAccess') {
     <div>
-      <ui-text-area
-        [id]="formConfig.assetRemarks.id"
-        [parentFormGroup]="assets"
-        [label]="formConfig.assetRemarks.label!"
-        [placeholder]="formConfig.assetRemarks.placeholder ?? ''"
-        [maxLength]="formConfig.assetRemarks.maxLength"
-        [isRequired]="formConfig.assetRemarks.isRequired!"
-      ></ui-text-area>
+      @for (access of systemAccessRecords.controls;track $index;let i = $index) {
+        <div
+          [formGroup]="access"
+          class="bg-white rounded-2xl border border-blue-100 shadow-[0_2px_8px_rgba(0,0,0,0.04)] pt-6 px-5 pb-5 mb-5"
+        >
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span
+                class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-blue-50 text-blue-600 text-xs font-semibold"
+              >
+                {{ i + 1 }}
+              </span>
+              <div>
+                <p class="text-sm font-semibold text-gray-600">
+                  System Access {{ i + 1 }}
+                </p>
+                <p class="text-xs text-gray-400">
+                  Application access details
+                </p>
+              </div>
+            </div>
+
+            @if (systemAccessRecords.length > 1) {
+           <ui-text-button
+  text="Remove"
+  variant="danger"
+  size="small"
+  type="button"
+  (buttonClick)="removeSystemAccess(i)"
+></ui-text-button>
+            }
+          </div>
+          <div class="grid grid-cols-3 gap-[10px] mb-6">
+            @if (!systemAccessConfig.applicationOrSystemName.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="systemAccessConfig.applicationOrSystemName.id"
+                  [parentFormGroup]="access"
+                  [label]="systemAccessConfig.applicationOrSystemName.label!"
+                  [placeholder]="systemAccessConfig.applicationOrSystemName.placeholder ?? ''"
+                  [minLength]="systemAccessConfig.applicationOrSystemName.minLength"
+                  [maxLength]="systemAccessConfig.applicationOrSystemName.maxLength"
+                  [isRequired]="systemAccessConfig.applicationOrSystemName.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+            @if (!systemAccessConfig.usernameOrLoginId.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="systemAccessConfig.usernameOrLoginId.id"
+                  [parentFormGroup]="access"
+                  [label]="systemAccessConfig.usernameOrLoginId.label!"
+                  [placeholder]="systemAccessConfig.usernameOrLoginId.placeholder ?? ''"
+                  [minLength]="systemAccessConfig.usernameOrLoginId.minLength"
+                  [maxLength]="systemAccessConfig.usernameOrLoginId.maxLength"
+                  [isRequired]="systemAccessConfig.usernameOrLoginId.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+            @if (!systemAccessConfig.roleOrAccessProfile.isHide) {
+              <div class="form-group">
+                <ui-dropdown
+                  [id]="systemAccessConfig.roleOrAccessProfile.id"
+                  [parentFormGroup]="access"
+                  [label]="systemAccessConfig.roleOrAccessProfile.label!"
+                  [placeholder]="systemAccessConfig.roleOrAccessProfile.placeholder ?? ''"
+                  [isRequired]="systemAccessConfig.roleOrAccessProfile.isRequired!"
+                  [options]="roleOptions$ | async"
+                ></ui-dropdown>
+              </div>
+            }
+            @if (!systemAccessConfig.accessStartDate.isHide) {
+              <div class="form-group">
+                <ui-calendar
+                  [id]="systemAccessConfig.accessStartDate.id"
+                  [parentFormGroup]="access"
+                  [label]="systemAccessConfig.accessStartDate.label!"
+                  [isRequired]="systemAccessConfig.accessStartDate.isRequired!"
+                ></ui-calendar>
+              </div>
+            }
+            @if (!systemAccessConfig.accessEndDate.isHide) {
+              <div class="form-group">
+                <ui-calendar
+                  [id]="systemAccessConfig.accessEndDate.id"
+                  [parentFormGroup]="access"
+                  [label]="systemAccessConfig.accessEndDate.label!"
+                  [isRequired]="systemAccessConfig.accessEndDate.isRequired!"
+                ></ui-calendar>
+              </div>
+            }
+            @if (!systemAccessConfig.accountStatus.isHide) {
+              <div class="form-group">
+                <ui-dropdown
+                  [id]="systemAccessConfig.accountStatus.id"
+                  [parentFormGroup]="access"
+                  [label]="systemAccessConfig.accountStatus.label!"
+                  [placeholder]="systemAccessConfig.accountStatus.placeholder ?? ''"
+                  [isRequired]="systemAccessConfig.accountStatus.isRequired!"
+                  [options]="accountStatusOptions$ | async"
+                ></ui-dropdown>
+              </div>
+            }
+            @if (!systemAccessConfig.passwordSetupRequired.isHide) {
+              <div class="form-group flex items-end pb-2">
+                <ui-checkbox
+                  [id]="systemAccessConfig.passwordSetupRequired.id"
+                  [parentFormGroup]="access"
+                  [label]="systemAccessConfig.passwordSetupRequired.label!"
+                ></ui-checkbox>
+              </div>
+            }
+            @if (!systemAccessConfig.temporaryPasswordIssuedFlag.isHide) {
+              <div class="form-group flex items-end pb-2">
+                <ui-checkbox
+                  [id]="systemAccessConfig.temporaryPasswordIssuedFlag.id"
+                  [parentFormGroup]="access"
+                  [label]="systemAccessConfig.temporaryPasswordIssuedFlag.label!"
+                ></ui-checkbox>
+              </div>
+            }
+            @if (!systemAccessConfig.passwordResetRequired.isHide) {
+              <div class="form-group flex items-end pb-2">
+                <ui-checkbox
+                  [id]="systemAccessConfig.passwordResetRequired.id"
+                  [parentFormGroup]="access"
+                  [label]="systemAccessConfig.passwordResetRequired.label!"
+                ></ui-checkbox>
+              </div>
+            }
+            @if (!systemAccessConfig.mfaEnabled.isHide) {
+              <div class="form-group flex items-end pb-2">
+                <ui-checkbox
+                  [id]="systemAccessConfig.mfaEnabled.id"
+                  [parentFormGroup]="access"
+                  [label]="systemAccessConfig.mfaEnabled.label!"
+                ></ui-checkbox>
+              </div>
+            }
+            @if (!systemAccessConfig.lastLogin.isHide) {
+              <div class="form-group">
+                <ui-calendar
+                  [id]="systemAccessConfig.lastLogin.id"
+                  [parentFormGroup]="access"
+                  [label]="systemAccessConfig.lastLogin.label!"
+                  [isRequired]="systemAccessConfig.lastLogin.isRequired!"
+                ></ui-calendar>
+              </div>
+            }
+            @if (!systemAccessConfig.accessApprovalReference.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="systemAccessConfig.accessApprovalReference.id"
+                  [parentFormGroup]="access"
+                  [label]="systemAccessConfig.accessApprovalReference.label!"
+                  [placeholder]="systemAccessConfig.accessApprovalReference.placeholder ?? ''"
+                  [minLength]="systemAccessConfig.accessApprovalReference.minLength"
+                  [maxLength]="systemAccessConfig.accessApprovalReference.maxLength"
+                  [isRequired]="systemAccessConfig.accessApprovalReference.isRequired!"
+                ></ui-text-box>
+             </div>
+            }
+          </div>
+        </div>
+      }
+      @if (canAddSystemAccess()) {
+        <div class="flex justify-end mt-4">
+          <ui-text-button
+  text="+ Add System Access"
+  variant="secondary"
+  size="medium"
+  type="button"
+  (buttonClick)="addSystemAccess()"
+></ui-text-button>
+        </div>
+      }
     </div>
   }
+  @if (activeTab() === 'assetsCompliance') {
+    <div>
 
+      @for (
+        asset of assetRecords.controls;track $index; let i = $index) {
+        <div
+          [formGroup]="asset"
+          class="bg-white rounded-2xl border border-blue-100 shadow-[0_2px_8px_rgba(0,0,0,0.04)] pt-6 px-5 pb-5 mb-5"
+        >
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span
+                class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-blue-50 text-blue-600 text-xs font-semibold"
+              >
+                {{ i + 1 }}
+              </span>
+              <div>
+                <p class="text-sm font-semibold text-gray-600">
+                  Asset {{ i + 1 }}
+                </p>
+                <p class="text-xs text-gray-400">
+                  Asset assignment and compliance details
+                </p>
+              </div>
+            </div>
+            @if (assetRecords.length > 1) {
+            <ui-text-button
+  text="Remove"
+  variant="danger"
+  size="small"
+  type="button"
+  (buttonClick)="removeAsset(i)"
+></ui-text-button>
+            }
+          </div>
+          <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">
+            Asset Assignment
+          </p>
+          <div class="grid grid-cols-3 gap-[10px] mb-6">
+            @if (!formConfig.assetAssignmentId.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="formConfig.assetAssignmentId.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.assetAssignmentId.label!"
+                  [placeholder]="formConfig.assetAssignmentId.placeholder ?? ''"
+                  [minLength]="formConfig.assetAssignmentId.minLength"
+                  [maxLength]="formConfig.assetAssignmentId.maxLength"
+                  [isRequired]="formConfig.assetAssignmentId.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+            @if (!formConfig.assetType.isHide) {
+              <div class="form-group">
+                <ui-dropdown
+                  [id]="formConfig.assetType.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.assetType.label!"
+                  [placeholder]="formConfig.assetType.placeholder ?? ''"
+                  [isRequired]="formConfig.assetType.isRequired!"
+                  [options]="assetTypeOptions$ | async"
+                ></ui-dropdown>
+              </div>
+            }
+
+            @if (!formConfig.assetCategory.isHide) {
+              <div class="form-group">
+                <ui-dropdown
+                  [id]="formConfig.assetCategory.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.assetCategory.label!"
+                  [placeholder]="formConfig.assetCategory.placeholder ?? ''"
+                  [isRequired]="formConfig.assetCategory.isRequired!"
+                  [options]="assetCategoryOptions$ | async"
+                ></ui-dropdown>
+              </div>
+            }
+
+            @if (!formConfig.assetName.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="formConfig.assetName.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.assetName.label!"
+                  [placeholder]="formConfig.assetName.placeholder ?? ''"
+                  [minLength]="formConfig.assetName.minLength"
+                  [maxLength]="formConfig.assetName.maxLength"
+                  [isRequired]="formConfig.assetName.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+
+            @if (!formConfig.assetSerialNumber.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="formConfig.assetSerialNumber.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.assetSerialNumber.label!"
+                  [placeholder]="formConfig.assetSerialNumber.placeholder ?? ''"
+                  [minLength]="formConfig.assetSerialNumber.minLength"
+                  [maxLength]="formConfig.assetSerialNumber.maxLength"
+                  [isRequired]="formConfig.assetSerialNumber.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+
+            @if (!formConfig.makeBrand.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="formConfig.makeBrand.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.makeBrand.label!"
+                  [placeholder]="formConfig.makeBrand.placeholder ?? ''"
+                  [minLength]="formConfig.makeBrand.minLength"
+                  [maxLength]="formConfig.makeBrand.maxLength"
+                  [isRequired]="formConfig.makeBrand.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+
+            @if (!formConfig.model.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="formConfig.model.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.model.label!"
+                  [placeholder]="formConfig.model.placeholder ?? ''"
+                  [minLength]="formConfig.model.minLength"
+                  [maxLength]="formConfig.model.maxLength"
+                  [isRequired]="formConfig.model.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+
+            @if (!formConfig.tagNumber.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="formConfig.tagNumber.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.tagNumber.label!"
+                  [placeholder]="formConfig.tagNumber.placeholder ?? ''"
+                  [minLength]="formConfig.tagNumber.minLength"
+                  [maxLength]="formConfig.tagNumber.maxLength"
+                  [isRequired]="formConfig.tagNumber.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+
+            @if (!formConfig.ownershipType.isHide) {
+              <div class="form-group">
+                <ui-dropdown
+                  [id]="formConfig.ownershipType.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.ownershipType.label!"
+                  [placeholder]="formConfig.ownershipType.placeholder ?? ''"
+                  [isRequired]="formConfig.ownershipType.isRequired!"
+                  [options]="ownershipTypeOptions$ | async"
+                ></ui-dropdown>
+              </div>
+            }
+
+            @if (!formConfig.issuedDate.isHide) {
+              <div class="form-group">
+                <ui-calendar
+                  [id]="formConfig.issuedDate.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.issuedDate.label!"
+                  [isRequired]="formConfig.issuedDate.isRequired!"
+                ></ui-calendar>
+              </div>
+            }
+            @if (!formConfig.issuedBy.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="formConfig.issuedBy.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.issuedBy.label!"
+                  [placeholder]="formConfig.issuedBy.placeholder ?? ''"
+                  [minLength]="formConfig.issuedBy.minLength"
+                  [maxLength]="formConfig.issuedBy.maxLength"
+                  [isRequired]="formConfig.issuedBy.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+            @if (!formConfig.issueLocation.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="formConfig.issueLocation.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.issueLocation.label!"
+                  [placeholder]="formConfig.issueLocation.placeholder ?? ''"
+                  [minLength]="formConfig.issueLocation.minLength"
+                  [maxLength]="formConfig.issueLocation.maxLength"
+                  [isRequired]="formConfig.issueLocation.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+            @if (!formConfig.employeeAcknowledgement.isHide) {
+              <div class="form-group flex items-end pb-2">
+                <ui-checkbox
+                  [id]="formConfig.employeeAcknowledgement.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.employeeAcknowledgement.label!"
+                ></ui-checkbox>
+              </div>
+            }
+            @if (!formConfig.acknowledgementDate.isHide) {
+              <div class="form-group">
+                <ui-calendar
+                  [id]="formConfig.acknowledgementDate.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.acknowledgementDate.label!"
+                  [isRequired]="formConfig.acknowledgementDate.isRequired!"
+                ></ui-calendar>
+              </div>
+            }
+
+            @if (!formConfig.assetConditionAtIssue.isHide) {
+              <div class="form-group">
+                <ui-dropdown
+                  [id]="formConfig.assetConditionAtIssue.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.assetConditionAtIssue.label!"
+                  [placeholder]="formConfig.assetConditionAtIssue.placeholder ?? ''"
+                  [isRequired]="formConfig.assetConditionAtIssue.isRequired!"
+                  [options]="conditionOptions$ | async"
+                ></ui-dropdown>
+              </div>
+            }
+
+            @if (!formConfig.warrantyStartDate.isHide) {
+              <div class="form-group">
+                <ui-calendar
+                  [id]="formConfig.warrantyStartDate.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.warrantyStartDate.label!"
+                  [isRequired]="formConfig.warrantyStartDate.isRequired!"
+                ></ui-calendar>
+              </div>
+            }
+
+            @if (!formConfig.warrantyEndDate.isHide) {
+              <div class="form-group">
+                <ui-calendar
+                  [id]="formConfig.warrantyEndDate.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.warrantyEndDate.label!"
+                  [isRequired]="formConfig.warrantyEndDate.isRequired!"
+                ></ui-calendar>
+              </div>
+            }
+            @if (!formConfig.insuranceCovered.isHide) {
+              <div class="form-group flex items-end pb-2">
+                <ui-checkbox
+                  [id]="formConfig.insuranceCovered.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.insuranceCovered.label!"
+                ></ui-checkbox>
+              </div>
+            }
+
+            @if (!formConfig.assetValue.isHide) {
+              <div class="form-group">
+                <ui-number-box
+                  [id]="formConfig.assetValue.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.assetValue.label!"
+                  [placeholder]="formConfig.assetValue.placeholder ?? ''"
+                  [isRequired]="formConfig.assetValue.isRequired!"
+                ></ui-number-box>
+              </div>
+            }
+
+            @if (!formConfig.securityDepositApplicable.isHide) {
+              <div class="form-group flex items-end pb-2">
+                <ui-checkbox
+                  [id]="formConfig.securityDepositApplicable.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.securityDepositApplicable.label!"
+                ></ui-checkbox>
+              </div>
+            }
+
+            @if (!formConfig.depositAmount.isHide) {
+              <div class="form-group">
+                <ui-number-box
+                  [id]="formConfig.depositAmount.id"
+                  [parentFormGroup]="asset"
+                  [label]="formConfig.depositAmount.label!"
+                  [placeholder]="formConfig.depositAmount.placeholder ?? ''"
+                  [isRequired]="formConfig.depositAmount.isRequired!"
+                ></ui-number-box>
+              </div>
+            }
+
+          </div>
+
+          @if (!formConfig.configurationDetails.isHide) {
+            <div class="mb-4">
+              <ui-text-area
+                [id]="formConfig.configurationDetails.id"
+                [parentFormGroup]="asset"
+                [label]="formConfig.configurationDetails.label!"
+                [placeholder]="formConfig.configurationDetails.placeholder ?? ''"
+                [maxLength]="formConfig.configurationDetails.maxLength"
+                [isRequired]="formConfig.configurationDetails.isRequired!"
+              ></ui-text-area>
+
+            </div>
+
+          }          
+
+          @if (!formConfig.assetRemarks.isHide) {
+            <div>
+              <ui-text-area
+                [id]="formConfig.assetRemarks.id"
+                [parentFormGroup]="asset"
+                [label]="formConfig.assetRemarks.label!"
+                [placeholder]="formConfig.assetRemarks.placeholder ?? ''"
+                [maxLength]="formConfig.assetRemarks.maxLength"
+                [isRequired]="formConfig.assetRemarks.isRequired!"
+              ></ui-text-area>
+            </div>
+          }
+        </div>
+      }
+      @if (canAddAsset()) {
+        <div class="flex justify-end mt-4">
+         <ui-text-button
+  text="+ Add Asset"
+  variant="secondary"
+  size="medium"
+  type="button"
+  (buttonClick)="addAsset()"
+></ui-text-button>
+        </div>
+      }
+
+    </div>
+
+  }
 </div>

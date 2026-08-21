@@ -1,225 +1,589 @@
 <div class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md">
 
-  <!-- Statutory IDs Section -->
-  <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Statutory Information</p>
-  <div class="grid grid-cols-3 gap-[10px] mb-6">
-
-    @if (!formConfig.panNumber.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.panNumber.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.panNumber.label!"
-          [placeholder]="formConfig.panNumber.placeholder ?? ''"
-          [minLength]="formConfig.panNumber.minLength"
-          [maxLength]="formConfig.panNumber.maxLength"
-          [isRequired]="formConfig.panNumber.isRequired!"
-        ></ui-text-box>
+  <form [formGroup]="identityStatutory">
+    <section
+      class="rounded-2xl border border-blue-100
+             bg-white p-4 shadow-sm mb-6"
+    >
+      <div class="mb-4">
+        <p class="text-sm font-semibold text-slate-700">Statutory Details</p>
       </div>
-    }
+      <div class="grid grid-cols-3 gap-[10px]">
 
-    @if (!formConfig.aadhaarNumber.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.aadhaarNumber.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.aadhaarNumber.label!"
-          [placeholder]="formConfig.aadhaarNumber.placeholder ?? ''"
-          [minLength]="formConfig.aadhaarNumber.minLength"
-          [maxLength]="formConfig.aadhaarNumber.maxLength"
-          [isRequired]="formConfig.aadhaarNumber.isRequired!"
-        ></ui-text-box>
+        @if (!formConfig.panNumber.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="formConfig.panNumber.id"
+              [parentFormGroup]="identityStatutory"
+              [label]="formConfig.panNumber.label!"
+              [placeholder]="formConfig.panNumber.placeholder ?? ''"
+              [minLength]="formConfig.panNumber.minLength"
+              [maxLength]="formConfig.panNumber.maxLength"
+              [isRequired]="formConfig.panNumber.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!formConfig.aadhaarNumber.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="formConfig.aadhaarNumber.id"
+              [parentFormGroup]="identityStatutory"
+              [label]="formConfig.aadhaarNumber.label!"
+              [placeholder]="formConfig.aadhaarNumber.placeholder ?? ''"
+              [minLength]="formConfig.aadhaarNumber.minLength"
+              [maxLength]="formConfig.aadhaarNumber.maxLength"
+              [isRequired]="formConfig.aadhaarNumber.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!formConfig.uanNumber.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="formConfig.uanNumber.id"
+              [parentFormGroup]="identityStatutory"
+              [label]="formConfig.uanNumber.label!"
+              [placeholder]="formConfig.uanNumber.placeholder ?? ''"
+              [minLength]="formConfig.uanNumber.minLength"
+              [maxLength]="formConfig.uanNumber.maxLength"
+              [isRequired]="formConfig.uanNumber.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!formConfig.pfAccountNumber.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="formConfig.pfAccountNumber.id"
+              [parentFormGroup]="identityStatutory"
+              [label]="formConfig.pfAccountNumber.label!"
+              [placeholder]="formConfig.pfAccountNumber.placeholder ?? ''"
+              [minLength]="formConfig.pfAccountNumber.minLength"
+              [maxLength]="formConfig.pfAccountNumber.maxLength"
+              [isRequired]="formConfig.pfAccountNumber.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
+
+        @if (!formConfig.esiNumber.isHide) {
+          <div class="form-group">
+            <ui-text-box
+              [id]="formConfig.esiNumber.id"
+              [parentFormGroup]="identityStatutory"
+              [label]="formConfig.esiNumber.label!"
+              [placeholder]="formConfig.esiNumber.placeholder ?? ''"
+              [minLength]="formConfig.esiNumber.minLength"
+              [maxLength]="formConfig.esiNumber.maxLength"
+              [isRequired]="formConfig.esiNumber.isRequired!"
+            ></ui-text-box>
+          </div>
+        }
       </div>
-    }
 
-    @if (!formConfig.uanNumber.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.uanNumber.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.uanNumber.label!"
-          [placeholder]="formConfig.uanNumber.placeholder ?? ''"
-          [minLength]="formConfig.uanNumber.minLength"
-          [maxLength]="formConfig.uanNumber.maxLength"
-          [isRequired]="formConfig.uanNumber.isRequired!"
-        ></ui-text-box>
+    </section>
+    <section class="mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <p class="text-base font-semibold text-slate-700"> Identity Documents</p>
+          <p class="text-xs text-slate-500 mt-1">
+            Add identity documents such as PAN,
+            Aadhaar, Passport, etc.
+          </p>
+        </div>
       </div>
-    }
 
-    @if (!formConfig.pfAccountNumber.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.pfAccountNumber.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.pfAccountNumber.label!"
-          [placeholder]="formConfig.pfAccountNumber.placeholder ?? ''"
-          [minLength]="formConfig.pfAccountNumber.minLength"
-          [maxLength]="formConfig.pfAccountNumber.maxLength"
-          [isRequired]="formConfig.pfAccountNumber.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
+      @for (document of identityDocumentForms;track document) {
+        <section class="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm mb-4">
+          <div class="mb-4 flex items-center justify-between gap-4">
+            <div>
+              <p class="text-sm font-semibold text-slate-700">
+                Identity Document {{ $index + 1 }}
+              </p>
+            </div>
 
-    @if (!formConfig.esiNumber.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.esiNumber.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.esiNumber.label!"
-          [placeholder]="formConfig.esiNumber.placeholder ?? ''"
-          [minLength]="formConfig.esiNumber.minLength"
-          [maxLength]="formConfig.esiNumber.maxLength"
-          [isRequired]="formConfig.esiNumber.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
-  </div>
+            @if (identityDocuments.length > 1) {
+            <ui-text-button
+  text="Remove"
+  variant="danger"
+  size="small"
+  type="button"
+  (buttonClick)="removeIdentityDocument($index)"
+></ui-text-button>
+            }
+          </div>
+          <form [formGroup]="document">
+            <div class="grid grid-cols-3 gap-[10px]">
 
-  <!-- Identity Document Section -->
-  <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Identity Document</p>
-  <div class="grid grid-cols-3 gap-[10px]">
+              @if (!formConfig.documentType.isHide) {
+                <div class="form-group">
+                  <ui-dropdown
+                    [id]="formConfig.documentType.id"
+                    [parentFormGroup]="document"
+                    [label]="formConfig.documentType.label!"
+                    [placeholder]="formConfig.documentType.placeholder ?? ''"
+                    [isRequired]="formConfig.documentType.isRequired!"
+                    [options]="documentTypeOptions$ | async"
+                  ></ui-dropdown>
+                </div>
+              }
 
-    @if (!formConfig.documentType.isHide) {
-      <div class="form-group">
-        <ui-dropdown
-          [id]="formConfig.documentType.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.documentType.label!"
-          [placeholder]="formConfig.documentType.placeholder ?? ''"
-          [isRequired]="formConfig.documentType.isRequired!"
-          [options]="documentTypeOptions$ | async"
-        ></ui-dropdown>
-      </div>
-    }
+              @if (!formConfig.documentNumber.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="formConfig.documentNumber.id"
+                    [parentFormGroup]="document"
+                    [label]="formConfig.documentNumber.label!"
+                    [placeholder]="formConfig.documentNumber.placeholder ?? ''"
+                    [minLength]="formConfig.documentNumber.minLength"
+                    [maxLength]="formConfig.documentNumber.maxLength"
+                    [isRequired]="formConfig.documentNumber.isRequired!"
+                  ></ui-text-box>
+                </div>
+              }
 
-    @if (!formConfig.documentNumber.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.documentNumber.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.documentNumber.label!"
-          [placeholder]="formConfig.documentNumber.placeholder ?? ''"
-          [minLength]="formConfig.documentNumber.minLength"
-          [maxLength]="formConfig.documentNumber.maxLength"
-          [isRequired]="formConfig.documentNumber.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
+              @if (!formConfig.nameOnDocument.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="formConfig.nameOnDocument.id"
+                    [parentFormGroup]="document"
+                    [label]="formConfig.nameOnDocument.label!"
+                    [placeholder]="formConfig.nameOnDocument.placeholder ?? ''"
+                    [minLength]="formConfig.nameOnDocument.minLength"   
+                    [maxLength]="formConfig.nameOnDocument.maxLength"
+                    [isRequired]="formConfig.nameOnDocument.isRequired!"
+                  ></ui-text-box>
+                </div>
+              }
 
-    @if (!formConfig.nameOnDocument.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.nameOnDocument.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.nameOnDocument.label!"
-          [placeholder]="formConfig.nameOnDocument.placeholder ?? ''"
-          [minLength]="formConfig.nameOnDocument.minLength"
-          [maxLength]="formConfig.nameOnDocument.maxLength"
-          [isRequired]="formConfig.nameOnDocument.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
+              @if (!formConfig.issuingAuthority.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]=" formConfig.issuingAuthority.id "
+                    [parentFormGroup]="document"
+                    [label]="formConfig.issuingAuthority.label!"
+                    [placeholder]="formConfig.issuingAuthority.placeholder ?? ''"
+                    [minLength]="formConfig.issuingAuthority.minLength"
+                    [maxLength]="formConfig.issuingAuthority.maxLength"
+                    [isRequired]="formConfig.issuingAuthority.isRequired!"
+                  ></ui-text-box>
+                </div>
+              }
 
-    @if (!formConfig.issuingAuthority.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.issuingAuthority.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.issuingAuthority.label!"
-          [placeholder]="formConfig.issuingAuthority.placeholder ?? ''"
-          [minLength]="formConfig.issuingAuthority.minLength"
-          [maxLength]="formConfig.issuingAuthority.maxLength"
-          [isRequired]="formConfig.issuingAuthority.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
-
-    @if (!formConfig.issueDate.isHide) {
-      <div class="form-group">
-        <ui-calendar
-          [id]="formConfig.issueDate.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.issueDate.label!"
-          [isRequired]="formConfig.issueDate.isRequired!"
-        ></ui-calendar>
-      </div>
-    }
+              @if (                !formConfig.issueDate.isHide ) {
+                <div class="form-group">
+                  <ui-calendar
+                    [id]="
+                      formConfig.issueDate.id
+                    "
+                    [parentFormGroup]="document"
+                    [label]="
+                      formConfig.issueDate.label!
+                    "
+                    [isRequired]="
+                      formConfig.issueDate.isRequired!
+                    "
+                  ></ui-calendar>
+                </div>
+              }
 
     @if (!formConfig.validFrom.isHide) {
-      <div class="form-group">
-        <ui-calendar
-          [id]="formConfig.validFrom.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.validFrom.label!"
-          [isRequired]="formConfig.validFrom.isRequired!"
-        ></ui-calendar>
+                <div class="form-group">
+                  <ui-calendar
+                    [id]="formConfig.validFrom.id  "
+                    [parentFormGroup]="document"
+                    [label]="  formConfig.validFrom.label!"
+                    [isRequired]=" formConfig.validFrom.isRequired! "
+                  ></ui-calendar>
+                </div>
+              }
+
+              @if (  !formConfig.validTo.isHide) {
+                <div class="form-group">
+                  <ui-calendar
+                    [id]="       formConfig.validTo.id "
+                    [parentFormGroup]="document"
+                    [label]="    formConfig.validTo.label!
+ "
+                    [isRequired]="   formConfig.validTo.isRequired!  "
+                  ></ui-calendar>
+                </div>
+              }
+
+              @if (!formConfig.countryOfIssue.isHide) {
+                <div class="form-group">
+                  <ui-dropdown
+                    [id]="formConfig.countryOfIssue.id"
+                    [parentFormGroup]="document"
+                    [label]="formConfig.countryOfIssue.label!"
+                    [placeholder]="formConfig.countryOfIssue.placeholder ?? ''"
+                    [isRequired]="formConfig.countryOfIssue.isRequired!"
+                    [options]="countryOptions$ | async"
+                  ></ui-dropdown>
+                </div>
+              }
+
+              @if (!formConfig.placeOfIssue.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="formConfig.placeOfIssue.id"
+                    [parentFormGroup]="document"
+                    [label]="formConfig.placeOfIssue.label!"
+                    [placeholder]="formConfig.placeOfIssue.placeholder ?? ''"
+                    [minLength]="formConfig.placeOfIssue.minLength"
+                    [maxLength]="formConfig.placeOfIssue.maxLength"
+                    [isRequired]="formConfig.placeOfIssue.isRequired!"
+                  ></ui-text-box>
+                </div>
+              }
+
+              @if (!formConfig.verificationStatus.isHide) {
+                <div class="form-group">
+                  <ui-dropdown
+                    [id]="formConfig.verificationStatus.id"
+                    [parentFormGroup]="document"
+                    [label]="formConfig.verificationStatus.label!"
+                    [placeholder]="formConfig.verificationStatus.placeholder ?? ''"
+                    [isRequired]="formConfig.verificationStatus.isRequired!"
+                    [options]="verificationStatusOptions$ | async"
+                  ></ui-dropdown>
+              </div>
+              }
+
+              @if (!formConfig.verifiedBy.isHide ) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="formConfig.verifiedBy.id"
+                    [parentFormGroup]="document"
+                    [label]="formConfig.verifiedBy.label!"
+                    [placeholder]="formConfig.verifiedBy.placeholder ?? ''"
+                    [minLength]="formConfig.verifiedBy.minLength"
+                    [maxLength]="formConfig.verifiedBy.maxLength"
+                    [isRequired]="formConfig.verifiedBy.isRequired!"
+                  ></ui-text-box>
+                </div>
+            }
+              @if (!formConfig.frontAttachLink.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="formConfig.frontAttachLink.id"
+                    [parentFormGroup]="document"
+                    [label]="formConfig.frontAttachLink.label!"
+                    [placeholder]="formConfig.frontAttachLink.placeholder ?? ''"
+                    [isRequired]="formConfig.frontAttachLink.isRequired!"
+                  ></ui-text-box>
+                </div>
+
+              }
+              @if (!formConfig.backAttachLink.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="formConfig.backAttachLink.id"
+                    [parentFormGroup]="document"
+                    [label]="formConfig.backAttachLink.label!"
+                    [placeholder]="formConfig.backAttachLink.placeholder ?? ''"
+                    [isRequired]="formConfig.backAttachLink.isRequired!"
+                  ></ui-text-box>
+                </div>
+              }
+
+            </div>
+
+            @if (!formConfig.identificationDocumentRemarks.isHide) {
+              <div class="mt-4">
+                <ui-text-area
+                  [id]="formConfig.identificationDocumentRemarks.id"
+                  [parentFormGroup]="document"
+                  [label]="formConfig.identificationDocumentRemarks.label!"
+                  [placeholder]="formConfig.identificationDocumentRemarks.placeholder ?? ''"
+                  [maxLength]="formConfig.identificationDocumentRemarks.maxLength"
+                  [isRequired]="formConfig.identificationDocumentRemarks.isRequired!"
+                              ></ui-text-area>
+              </div>
+            }
+          </form>
+        </section>
+      }
+      <div class="flex items-center justify-between pt-1">
+
+        <p class="text-xs text-slate-500">
+          {{ identityDocuments.length }}
+          /
+          {{ maxIdentityDocuments }}
+          identity document records
+        </p>
+
+        <ui-text-button
+  text="Add Identity Document"
+  variant="secondary"
+  [disabled]="!canAddIdentityDocument()"
+  (buttonClick)="addIdentityDocument()"
+></ui-text-button>
       </div>
-    }
+    </section>
 
-    @if (!formConfig.validTo.isHide) {
-      <div class="form-group">
-        <ui-calendar
-          [id]="formConfig.validTo.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.validTo.label!"
-          [isRequired]="formConfig.validTo.isRequired!"
-        ></ui-calendar>
+
+   <section class="mb-6">
+
+     <div class="flex items-center justify-between mb-4">
+        <div>
+          <p class="text-base font-semibold text-slate-700">Document Repository</p>
+          <p class="text-xs text-slate-500 mt-1">
+            Add supporting documents and
+            repository information.
+          </p>
+        </div>
       </div>
-    }
 
-    @if (!formConfig.countryOfIssue.isHide) {
-      <div class="form-group">
-        <ui-dropdown
-          [id]="formConfig.countryOfIssue.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.countryOfIssue.label!"
-          [placeholder]="formConfig.countryOfIssue.placeholder ?? ''"
-          [isRequired]="formConfig.countryOfIssue.isRequired!"
-          [options]="countryOptions$ | async"
-        ></ui-dropdown>
+
+      @for (repository of documentRepositoryForms;track repository) {
+        <section
+          class="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm mb-4">
+
+           <div class="mb-4 flex items-center justify-between gap-4">
+<div>
+              <p class="text-sm font-semibold text-slate-700">Document Repository {{ $index + 1 }} </p>
+            </div>
+
+            @if (documentRepository.length > 1  ) {
+              <ui-text-button
+  text="Remove"
+  variant="danger"
+  size="small"
+  type="button"
+  (buttonClick)="removeDocumentRepository($index)"
+></ui-text-button>
+            }
+          </div>
+
+          <form [formGroup]="repository">
+            <div class="grid grid-cols-3 gap-[10px]">
+
+                  @if (!formConfig.genericDocumentCategory.isHide) {
+                <div class="form-group">
+                  <ui-dropdown
+                    [id]="formConfig.genericDocumentCategory.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericDocumentCategory.label!"
+                    [placeholder]="formConfig.genericDocumentCategory.placeholder ?? ''"
+                    [isRequired]="formConfig.genericDocumentCategory.isRequired!"
+                    [options]="documentTypeOptions$ | async"
+                  ></ui-dropdown>
+                </div>
+              }
+
+              @if (!formConfig.genericDocumentName.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="formConfig.genericDocumentName.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericDocumentName.label!"
+                    [placeholder]="formConfig.genericDocumentName.placeholder ?? ''"
+                    [minLength]="formConfig.genericDocumentName.minLength"
+                    [maxLength]="formConfig.genericDocumentName.maxLength"
+                    [isRequired]="formConfig.genericDocumentName.isRequired!"
+                  ></ui-text-box>
+                </div>
+             }
+
+              @if (!formConfig.genericRelatedSection.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="formConfig.genericRelatedSection.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericRelatedSection.label!"
+                    [placeholder]="formConfig.genericRelatedSection.placeholder ?? ''"
+                    [minLength]="formConfig.genericRelatedSection.minLength"
+                    [maxLength]="formConfig.genericRelatedSection.maxLength"
+                    [isRequired]="formConfig.genericRelatedSection.isRequired!"
+                  ></ui-text-box>
+                </div>
+              }
+
+              @if (!formConfig.genericRelatedRecordID.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="formConfig.genericRelatedRecordID.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericRelatedRecordID.label!"
+                    [placeholder]="formConfig.genericRelatedRecordID.placeholder ?? ''"
+                    [minLength]="formConfig.genericRelatedRecordID.minLength"
+                    [maxLength]="formConfig.genericRelatedRecordID.maxLength"
+                    [isRequired]="formConfig.genericRelatedRecordID.isRequired!"
+                  ></ui-text-box>
+                </div>
+              }
+>
+
+              @if (!formConfig.genericRelatedSection.isHide) {
+                <div class="form-group">
+                <ui-text-box
+                    [id]="formConfig.genericRelatedSection.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericRelatedSection.label!"
+                    [placeholder]="formConfig.genericRelatedSection.placeholder ?? ''"
+                    [minLength]="formConfig.genericRelatedSection.minLength"
+                    [maxLength]="formConfig.genericRelatedSection.maxLength"
+                    [isRequired]="formConfig.genericRelatedSection.isRequired!"
+                  ></ui-text-box>
+                </div>
+              }
+
+              @if (!formConfig.genericRelatedRecordID.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="formConfig.genericRelatedRecordID.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericRelatedRecordID.label!"
+                    [placeholder]="formConfig.genericRelatedRecordID.placeholder ?? ''"
+                    [minLength]="formConfig.genericRelatedRecordID.minLength"
+                    [maxLength]="formConfig.genericRelatedRecordID.maxLength"
+                    [isRequired]="formConfig.genericRelatedRecordID.isRequired!"
+                  ></ui-text-box>
+                </div>
+              }
+
+              @if (!formConfig.genericRelatedSection.isHide) {
+                <div class="form-group">
+                <ui-text-box
+                    [id]="formConfig.genericRelatedSection.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericRelatedSection.label!"
+                    [placeholder]="formConfig.genericRelatedSection.placeholder ?? ''"
+                    [minLength]="formConfig.genericRelatedSection.minLength"
+                    [maxLength]="formConfig.genericRelatedSection.maxLength"
+                    [isRequired]="formConfig.genericRelatedSection.isRequired!"
+                  ></ui-text-box>
+                </div>
+              }
+
+              @if (!formConfig.genericRelatedRecordID.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="formConfig.genericRelatedRecordID.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericRelatedRecordID.label!"
+                    [placeholder]="formConfig.genericRelatedRecordID.placeholder ?? ''"
+                    [minLength]="formConfig.genericRelatedRecordID.minLength"
+                    [maxLength]="formConfig.genericRelatedRecordID.maxLength"
+                    [isRequired]="formConfig.genericRelatedRecordID.isRequired!"
+                  ></ui-text-box>
+                </div>
+              }
+              <!-- File Upload -->
+
+              @if (!formConfig.genericFileUpload.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="formConfig.genericFileUpload.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericFileUpload.label!"
+                    [placeholder]="formConfig.genericFileUpload.placeholder ?? ''"
+                    [isRequired]="formConfig.genericFileUpload.isRequired!"
+                                    ></ui-text-box>
+                </div>
+              }
+
+              @if (!formConfig.genericUploadDate.isHide) {
+                <div class="form-group">
+                  <ui-calendar
+                    [id]="formConfig.genericUploadDate.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericUploadDate.label!"
+                    [isRequired]="formConfig.genericUploadDate.isRequired!"
+                  ></ui-calendar>
+
+                </div>
+
+              }
+
+              @if (!formConfig.genericValidFrom.isHide) {
+                <div class="form-group">
+                  <ui-calendar
+                    [id]="formConfig.genericValidFrom.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericValidFrom.label!"
+                    [isRequired]="formConfig.genericValidFrom.isRequired!"
+                  ></ui-calendar>
+                </div>
+              }
+
+
+
+              @if (!formConfig.genericValidTo.isHide) {
+                <div class="form-group">
+                  <ui-calendar
+                    [id]="formConfig.genericValidTo.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericValidTo.label!"
+                    [isRequired]="formConfig.genericValidTo.isRequired!"
+                  ></ui-calendar>
+                </div>
+              }
+
+              @if (!formConfig.genericVerificationStatus.isHide) {
+                <div class="form-group">
+                  <ui-dropdown
+                    [id]="formConfig.genericVerificationStatus.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericVerificationStatus.label!"
+                    [placeholder]="formConfig.genericVerificationStatus.placeholder ?? ''"
+                    [isRequired]="formConfig.genericVerificationStatus.isRequired!"
+                    [options]="verificationStatusOptions$| async"
+                  ></ui-dropdown>
+                </div>
+              }
+
+
+              @if (!formConfig.genericVerifiedBy.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="formConfig.genericVerifiedBy.id"
+                    [parentFormGroup]="repository"
+                    [label]="formConfig.genericVerifiedBy.label!"
+                    [placeholder]="formConfig.genericVerifiedBy.placeholder ?? ''"
+                    [minLength]="formConfig.genericVerifiedBy.minLength"
+                    [maxLength]="formConfig.genericVerifiedBy.maxLength"
+                    [isRequired]="formConfig.genericVerifiedBy.isRequired!"
+                  ></ui-text-box>
+                </div>
+              }
+            </div>
+
+            @if (!formConfig.genericRemarks.isHide) {
+              <div class="mt-4">
+                <ui-text-area
+                  [id]="formConfig.genericRemarks.id"
+                  [parentFormGroup]="repository"
+                  [label]="formConfig.genericRemarks.label!"
+                  [placeholder]="formConfig.genericRemarks.placeholder ?? ''"
+                  [maxLength]="formConfig.genericRemarks.maxLength"
+                  [isRequired]="formConfig.genericRemarks.isRequired!"
+                ></ui-text-area>
+              </div>
+            }
+
+          </form>
+        </section>
+      }
+
+      <div class="flex items-center justify-between pt-1" >
+
+        <p class="text-xs text-slate-500" >
+          {{ documentRepository.length }}
+          /
+          {{ maxDocumentRepository }}
+          document repository records
+        </p>
+
+
+        <ui-text-button
+  text="Add Document Repository"
+  variant="secondary"
+  [disabled]="!canAddDocumentRepository()"
+  (buttonClick)="addDocumentRepository()"
+></ui-text-button>
       </div>
-    }
-
-    @if (!formConfig.placeOfIssue.isHide) {
-      <div class="form-group">
-        <ui-text-box
-          [id]="formConfig.placeOfIssue.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.placeOfIssue.label!"
-          [placeholder]="formConfig.placeOfIssue.placeholder ?? ''"
-          [minLength]="formConfig.placeOfIssue.minLength"
-          [maxLength]="formConfig.placeOfIssue.maxLength"
-          [isRequired]="formConfig.placeOfIssue.isRequired!"
-        ></ui-text-box>
-      </div>
-    }
-
-    @if (!formConfig.verificationStatus.isHide) {
-      <div class="form-group">
-        <ui-dropdown
-          [id]="formConfig.verificationStatus.id"
-          [parentFormGroup]="identityStatutory"
-          [label]="formConfig.verificationStatus.label!"
-          [placeholder]="formConfig.verificationStatus.placeholder ?? ''"
-          [isRequired]="formConfig.verificationStatus.isRequired!"
-          [options]="verificationStatusOptions$ | async"
-        ></ui-dropdown>
-      </div>
-    }
-
-  </div>
-
-  @if (!formConfig.documentRemarks.isHide) {
-    <div class="mt-4">
-      <ui-text-area
-        [id]="formConfig.documentRemarks.id"
-        [parentFormGroup]="identityStatutory"
-        [label]="formConfig.documentRemarks.label!"
-        [placeholder]="formConfig.documentRemarks.placeholder ?? ''"
-        [maxLength]="formConfig.documentRemarks.maxLength"
-        [isRequired]="formConfig.documentRemarks.isRequired!"
-      ></ui-text-area>
-    </div>
-  }
-
+    </section>
+  </form>
 </div>

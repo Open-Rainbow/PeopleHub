@@ -19,6 +19,7 @@ import {
   CalendarComponent,
   CheckboxComponent,
   DropdownComponent,
+  NumberBoxComponent,
   TextAreaComponent,
   TextBoxComponent,
   TextButtonComponent,
@@ -48,6 +49,7 @@ import type {
     CalendarComponent,
     CheckboxComponent,
     TextButtonComponent,
+    NumberBoxComponent
   ],
   templateUrl: './family-details.component.html',
   styleUrls: ['./family-details.component.scss'],

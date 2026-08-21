@@ -4,7 +4,7 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import {
@@ -12,6 +12,7 @@ import {
   DropdownComponent,
   TextAreaComponent,
   TextBoxComponent,
+  TextButtonComponent,
 } from 'ui';
 import { DropdownConfigService, CommonService, DropdownOption } from 'common';
 import { StepperService } from '../../services/stepper/stepper.service';
@@ -29,6 +30,7 @@ import { salaryStructureForm } from '../../config/form-configs/salary-structure.
     TextAreaComponent,
     DropdownComponent,
     CalendarComponent,
+    TextButtonComponent
   ],
   templateUrl: './salary-structure.component.html',
   styleUrls: ['./salary-structure.component.scss'],
@@ -47,7 +49,7 @@ export class SalaryStructureComponent implements OnInit {
   accountTypeOptions$!: Observable<DropdownOption[]>;
   paymentModeOptions$!: Observable<DropdownOption[]>;
   taxRegimeOptions$!: Observable<DropdownOption[]>;
-
+  
   ngOnInit(): void {
     this.payrollGroupOptions$ = this.dropdownService.getOptions('payrollGroup');
     this.salaryStructureOptions$ = this.dropdownService.getOptions('salaryStructure');
@@ -56,7 +58,8 @@ export class SalaryStructureComponent implements OnInit {
     this.taxRegimeOptions$ = this.dropdownService.getOptions('taxRegime');
 
     this.salaryStructure = this.commonService.createForm(this.formConfig);
-
+    this.salaryStructure.addControl('salaryStructures',new FormArray([this.commonService.createForm(this.formConfig)]));
+    
     const savedData = this.dataService.getDataByRoute('salary-structure');
     if (savedData) {
       this.salaryStructure.patchValue(savedData as Record<string, unknown>);
@@ -67,5 +70,30 @@ export class SalaryStructureComponent implements OnInit {
     this.salaryStructure.statusChanges.subscribe((status) => {
       this.stepperService.setStepValidity(status === 'VALID');
     });
+  }
+  get salaryStructures(): FormArray {
+    return this.salaryStructure.get('salaryStructures') as FormArray;
+  }
+
+  get salaryStructureForms(): FormGroup[] {
+    return this.salaryStructures.controls as FormGroup[];
+  }
+
+  readonly maxSalaryStructures = 3;
+
+  canAddSalaryStructure(): boolean {
+    return this.salaryStructures.length < this.maxSalaryStructures;
+  }
+
+  addSalaryStructure(): void {
+    if (!this.canAddSalaryStructure()) {
+      return;
+    }
+
+    this.salaryStructures.push(this.commonService.createForm(this.formConfig));
+  }
+
+  removeSalaryStructure(index: number): void {
+    this.salaryStructures.removeAt(index);
   }
 }

@@ -1,0 +1,43 @@
+<div class="tab-wrapper">
+
+  @if (showLeftArrow) {
+    <button
+      type="button"
+      class="tab-scroll-button tab-scroll-button-left"
+      aria-label="Scroll tabs left"
+      (click)="scrollLeft()"
+    >
+      <span>&lsaquo;</span>
+    </button>
+  }
+
+  <div
+    #tabContainer
+    class="tab-container"
+    (scroll)="onScroll()"
+  >
+    @for (tab of tabs; track tab.id) {
+      <button
+        type="button"
+        class="tab-button"
+        [class.active]="activeTab === tab.id"
+        [class.inactive]="activeTab !== tab.id"
+        (click)="selectTab(tab.id)"
+      >
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  @if (showRightArrow) {
+    <button
+      type="button"
+      class="tab-scroll-button tab-scroll-button-right"
+      aria-label="Scroll tabs right"
+      (click)="scrollRight()"
+    >
+      <span>&rsaquo;</span>
+    </button>
+  }
+
+</div>

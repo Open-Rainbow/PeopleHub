@@ -145,12 +145,13 @@
     </div>
 
     @if (addresses.length > 1) {
-      <button
-        type="button"
-        class="text-sm font-medium text-red-600 hover:text-red-700"
-        (click)="removeAddress($index)">
-        Remove
-      </button>
+     <ui-text-button
+  text="Remove"
+  variant="danger"
+  size="small"
+  type="button"
+  (buttonClick)="removeAddress($index)"
+></ui-text-button>
     }
 
   </div>
@@ -239,6 +240,39 @@
           [minLength]="formConfig.area.minLength"
           [maxLength]="formConfig.area.maxLength"
           [isRequired]="formConfig.area.isRequired!"
+        ></ui-text-box>
+      </div>
+    }
+     @if (!formConfig.effectiveFrom.isHide) {
+      <div class="form-group">
+        <ui-calendar
+          [id]="formConfig.effectiveFrom.id"
+          [parentFormGroup]="contactInfo"
+          [label]="formConfig.effectiveFrom.label!"
+          [isRequired]="formConfig.effectiveFrom.isRequired!"
+        ></ui-calendar>
+      </div>
+    }
+     @if (!formConfig.effectiveTo.isHide) {
+      <div class="form-group">
+        <ui-calendar
+          [id]="formConfig.effectiveTo.id"
+          [parentFormGroup]="contactInfo"
+          [label]="formConfig.effectiveTo.label!"
+          [isRequired]="formConfig.effectiveTo.isRequired!"
+        ></ui-calendar>
+      </div>
+    }
+     @if (!formConfig.addressProofLink.isHide) {
+      <div class="form-group">
+        <ui-text-box
+          [id]="formConfig.addressProofLink.id"
+          [parentFormGroup]="contactInfo"
+          [label]="formConfig.addressProofLink.label!"
+          [placeholder]="formConfig.addressProofLink.placeholder ?? ''"
+          [minLength]="formConfig.addressProofLink.minLength"
+          [maxLength]="formConfig.addressProofLink.maxLength"
+          [isRequired]="formConfig.addressProofLink.isRequired!"
         ></ui-text-box>
       </div>
     }
@@ -361,12 +395,13 @@
     </div>
 
     @if (emergencyContacts.length > 1) {
-      <button
-        type="button"
-        class="text-sm font-medium text-red-600 hover:text-red-700"
-        (click)="removeEmergencyContact($index)">
-        Remove
-      </button>
+      <ui-text-button
+  text="Remove"
+  variant="danger"
+  size="small"
+  type="button"
+  (buttonClick)="removeEmergencyContact($index)"
+></ui-text-button>
     }
 
   </div>
@@ -441,6 +476,35 @@
             [maxLength]="formConfig.emergencyEmail.maxLength"
             [isRequired]="formConfig.emergencyEmail.isRequired!"
           ></ui-text-box>
+        </div>
+      }
+      @if (!formConfig.remarks.isHide) {
+    <div class="mt-5">
+      <ui-text-area
+        [id]="formConfig.remarks.id"
+        [parentFormGroup]="contactInfo"
+        [label]="formConfig.remarks.label!"
+        [placeholder]="formConfig.remarks.placeholder ?? ''"
+      ></ui-text-area>
+    </div>
+  }
+  @if (!formConfig.emergencyAddress.isHide) {
+    <div class="mt-5">
+      <ui-text-area
+        [id]="formConfig.emergencyAddress.id"
+        [parentFormGroup]="contactInfo"
+        [label]="formConfig.emergencyAddress.label!"
+        [placeholder]="formConfig.emergencyAddress.placeholder ?? ''"
+      ></ui-text-area>
+    </div>
+  }
+  @if (!formConfig.priorityOrder.isHide) {
+        <div class="form-group flex items-end pb-2">
+          <ui-checkbox
+            [id]="formConfig.priorityOrder.id"
+            [parentFormGroup]="contactInfo"
+            [label]="formConfig.priorityOrder.label!"
+          ></ui-checkbox>
         </div>
       }
 

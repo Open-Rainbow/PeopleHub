@@ -16,6 +16,9 @@ export interface IInsurancePolicyFormFields {
   sumInsuredAllocation: IFormFieldConfig;
   memberCoverageFrom: IFormFieldConfig;
   memberCoverageTo: IFormFieldConfig;
+  linkedFamilyOrDependentRecord: IFormFieldConfig;
+  coveredUnderPolicy: IFormFieldConfig;
+  insuranceCardProofLink: IFormFieldConfig;
 }
 
 export interface INomineeFormFields {
@@ -36,6 +39,9 @@ export interface INomineeFormFields {
   nomineeIfscCode: IFormFieldConfig;
   nomineeAadhaarNumber: IFormFieldConfig;
   nomineePanNumber: IFormFieldConfig;
+  linkedFamilyOrDependentRecord: IFormFieldConfig;
+  address: IFormFieldConfig;
+  proofDocumentLink: IFormFieldConfig;
 }
 
 export type { IInsurancePolicyForm, INomineeForm } from './insurance-details.types';

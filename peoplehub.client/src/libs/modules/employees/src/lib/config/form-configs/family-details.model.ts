@@ -8,6 +8,8 @@ export interface IFamilyMemberFormFields {
   memberMaritalStatus: IFormFieldConfig;
   memberOccupation: IFormFieldConfig;
   memberContactNumber: IFormFieldConfig;
+  memberEmail: IFormFieldConfig;
+  addressSameasEmployee: IFormFieldConfig;
   livesWithEmployee: IFormFieldConfig;
   memberNotes: IFormFieldConfig;
 }
@@ -23,6 +25,11 @@ export interface IDependentFormFields {
   dependencyStartDate: IFormFieldConfig;
   eligibleForBenefits: IFormFieldConfig;
   dependentRemarks: IFormFieldConfig;
+
+  linkedFamilyRecord: IFormFieldConfig;
+  monthlyIncomeOrPension: IFormFieldConfig;
+  dependencyEndDate: IFormFieldConfig;
+  proofDocumentLink: IFormFieldConfig;
 }
 
 export type IFamilyMemberForm = IFamilyMemberFormFields;

@@ -51,13 +51,13 @@
             </div>
 
             @if (familyMember.length > 1) {
-              <button
-                type="button"
-                class="text-sm font-medium text-red-600 transition-colors duration-150 hover:text-red-700"
-                (click)="removeFamilyMember(index)"
-              >
-                Remove
-              </button>
+             <ui-text-button
+  text="Remove"
+  variant="danger"
+  size="small"
+  type="button"
+  (buttonClick)="removeFamilyMember(index)"
+></ui-text-button>
             }
           </div>
 
@@ -159,6 +159,20 @@
                 </div>
               }
 
+               @if (!familyMemberConfig.memberEmail.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="familyMemberConfig.memberEmail.id"
+                    [parentFormGroup]="entry"
+                    [label]="familyMemberConfig.memberEmail.label!"
+                    [placeholder]="familyMemberConfig.memberEmail.placeholder ?? ''"
+                    [minLength]="familyMemberConfig.memberEmail.minLength"
+                    [maxLength]="familyMemberConfig.memberEmail.maxLength"
+                    [isRequired]="familyMemberConfig.memberEmail.isRequired!"
+                  ></ui-text-box>
+                </div>
+              }
+
               @if (!familyMemberConfig.memberContactNumber.isHide) {
                 <div class="form-group">
                   <ui-text-box
@@ -190,8 +204,17 @@
                   ></ui-checkbox>
                 </div>
               }
+              @if (!familyMemberConfig.addressSameasEmployee.isHide) {
+                <div class="form-group flex items-end pb-2">
+                  <ui-checkbox
+                    [id]="familyMemberConfig.addressSameasEmployee.id"
+                    [parentFormGroup]="entry"
+                    [label]="familyMemberConfig.addressSameasEmployee.label!"
+                  ></ui-checkbox>
+                </div>
+              }  
             </div>
-
+            
             @if (!familyMemberConfig.memberNotes.isHide) {
               <div class="mt-4">
                 <ui-text-area
@@ -248,13 +271,13 @@
             </div>
 
             @if (dependent.length > 1) {
-              <button
-                type="button"
-                class="text-sm font-medium text-red-600 transition-colors duration-150 hover:text-red-700"
-                (click)="removeDependent(index)"
-              >
-                Remove
-              </button>
+            <ui-text-button
+  text="Remove"
+  variant="danger"
+  size="small"
+  type="button"
+  (buttonClick)="removeDependent(index)"
+></ui-text-button>
             }
           </div>
 
@@ -363,6 +386,44 @@
                     [label]="dependentConfig.eligibleForBenefits.label!"
                   ></ui-checkbox>
                 }
+                 @if (!dependentConfig.linkedFamilyRecord.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="dependentConfig.linkedFamilyRecord.id"
+                    [parentFormGroup]="entry"
+                    [label]="dependentConfig.linkedFamilyRecord.label!"
+                    [placeholder]="dependentConfig.linkedFamilyRecord.placeholder ?? ''"
+                  ></ui-text-box>
+                </div>
+              }
+                @if (!dependentConfig.monthlyIncomeOrPension.isHide) {
+        <ui-number-box
+          [id]="dependentConfig.monthlyIncomeOrPension.id"
+          [parentFormGroup]="entry"
+          [label]="dependentConfig.monthlyIncomeOrPension.label!"
+          [placeholder]="dependentConfig.monthlyIncomeOrPension.placeholder ?? ''"
+          [isRequired]="dependentConfig.monthlyIncomeOrPension.isRequired!"
+        ></ui-number-box>
+    }
+      @if (!dependentConfig.dependencyEndDate.isHide) {
+                <div class="form-group">
+                  <ui-calendar
+                    [id]="dependentConfig.dependencyEndDate.id"
+                    [parentFormGroup]="entry"
+                    [label]="dependentConfig.dependencyEndDate.label!"
+                  ></ui-calendar>
+                </div>
+              }
+               @if (!dependentConfig.proofDocumentLink.isHide) {
+                <div class="form-group">
+                  <ui-text-box
+                    [id]="dependentConfig.proofDocumentLink.id"
+                    [parentFormGroup]="entry"
+                    [label]="dependentConfig.proofDocumentLink.label!"
+                    [placeholder]="dependentConfig.proofDocumentLink.placeholder ?? ''"
+                  ></ui-text-box>
+                </div>
+              }
               </div>
             </div>
 
@@ -375,8 +436,6 @@
                   [placeholder]="
                     dependentConfig.dependentRemarks.placeholder ?? ''
                   "
-                  [maxLength]="dependentConfig.dependentRemarks.maxLength"
-                  [isRequired]="dependentConfig.dependentRemarks.isRequired!"
                 ></ui-text-area>
               </div>
             }

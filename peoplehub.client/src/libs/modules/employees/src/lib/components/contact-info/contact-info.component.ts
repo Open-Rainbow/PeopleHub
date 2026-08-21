@@ -2,7 +2,7 @@
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { CheckboxComponent, DropdownComponent, TextBoxComponent, TextButtonComponent } from 'ui';
+import { CalendarComponent, CheckboxComponent, DropdownComponent, TextAreaComponent, TextBoxComponent, TextButtonComponent } from 'ui';
 import { DropdownConfigService, CommonService, DropdownOption } from 'common';
 import { StepperService } from '../../services/stepper/stepper.service';
 import { EmployeeDataService } from '../../services/employee-data/employee-data.service';
@@ -12,7 +12,7 @@ import { contactInfoForm } from '../../config/form-configs/contact-info.config';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'employees-contact-info',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TextBoxComponent, DropdownComponent, CheckboxComponent,TextButtonComponent],
+  imports: [CommonModule, ReactiveFormsModule, TextBoxComponent, DropdownComponent, CheckboxComponent,TextButtonComponent,CalendarComponent,TextAreaComponent],
   templateUrl: './contact-info.component.html',
   styleUrls: ['./contact-info.component.scss'],
 })
