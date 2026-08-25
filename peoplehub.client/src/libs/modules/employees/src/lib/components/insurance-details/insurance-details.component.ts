@@ -17,10 +17,11 @@ import {
   TextAreaComponent,
   TextBoxComponent,
 } from 'ui';
-import { DropdownConfigService, CommonService, DropdownOption } from 'common';
+import {DropdownConfigService,CommonService,DropdownOption} from 'common';
 import { StepperService } from '../../services/stepper/stepper.service';
 import { EmployeeDataService } from '../../services/employee-data/employee-data.service';
-import { insurancePolicyForm, nomineeForm } from '../../config/form-configs/insurance-details.config';
+import {insurancePolicyForm,nomineeForm,} from '../../config/form-configs/insurance-details.config';
+import { TabButtonComponent } from '../../../../../../shared/ui/src/lib/components/primitives/tab-button/tab-button';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +36,7 @@ import { insurancePolicyForm, nomineeForm } from '../../config/form-configs/insu
     CalendarComponent,
     CheckboxComponent,
     NumberBoxComponent,
+    TabButtonComponent,
   ],
   templateUrl: './insurance-details.component.html',
   styleUrls: ['./insurance-details.component.scss'],
@@ -52,7 +54,18 @@ export class InsuranceDetailsComponent implements OnInit {
   nominee!: FormGroup;
 
   readonly activeTab = signal<'insurance' | 'nominee'>('insurance');
-  readonly isInsuranceTab = computed(() => this.activeTab() === 'insurance');
+  readonly isInsuranceTab = computed(() => this.activeTab() === 'insurance' );
+
+  readonly tabs = [
+    {
+      id: 'insurance',
+      label: 'Insurance',
+    },
+    {
+      id: 'nominee',
+      label: 'Nominees',
+    },
+  ];
 
   benefitTypeOptions$!: Observable<DropdownOption[]>;
   premiumSharingOptions$!: Observable<DropdownOption[]>;
@@ -81,15 +94,17 @@ export class InsuranceDetailsComponent implements OnInit {
     this.stepperService.setStepValidity(true);
   }
 
-  switchTab(tab: 'insurance' | 'nominee'): void {
-    if (tab === 'insurance') {
-      this.dataService.setDataByRoute('insurance-nominee', this.nominee.value);
-    } else {
-      this.dataService.setDataByRoute('insurance-policy', this.insurance.value);
+
+  switchTab(tab: string): void {
+    if (tab !== 'insurance' && tab !== 'nominee') {
+      return;
     }
-    this.activeTab.set(tab);
+    if (this.isInsuranceTab()) {
+      this.dataService.setDataByRoute('insurance-policy',this.insurance.value);
+    } else {
+      this.dataService.setDataByRoute('insurance-nominee',this.nominee.value);
+    }
+    this.activeTab.set(tab as 'insurance' | 'nominee');
+    this.stepperService.setStepValidity(true);
   }
 }
-
-
-

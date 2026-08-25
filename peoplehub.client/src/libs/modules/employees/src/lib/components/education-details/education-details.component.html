@@ -1,6 +1,6 @@
 <div class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md">
 
-  <div class="flex gap-2 border-b border-gray-200 mb-6">
+  <!-- <div class="flex gap-2 border-b border-gray-200 mb-6">
     <button
       type="button"
       class="px-5 py-2 text-sm font-medium rounded-t-lg transition-colors duration-150"
@@ -22,8 +22,15 @@
       (click)="switchTab('certification')">
       Certification
     </button>
-  </div>
+  </div> -->
 
+  <div class="mb-6">
+  <ui-tab-button
+    [tabs]="tabs"
+    [activeTab]="activeTab()"
+    (tabChange)="switchTab($event)"
+  ></ui-tab-button>
+</div>
   @if (isEducationTab()) {
     <p class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">
       Education Information

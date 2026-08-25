@@ -35,6 +35,7 @@ import type {
   IFamilyMemberForm,
   IDependentForm,
 } from '../../config/form-configs/family-details.model';
+import { TabButtonComponent } from '../../../../../../shared/ui/src/lib/components/primitives/tab-button/tab-button';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,7 +50,8 @@ import type {
     CalendarComponent,
     CheckboxComponent,
     TextButtonComponent,
-    NumberBoxComponent
+    NumberBoxComponent,
+    TabButtonComponent
   ],
   templateUrl: './family-details.component.html',
   styleUrls: ['./family-details.component.scss'],
@@ -74,6 +76,17 @@ export class FamilyDetailsComponent implements OnInit {
   readonly activeTab = signal<'family' | 'dependent'>('family');
   readonly isFamilyTab = computed(() => this.activeTab() === 'family');
 
+  readonly tabs = [
+    {
+      id: 'family',
+      label: 'Family Members'
+    },
+    {
+      id: 'dependent',
+      label: 'Dependents'
+    }
+  ];
+
   relationOptions$!: Observable<DropdownOption[]>;
   genderOptions$!: Observable<DropdownOption[]>;
   maritalStatusOptions$!: Observable<DropdownOption[]>;
@@ -92,19 +105,19 @@ export class FamilyDetailsComponent implements OnInit {
   > {
     const isFamily = this.isFamilyTab();
     const totalRows = isFamily
-      ? this.familyMember.length
-      : this.dependent.length;
+        ? this.familyMember.length
+        : this.dependent.length;
     const labelPrefix = isFamily ? 'Family Member' : 'Dependent';
 
     return Array.from({ length: totalRows }).reduce<
       Record<string, { isHide: boolean; isRequired: boolean; label: string }>
     >((config, _, index) => {
-      config[index] = {
-        isHide: false,
-        isRequired: true,
-        label: `${labelPrefix} ${index + 1}`,
-      };
-      return config;
+        config[index] = {
+          isHide: false,
+          isRequired: true,
+          label: `${labelPrefix} ${index + 1}`,
+        };
+        return config;
     }, {});
   }
 
@@ -115,42 +128,45 @@ export class FamilyDetailsComponent implements OnInit {
       this.dropdownService.getOptions('maritalStatus');
 
     this.familyMember = this.buildRepeatableFormArray(
-      this.familyMemberConfig,
-      this.dataService.getDataByRoute('family-member'),
-      this.familyRepeatTimes,
-    );
+        this.familyMemberConfig,
+        this.dataService.getDataByRoute('family-member'),
+        this.familyRepeatTimes,
+      );
     this.dependent = this.buildRepeatableFormArray(
-      this.dependentConfig,
-      this.dataService.getDataByRoute('dependent'),
-      this.dependentRepeatTimes,
-    );
+        this.dependentConfig,
+        this.dataService.getDataByRoute('dependent'),
+        this.dependentRepeatTimes,
+      );
 
     this.familyMember.statusChanges.subscribe((status) => {
-      if (this.isFamilyTab()) {
-        this.stepperService.setStepValidity(
-          status === 'VALID' && this.dependent.valid,
-        );
-      }
-    });
+        if (this.isFamilyTab()) {
+          this.stepperService.setStepValidity(
+            status === 'VALID' && this.dependent.valid,
+          );
+        }
+      });
 
     this.dependent.statusChanges.subscribe((status) => {
-      if (!this.isFamilyTab()) {
-        this.stepperService.setStepValidity(
-          status === 'VALID' && this.familyMember.valid,
-        );
-      }
-    });
+        if (!this.isFamilyTab()) {
+          this.stepperService.setStepValidity(
+            status === 'VALID' && this.familyMember.valid,
+          );
+        }
+      });
 
     this.stepperService.setStepValidity(
       this.familyMember.valid && this.dependent.valid,
     );
   }
 
-  switchTab(tab: 'family' | 'dependent'): void {
+  switchTab(tab: string): void {
+    if (tab !== 'family' && tab !== 'dependent') {
+      return;
+    }
     this.persistActiveTabData();
-    this.activeTab.set(tab);
+    this.activeTab.set(tab as 'family' | 'dependent');
     this.stepperService.setStepValidity(
-      this.familyMember.valid && this.dependent.valid,
+      this.familyMember.valid && this.dependent.valid
     );
   }
 
@@ -160,9 +176,7 @@ export class FamilyDetailsComponent implements OnInit {
     }
 
     this.familyMember.push(this.createRepeatableForm(this.familyMemberConfig));
-    this.stepperService.setStepValidity(
-      this.familyMember.valid && this.dependent.valid,
-    );
+    this.stepperService.setStepValidity(this.familyMember.valid &&this.dependent.valid,);
   }
 
   removeFamilyMember(index: number): void {
@@ -181,7 +195,7 @@ export class FamilyDetailsComponent implements OnInit {
   }
 
   canAddFamilyMember(): boolean {
-    return this.familyMember.length < Math.max(1, this.familyRepeatTimes);
+    return (this.familyMember.length < Math.max(1, this.familyRepeatTimes));
   }
 
   addDependent(): void {
@@ -205,13 +219,11 @@ export class FamilyDetailsComponent implements OnInit {
     }
 
     this.dependent.removeAt(index);
-    this.stepperService.setStepValidity(
-      this.familyMember.valid && this.dependent.valid,
-    );
+    this.stepperService.setStepValidity(this.familyMember.valid && this.dependent.valid);
   }
 
   canAddDependent(): boolean {
-    return this.dependent.length < Math.max(1, this.dependentRepeatTimes);
+    return (this.dependent.length < Math.max(1, this.dependentRepeatTimes));
   }
 
   private persistActiveTabData(): void {
@@ -224,15 +236,12 @@ export class FamilyDetailsComponent implements OnInit {
   }
 
   private buildRepeatableFormArray(
-    config: IFamilyMemberForm | IDependentForm,
+    config: | IFamilyMemberForm| IDependentForm,
     savedData: unknown,
     repeatTimes: number,
   ): FormArray<FormGroup> {
     const normalizedSavedData = this.normalizeSavedData(savedData);
-    const initialCount = Math.min(
-      Math.max(1, normalizedSavedData.length || 1),
-      Math.max(1, repeatTimes),
-    );
+    const initialCount = Math.min(Math.max(1, normalizedSavedData.length || 1), Math.max(1, repeatTimes));
 
     const formArray = new FormArray<FormGroup>([]);
 
@@ -284,9 +293,9 @@ export class FamilyDetailsComponent implements OnInit {
       }
 
       controls[field.id] = new FormControl(
-        field.defaultValue ?? null,
-        validators,
-      );
+          field.defaultValue ?? null,
+          validators,
+        );
     });
 
     const formGroup = new FormGroup(controls);
@@ -309,7 +318,7 @@ export class FamilyDetailsComponent implements OnInit {
 
     if (typeof savedData === 'object') {
       return [savedData as Record<string, unknown>];
-    }
+  }
 
     return [];
   }

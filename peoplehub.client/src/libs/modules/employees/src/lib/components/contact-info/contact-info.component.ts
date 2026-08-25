@@ -6,13 +6,14 @@ import { CalendarComponent, CheckboxComponent, DropdownComponent, TextAreaCompon
 import { DropdownConfigService, CommonService, DropdownOption } from 'common';
 import { StepperService } from '../../services/stepper/stepper.service';
 import { EmployeeDataService } from '../../services/employee-data/employee-data.service';
-import { contactInfoForm } from '../../config/form-configs/contact-info.config';
+import {contactInfoForm } from '../../config/form-configs/contact-info.config';
+import { TabButtonComponent } from '../../../../../../shared/ui/src/lib/components/primitives/tab-button/tab-button';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'employees-contact-info',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TextBoxComponent, DropdownComponent, CheckboxComponent,TextButtonComponent,CalendarComponent,TextAreaComponent],
+  imports: [ CommonModule, ReactiveFormsModule,TextBoxComponent,DropdownComponent, CheckboxComponent,  TextButtonComponent, CalendarComponent,  TextAreaComponent, TabButtonComponent],
   templateUrl: './contact-info.component.html',
   styleUrls: ['./contact-info.component.scss'],
 })
@@ -29,6 +30,20 @@ export class ContactInfoComponent implements OnInit {
   countryOptions$!: Observable<DropdownOption[]>;
   addressTypeOptions$!: Observable<DropdownOption[]>;
 
+  readonly activeTab =
+    signal<'Contact' | 'Emergency'>('Contact');
+  readonly tabs = [
+    {
+      id: 'Contact',
+      label: 'Contact'
+    },
+    {
+      id: 'Emergency',
+      label: 'Emergency'
+    }
+  ];
+
+
   ngOnInit(): void {
     this.relationOptions$ = this.dropdownService.getOptions('relation');
     this.countryOptions$ = this.dropdownService.getOptions('country');
@@ -37,18 +52,18 @@ export class ContactInfoComponent implements OnInit {
     this.contactInfo = this.commonService.createForm(this.formConfig);
 
     this.contactInfo.addControl(
-    'addresses',
-    new FormArray([
-      this.commonService.createForm(this.formConfig)
-    ])
-  );
+      'addresses',
+      new FormArray([
+        this.commonService.createForm(this.formConfig)
+      ])
+    );
 
-  this.contactInfo.addControl(
-    'emergencyContacts',
-    new FormArray([
-      this.commonService.createForm(this.formConfig)
-    ])
-  );
+    this.contactInfo.addControl(
+      'emergencyContacts',
+      new FormArray([
+        this.commonService.createForm(this.formConfig)
+      ])
+    );
     const savedData = this.dataService.getDataByRoute('contact-info');
     if (savedData) {
       this.contactInfo.patchValue(savedData as Record<string, unknown>);
@@ -61,62 +76,68 @@ export class ContactInfoComponent implements OnInit {
     });
   }
   get addresses(): FormArray {
-  return this.contactInfo.get('addresses') as FormArray;
-}
-get addressForms(): FormGroup[] {
-  return this.addresses.controls as FormGroup[];
-}
-
-get emergencyContacts(): FormArray {
-  return this.contactInfo.get('emergencyContacts') as FormArray;
-}
-get emergencyForms(): FormGroup[] {
-  return this.emergencyContacts.controls as FormGroup[];
-}
-
-readonly maxAddresses = 3;
-canAddAddress(): boolean {
-  return this.addresses.length < this.maxAddresses;
-}
-
-readonly maxEmergencyContacts = 3;
-canAddEmergencyContact(): boolean {
-  return this.emergencyContacts.length < this.maxEmergencyContacts;
-}
-addAddress(): void {
-  if (!this.canAddAddress()) {
-    return;
+    return this.contactInfo.get('addresses') as FormArray;
   }
-  this.addresses.push(
-    this.commonService.createForm(this.formConfig)
-  );
-}
-
-removeAddress(index: number): void {
-  this.addresses.removeAt(index);
-}
-
-addEmergencyContact(): void {
-   if (!this.canAddEmergencyContact()) {
-    return;
+  get addressForms(): FormGroup[] {
+    return this.addresses.controls as FormGroup[];
   }
-  this.emergencyContacts.push(
-    this.commonService.createForm(this.formConfig)
-  );
+
+
+  readonly maxAddresses = 3;
+  canAddAddress(): boolean {
+    return this.addresses.length < this.maxAddresses;
+  }
+
+  addAddress(): void {
+    if (!this.canAddAddress()) {
+      return;
+    }
+    this.addresses.push(
+      this.commonService.createForm(this.formConfig)
+    );
+  }
+
+  removeAddress(index: number): void {
+    this.addresses.removeAt(index);
+  }
+
+  get emergencyContacts(): FormArray {
+    return this.contactInfo.get(
+      'emergencyContacts'
+    ) as FormArray;
+  }
+
+  get emergencyForms(): FormGroup[] {
+    return this.emergencyContacts.controls as FormGroup[];
+  }
+
+  readonly maxEmergencyContacts = 3;
+  canAddEmergencyContact(): boolean {
+    return ( this.emergencyContacts.length < this.maxEmergencyContacts );
+  }
+
+  addEmergencyContact(): void {
+    if (!this.canAddEmergencyContact()) {
+      return;
+    }
+    this.emergencyContacts.push(
+      this.commonService.createForm(this.formConfig)
+    );
+  }
+
+  removeEmergencyContact(index: number): void {
+    this.emergencyContacts.removeAt(index);
+  }
+
+  switchTab(tab: string): void {
+    if (tab === 'Contact' || tab === 'Emergency') {
+      this.activeTab.set(tab);
+    }
+  }
+
+
+
+  readonly isContactTab = computed(() => this.activeTab() === 'Contact' );
+
+  readonly isEmergencyTab = computed(() => this.activeTab() === 'Emergency');
 }
-
-removeEmergencyContact(index: number): void {
-  this.emergencyContacts.removeAt(index);
-}
-
-  switchTab(tab: 'Contact' | 'Emergency'): void {
-  this.activeTab.set(tab);
-}
-
-  readonly activeTab = signal<'Contact' | 'Emergency'>('Contact');
-  readonly isContactTab = computed(() => this.activeTab() === 'Contact');
-  readonly isEmergencyTab = computed(() => this.activeTab() === 'Emergency');  
-}
-
-
-
