@@ -1,8 +1,10 @@
-
-<div class="tab-wrapper">
-
+<div
+  class="relative flex w-full max-w-full min-w-0 items-center overflow-hidden border-b border-gray-200 box-border"
+>
   @if (showLeftArrow) {
-    <div class="tab-scroll-button tab-scroll-button-left">
+    <div
+      class="absolute left-1 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg border border-blue-100 bg-white p-0 text-blue-600 shadow-[0_2px_6px_rgba(0,0,0,0.08)] transition-all duration-150 hover:bg-blue-50 hover:shadow-[0_4px_10px_rgba(0,0,0,0.1)] max-sm:h-7 max-sm:w-7"
+    >
       <ui-icon-button
         iconName="material-symbols:chevron-left"
         ariaLabel="Scroll tabs left"
@@ -17,15 +19,18 @@
 
   <div
     #tabContainer
-    class="tab-container"
+    class="flex w-0 min-w-0 max-w-full flex-1 items-stretch gap-1 overflow-x-auto overflow-y-hidden whitespace-nowrap [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     (scroll)="onScroll()"
   >
     @for (tab of tabs; track $index) {
       <button
         type="button"
-        class="tab-button"
-        [class.active]="activeTab === tab.id"
-        [class.inactive]="activeTab !== tab.id"
+        class="shrink-0 border-0 border-b-2 bg-transparent px-5 py-3 text-sm font-medium transition-all duration-200 ease-in-out max-sm:px-3.5 max-sm:py-2.5 max-sm:text-[13px]"
+        [class.text-blue-600]="activeTab === tab.id"
+        [class.border-blue-600]="activeTab === tab.id"
+        [class.text-gray-500]="activeTab !== tab.id"
+        [class.border-transparent]="activeTab !== tab.id"
+        [class.hover:text-blue-600]="activeTab !== tab.id"
         (click)="selectTab(tab.id)"
       >
         {{ tab.label }}
@@ -34,7 +39,9 @@
   </div>
 
   @if (showRightArrow) {
-    <div class="tab-scroll-button tab-scroll-button-right">
+    <div
+      class="absolute right-1 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg border border-blue-100 bg-white p-0 text-blue-600 shadow-[0_2px_6px_rgba(0,0,0,0.08)] transition-all duration-150 hover:bg-blue-50 hover:shadow-[0_4px_10px_rgba(0,0,0,0.1)] max-sm:h-7 max-sm:w-7"
+    >
       <ui-icon-button
         iconName="material-symbols:chevron-right"
         ariaLabel="Scroll tabs right"
@@ -46,5 +53,4 @@
       ></ui-icon-button>
     </div>
   }
-
 </div>
