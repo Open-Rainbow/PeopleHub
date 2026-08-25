@@ -57,3 +57,13 @@ export * from './lib/components/charts/org-chart/org-chart.component';
 export * from './lib/components/charts/progress-chart/progress-chart.component';
 export * from './lib/components/charts/scatter-chart/scatter-chart.component';
 export * from './lib/components/charts/spinning-chart/spinning-chart.component';
+export {
+  TableCellType,
+} from './lib/models/table.model';
+export type {
+  BaseCell,
+  TdProperties,
+  ThProperties,
+  FontProperties,
+} from './lib/models/table.model';
+export type { TableCell, TableRow, TableData } from './lib/models/table.types';

@@ -4,15 +4,8 @@
     "outDir": "../../../../out-tsc/lib",
     "declaration": true,
     "declarationMap": true,
-    "types": [],
-    "paths": {
-      "common": [
-        "../../../../dist/common"
-      ],
-      "ui": [
-        "../../../../dist/ui"
-      ]
-    }
+    "inlineSources": true,
+    "types": []
   },
   "include": [
     "src/**/*.ts"

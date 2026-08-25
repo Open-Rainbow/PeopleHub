@@ -1,0 +1,56 @@
+<div class="relative p-5 bg-white rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.06),0_4px_10px_rgba(0,0,0,0.04)]">
+  <ui-icon
+    class="absolute top-[10px] right-[10px] cursor-pointer"
+    [name]="'cross_2'"
+  >
+  </ui-icon>
+  <h2 class="mt-[10px] mb-[15px] text-[18px] font-semibold">
+    {{ title }}
+  </h2>
+  @for (item of data; track item) {
+    <div>
+      <div
+        class="flex items-center px-3 py-2.5 mb-3 bg-[#faf8ff] rounded-xl shadow-[2px_4px_8px_rgb(233,244,248)] transition-all duration-300 ease hover:bg-[#e6e7e9]"
+      >
+        <img
+          class="w-[50px] h-[50px] mx-[15px] rounded-full"
+          [src]="item.imageUrl"
+          [alt]="item.name"
+        />
+        <div class="flex flex-col">
+          <span class="m-0 text-[14px] font-[650] text-[#560cb4]">{{ item.name }}</span>
+          <p class="mt-[2px] mb-0 text-[12px] text-[#888]">
+            {{ item.designation }} {{ item.empID }}
+          </p>
+        </div>
+        <div class="ml-auto mt-[15px] font-semibold">
+          <span class="mr-1 text-black">Priority:</span>
+          <span class="font-medium text-[#888]">{{ item.priority }}</span>
+        </div>
+      </div>
+    </div>
+  }
+  <ui-text-area
+    id="description"
+    [label]="'Description'"
+    [placeholder]="'Enter description'"
+    [isRequired]="true"
+    [showBorder]="true"
+    [maxLength]="200"
+    [showCharCount]="true"
+  >
+  </ui-text-area>
+  <div class="flex flex-wrap gap-4 mt-3">
+    @for (info of announcementInfo; track info) {
+      <div
+        class="inline-flex flex-col gap-1 px-3.5 py-2.5 w-fit min-w-[140px] bg-gray-100 rounded-[10px]"
+      >
+        <div class="flex items-center gap-[6px]">
+          <ui-icon [name]="info.icon"></ui-icon>
+          <span class="text-[11px] font-semibold tracking-[0.5px] text-gray-400">{{ info.label }}</span>
+        </div>
+        <span class="text-[13px] font-medium text-gray-700">{{ info.value }}</span>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,80 @@
+<div class="flex justify-between items-center py-[10px]">
+  <div class="flex items-center gap-4">
+    <h2 class="m-0 text-[18px] font-semibold">Announcement's List</h2>
+  </div>
+  <div class="flex items-center">
+    <ui-text-button text="Download Report" variant="secondary"></ui-text-button>
+  </div>
+</div>
+
+<div class="flex items-center w-full" [formGroup]="searchForm">
+  <div class="flex items-center gap-3">
+    <ui-search
+      class="min-w-[260px]"
+      id="search"
+      [parentFormGroup]="searchForm"
+      [placeholderText]="'Announcements by Title Search'"
+      [showBorder]="true"
+      [borderColor]="'#2563eb'"
+      [showIcon]="true"
+      (onSelect)="onSearch($event)"
+    >
+    </ui-search>
+    <ui-dropdown
+      class="min-w-[260px]"
+      id="category"
+      [parentFormGroup]="searchForm"
+      [label]="'All Categories'"
+      [options]="categoryOptions$ | async"
+      [placeholder]="'Select Categories'"
+    >
+    </ui-dropdown>
+  </div>
+
+  <div class="ml-auto flex">
+    <div class="flex bg-[#f9fafb] rounded-[10px] p-1 gap-[6px]">
+      <ui-chip
+        [text]="'All (' + originalTableData.length + ')'"
+        (click)="applyStatusFilter('All')"
+        [bgColor]="selectedStatus === 'All' ? '#7c3aed' : 'white'"
+        [color]="selectedStatus === 'All' ? 'white' : 'grey'"
+        [borderRadius]="'9999px'"
+        [size]="'medium'"
+      >
+      </ui-chip>
+      <ui-chip
+        [text]="'Active (' + activeCount + ')'"
+        (click)="applyStatusFilter('Active')"
+        [bgColor]="selectedStatus === 'Active' ? '#7c3aed' : 'white'"
+        [color]="selectedStatus === 'Active' ? 'white' : 'grey'"
+        [borderRadius]="'9999px'"
+        [size]="'medium'"
+      >
+      </ui-chip>
+      <ui-chip
+        [text]="'Expired (' + expiredCount + ')'"
+        (click)="applyStatusFilter('Expired')"
+        [bgColor]="selectedStatus === 'Expired' ? '#7c3aed' : 'white'"
+        [color]="selectedStatus === 'Expired' ? 'white' : 'grey'"
+        [borderRadius]="'9999px'"
+        [size]="'medium'"
+      >
+      </ui-chip>
+    </div>
+  </div>
+</div>
+
+<ui-table
+  [tableData]="normalizedTableData"
+  [topPagination]="true"
+  [bottomPagination]="false"
+  [showSerialNo]="false"
+  [showUndoRedo]="false"
+  [canDrag]="false"
+  [showCheckbox]="false"
+  (rowSelected)="rowSelected()"
+  (linkClick)="linkClick($event)"
+  (editClicked)="editClicked($event)"
+  (deleteClicked)="deleteClicked($event)"
+>
+</ui-table>

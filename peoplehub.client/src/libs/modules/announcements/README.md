@@ -1,5 +1,34 @@
 # Announcements
 
+This library contains the Announcements module for PeopleHub. All
+announcement functionality — both admin and non-admin — lives directly
+under `src/lib` (there is intentionally **no** separate `admin` folder).
+
+## Components
+
+- `announcements-add-edit-announcement` (`AddEditAnnouncementComponent`) — container that hosts the add/edit/view modal and the announcement summary table.
+- `announcements-announcement-summary` (`AnnouncementSummaryComponent`) — searchable, filterable table of announcements with edit/delete/view actions.
+- `announcements-announcement-box` (`AnnouncementBoxComponent`) — read-only pinned/recent announcements card.
+- `announcements-expire-announcement` (`ExpireAnnouncementComponent`) — list of expiring announcements with an inline create form.
+- `announcements-view-announcement` (`ViewAnnouncementComponent`) — announcement detail view.
+
+## Services
+
+- `AnnouncementsService` — module-facing facade backed by the shared `CommonService` for all HTTP operations.
+
+## Structure
+
+```
+src/lib/
+  components/         # all announcement components (admin + non-admin)
+  config/             # reactive form configs, models and types
+  services/           # AnnouncementsService
+```
+
+Shared models (`Announcement`, `ExpireAnnouncement`, `AnnouncementInfo`,
+`DropdownOption`, etc.) and shared UI controls are consumed from the
+`common` and `ui` libraries respectively.
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
 
 ## Code scaffolding

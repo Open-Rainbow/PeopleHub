@@ -1,0 +1,114 @@
+<div class="container w-full h-full p-[20px]">
+  <div
+    class="blank-space w-full bg-white rounded-[20px] px-[20px] items-start border border-gray-300 box-border overflow-hidden transition-all duration-500 ease-in-out"
+    [class.visible]="showForm"
+  >
+    <form [formGroup]="form">
+      <ui-text-box
+        id="title"
+        [parentFormGroup]="form"
+        [label]="'Title'"
+        [placeholder]="'Enter the title'"
+        [isRequired]="true"
+      >
+      </ui-text-box>
+      <div class="inside flex gap-[16px] mb-[18px] mt-[20px] w-full box-border">
+        <ui-dropdown
+          class="flex-1 min-w-0"
+          id="priority"
+          [parentFormGroup]="form"
+          [label]="'Priority'"
+          [placeholder]="'Select severity type'"
+          [isRequired]="true"
+          [options]="severityOptions$ | async"
+        >
+        </ui-dropdown>
+        <ui-calendar
+          class="flex-1 min-w-0"
+          id="expiresOn"
+          [parentFormGroup]="form"
+          [label]="'Expires On'"
+        >
+        </ui-calendar>
+      </div>
+      <ui-text-area
+        id="description"
+        [parentFormGroup]="form"
+        [label]="'Description'"
+        [placeholder]="'Enter description'"
+        [isRequired]="true"
+        [showBorder]="true"
+      >
+      </ui-text-area>
+      <div class="footer flex justify-end items-center pr-[2px] pt-[13px] gap-[8px]">
+        <ui-text-button
+          text="Clear"
+          variant="secondary"
+        ></ui-text-button>
+        <ui-text-button
+          text="Save"
+        ></ui-text-button>
+      </div>
+    </form>
+  </div>
+
+  <div
+    class="blank-space-two w-full h-full mt-[25px] bg-white rounded-[20px] p-[20px] items-start border border-gray-300 box-border"
+  >
+    <div
+      class="form-header bg-[#eef4ff] rounded-t-[19px] rounded-b-none px-[13px] py-[10px] mt-[-20px] mx-[-20px] mb-[20px] border-b border-[#dbeafe] flex flex-row items-center"
+    >
+      <span class="icon-box">
+        <ui-icon [name]="'announcement_outline'"></ui-icon>
+      </span>
+      <div class="header-text">
+        <h3 class="m-0 text-[#1e40af] text-[1.22rem] ml-[8px] mb-[-2px]">
+          Expire Announcements
+        </h3>
+      </div>
+    </div>
+    @for (announcement of otherAnnouncements; track announcement; let last = $last) {
+      <div class="announcement-item">
+        <div class="title-row flex items-center gap-[10px]">
+          <h4 class="title text-[15px] font-semibold text-[#1a1a1a]">
+            {{ announcement.title }}
+          </h4>
+          <ui-chip
+            [text]="announcement.priorityDesc"
+            [color]="announcement.priorityDesc === 'high' ? '#b38742' : (announcement.priorityDesc === 'low' ? '#23816c' : '#aa355b')"
+            [activeColor]="announcement.priorityDesc === 'medium' ? '#b38742' : (announcement.priorityDesc === 'low' ? '#23816c' : '#aa355b')"
+            [activeBGColor]="announcement.priorityDesc === 'medium' ? '#fef9c2' : (announcement.priorityDesc === 'low' ? '#dbfce7' : '#ffe2e2')"
+            [bgColor]="announcement.priorityDesc === 'medium' ? '#fef9c2' : (announcement.priorityDesc === 'low' ? '#dbfce7' : '#ffe2e2')"
+          >
+          </ui-chip>
+        </div>
+        <p
+          class="description text-[14px] text-[#4b4b4b] my-[10px] mb-[16px] leading-[1.4]"
+          [class.truncated]="isTruncated(announcement.description, 50)"
+          [directivesTooltip]="isTruncated(announcement.description, 50) ? announcement.description : ''"
+          tooltipPosition="top"
+          [tooltipBgColor]="'red'"
+          [tooltipTextColor]="'black'"
+          [tooltipMaxWidth]="'60'"
+        >
+          {{ leaveDescription(announcement.description, 50) }}
+        </p>
+        <div class="footer-row flex justify-between items-center text-[13px] text-[#6c6c6c]">
+          <div class="date text-[12px] font-medium flex items-center gap-[4px]">
+            <span class="expire-label text-black">Expire on:</span>
+            <span class="expire-date text-[#C0171A]">
+              {{ announcement.expireOn }}
+            </span>
+          </div>
+          <div class="footer flex justify-end items-center gap-[8px]">
+            <ui-text-button text="Edit"></ui-text-button>
+            <ui-text-button text="Delete" variant="secondary"></ui-text-button>
+          </div>
+        </div>
+      </div>
+      @if (!last) {
+        <hr class="custom-line border-0 border-t border-[#e2e8f0] my-[30px] opacity-60" />
+      }
+    }
+  </div>
+</div>
