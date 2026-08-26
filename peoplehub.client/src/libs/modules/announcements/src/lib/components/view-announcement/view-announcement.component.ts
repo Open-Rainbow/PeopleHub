@@ -12,22 +12,7 @@ import { AnnouncementInfo, TeamData } from 'common';
   styleUrls: ['./view-announcement.component.scss'],
 })
 export class ViewAnnouncementComponent {
-  @Input() title = 'Annual Company Retreat - Registration Open';
-
-  @Input() data: TeamData[] = [
-    {
-      name: 'Ganesh',
-      designation: 'UI/UX Designer',
-      empID: 'CECO_10111',
-      imageUrl:
-        'https://plus.unsplash.com/premium_photo-1661757403301-ae68e1f1b827?ixlib=rb-4.1.0&auto=format&fit=crop&q=80&w=735',
-      priority: 'High',
-    },
-  ];
-
-  @Input() announcementInfo: AnnouncementInfo[] = [
-    { icon: 'calendar', label: 'PUBLISHED', value: '10 Feb 2026' },
-    { icon: 'edit', label: 'EXPIRES', value: '15 Mar 2026' },
-    { icon: 'delete', label: 'AUDIENCE', value: 'All Employees' },
-  ];
+  @Input() title!: string;
+  @Input() data: TeamData[] = [];
+  @Input() announcementInfo: AnnouncementInfo[] = [];
 }
