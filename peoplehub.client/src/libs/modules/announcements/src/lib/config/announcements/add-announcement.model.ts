@@ -10,5 +10,4 @@ export interface IAddAnnouncementFormFields {
   expiresOn: IFormFieldConfig;
 }
 
-import { IAddAnnouncementForm } from "./add-announcement.types";
 

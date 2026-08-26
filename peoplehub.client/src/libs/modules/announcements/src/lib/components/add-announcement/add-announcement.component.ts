@@ -25,9 +25,8 @@ import {
   DropdownOption,
   ExpireAnnouncement,
 } from 'common';
-//import { addEditAnnouncementForm } from '../../config/announcements/add-announcement.config';
 import { SummaryComponent } from '../summary/summary.component';
-import { addEditAnnouncementForm } from '../../config/announcements/add-announcement.config';
+import { addAnnouncementForm } from '../../config/announcements/add-announcement.config';
 
 type AnnouncementMode = 'add' | 'edit' | 'view';
 
@@ -56,7 +55,7 @@ export class AddAnnouncementComponent implements OnInit {
   private readonly dropdownService = inject(DropdownConfigService);
 
   addEditAnnouncement!: FormGroup;
-  formConfig = addEditAnnouncementForm;
+  formConfig = addAnnouncementForm;
 
   isModalOpen = false;
   isEditMode = false;

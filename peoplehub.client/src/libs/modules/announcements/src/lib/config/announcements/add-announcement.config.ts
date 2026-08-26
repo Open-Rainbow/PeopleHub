@@ -1,7 +1,7 @@
 import { IAddAnnouncementForm } from "./add-announcement.types";
 
 
-export const addEditAnnouncementForm: IAddAnnouncementForm = {
+export const addAnnouncementForm: IAddAnnouncementForm = {
   title: {
     id: 'title',
     isHide: false,

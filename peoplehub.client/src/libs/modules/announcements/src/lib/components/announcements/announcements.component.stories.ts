@@ -5,7 +5,7 @@ type Story = StoryObj<AnnouncementsComponent>;
 
 const meta: Meta<AnnouncementsComponent> = {
   component: AnnouncementsComponent,
-  title: 'modules/announcements/AnnouncementBox',
+  title: 'modules/announcements/Announcements',
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',

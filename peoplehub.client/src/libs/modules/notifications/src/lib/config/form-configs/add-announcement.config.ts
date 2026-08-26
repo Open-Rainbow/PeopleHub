@@ -1,6 +1,6 @@
 import { IAddAnnouncementForm } from "./add-announcement.model";
 
-export const addEditAnnouncementForm: IAddAnnouncementForm = 
+export const addAnnouncementForm: IAddAnnouncementForm = 
     {
     "title": {
         id:'title',
