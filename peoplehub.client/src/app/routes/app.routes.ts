@@ -173,10 +173,10 @@ export const appRoutes: Routes = [
           ),
       },
       {
-        path: 'announcement-box',
+        path: 'announcements',
         loadComponent: () =>
-          import('../../libs/modules/announcements/src/lib/components/announcement-box/announcement-box.component').then(
-            (m) => m.AnnouncementBoxComponent,
+          import('../../libs/modules/announcements/src/lib/components/announcements/announcements.component').then(
+            (m) => m.AnnouncementsComponent,
           ),
       },
       {
@@ -265,8 +265,8 @@ export const appRoutes: Routes = [
       {
         path: 'AddEditAnnouncement',
         loadComponent: () =>
-          import('../../libs/modules/announcements/src/lib/components/add-edit-announcement/add-edit-announcement.component').then(
-            (m) => m.AddEditAnnouncementComponent,
+          import('../../libs/modules/announcements/src/lib/components/add-announcement/add-announcement.component').then(
+            (m) => m.AddAnnouncementComponent,
           ),
       },
       {
@@ -375,8 +375,8 @@ export const appRoutes: Routes = [
       {
         path: 'AddEditAnnouncement',
         loadComponent: () =>
-          import('../../libs/modules/announcements/src/lib/components/add-edit-announcement/add-edit-announcement.component').then(
-            (m) => m.AddEditAnnouncementComponent,
+          import('../../libs/modules/announcements/src/lib/components/add-announcement/add-announcement.component').then(
+            (m) => m.AddAnnouncementComponent,
           ),
       },
       {

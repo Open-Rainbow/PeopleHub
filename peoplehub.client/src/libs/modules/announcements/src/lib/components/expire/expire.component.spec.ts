@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ExpireAnnouncementComponent } from './expire-announcement.component';
+import { ExpireComponent } from './expire.component';
 
-describe('ExpireAnnouncementComponent', () => {
-  let component: ExpireAnnouncementComponent;
-  let fixture: ComponentFixture<ExpireAnnouncementComponent>;
+describe('ExpireComponent', () => {
+  let component: ExpireComponent;
+  let fixture: ComponentFixture<ExpireComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ExpireAnnouncementComponent],
+      imports: [ExpireComponent],
       providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ExpireAnnouncementComponent);
+    fixture = TestBed.createComponent(ExpireComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
@@ -22,3 +22,4 @@ describe('ExpireAnnouncementComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

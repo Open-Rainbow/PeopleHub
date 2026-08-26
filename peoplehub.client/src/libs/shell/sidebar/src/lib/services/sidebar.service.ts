@@ -15,7 +15,7 @@ export interface MenuItem {
 export const MENU_CONFIG: Record<string, MenuItem[]> = {
   employee: [
     { label: 'Dashboard', icon: 'view_dashboard_outline', route: 'dashboard' },
-    { label: 'Announcement', icon: 'announcement_megaphone', route: 'announcement-box' },
+    { label: 'Announcement', icon: 'announcement_megaphone', route: 'announcements' },
     { label: 'Apply Leave', icon: 'leave_user', route: 'apply-leave' },
     { label: 'Payroll', icon: 'dollar', route: 'payslips' },
     { label: 'Attendance', icon: 'calendar', route: 'attendance' },

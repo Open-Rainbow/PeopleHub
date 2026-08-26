@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { AddEditAnnouncementComponent } from './add-edit-announcement.component';
+import { AddAnnouncementComponent } from './add-announcement.component';
 
-describe('AddEditAnnouncementComponent', () => {
-  let component: AddEditAnnouncementComponent;
-  let fixture: ComponentFixture<AddEditAnnouncementComponent>;
+describe('AddAnnouncementComponent', () => {
+  let component: AddAnnouncementComponent;
+  let fixture: ComponentFixture<AddAnnouncementComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddEditAnnouncementComponent],
+      imports: [AddAnnouncementComponent],
       providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AddEditAnnouncementComponent);
+    fixture = TestBed.createComponent(AddAnnouncementComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
@@ -22,3 +22,4 @@ describe('AddEditAnnouncementComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

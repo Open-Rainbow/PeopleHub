@@ -1,13 +1,13 @@
 import { Meta, StoryObj } from '@storybook/angular';
 import { applicationConfig } from '@storybook/angular';
 import { provideHttpClient } from '@angular/common/http';
-import { AnnouncementSummaryComponent } from './announcement-summary.component';
+import { SummaryComponent } from './summary.component';
 
-type Story = StoryObj<AnnouncementSummaryComponent>;
+type Story = StoryObj<SummaryComponent>;
 
-const meta: Meta<AnnouncementSummaryComponent> = {
-  component: AnnouncementSummaryComponent,
-  title: 'modules/announcements/AnnouncementSummary',
+const meta: Meta<SummaryComponent> = {
+  component: SummaryComponent,
+  title: 'modules/announcements/Summary',
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
@@ -24,3 +24,4 @@ export default meta;
 export const Default: Story = {
   args: {},
 };
+

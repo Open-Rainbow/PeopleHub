@@ -6,10 +6,10 @@ under `src/lib` (there is intentionally **no** separate `admin` folder).
 
 ## Components
 
-- `announcements-add-edit-announcement` (`AddEditAnnouncementComponent`) — container that hosts the add/edit/view modal and the announcement summary table.
-- `announcements-announcement-summary` (`AnnouncementSummaryComponent`) — searchable, filterable table of announcements with edit/delete/view actions.
-- `announcements-announcement-box` (`AnnouncementBoxComponent`) — read-only pinned/recent announcements card.
-- `announcements-expire-announcement` (`ExpireAnnouncementComponent`) — list of expiring announcements with an inline create form.
+- `announcements-add-announcement` (`AddAnnouncementComponent`) — container that hosts the add/edit/view modal and the announcement summary table.
+- `announcements-summary` (`SummaryComponent`) — searchable, filterable table of announcements with edit/delete/view actions.
+- `announcements-announcements` (`AnnouncementsComponent`) — read-only pinned/recent announcements card.
+- `announcements-expire` (`ExpireComponent`) — list of expiring announcements with an inline create form.
 - `announcements-view-announcement` (`ViewAnnouncementComponent`) — announcement detail view.
 
 ## Services

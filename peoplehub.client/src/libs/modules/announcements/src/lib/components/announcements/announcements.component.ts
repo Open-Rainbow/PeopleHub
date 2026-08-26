@@ -1,17 +1,17 @@
-﻿import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChipComponent } from 'ui';
 import { Announcement } from 'common';
 
 @Component({
-  selector: 'announcements-announcement-box',
+  selector: 'announcements-announcements',
   standalone: true,
   imports: [CommonModule, ChipComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './announcement-box.component.html',
-  styleUrls: ['./announcement-box.component.scss'],
+  templateUrl: './announcements.component.html',
+  styleUrls: ['./announcements.component.scss'],
 })
-export class AnnouncementBoxComponent {
+export class AnnouncementsComponent {
   @Input() announcements: Announcement[] = [
     {
       announcementId: 123,

@@ -1,6 +1,6 @@
 import { IFormFieldConfig } from 'common';
 
-export interface IAddEditAnnouncementFormFields {
+export interface IAddAnnouncementFormFields {
   title: IFormFieldConfig;
   description: IFormFieldConfig;
   priority: IFormFieldConfig;
@@ -10,4 +10,5 @@ export interface IAddEditAnnouncementFormFields {
   expiresOn: IFormFieldConfig;
 }
 
-export type { IAddEditAnnouncementForm } from './add-edit-announcement.types';
+import { IAddAnnouncementForm } from "./add-announcement.types";
+

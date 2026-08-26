@@ -27,7 +27,7 @@ import {
 import { ConfirmPopupService } from 'ui';
 
 @Component({
-  selector: 'announcements-announcement-summary',
+  selector: 'announcements-summary',
   standalone: true,
   imports: [
     CommonModule,
@@ -39,10 +39,10 @@ import { ConfirmPopupService } from 'ui';
     TextButtonComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './announcement-summary.component.html',
-  styleUrls: ['./announcement-summary.component.scss'],
+  templateUrl: './summary.component.html',
+  styleUrls: ['./summary.component.scss'],
 })
-export class AnnouncementSummaryComponent implements OnInit {
+export class SummaryComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly commonService = inject(CommonService);
   private readonly confirmPopupService = inject(ConfirmPopupService);
@@ -301,22 +301,21 @@ export class AnnouncementSummaryComponent implements OnInit {
       this.applyStatusFilter(this.selectedStatus);
       return;
     }
-    const lowerSearch = searchText.toLowerCase();
-    const filteredData = this.originalTableData.filter((row) => {
-      const titleCell = row.find((cell) => cell.colName === 'Title') as any;
-      const title = titleCell?.value?.title?.toLowerCase();
-      return title?.includes(lowerSearch);
+    const lower = searchText.toLowerCase();
+    const filtered = this.originalTableData.filter((row) => {
+      return row.some((cell) => {
+        const value = (cell as any).value;
+        if (!value) return false;
+        if (typeof value === 'string') return value.toLowerCase().includes(lower);
+        if (typeof value === 'object' && value.title) return value.title.toLowerCase().includes(lower);
+        return false;
+      });
     });
-    const finalData =
-      this.selectedStatus === 'All'
-        ? filteredData
-        : filteredData.filter((row) => {
-            const statusCell = row.find((cell) => cell.colName === 'Status') as any;
-            return (
-              statusCell?.value?.toLowerCase() ===
-              this.selectedStatus.toLowerCase()
-            );
-          });
-    this.normalizedTableData = this.normalize(finalData);
+    this.normalizedTableData = this.normalize(filtered);
+  }
+
+  private extractColData(cell: BaseCell): unknown {
+    return (cell as any).value;
   }
 }
+

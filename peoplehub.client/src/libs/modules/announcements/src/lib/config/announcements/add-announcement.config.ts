@@ -1,6 +1,7 @@
-import { IAddEditAnnouncementForm } from './add-edit-announcement.model';
+import { IAddAnnouncementForm } from "./add-announcement.types";
 
-export const addEditAnnouncementForm: IAddEditAnnouncementForm = {
+
+export const addEditAnnouncementForm: IAddAnnouncementForm = {
   title: {
     id: 'title',
     isHide: false,
@@ -99,3 +100,4 @@ export const addEditAnnouncementForm: IAddEditAnnouncementForm = {
     isDisable: false,
   },
 };
+

@@ -15,7 +15,7 @@ import { Announcement, DropdownConfigService, DropdownOption } from 'common';
 import { TooltipDirective } from 'directives';
 
 @Component({
-  selector: 'announcements-expire-announcement',
+  selector: 'announcements-expire',
   standalone: true,
   imports: [
     CommonModule,
@@ -30,10 +30,10 @@ import { TooltipDirective } from 'directives';
     TooltipDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './expire-announcement.component.html',
-  styleUrls: ['./expire-announcement.component.scss'],
+  templateUrl: './expire.component.html',
+  styleUrls: ['./expire.component.scss'],
 })
-export class ExpireAnnouncementComponent {
+export class ExpireComponent {
   private readonly fb = inject(FormBuilder);
   private readonly dropdownService = inject(DropdownConfigService);
 
@@ -89,3 +89,4 @@ export class ExpireAnnouncementComponent {
     return trimmed + '...';
   }
 }
+

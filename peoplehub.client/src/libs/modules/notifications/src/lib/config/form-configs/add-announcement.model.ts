@@ -11,7 +11,7 @@ export interface IAnnouncementFormFields {
     postedBy : IFormFieldConfig;
 }
 
-export type { IAddEditAnnouncementForm } from './add-edit-announcement.types';
+export type { IAddAnnouncementForm } from './add-announcement.types';
 
 
 

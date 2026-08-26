@@ -1,10 +1,10 @@
 import { Meta, StoryObj } from '@storybook/angular';
-import { AnnouncementBoxComponent } from './announcement-box.component';
+import { AnnouncementsComponent } from './announcements.component';
 
-type Story = StoryObj<AnnouncementBoxComponent>;
+type Story = StoryObj<AnnouncementsComponent>;
 
-const meta: Meta<AnnouncementBoxComponent> = {
-  component: AnnouncementBoxComponent,
+const meta: Meta<AnnouncementsComponent> = {
+  component: AnnouncementsComponent,
   title: 'modules/announcements/AnnouncementBox',
   tags: ['autodocs'],
   parameters: {
@@ -17,3 +17,4 @@ export default meta;
 export const Default: Story = {
   args: {},
 };
+

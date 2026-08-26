@@ -25,13 +25,14 @@ import {
   DropdownOption,
   ExpireAnnouncement,
 } from 'common';
-import { addEditAnnouncementForm } from '../../config/announcements/add-edit-announcement.config';
-import { AnnouncementSummaryComponent } from '../announcement-summary/announcement-summary.component';
+//import { addEditAnnouncementForm } from '../../config/announcements/add-announcement.config';
+import { SummaryComponent } from '../summary/summary.component';
+import { addEditAnnouncementForm } from '../../config/announcements/add-announcement.config';
 
 type AnnouncementMode = 'add' | 'edit' | 'view';
 
 @Component({
-  selector: 'announcements-add-edit-announcement',
+  selector: 'announcements-add-announcement',
   standalone: true,
   imports: [
     CommonModule,
@@ -43,13 +44,13 @@ type AnnouncementMode = 'add' | 'edit' | 'view';
     ChipComponent,
     IconComponent,
     TextButtonComponent,
-    AnnouncementSummaryComponent,
+    SummaryComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './add-edit-announcement.component.html',
-  styleUrls: ['./add-edit-announcement.component.scss'],
+  templateUrl: './add-announcement.component.html',
+  styleUrls: ['./add-announcement.component.scss'],
 })
-export class AddEditAnnouncementComponent implements OnInit {
+export class AddAnnouncementComponent implements OnInit {
   private readonly commonService = inject(CommonService);
   private readonly confirmPopupService = inject(ConfirmPopupService);
   private readonly dropdownService = inject(DropdownConfigService);
@@ -272,3 +273,4 @@ export class AddEditAnnouncementComponent implements OnInit {
     return value;
   }
 }
+

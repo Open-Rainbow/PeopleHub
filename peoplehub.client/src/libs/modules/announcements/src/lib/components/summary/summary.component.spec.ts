@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { AnnouncementSummaryComponent } from './announcement-summary.component';
+import { SummaryComponent } from './summary.component';
 
-describe('AnnouncementSummaryComponent', () => {
-  let component: AnnouncementSummaryComponent;
-  let fixture: ComponentFixture<AnnouncementSummaryComponent>;
+describe('SummaryComponent', () => {
+  let component: SummaryComponent;
+  let fixture: ComponentFixture<SummaryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AnnouncementSummaryComponent],
+      imports: [SummaryComponent],
       providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AnnouncementSummaryComponent);
+    fixture = TestBed.createComponent(SummaryComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
@@ -22,3 +22,4 @@ describe('AnnouncementSummaryComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
