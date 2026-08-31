@@ -30,65 +30,84 @@ export class SidebarComponent implements OnInit {
     this.menuItems = this.sidebarService.getMenuByRole(role);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        this.setActiveMenuByRoute(event.urlAfterRedirects);
-      });
+          this.setActiveMenuByRoute(event.urlAfterRedirects);
+        });
+    this.setActiveMenuByRoute(this.router.url);
   }
 
-  onMouseEnter() {
+  onMouseEnter(): void {
     if (this.hoverEnabled) {
       this.hoverEnter.emit();
     }
   }
 
-  onMouseLeave() {
+  onMouseLeave(): void {
     if (this.hoverEnabled) {
       this.hoverLeave.emit();
     }
   }
 
-  onClick(index: number) {
-    this.activeIndex = index;
-    this.viewSubMenu = !this.viewSubMenu;
-  }
+  onClick(index: number): void {
+    const item = this.menuItems[index];
+    if (!item) {
+      return;
+    }
 
-  onSubMenuClick(parentIndex: number, route: string) {
-    this.activeIndex = parentIndex;
-    this.activeSubRoute = route;
-    this.viewSubMenu = true;
-  }
-
-  onHoverSubMenuClick(parentIndex: number, route: string) {
-    this.activeIndex = parentIndex;
-    this.activeSubRoute = route;
-    this.viewSubMenu = true;
-  }
-
-  setActiveMenuByRoute(url: string) {
-    const cleanUrl = url.split('?')[0];
-    const lastSegment = cleanUrl.split('/').pop();
-
-    this.menuItems.forEach((item, index) => {
-      if (item.route && item.route.includes(lastSegment!)) {
+    if (item.routes?.length) {
+      if (this.activeIndex === index) {
+        this.viewSubMenu = !this.viewSubMenu;
+      } else {
         this.activeIndex = index;
+        this.viewSubMenu = true;
         this.activeSubRoute = null;
-        this.viewSubMenu = false;
-        return;
       }
 
-      if (item.routes) {
-        const sub = item.routes.find(r => r.route.includes(lastSegment!));
+      return;
+    }
 
-        if (sub) {
-          this.activeIndex = index;
-          this.activeSubRoute = sub.route;
-          this.viewSubMenu = true;
+    this.activeIndex = index;
+    this.viewSubMenu = false;
+    this.activeSubRoute = null;
+  }
+
+  onSubMenuClick(parentIndex: number, route: string): void {
+    this.activeIndex = parentIndex;
+    this.activeSubRoute = route;
+    this.viewSubMenu = true;
+  }
+
+  onHoverSubMenuClick(parentIndex: number, route: string): void {
+    this.activeIndex = parentIndex;
+    this.activeSubRoute = route;
+    this.viewSubMenu = true;
+  }
+
+  setActiveMenuByRoute(url: string): void {
+    const cleanUrl = url.split('?')[0].split('#')[0];
+
+    this.menuItems.forEach(
+      (item, index) => {
+     
+        if (item.routes?.length) {
+          const subRoute = item.routes.find((sub) => cleanUrl.includes(`/${sub.route}`));
+          if (subRoute) {
+            this.activeIndex = index;
+            this.activeSubRoute = subRoute.route;
+            this.viewSubMenu = true;
+            return;
+          }
         }
-      }
-    });
+
+        if (item.route && cleanUrl.includes(`/${item.route}`)) {
+          this.activeIndex = index;
+          this.activeSubRoute = null;
+          this.viewSubMenu = false;
+        }
+      });
   }
 }
 

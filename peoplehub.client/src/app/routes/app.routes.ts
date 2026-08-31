@@ -265,9 +265,16 @@ export const appRoutes: Routes = [
       {
         path: 'AddEditAnnouncement',
         loadComponent: () =>
-          import('../../libs/modules/announcements/src/lib/components/add-announcement/add-announcement.component').then(
-            (m) => m.AddAnnouncementComponent,
-          ),
+          import(
+            '../../libs/modules/announcements/src/lib/components/add-announcement/add-announcement.component'
+          ).then((m) => m.AddAnnouncementComponent),
+      },
+      {
+        path: 'announcements',
+        loadComponent: () =>
+          import(
+            '../../libs/modules/announcements/src/lib/components/announcements/announcements.component'
+          ).then((m) => m.AnnouncementsComponent),
       },
       {
         path: 'apply-leave',
@@ -375,9 +382,16 @@ export const appRoutes: Routes = [
       {
         path: 'AddEditAnnouncement',
         loadComponent: () =>
-          import('../../libs/modules/announcements/src/lib/components/add-announcement/add-announcement.component').then(
-            (m) => m.AddAnnouncementComponent,
-          ),
+          import(
+            '../../libs/modules/announcements/src/lib/components/add-announcement/add-announcement.component'
+          ).then((m) => m.AddAnnouncementComponent),
+      },
+      {
+        path: 'announcements',
+        loadComponent: () =>
+          import(
+            '../../libs/modules/announcements/src/lib/components/announcements/announcements.component'
+          ).then((m) => m.AnnouncementsComponent),
       },
       {
         path: 'apply-leave',

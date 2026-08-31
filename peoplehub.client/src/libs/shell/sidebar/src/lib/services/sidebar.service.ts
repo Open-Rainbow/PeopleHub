@@ -15,7 +15,11 @@ export interface MenuItem {
 export const MENU_CONFIG: Record<string, MenuItem[]> = {
   employee: [
     { label: 'Dashboard', icon: 'view_dashboard_outline', route: 'dashboard' },
-    { label: 'Announcement', icon: 'announcement_megaphone', route: 'announcements' },
+    {
+      label: 'Announcement',
+      icon: 'announcement_megaphone',
+      routes: [{ label: 'View Announcement', route: 'announcements' }],
+    },
     { label: 'Apply Leave', icon: 'leave_user', route: 'apply-leave' },
     { label: 'Payroll', icon: 'dollar', route: 'payslips' },
     { label: 'Attendance', icon: 'calendar', route: 'attendance' },
@@ -23,7 +27,7 @@ export const MENU_CONFIG: Record<string, MenuItem[]> = {
     { label: 'Org-Chart', icon: 'chart_growth', route: 'org-chart' },
     { label: 'Others', icon: 'dots_horizontal', route: 'others' },
   ],
-
+ 
   admin: [
     { label: 'Admin Dashboard', icon: 'administrator_line', route: 'dashboard' },
     {
@@ -35,7 +39,14 @@ export const MENU_CONFIG: Record<string, MenuItem[]> = {
         { label: 'EDocs', route: 'offer-letter' },
       ],
     },
-    { label: 'Announcement', icon: 'announcement_megaphone', route: 'AddEditAnnouncement' },
+    {
+      label: 'Announcement',
+      icon: 'announcement_megaphone',
+      routes: [
+        { label: 'Add Announcement', route: 'AddEditAnnouncement' },
+        { label: 'View Announcement', route: 'announcements' },
+      ],
+    },
     {
       label: 'Leave',
       icon: 'leave_user',
@@ -63,7 +74,14 @@ export const MENU_CONFIG: Record<string, MenuItem[]> = {
         { label: 'EDocs', route: 'offer-letter' },
       ],
     },
-    { label: 'Announcement', icon: 'announcement_megaphone', route: 'AddEditAnnouncement' },
+    {
+      label: 'Announcement',
+      icon: 'announcement_megaphone',
+      routes: [
+        { label: 'Add Announcement', route: 'AddEditAnnouncement' },
+        { label: 'View Announcement', route: 'announcements' },
+      ],
+    },
     {
       label: 'Leave',
       icon: 'leave_user',
@@ -74,7 +92,7 @@ export const MENU_CONFIG: Record<string, MenuItem[]> = {
     },
     { label: 'Payroll', icon: 'dollar', route: 'payslips' },
     { label: 'Attendance', icon: 'calendar', route: 'attendance' },
-    { label: 'Holidays', icon: 'suitcase_line', route: 'holidayList' },
+   { label: 'Holidays', icon: 'suitcase_line', route: 'holidayList' },
     { label: 'Org Chart', icon: 'chart_growth', route: 'org-chart' },
     { label: 'Others', icon: 'dots_horizontal', route: 'others' },
   ],
