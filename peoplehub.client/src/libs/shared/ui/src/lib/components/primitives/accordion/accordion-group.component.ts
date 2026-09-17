@@ -47,4 +47,11 @@ export class AccordionGroupComponent {
   getOpenState(sectionId: string): boolean {
     return this.openItems().has(sectionId);
   }
+  setInitialOpen(sectionId: string): void {
+  const currentOpen = new Set(this.openItems());
+
+  currentOpen.add(sectionId);
+
+  this.openItems.set(currentOpen);
+}
 }

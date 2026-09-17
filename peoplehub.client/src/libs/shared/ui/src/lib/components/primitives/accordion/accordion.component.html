@@ -55,8 +55,12 @@
     role="region"
     [attr.aria-labelledby]="'accordion-header-' + sectionId"
   >
-    <div class="ui-accordion__body">
-      <ng-container *ngTemplateOutlet="modalTemplate"></ng-container>
-    </div>
+   <div class="ui-accordion__body">
+  @if (modalTemplate) {
+    <ng-container *ngTemplateOutlet="modalTemplate"></ng-container>
+  }
+
+  <ng-content></ng-content>
+</div>
   </div>
 </div>

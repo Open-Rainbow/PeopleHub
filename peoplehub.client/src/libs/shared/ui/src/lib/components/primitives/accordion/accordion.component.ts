@@ -36,9 +36,11 @@ export class AccordionComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngOnInit() {
-    // Initialize any needed state
+ngOnInit() {
+  if (this.parentGroup && this.isOpen) {
+    this.parentGroup.setInitialOpen(this.sectionId!);
   }
+}
 
   // Check if accordion is open - read from parent's signal directly
   isAccordionOpen(): boolean {

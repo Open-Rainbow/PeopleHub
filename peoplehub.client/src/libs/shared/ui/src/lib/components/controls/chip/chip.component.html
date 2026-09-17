@@ -6,6 +6,7 @@
   [style.backgroundColor]="isHovered ? activeBGColor : finalBgColor"
   [style.color]="isHovered ? activeColor : textColor"
   [style.cursor]="disabled ? 'not-allowed' : (usePointerCursor ? 'pointer' : 'default')"
+  [style.border]="borderColor ? '1px solid ' + borderColor : 'none'"
   [style.borderRadius]="borderRadius"
   [style.height]="height"
   [style.width]="width"

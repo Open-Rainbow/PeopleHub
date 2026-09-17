@@ -1,0 +1,185 @@
+<div class="w-full min-h-full bg-white flex flex-col">
+  <div class="flex items-start justify-between px-6 py-5 border-b border-gray-200">
+    <div>
+      <h2 class="text-xl font-semibold text-gray-900">Add New Leave Type</h2>
+      <p class="mt-1 text-sm text-gray-500">Configure a new leave type for your policy.</p>
+    </div>
+
+    <button
+      type="button"
+      class="text-2xl leading-none text-gray-500 hover:text-gray-800"
+      (click)="closeForm()"
+      aria-label="Close"
+    >
+      ×
+    </button>
+    <ui-icon-button [iconName]="'home'" [ariaLabel]="'Search'" [title]="'Search'" [variant]="'secondary'" [size]="'medium'" [type]="'button'" [disabled]="false" [isExpanded]="false"></ui-icon-button>
+  </div>
+
+
+  @if (form) {
+    <form [formGroup]="form" class="flex-1 px-6 py-5" >
+      <div class="flex flex-col gap-4 max-[768px]:grid-cols-1">
+        <!-- Leave Name -->
+        @if (!formConfig.leaveName.isHide) {
+          <ui-text-box
+            [id]="formConfig.leaveName.id"
+            [parentFormGroup]="form"
+            [label]="formConfig.leaveName.label!"
+            [placeholder]="formConfig.leaveName.placeholder ?? ''"
+            [minLength]="formConfig.leaveName.minLength"
+            [maxLength]="formConfig.leaveName.maxLength"
+            [isRequired]="formConfig.leaveName.isRequired!"
+          >
+          </ui-text-box>
+        }
+     <!-- Description -->
+        @if (!formConfig.description.isHide) {
+          <ui-text-area
+            [id]="formConfig.description.id"
+            [parentFormGroup]="form"
+            [label]="formConfig.description.label!"
+            [placeholder]="formConfig.description.placeholder ?? ''"
+            [maxLength]="formConfig.description.maxLength"
+            [isRequired]="formConfig.description.isRequired!"
+          >
+          </ui-text-area>
+        }
+        <!-- Annual Allowance -->
+        @if (!formConfig.annualAllowance.isHide) {
+          <ui-number-box
+            [id]="formConfig.annualAllowance.id"
+            [parentFormGroup]="form"
+            [label]="formConfig.annualAllowance.label!"
+            [placeholder]="formConfig.annualAllowance.placeholder ?? ''"
+            [isRequired]="formConfig.annualAllowance.isRequired!"
+          >
+          </ui-number-box>
+        }
+        <!-- Carry Forward Days -->
+        @if (!formConfig.carryForwardDays.isHide) {
+          <ui-number-box
+            [id]="formConfig.carryForwardDays.id"
+            [parentFormGroup]="form"
+            [label]="formConfig.carryForwardDays.label!"
+            [placeholder]="formConfig.carryForwardDays.placeholder ?? ''"
+            [isRequired]="formConfig.carryForwardDays.isRequired!"
+          >
+          </ui-number-box>
+        }
+        <!-- Enhancement Allowed -->
+        @if (!formConfig.enhancementAllowed.isHide) {
+                    <ui-checkbox
+                   [id]="formConfig.enhancementAllowed.id"
+            [parentFormGroup]="form"
+            [label]="formConfig.enhancementAllowed.label!"
+            [isRequired]="formConfig.enhancementAllowed.isRequired!"
+                ></ui-checkbox>
+        }
+        <!-- Paid Leave -->
+        @if (!formConfig.paidLeave.isHide) {
+      
+            <ui-checkbox
+          [id]="formConfig.paidLeave.id"
+            [parentFormGroup]="form"
+            [label]="formConfig.paidLeave.label!"
+            [isRequired]="formConfig.paidLeave.isRequired!"
+                ></ui-checkbox>
+        }
+       <!-- Must Be Taken Within -->
+        <hr>
+        @if (!formConfig.mustBeTakenWithinMonths.isHide) {
+          <ui-number-box
+            [id]="formConfig.mustBeTakenWithinMonths.id"
+            [parentFormGroup]="form"
+            [label]="formConfig.mustBeTakenWithinMonths.label!"
+            [placeholder]="formConfig.mustBeTakenWithinMonths.placeholder ?? ''"
+            [isRequired]="formConfig.mustBeTakenWithinMonths.isRequired!"
+          >
+          </ui-number-box>
+        }
+        <!-- Allowance Based On -->
+        @if (!formConfig.allowanceBasedOn.isHide) {
+
+          <ui-dropdown
+            [id]="formConfig.allowanceBasedOn.id"
+            [parentFormGroup]="form"
+            [label]="formConfig.allowanceBasedOn.label!"
+            [placeholder]="formConfig.allowanceBasedOn.placeholder ?? ''"
+            [isRequired]="formConfig.allowanceBasedOn.isRequired!"
+          >
+          </ui-dropdown>
+        }
+        <!-- Employment Type -->
+        @if (!formConfig.employmentTypes.isHide) {
+          <ui-dropdown
+            [id]="formConfig.employmentTypes.id"
+            [parentFormGroup]="form"
+            [label]="formConfig.employmentTypes.label!"
+            [placeholder]="formConfig.employmentTypes.placeholder ?? ''"
+            [isRequired]="formConfig.employmentTypes.isRequired!"
+          >
+          </ui-dropdown>
+        }
+        <!-- Approval Required -->
+        @if (!formConfig.approvalRequired.isHide) {
+          <ui-dropdown
+            [id]="formConfig.approvalRequired.id"
+            [parentFormGroup]="form"
+            [label]="formConfig.approvalRequired.label!"
+            [placeholder]="formConfig.approvalRequired.placeholder ?? ''"
+            [isRequired]="formConfig.approvalRequired.isRequired!"
+          >
+          </ui-dropdown>
+        }
+        <!-- Any Certificates -->
+        @if (!formConfig.anyCertificates.isHide) {
+          <ui-checkbox
+                [id]="formConfig.anyCertificates.id"
+            [parentFormGroup]="form"
+            [label]="formConfig.anyCertificates.label!"
+            [isRequired]="formConfig.anyCertificates.isRequired!"
+          >
+          </ui-checkbox>
+        }
+        <!-- Certificate Required After Days -->
+
+             @if (
+          !formConfig.certificateRequiredAfterDays.isHide
+          &&
+          form.get('anyCertificates')?.value
+        ) {
+
+           <div class="bg-blue-50/50 border border-blue-500 rounded-xl p-4 flex flex-col gap-2 ml-8">
+  <p class="text-blue-600 font-semibold text-sm">Certificate Required After (days)</p>
+          <ui-number-box
+            [id]="formConfig.certificateRequiredAfterDays.id"
+            [parentFormGroup]="form"
+            [label]="formConfig.certificateRequiredAfterDays.label!"
+            [placeholder]="formConfig.certificateRequiredAfterDays.placeholder ?? ''"
+            [isRequired]="formConfig.certificateRequiredAfterDays.isRequired!"
+          >
+          </ui-number-box>
+          </div>
+        }
+       
+       
+      </div>
+    </form>
+  }
+  <div
+    class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200"
+  >
+    <ui-text-button
+      text="Cancel"
+      variant="secondary"
+      (buttonClick)="closeForm()"
+    >
+    </ui-text-button>
+    <ui-text-button
+      text="Save Leave"
+      (buttonClick)="saveLeave()"
+    >
+    </ui-text-button>
+  </div>
+</div>
