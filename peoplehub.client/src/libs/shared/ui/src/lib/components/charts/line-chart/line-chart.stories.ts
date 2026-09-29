@@ -1,99 +1,36 @@
-import { Meta, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular';
 import { LineChartComponent } from './line-chart.component';
-
-type Story = StoryObj<LineChartComponent>;
+// import { LineChartComponent } from '../../../app/common-ui/charts/line-chart/line-chart.component';
 
 const meta: Meta<LineChartComponent> = {
+  title: 'Common-UI/Charts/Line Chart',
   component: LineChartComponent,
-  title: 'UI/Charts/Line Chart',
-  tags: ['autodocs'],
+   tags: ['autodocs'],
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
   },
-  argTypes: {
-    labels: {
-      control: 'text',
-      description: 'labels property',
-    },
-    data: {
-      control: 'text',
-      description: 'data property',
-    },
-    colors: {
-      control: 'text',
-      description: 'colors property',
-    },
-    lineStyles: {
-      control: 'text',
-      description: 'lineStyles property',
-    },
-    visible: {
-      control: 'text',
-      description: 'visible property',
-    },
-    seriesLabels: {
-      control: 'text',
-      description: 'seriesLabels property',
-    },
-    lineThickness: {
-      control: 'text',
-      description: 'lineThickness property',
-    },
-    legendShapes: {
-      control: 'text',
-      description: 'legendShapes property',
-    },
-    yAxisLabels: {
-      control: 'text',
-      description: 'yAxisLabels property',
-    },
-    showDataPoints: {
-      control: 'boolean',
-      description: 'showDataPoints property',
-    },
-    yAxisStep: {
-      control: 'text',
-      description: 'yAxisStep property',
-    },
-    showYAxisLine: {
-      control: 'boolean',
-      description: 'showYAxisLine property',
-    },
-  },
+  args: {},
 };
 
 export default meta;
+type Story = StoryObj<LineChartComponent>;
 
-export const Default: Story = {
-  args: {
-    labels: [],
-    data: [],
-    colors: [],
-    lineStyles: [],
-    visible: [],
-    seriesLabels: [],
-    lineThickness: [],
-    legendShapes: [],
-    yAxisLabels: [],
-    showDataPoints: true,
-    yAxisStep: null,
-    showYAxisLine: true
-},
-};
-
-export const Colored: Story = {
-  args: {
-    labels: [],
-    data: [],
-    colors: [],
-    lineStyles: [],
-    visible: [],
-    seriesLabels: [],
-    lineThickness: [],
-    legendShapes: [],
-    yAxisLabels: [],
-    showDataPoints: true,
-    yAxisStep: null,
-    showYAxisLine: true
-},
+export const LineChart: Story = {
+args: {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+    yAxisLabels: ['0', '100k', '200k', '300k', '400k', '500k'],
+    seriesLabels: ['Revenue', 'Expenses', 'Profit'],
+    data: [
+      [300, 200, 100, 250, 300, 350, 500],
+      [200, 150, 180, 220, 260, 300, 400],
+      [100, 80, 70, 150, 200, 250, 350],
+    ],
+    colors: ['orange', 'blue', 'green'],
+    lineStyles: ['solid', 'dotted', 'dashed'],
+    visible: [true, true, true],
+    lineThickness: [2, 2, 2],
+    legendShapes: ['rectRounded', 'rectRounded', 'rectRounded'],
+    // yAxisStep:2,
+    showYAxisLine : true
+  },
 };

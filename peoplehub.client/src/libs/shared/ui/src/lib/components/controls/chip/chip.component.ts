@@ -22,7 +22,7 @@ import {
 export class ChipComponent implements OnChanges, OnInit {
 
   @Input() text?: string = 'text';
-
+  @Input() borderColor?: string;
 
   private readonly defaultTextColor = '#6b7280';
 

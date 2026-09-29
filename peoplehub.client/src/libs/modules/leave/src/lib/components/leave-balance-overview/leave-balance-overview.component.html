@@ -1,0 +1,199 @@
+<!-- <div class="leave-balance-container">
+    <div class="header">
+    <h3>Leave Balance Overview</h3>
+    <orms-button [text]="'Request Leave'" [bgColor]="'#030213'" [color]="'white'" [hoverBGColor]="'#1c1b2b'" [hoverColor]="'white'" [borderRadius]="10" [borderColor]="'#030213'" [showBorder]="false" (click)="goToApplyLeave()" [iconName]="'arrow_narrow_right'" [iconPosition]="'right'"></orms-button>
+    </div>
+    <div class="grid">
+    <orms-count-widget [label]="'Total Days'" [value]="leaveBalance.totalDays" [valueColor]="'blue'" [showBorder]="false"></orms-count-widget>
+    <orms-count-widget [label]="'Remaining'" [value]="leaveBalance.remainingDays" [valueColor]="'green'" [showBorder]="false"></orms-count-widget>
+    <orms-count-widget [label]="'Used'" [value]="leaveBalance.usedDays" [valueColor]="'#4c5665'" [showBorder]="false"></orms-count-widget>
+    <orms-count-widget [label]="'Pending'" [value]="leaveBalance.pendingDays" [valueColor]="'red'" [showBorder]="false"></orms-count-widget>
+    </div>
+    <div>
+    <orms-progress-bar [total]="leaveBalance.totalDays" [used]="leaveBalance.usedDays" [barColor]="'black'" [remainingTextColor]="'#353d43'"></orms-progress-bar>
+    </div>
+</div>
+   
+<div class="leave-balance-container-spin">
+  <div class="stats-grid">
+
+    
+<div
+  class="stat-card"
+  [style.--card-color]="leaveData.todayPresent?.color ?? '#3b82f6'"
+>
+  <div class="stat-left">
+    <h2>
+      {{ leaveData.todayPresent?.count ?? 0 }}
+      <span>/{{ leaveData.todayPresent?.total ?? 0 }}</span>
+    </h2>
+
+    <p [style.color]="leaveData.todayPresent?.color ?? '#6B7280'">
+      {{ leaveData.todayPresent?.labelName ?? '' }}
+    </p>
+  </div>
+
+  <div class="chart-box">
+    <orms-spinning-chart
+      [percentage]="getPercentage(
+        leaveData.todayPresent?.count,
+        leaveData.todayPresent?.total
+      )"
+      [completedColor]="leaveData.todayPresent?.color ?? '#E5E7EB'"
+      [width]="150"
+      [height]="150">
+    </orms-spinning-chart>
+  </div>
+</div>
+
+
+
+  
+    <div
+  class="stat-card"
+  [style.--card-color]="leaveData.plannedLeaves?.color ?? '#ef4444'"
+>
+  <div class="stat-left">
+    <h2>
+      {{ leaveData.plannedLeaves?.count ?? 0 }}
+      <span>/{{ leaveData.plannedLeaves?.total ?? 0 }}</span>
+    </h2>
+
+    <p [style.color]="leaveData.plannedLeaves?.color ?? '#6B7280'">
+      {{ leaveData.plannedLeaves?.labelName ?? '' }}
+    </p>
+  </div>
+
+  <div class="chart-box">
+    <orms-spinning-chart
+      [percentage]="getPercentage(
+        leaveData.plannedLeaves?.count,
+        leaveData.plannedLeaves?.total
+      )"
+      [completedColor]="leaveData.plannedLeaves?.color ?? '#E5E7EB'"
+      [width]="150"
+      [height]="150">
+    </orms-spinning-chart>
+  </div>
+</div>
+
+
+   <div
+  class="stat-card"
+  [style.--card-color]="leaveData.unplannedLeaves?.color ?? '#06b6d4'"
+>
+  <div class="stat-left">
+    <h2>
+      {{ leaveData.unplannedLeaves?.count ?? 0 }}
+      <span>/{{ leaveData.unplannedLeaves?.total ?? 0 }}</span>
+    </h2>
+
+    <p [style.color]="leaveData.unplannedLeaves?.color ?? '#6B7280'">
+      {{ leaveData.unplannedLeaves?.labelName ?? '' }}
+    </p>
+  </div>
+
+  <div class="chart-box">
+    <orms-spinning-chart
+      [percentage]="getPercentage(
+        leaveData.unplannedLeaves?.count,
+        leaveData.unplannedLeaves?.total
+      )"
+      [completedColor]="leaveData.unplannedLeaves?.color ?? '#E5E7EB'"
+      [width]="150"
+      [height]="150">
+    </orms-spinning-chart>
+  </div>
+</div>
+
+
+   <div
+  class="stat-card"
+  [style.--card-color]="leaveData.pendingRequests?.color ?? '#f97316'"
+>
+  <div class="stat-left">
+    <h2>
+      {{ leaveData.pendingRequests?.count ?? 0 }}
+      <span>/{{ leaveData.pendingRequests?.total ?? 0 }}</span>
+    </h2>
+
+    <p [style.color]="leaveData.pendingRequests?.color ?? '#6B7280'">
+      {{ leaveData.pendingRequests?.labelName ?? '' }}
+    </p>
+  </div>
+
+  <div class="chart-box">
+    <orms-spinning-chart
+      [percentage]="getPercentage(
+        leaveData.pendingRequests?.count,
+        leaveData.pendingRequests?.total
+      )"
+      [completedColor]="leaveData.pendingRequests?.color ?? '#E5E7EB'"
+      [width]="150"
+      [height]="150">
+    </orms-spinning-chart>
+  </div>
+</div>
+</div> -->
+
+
+
+<!-- <div class="leave-card">
+  <div class="leave-header">
+    <h2 style="font-size: 14px;">Leave Balance overview</h2>
+    <ui-dropdown
+      [dropdownValues]="[{value: '2026', isDefault: false, textColor: 'blue', backgroundColor: 'black', isDisabled: false}, {value: '2025', isDefault: true, textColor: 'green', backgroundColor: 'black', isDisabled: false}, {value: '2024', isDefault: true, textColor: 'orange', backgroundColor: 'red', isDisabled: false}]"
+      [placeholderText]="'2026'" [textColor]="'#111'" [backgroundColor]="'white'" [activeBackgroundColor]="'#ecf2fd'"
+      [borderColor]="'lightgray'" [activeTextColor]="'#4076ff'" [parentFormGroup]="LeaveBalanceOverview"></ui-dropdown>
+  </div>
+
+  <div class="leave-content">
+    <ui-doughnut-chart[showLegends]="true" [centerText]="true" [showAsValue]="false"
+      [legendData]="[{color: '#ffb6c1', value: 40, label: 'Used'}, {color: '#fff09c', value: 30, label: 'Pending'}, {color: '#acefac', value: 30, label: 'Remaining'}]"
+      [activeLabel]="'Total Leaves'"></orms-doughnut-chart>
+  </div>
+
+  <div class="leave-footer">
+    <h3>Here you can request for a leave</h3>
+    <orms-button [text]="'Request Leave'" [bgColor]="'#030213'" [color]="'white'" [hoverBGColor]="'#1c1b2b'"
+      [hoverColor]="'white'" [borderRadius]="10" [borderColor]="'#030213'" [showBorder]="false"
+      (click)="goToApplyLeave()" [iconName]="'arrow_narrow_right'" [iconPosition]="'right'"></orms-button>
+  </div>
+</div>
+ -->
+
+
+
+
+
+
+
+
+
+<div class="w-full rounded-[20px] py-5 px-[25px]">
+  <div class="flex flex-wrap items-center justify-between mb-5">
+    <h2 class="m-0 text-sm font-semibold text-[var(--text-color)]">Leave Balance overview</h2>
+    <ui-dropdown
+      [dropdownValues]="[{value: '2026', isDefault: false, textColor: 'blue', backgroundColor: 'black', isDisabled: false}, {value: '2025', isDefault: true, textColor: 'green', backgroundColor: 'black', isDisabled: false}, {value: '2024', isDefault: true, textColor: 'orange', backgroundColor: 'red', isDisabled: false}]"
+      [placeholderText]="'2026'" [textColor]="'#111'" [backgroundColor]="'white'" [activeBackgroundColor]="'#ecf2fd'"
+      [borderColor]="'lightgray'" [activeTextColor]="'#4076ff'" [parentFormGroup]="LeaveBalanceOverview">
+    </ui-dropdown>
+  </div>
+
+  <div class="flex items-center justify-center w-full my-[25px]">
+    <ui-doughnut-chart
+      class="w-full h-auto max-w-full min-[1231px]:w-[300px] min-[1231px]:h-[230px]"
+      [showLegends]="true" [centerText]="true" [showAsValue]="false"
+      [legendData]="[{color: '#ffb6c1', value: 40, label: 'Used'}, {color: '#fff09c', value: 30, label: 'Pending'}, {color: '#acefac', value: 30, label: 'Remaining'}]"
+      [activeLabel]="'Total Leaves'">
+    </ui-doughnut-chart>
+  </div>
+
+  <div class="flex flex-wrap items-center justify-between gap-2.5 pt-5 px-5 pb-0 -mx-[25px] border-t border-gray-200">
+    <h3 class="m-0 text-base font-medium text-[var(--text-color)]">Here you can request for a leave</h3>
+    <ui-text-button  [text]="'Request Leave'" [bgColor]="'#030213'" [color]="'white'" [hoverBGColor]="'#1c1b2b'"
+      [hoverColor]="'white'" [borderRadius]="10" [borderColor]="'#030213'" [showBorder]="false"
+      (click)="goToApplyLeave()" [iconName]="'arrow_narrow_right'" [iconPosition]="'right'">
+    </ui-text-button >
+  </div>
+</div>

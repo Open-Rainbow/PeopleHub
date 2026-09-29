@@ -1,36 +1,41 @@
-import { CommonModule } from '@angular/common';
-import { Component,
-    EventEmitter,
-    HostListener,
-    Input,
-    Output,
-    SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import {
-    BaseCell,
-    FontProperties,
-    IconCell,
-    IconPanelCell,
-    IconPopoverCell,
-    ImageCell,
-    TableCell,
-    TableCellType,
-    TableData,
-    TableRow,
-    TextCell,
-    UserCell,
-    ValueDropdownCell,
-} from '../../../models/table.model';
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+import { PaginationComponent } from '../pagination/pagination.component';
+
+import { ToggleComponent } from '../../controls/toggle/toggle.component';
+
+import { IconButtonPopupComponent } from '../../controls/icon-button-popup/icon-button-popup.component';
+import { IconButtonComponent } from '../../controls/icon-button/icon-button.component';
+import { ChipComponent } from '../../controls/chip/chip.component';
+import { IconComponent } from '../icon/icon.component';
+import { TableData } from '../../../models/table.types';
+import { BaseCell, FontProperties, IconCell, IconPopoverCell, ImageCell, TableCell, TableCellType, TableRow, TextCell, UserCell, ValueDropdownCell } from '../../../models/table.model';
+type PopupTarget = { type: 'day' | 'leave' | 'name'; index?: number } | null;
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'ui-table',
+  selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
+    IconComponent,
+    PaginationComponent,
+    ToggleComponent,
+
+    IconButtonPopupComponent,
+    IconButtonComponent,
+    ChipComponent,
   ],
 })
 export class TableComponent {
@@ -45,14 +50,14 @@ export class TableComponent {
   leaveSortState: number = 0;
   @Input() topPagination: boolean = true;
   @Input() bottomPagination: boolean = true;
-  @Input() showSerialNo: boolean = true;
+  @Input() showserialNo: boolean = true;
   @Input() showUndoRedo: boolean = true;
   @Input() canDrag: boolean = false;
   @Input() showCheckbox: boolean = true;
   @Input() alternateRowColor: boolean = true;
   @Input() customRowColor: string = '#dbeafe';
-  @Input() thRadius: string = '';
-  @Input() trRadius: string = '';
+  @Input() thradius: string = '';
+  @Input() trradius: string = '';
   dragOverIndex: number = -1;
 
   selectedRows: Set<BaseCell[]> = new Set();
@@ -103,23 +108,33 @@ export class TableComponent {
     }
 
     if (!this.tableHeaders || this.tableHeaders.length === 0) {
-      this.tableHeaders = this.tableData[0].map((col: any) => ({
+      this.tableHeaders = this.tableData[0].map((col) => ({
+        // colName: col.colName,
+        // type: col.type,
+        // showColIcon: col.showColIcon,
+        // colIconName: col.colIconName,
+        // colIconName2: col.colIconName2,
+        // hoverIconName: col.hoverIconName,
+        // showHoverIcon: col.showHoverIcon,
+        // freeze: col.freeze,
+        // thProperties: col.thProperties,
 
         colName: col.colName,
         showColIcon: col.showColIcon,
         colIconName: col.colIconName,
         colIconName2: col.colIconName2,
         hoverIconName: col.hoverIconName,
+        // showHoverIcon: col.showHoverIcon,
         showHoverIcon: false,
         freeze: col.freeze,
         thProperties: col.thProperties,
         colClickIconName: col.colClickIconName,
         colClickIconName2: col.colClickIconName2,
         tdProperties: col.tdProperties,
-        tdColspan: col.tdColspan,
-        thColspan: col.thColspan,
-        thRowSpan: col.thRowSpan,
-        tdRowSpan: col.tdRowSpan,
+        tdColspan: col.tdColSpan,
+        thColspan: col.thColSpan,
+        thRowspan: col.thRowSpan,
+        tdRowspan: col.tdRowSpan,
         thHidden: col.thHidden,
         tdHidden: col.tdHidden,
         isLink: col.isLink,
@@ -135,7 +150,7 @@ export class TableComponent {
   }
   activePanelCell: any = null;
   @HostListener('document:click', ['$event'])
-  onClickOutside(event?: Event) {
+  onClickOutside(event: Event) {
     this.activePanelCell = null;
   }
 
@@ -154,12 +169,27 @@ export class TableComponent {
   asIcon(cell: TableCell): IconCell {
     return cell as IconCell;
   }
-  asIconPopover(cell: TableCell): IconPopoverCell {
+  asiconPopover(cell: TableCell): IconPopoverCell {
     return cell as IconPopoverCell;
   }
-  asIconPanel(cell: TableCell): IconPanelCell {
-    return cell as IconPanelCell;
+  asiconPannel(cell: TableCell): IconPopoverCell {
+    return cell as IconPopoverCell;
   }
+
+  // sortEmployeeName(): void {
+  //   this.count++;
+  //   const data = this.getDeepCopy(this.originalTable);
+  //   if (this.count === 1) {
+  //     this.sortedTable = data.sort((a, b) => (a[0].value || '').toString().localeCompare((b[0].value || '').toString()));
+  //   } else if (this.count === 2) {
+  //     this.sortedTable = data.sort((a, b) => (b[0].value || '').toString().localeCompare((a[0].value || '').toString()));
+  //   } else {
+  //     this.sortedTable = [];
+  //     this.count = 0;
+  //   }
+  //   this.currentPage = 1;
+  //   this.processTableData();
+  // }
 
   sortEmployeeName(): void {
     this.count++;
@@ -168,7 +198,7 @@ export class TableComponent {
     const data = this.getDeepCopy(this.originalTable);
 
     if (this.count === 1 || this.count === 2) {
-      this.sortedTable = data.sort((a: any, b: any) => {
+      this.sortedTable = data.sort((a, b) => {
         const valA: any = a[0]?.value;
         const valB: any = b[0]?.value;
 
@@ -191,6 +221,27 @@ export class TableComponent {
     this.processTableData();
   }
 
+  // sortColumn(colIndex: number): void {
+  //   if (colIndex === 0) return;
+  //   this.colSortState = this.currentSortColIndex !== colIndex ? 1 : (this.colSortState + 1) % 3;
+  //   this.currentSortColIndex = colIndex;
+
+  //   if (this.colSortState === 0) {
+  //     this.sortedTable = [];
+  //   }
+
+  //   else {
+  //     const data = this.getDeepCopy(this.originalTable);
+  //     if(data == 'Apply Date' && ){}
+  //     this.sortedTable = data.sort((a, b) => {
+  //       const vA = (a[colIndex]?.value || '').toString().toLowerCase();
+  //       const vB = (b[colIndex]?.value || '').toString().toLowerCase();
+  //       return this.colSortState === 1 ? vA.localeCompare(vB) : vB.localeCompare(vA);
+  //     });
+  //   }
+  //   this.currentPage = 1;
+  // }
+
   sortColumn(colIndex: number): void {
     if (colIndex === 0) {
       this.sortEmployeeName();
@@ -212,7 +263,7 @@ export class TableComponent {
         colHeader.includes('end') ||
         colHeader.includes('applied');
 
-      this.sortedTable = data.sort((a: any, b: any) => {
+      this.sortedTable = data.sort((a, b) => {
         const cellA = a[colIndex];
         const cellB = b[colIndex];
 
@@ -257,7 +308,7 @@ export class TableComponent {
     );
   }
 
-  thCheck() {
+  thcheck() {
     const allOnPage = this.isCurrentPageSelected;
     this.tableRows.forEach((row: TableRow) => {
       if (allOnPage) {
@@ -340,7 +391,7 @@ export class TableComponent {
   }
 
   private getDeepCopy(data: TableData): TableData {
-    return data.map((row: any) => [...row]);
+    return data.map((row) => [...row]);
   }
 
   getFontStyles(font?: FontProperties): any {
@@ -362,19 +413,19 @@ export class TableComponent {
     this.processTableData();
   }
 
-  trackByFn(index: number) {
+  trackByFn(index: number, item: any) {
     return index;
   }
 
   getDefaultDropdownValue(cell: ValueDropdownCell): any {
-    const defaultOption = cell.options.find((opt: any) => opt.isDefault);
+    const defaultOption = cell.options.find((opt) => opt.isDefault);
     return defaultOption ? defaultOption.value : cell.value;
   }
 
   onDropdownChange(row: TableRow, cell: ValueDropdownCell, newValue: any) {
     cell.value = newValue;
 
-    cell.options.forEach((opt: any) => {
+    cell.options.forEach((opt) => {
       opt.isDefault = opt.value === newValue;
     });
 

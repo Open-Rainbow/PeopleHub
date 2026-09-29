@@ -1,14 +1,27 @@
 ﻿import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ToggleComponent, DropdownComponent, NumberBoxComponent, TextButtonComponent, IconTextButtonComponent, AccordionComponent, ChipComponent } from 'ui';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { LeaveCategory, LeaveItem, LeaveManagementSummary } from '../../config/form-configs/leave-management.types';
-import { AccordionGroupComponent } from '../../../../../../shared/ui/src/lib/components/primitives/accordion/accordion-group.component';
+import {ReactiveFormsModule,} from '@angular/forms';
+import { ToggleComponent, DropdownComponent, NumberBoxComponent, TextButtonComponent, IconTextButtonComponent, AccordionComponent, ChipComponent,} from 'ui';
+import { LeaveCategory, LeaveItem, LeaveManagementSummary,} from '../../config/form-configs/leave-management.types';
+import { AccordionGroupComponent,} from '../../../../../../shared/ui/src/lib/components/primitives/accordion/accordion-group.component';
+import { AddLeaveType } from '../add-leave-type/add-leave-type';
 
 @Component({
   selector: 'leave-management-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ToggleComponent, DropdownComponent, NumberBoxComponent, TextButtonComponent, IconTextButtonComponent,AccordionComponent,AccordionGroupComponent,ChipComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ToggleComponent,
+    DropdownComponent,
+    NumberBoxComponent,
+    TextButtonComponent,
+    IconTextButtonComponent,
+    AccordionComponent,
+    AccordionGroupComponent,
+    ChipComponent,
+    AddLeaveType
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './leave-management.component.html',
 })
@@ -17,16 +30,12 @@ export class LeaveManagementComponent {
 
   selectedYear = this.currentYear;
 
-  selectedEmploymentType = 'Full-Time';
-
+  selectedEmploymentType = 1;
 
   readonly years = Array.from(
     { length: 5 },
     (_, index) => this.currentYear - index,
   );
-
-
-
 
   readonly employmentTypes = [
     'Full-Time',
@@ -34,15 +43,17 @@ export class LeaveManagementComponent {
     'Contract',
   ];
 
-    readonly employmentTypeDropdownOptions = this.employmentTypes.map(type => ({
-    label: type,
-    value: type,
-  })); 
+  readonly employmentTypeDropdownOptions = [
+    { name: 'Full-Time', value: 1 },
+    { name: 'Part-Time', value: 2 },
+    { name: 'Contract', value: 3 },
+  ];
 
-  readonly yearDropdownOptions = this.years.map(year => ({
-  name: String(year),
-  value: year,
-}));
+  readonly yearDropdownOptions = this.years.map(
+    year => ({
+      name: String(year),
+      value: year,
+    }));
 
   categories: LeaveCategory[] = [
     {
@@ -162,35 +173,39 @@ export class LeaveManagementComponent {
   }
 
 
-  // toggleCategory(
-  //   categoryId: string,
-  // ): void {
+  onYearChange(value: unknown): void {
 
-  //   const category = this.categories.find(
-  //     item => item.id === categoryId,
-  //   );
+    const year = Number(value);
+    if (
+      Number.isFinite(year) &&
+      this.years.includes(year)
+    ) {
+      this.selectedYear = year;
+    }
+  }
+  onEmploymentTypeChange(value: unknown): void {
 
-  //   if (!category) {
-  //     return;
-  //   }
+    const employmentTypeId = Number(value);
 
-  //   category.expanded = !category.expanded;
-  // }
+    const isValid =
+      this.employmentTypeDropdownOptions.some(
+        option => option.value === employmentTypeId,
+      );
 
+    if (isValid) {
+      this.selectedEmploymentType = employmentTypeId;
+    }
+  }
 
- onYearChange(event: Event): void {
-  const value = (
-    event.target as HTMLSelectElement
-  ).value;
+  get selectedEmploymentTypeName(): string {
+    return (
+      this.employmentTypeDropdownOptions.find(
+        option =>
+          option.value === this.selectedEmploymentType,
+      )?.name ?? ''
+    );
+  }
 
-  this.selectedYear = Number(value);
-}
-
-onEmploymentTypeChange(event: Event): void {
-  this.selectedEmploymentType = (
-    event.target as HTMLSelectElement
-  ).value;
-}
 
 createNewYearPolicy(): void {
 
@@ -203,36 +218,35 @@ createNewYearPolicy(): void {
 
   saveDraft(): void {
 
-    console.log(
-      'Save draft',
-      {
-        year: this.selectedYear,
-        employmentType:
-          this.selectedEmploymentType,
-        leaves: this.leaves,
-      },
-    );
+    console.log('Save draft', {
+      year: this.selectedYear,
+      employmentType: this.selectedEmploymentTypeName,
+      leaves: this.leaves,
+    });
   }
-
 
   publishPolicy(): void {
 
-    console.log(
-      'Publish policy',
-      {
-        year: this.selectedYear,
-        employmentType:
-          this.selectedEmploymentType,
-        leaves: this.leaves,
-      },
-    );
+    console.log('Publish policy', {
+      year: this.selectedYear,
+      employmentType: this.selectedEmploymentTypeName,
+      leaves: this.leaves,
+    });
   }
 
+showAddLeave = false;
 
-  addLeave(): void {
-
-    console.log('Add Leave clicked');
-  }
+addLeave(): void {
+  this.showAddLeave = true;
 }
 
+closeAddLeave(): void {
+  this.showAddLeave = false;
+}
 
+onSaveLeave(leaveData: Record<string, unknown>): void {
+  console.log('Leave saved:', leaveData);
+
+  this.showAddLeave = false;
+}
+}

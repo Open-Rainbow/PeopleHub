@@ -1,29 +1,33 @@
-import { Component,
-    ElementRef,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    SimpleChanges,
-    ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { httpResource } from '@angular/common/http';
 import {
-    CategoryScale,
-    Chart,
-    ChartConfiguration,
-    Legend,
-    LinearScale,
-    LineController,
-    LineElement,
-    PointElement,
-    Title,
-    Tooltip,
-    TooltipModel,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import {
+  Chart,
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+  CategoryScale,
+  Tooltip,
+  Legend,
+  ChartConfiguration,
+  TooltipModel,
 } from 'chart.js';
-import type { LegendShape } from '../../../models/component-models/chart-grid-options.model';
+import { formatFileContent } from 'storybook/internal/common';
+
+type LegendShape = 'circle' | 'rectRounded' | 'rect';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'ui-line-chart',
+  selector: 'line-chart',
   standalone: true,
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
@@ -94,11 +98,11 @@ export class LineChartComponent implements OnInit, OnChanges, OnDestroy {
 
           ctx.save();
           ctx.beginPath();
-          ctx.setLineDash([4, 4]);
+          ctx.setLineDash([4, 4]); // Dotted pattern
           ctx.moveTo(x, topY);
           ctx.lineTo(x, bottomY);
           ctx.lineWidth = 1;
-          ctx.strokeStyle = '#9ca3af';
+          ctx.strokeStyle = '#9ca3af'; // Gray line color
           ctx.stroke();
           ctx.restore();
         }
@@ -119,7 +123,7 @@ export class LineChartComponent implements OnInit, OnChanges, OnDestroy {
         interaction: { mode: 'index', intersect: false },
         plugins: {
           tooltip: {
-            enabled: false,
+            enabled: false, // Disable default canvas tooltip
             external: (context) => this.externalTooltipHandler(context),
           },
           legend: {
@@ -321,6 +325,8 @@ export class LineChartComponent implements OnInit, OnChanges, OnDestroy {
       
       
       yScale.ticks.stepSize = this.yAxisStep ?? undefined;
+      
+      // Add these lines to dynamically toggle the axis line:
       if (yScale.border) yScale.border.display = this.showYAxisLine;
      
     }
