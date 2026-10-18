@@ -15,7 +15,6 @@ const addEmployeeSectionRoutes = [
   'temp-login-credentials',
   'separation',
   'assets',
-  'custom-fields-additional',
   'change-requests-audit',
 ];
 
@@ -125,13 +124,6 @@ const addEmployeeChildRoutes: Routes = [
     loadComponent: () =>
       import('../../libs/modules/employees/src/lib/components/assets/assets.component').then(
         (m) => m.AssetsComponent,
-      ),
-  },
-  {
-    path: 'custom-fields-additional',
-    loadComponent: () =>
-      import('../../libs/modules/employees/src/lib/components/custom-fields-additional/custom-fields-additional.component').then(
-        (m) => m.CustomFieldsAdditionalComponent,
       ),
   },
   {
