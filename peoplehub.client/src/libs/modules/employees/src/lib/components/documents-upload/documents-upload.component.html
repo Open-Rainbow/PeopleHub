@@ -1,15 +1,8 @@
-<div class="w-full h-full bg-white rounded-[25px] p-5 border border-gray-200 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in-out hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]">
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 p-5">
+<div class="bg-white rounded-2xl border border-gray-200">
+  <p class="ae-group-title">Identity proofs</p>
+  <p class="text-xs text-slate-500 -mt-2 mb-4">Enter the number and upload a scan for each document.</p>
 
-    @if (!formConfig.employeePhoto.isHide) {
-      <ui-file-upload
-        [id]="formConfig.employeePhoto.id"
-        [parentFormGroup]="documentsUpload"
-        [label]="formConfig.employeePhoto.label!"
-        [isRequired]="formConfig.employeePhoto.isRequired!"
-      ></ui-file-upload>
-    }
-
+  <div class="ae-keep-cols grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-[1.125rem]">
     @if (!formConfig.employeePanNumber.isHide) {
       <ui-text-box
         [id]="formConfig.employeePanNumber.id"
@@ -66,22 +59,28 @@
         [isRequired]="formConfig.employeePassport.isRequired!"
       ></ui-file-upload>
     }
+  </div>
 
-    @if (!formConfig.last6monthsBankStatements.isHide) {
+  <hr class="my-6 border-[#eef0f4]" />
+
+  <p class="ae-group-title">Employment &amp; financial documents</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    @if (!formConfig.employeePhoto.isHide) {
       <ui-file-upload
-        [id]="formConfig.last6monthsBankStatements.id"
+        [id]="formConfig.employeePhoto.id"
         [parentFormGroup]="documentsUpload"
-        [label]="formConfig.last6monthsBankStatements.label!"
-        [isRequired]="formConfig.last6monthsBankStatements.isRequired!"
+        [label]="formConfig.employeePhoto.label!"
+        [isRequired]="formConfig.employeePhoto.isRequired!"
       ></ui-file-upload>
     }
 
-    @if (!formConfig.last3monthsPayslips.isHide) {
+    @if (!formConfig.offerLetter.isHide) {
       <ui-file-upload
-        [id]="formConfig.last3monthsPayslips.id"
+        [id]="formConfig.offerLetter.id"
         [parentFormGroup]="documentsUpload"
-        [label]="formConfig.last3monthsPayslips.label!"
-        [isRequired]="formConfig.last3monthsPayslips.isRequired!"
+        [label]="formConfig.offerLetter.label!"
+        [isRequired]="formConfig.offerLetter.isRequired!"
       ></ui-file-upload>
     }
 
@@ -103,14 +102,22 @@
       ></ui-file-upload>
     }
 
-    @if (!formConfig.offerLetter.isHide) {
+    @if (!formConfig.last3monthsPayslips.isHide) {
       <ui-file-upload
-        [id]="formConfig.offerLetter.id"
+        [id]="formConfig.last3monthsPayslips.id"
         [parentFormGroup]="documentsUpload"
-        [label]="formConfig.offerLetter.label!"
-        [isRequired]="formConfig.offerLetter.isRequired!"
+        [label]="formConfig.last3monthsPayslips.label!"
+        [isRequired]="formConfig.last3monthsPayslips.isRequired!"
       ></ui-file-upload>
     }
 
+    @if (!formConfig.last6monthsBankStatements.isHide) {
+      <ui-file-upload
+        [id]="formConfig.last6monthsBankStatements.id"
+        [parentFormGroup]="documentsUpload"
+        [label]="formConfig.last6monthsBankStatements.label!"
+        [isRequired]="formConfig.last6monthsBankStatements.isRequired!"
+      ></ui-file-upload>
+    }
   </div>
 </div>

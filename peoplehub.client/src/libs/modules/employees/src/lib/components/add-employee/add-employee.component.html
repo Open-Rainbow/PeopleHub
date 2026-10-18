@@ -5,12 +5,22 @@
     (toastClosed)="removeToast($event)"
   ></ui-toast-stack>
 
-  <!-- Stepper stays pinned while the form scrolls; scrolls on its own if taller than the viewport -->
-  <aside class="sticky top-0 self-start shrink-0 max-h-[calc(100dvh-124px)] overflow-y-auto">
+  <!-- Stepper stays pinned while the form scrolls -->
+  <aside class="sticky top-0 self-start shrink-0">
     <employees-stepper></employees-stepper>
   </aside>
 
-  <section class="flex-1 min-w-0 flex flex-col gap-4">
+  <section class="ae-content flex-1 min-w-0 flex flex-col gap-4">
+    <header class="ae-step-header">
+      <p class="text-[12px] font-semibold uppercase tracking-wide text-blue-600">
+        Step {{ stepIndex() + 1 }} of {{ stepCount }}
+      </p>
+      <h2 class="text-[20px] font-semibold text-gray-900 mt-0.5">{{ currentStep().title }}</h2>
+      @if (stepDescription()) {
+        <p class="text-[13px] text-gray-500 mt-0.5">{{ stepDescription() }}</p>
+      }
+    </header>
+
     <router-outlet (activate)="onComponentActivate($event)"></router-outlet>
 
     <employees-button-navigation

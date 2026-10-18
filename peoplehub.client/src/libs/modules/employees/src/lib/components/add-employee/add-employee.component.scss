@@ -1,1 +1,99 @@
-// Add-employee layout styles handled via Tailwind utilities in template
+:host {
+  display: block;
+}
+
+.ae-step-header {
+  padding: 0 0.25rem;
+}
+
+/*
+ * Shared look for every step rendered in the router-outlet.
+ * Step templates still use their own Tailwind markup; these rules normalise
+ * spacing, grid behaviour and card styling so all 15 steps look the same.
+ */
+:host ::ng-deep .ae-content {
+  /* root card of each step component */
+  > :not(header):not(router-outlet):not(employees-button-navigation) > div:first-child {
+    padding: 1.5rem !important;
+    border: 1px solid #e6e9ef !important;
+    border-radius: 1rem !important;
+    background-color: var(--color-surface, #fff) !important;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04) !important;
+  }
+
+  /* form grids: as many columns as fit, never narrower than 15rem, so labels stay readable */
+  .grid:not(.ae-keep-cols) {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)) !important;
+    gap: 1.125rem 1rem !important;
+    align-items: start;
+  }
+
+  .grid.p-5 {
+    padding: 0 !important;
+  }
+
+  /* checkbox cells line up with the 40px fields next to them */
+  .grid > .form-group:has(> ui-checkbox) {
+    display: flex !important;
+    align-items: center !important;
+    min-height: 2.5rem;
+    padding: 0 !important;
+  }
+
+  /* text areas always take the full row */
+  .grid > :has(> ui-text-area) {
+    grid-column: 1 / -1;
+    margin-top: 0 !important;
+  }
+
+  .mt-4:has(> ui-text-area),
+  .mt-5:has(> ui-text-area) {
+    margin-top: 1.125rem !important;
+  }
+
+  ui-text-area {
+    width: 100%;
+  }
+
+  /* section titles ("CONTACT INFORMATION", "SALARY STRUCTURE" ...) */
+  p.uppercase,
+  .ae-group-title {
+    margin-bottom: 0.75rem !important;
+    font-size: 0.9375rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    color: var(--color-text-primary) !important;
+  }
+
+  hr {
+    margin-bottom: 1rem !important;
+    border-color: #eef0f4;
+  }
+
+  /* repeatable record cards (Address 1, Skill 1 ...) */
+  section.rounded-2xl {
+    padding: 1.25rem !important;
+    border: 1px solid #e6e9ef !important;
+    border-radius: 0.75rem !important;
+    background-color: #fbfcfe !important;
+    box-shadow: none !important;
+  }
+
+  section.rounded-2xl + section.rounded-2xl {
+    margin-top: 1rem;
+  }
+
+  /* "1 / 3 addresses  [Add Address]" footer */
+  .flex.justify-between.pt-1 {
+    margin-top: 1rem;
+  }
+
+  /* checkbox row helper used by some steps */
+  .ae-checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+    margin-top: 1rem;
+  }
+}

@@ -18,7 +18,6 @@ export * from './lib/components/temp-login-credentials/temp-login-credentials.co
 export * from './lib/components/salary-structure/salary-structure.component';
 export * from './lib/components/separation/separation.component';
 export * from './lib/components/assets/assets.component';
-export * from './lib/components/custom-fields-additional/custom-fields-additional.component';
 export * from './lib/components/change-requests-audit/change-requests-audit.component';
 export * from './lib/components/employee-list/employee-list.component';
 export * from './lib/components/employee-overview/employee-overview.component';
