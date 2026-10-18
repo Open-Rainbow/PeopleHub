@@ -26,24 +26,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [{"glob": "**/*", "input": "public"}],
             "styles": ["src/styles.css"],
-            "scripts": [],
-            "allowedCommonJsDependencies": [
-              "@iconify-icons/tabler",
-              "@iconify/icons-ci",
-              "@iconify/icons-clarity",
-              "@iconify/icons-fluent-mdl2",
-              "@iconify/icons-fluent",
-              "@iconify/icons-heroicons",
-              "@iconify/icons-ic",
-              "@iconify/icons-icon-park-outline",
-              "@iconify/icons-lucide",
-              "@iconify/icons-material-symbols",
-              "@iconify/icons-mdi",
-              "@iconify/icons-mingcute",
-              "@iconify/icons-radix-icons",
-              "@iconify/icons-system-uicons",
-              "@iconify/icons-uil"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
