@@ -1,4 +1,4 @@
-﻿import { IFamilyMemberForm, IDependentForm } from './family-details.model';
+import { IFamilyMemberForm, IDependentForm } from './family-details.model';
 
 export const familyMemberForm: IFamilyMemberForm = {
   memberName: {
@@ -125,7 +125,7 @@ export const familyMemberForm: IFamilyMemberForm = {
     isDisable: false,
     placeholder: 'Any additional notes',
   },
-     memberEmail: {
+  memberEmail: {
     id: 'memberEmail',
     isHide: false,
     readOnly: false,
@@ -139,19 +139,18 @@ export const familyMemberForm: IFamilyMemberForm = {
     isDisable: false,
     placeholder: 'Enter email address',
   },
-   addressSameasEmployee: {
+  addressSameasEmployee: {
     id: 'addressSameasEmployee',
     isHide: false,
     readOnly: false,
     minLength: 0,
-    maxLength: 500,
+    maxLength: 0,
     isRequired: false,
-    label: 'Remarks',
+    label: 'Address same as Employee',
     defaultValue: null,
     fieldValue: null,
-    tabIndex: 10,
+    tabIndex: 11,
     isDisable: false,
-    placeholder: 'Any additional remarks',
   },
 };
 
@@ -290,12 +289,7 @@ export const dependentForm: IDependentForm = {
     isDisable: false,
     placeholder: 'Any additional remarks',
   },
-
-
-
-
-
-   linkedFamilyRecord: {
+  linkedFamilyRecord: {
     id: 'linkedFamilyRecord',
     isHide: false,
     readOnly: false,
@@ -307,9 +301,9 @@ export const dependentForm: IDependentForm = {
     fieldValue: null,
     tabIndex: 10,
     isDisable: false,
-    placeholder: 'linked Family Record',
+    placeholder: 'Linked family record',
   },
-   monthlyIncomeOrPension: {
+  monthlyIncomeOrPension: {
     id: 'monthlyIncomeOrPension',
     isHide: false,
     readOnly: false,
@@ -323,7 +317,7 @@ export const dependentForm: IDependentForm = {
     isDisable: false,
     placeholder: 'Enter monthly income or pension',
   },
-   dependencyEndDate: {
+  dependencyEndDate: {
     id: 'dependencyEndDate',
     isHide: false,
     readOnly: false,
@@ -337,7 +331,7 @@ export const dependentForm: IDependentForm = {
     isDisable: false,
     placeholder: 'Enter dependency end date',
   },
-   proofDocumentLink: {
+  proofDocumentLink: {
     id: 'proofDocumentLink',
     isHide: false,
     readOnly: false,

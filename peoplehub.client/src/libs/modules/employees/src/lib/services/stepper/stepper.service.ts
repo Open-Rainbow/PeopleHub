@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Step, StepperType } from 'ui';
@@ -6,118 +6,21 @@ import { EmployeeDataService } from '../employee-data/employee-data.service';
 
 export const EMPLOYEE_STEPPER_CONFIG: Record<StepperType, Step[]> = {
   addEmployee: [
-    {
-      title: 'Personal Information',
-      route: 'personal-info',
-      status: 'active',
-      isValid: false,
-      icon: 'home',
-    },
-    {
-      title: 'Contact Details',
-      route: 'contact-info',
-      status: 'pending',
-      isValid: false,
-      icon: 'fluent:call-24-regular',
-    },
-    {
-      title: 'Family Details & Dependents',
-      route: 'family-details',
-      status: 'pending',
-      isValid: false,
-      icon: 'carbon:user-multiple',
-    },
-    {
-      title: 'Employment Details',
-      route: 'job-details',
-      status: 'pending',
-      isValid: false,
-      icon: 'mingcute:suitcase-line',
-    },
-    {
-      title: 'Education Details',
-      route: 'education-details',
-      status: 'pending',
-      isValid: false,
-      icon: 'qlementine-icons:education-16',
-    },
-    {
-      title: 'Skills & Competencies',
-      route: 'skills',
-      status: 'pending',
-      isValid: false,
-      icon: 'tabler:brain',
-    },
-    {
-      title: 'Compensation, Payroll & Bank',
-      route: 'salary-structure',
-      status: 'pending',
-      isValid: false,
-      icon: 'bx:dollar',
-    },
-    {
-      title: 'Identity & Statutory Details',
-      route: 'identity-statutory',
-      status: 'pending',
-      isValid: false,
-      icon: 'qlementine-icons:id-card-16',
-    },
-    {
-      title: 'Previous Employment',
-      route: 'work-experience',
-      status: 'pending',
-      isValid: false,
-      icon: 'f7:doc-plaintext',
-    },
-    {
-      title: 'Insurance & Benefits',
-      route: 'insurance-details',
-      status: 'pending',
-      isValid: false,
-      icon: 'healthicons:health-insurance',
-    },
-    {
-      title: 'Employee Documents',
-      route: 'documents-upload',
-      status: 'pending',
-      isValid: false,
-      icon: 'material-symbols:upload-rounded',
-    },
-    {
-      title: 'System Access',
-      route: 'temp-login-credentials',
-      status: 'pending',
-      isValid: false,
-      icon: 'lucide:key',
-    },
-    {
-      title: 'Separation & Exit Management',
-      route: 'separation',
-      status: 'pending',
-      isValid: false,
-      icon: 'tabler:logout',
-    },
-    {
-      title: 'Assets & Compliance',
-      route: 'assets',
-      status: 'pending',
-      isValid: false,
-      icon: 'carbon:asset',
-    },
-    {
-      title: 'Custom Fields / Additional Information',
-      route: 'custom-fields-additional',
-      status: 'pending',
-      isValid: false,
-      icon: 'material-symbols:list-alt-outline',
-    },
-    {
-      title: 'Change Requests & Audit Trail',
-      route: 'change-requests-audit',
-      status: 'pending',
-      isValid: false,
-      icon: 'mdi:timeline-clock-outline',
-    },
+    { title: 'Personal Information', route: 'personal-info', status: 'active', isValid: false, icon: 'home' },
+    { title: 'Contact Details', route: 'contact-info', status: 'pending', isValid: false, icon: 'fluent:call-24-regular' },
+    { title: 'Family & Dependents', route: 'family-details', status: 'pending', isValid: false, icon: 'carbon:user-multiple' },
+    { title: 'Employment Details', route: 'job-details', status: 'pending', isValid: false, icon: 'mingcute:suitcase-line' },
+    { title: 'Education Details', route: 'education-details', status: 'pending', isValid: false, icon: 'qlementine-icons:education-16' },
+    { title: 'Skills & Competencies', route: 'skills', status: 'pending', isValid: false, icon: 'tabler:brain' },
+    { title: 'Compensation, Payroll & Bank', route: 'salary-structure', status: 'pending', isValid: false, icon: 'bx:dollar' },
+    { title: 'Identity & Statutory', route: 'identity-statutory', status: 'pending', isValid: false, icon: 'qlementine-icons:id-card-16' },
+    { title: 'Previous Employment', route: 'work-experience', status: 'pending', isValid: false, icon: 'f7:doc-plaintext' },
+    { title: 'Insurance & Benefits', route: 'insurance-details', status: 'pending', isValid: false, icon: 'healthicons:health-insurance' },
+    { title: 'Employee Documents', route: 'documents-upload', status: 'pending', isValid: false, icon: 'material-symbols:upload-rounded' },
+    { title: 'System Access', route: 'temp-login-credentials', status: 'pending', isValid: false, icon: 'lucide:key' },
+    { title: 'Separation & Exit', route: 'separation', status: 'pending', isValid: false, icon: 'tabler:logout' },
+    { title: 'Assets & Compliance', route: 'assets', status: 'pending', isValid: false, icon: 'carbon:asset' },
+    { title: 'Change Requests & Audit', route: 'change-requests-audit', status: 'pending', isValid: false, icon: 'mdi:timeline-clock-outline' },
   ],
 };
 
@@ -217,6 +120,7 @@ export class StepperService {
       }
     });
   }
+
   isEntered(): boolean {
     return this.isLast;
   }
@@ -225,5 +129,3 @@ export class StepperService {
     return EMPLOYEE_STEPPER_CONFIG[type].length;
   }
 }
-
-

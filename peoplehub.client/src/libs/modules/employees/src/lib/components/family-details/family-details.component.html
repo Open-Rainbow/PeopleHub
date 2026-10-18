@@ -1,467 +1,369 @@
-<div
-  class="bg-white rounded-2xl border border-blue-100 shadow-[0_4px_10px_rgba(0,0,0,0.05)] transition-shadow duration-200 ease-in pt-8 px-6 pb-7 h-full hover:shadow-md"
->
-  <!-- Tab Header -->
-  <!-- <div class="flex gap-2 border-b border-gray-200 mb-6">
-    <button
-      type="button"
-      class="px-5 py-2 text-sm font-medium rounded-t-lg transition-colors duration-150"
-      [class.text-blue-600]="isFamilyTab()"
-      [class.border-b-2]="isFamilyTab()"
-      [class.border-blue-600]="isFamilyTab()"
-      [class.text-gray-500]="!isFamilyTab()"
-      (click)="switchTab('family')"
-    >
-      Family Members
-    </button>
-    <button
-      type="button"
-      class="px-5 py-2 text-sm font-medium rounded-t-lg transition-colors duration-150"
-      [class.text-blue-600]="!isFamilyTab()"
-      [class.border-b-2]="!isFamilyTab()"
-      [class.border-blue-600]="!isFamilyTab()"
-      [class.text-gray-500]="isFamilyTab()"
-      (click)="switchTab('dependent')"
-    >
-      Dependents
-    </button>
-  </div> -->
+<div class="bg-white rounded-2xl border border-blue-100">
+  <div class="mb-6">
+    <ui-tab-button
+      [tabs]="tabs"
+      [activeTab]="activeTab()"
+      (tabChange)="switchTab($event)"
+    ></ui-tab-button>
+  </div>
 
-  <!-- Tab Header -->
-<div class="mb-6">
-  <ui-tab-button
-    [tabs]="tabs"
-    [activeTab]="activeTab()"
-    (tabChange)="switchTab($event)"
-  ></ui-tab-button>
-</div>
-  <!-- Tab A: Family Members -->
+  <!-- Family members -->
   @if (isFamilyTab()) {
-    <div class="space-y-4">
-      <ng-container
-        *ngFor="
-          let entry of familyMember.controls;
-          let index = index;
-          trackBy: trackByIndex
-        "
-      >
-        <section
-          class="rounded-2xl border border-blue-100 bg-blue-50/40 p-4 shadow-sm"
-        >
-          <div class="mb-4 flex items-center justify-between gap-4">
-            <div>
-              <p class="text-sm font-semibold text-slate-700">
-                Family Member {{ index + 1 }}
-              </p>
-              <p class="text-xs text-slate-500">
-                Enter one household member per card.
-              </p>
-            </div>
+    <ng-container *ngFor="let entry of familyMember.controls; let index = index; trackBy: trackByIndex">
+      <section class="rounded-2xl border border-blue-100 bg-white p-4">
+        <div class="mb-4 flex items-center justify-between gap-4">
+          <div>
+            <p class="text-sm font-semibold text-slate-700">Family Member {{ index + 1 }}</p>
+            <p class="text-xs text-slate-500">Enter one household member per card.</p>
+          </div>
 
-            @if (familyMember.length > 1) {
-             <ui-text-button
-  text="Remove"
-  variant="danger"
-  size="small"
-  type="button"
-  (buttonClick)="removeFamilyMember(index)"
-></ui-text-button>
+          @if (familyMember.length > 1) {
+            <ui-text-button
+              text="Remove"
+              variant="danger"
+              size="small"
+              type="button"
+              (buttonClick)="removeFamilyMember(index)"
+            ></ui-text-button>
+          }
+        </div>
+
+        <form [formGroup]="entry">
+          <div class="grid grid-cols-3 gap-[10px]">
+            @if (!familyMemberConfig.memberName.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="familyMemberConfig.memberName.id"
+                  [parentFormGroup]="entry"
+                  [label]="familyMemberConfig.memberName.label!"
+                  [placeholder]="familyMemberConfig.memberName.placeholder ?? ''"
+                  [minLength]="familyMemberConfig.memberName.minLength"
+                  [maxLength]="familyMemberConfig.memberName.maxLength"
+                  [isRequired]="familyMemberConfig.memberName.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+
+            @if (!familyMemberConfig.memberRelationship.isHide) {
+              <div class="form-group">
+                <ui-dropdown
+                  [id]="familyMemberConfig.memberRelationship.id"
+                  [parentFormGroup]="entry"
+                  [label]="familyMemberConfig.memberRelationship.label!"
+                  [placeholder]="familyMemberConfig.memberRelationship.placeholder ?? ''"
+                  [isRequired]="familyMemberConfig.memberRelationship.isRequired!"
+                  [options]="relationOptions$ | async"
+                ></ui-dropdown>
+              </div>
+            }
+
+            @if (!familyMemberConfig.memberGender.isHide) {
+              <div class="form-group">
+                <ui-dropdown
+                  [id]="familyMemberConfig.memberGender.id"
+                  [parentFormGroup]="entry"
+                  [label]="familyMemberConfig.memberGender.label!"
+                  [placeholder]="familyMemberConfig.memberGender.placeholder ?? ''"
+                  [isRequired]="familyMemberConfig.memberGender.isRequired!"
+                  [options]="genderOptions$ | async"
+                ></ui-dropdown>
+              </div>
+            }
+
+            @if (!familyMemberConfig.memberDateOfBirth.isHide) {
+              <div class="form-group">
+                <ui-calendar
+                  [id]="familyMemberConfig.memberDateOfBirth.id"
+                  [parentFormGroup]="entry"
+                  [label]="familyMemberConfig.memberDateOfBirth.label!"
+                  [isRequired]="familyMemberConfig.memberDateOfBirth.isRequired!"
+                ></ui-calendar>
+              </div>
+            }
+
+            @if (!familyMemberConfig.memberMaritalStatus.isHide) {
+              <div class="form-group">
+                <ui-dropdown
+                  [id]="familyMemberConfig.memberMaritalStatus.id"
+                  [parentFormGroup]="entry"
+                  [label]="familyMemberConfig.memberMaritalStatus.label!"
+                  [placeholder]="familyMemberConfig.memberMaritalStatus.placeholder ?? ''"
+                  [isRequired]="familyMemberConfig.memberMaritalStatus.isRequired!"
+                  [options]="maritalStatusOptions$ | async"
+                ></ui-dropdown>
+              </div>
+            }
+
+            @if (!familyMemberConfig.memberOccupation.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="familyMemberConfig.memberOccupation.id"
+                  [parentFormGroup]="entry"
+                  [label]="familyMemberConfig.memberOccupation.label!"
+                  [placeholder]="familyMemberConfig.memberOccupation.placeholder ?? ''"
+                  [minLength]="familyMemberConfig.memberOccupation.minLength"
+                  [maxLength]="familyMemberConfig.memberOccupation.maxLength"
+                  [isRequired]="familyMemberConfig.memberOccupation.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+
+            @if (!familyMemberConfig.memberEmail.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="familyMemberConfig.memberEmail.id"
+                  [parentFormGroup]="entry"
+                  [label]="familyMemberConfig.memberEmail.label!"
+                  [placeholder]="familyMemberConfig.memberEmail.placeholder ?? ''"
+                  [minLength]="familyMemberConfig.memberEmail.minLength"
+                  [maxLength]="familyMemberConfig.memberEmail.maxLength"
+                  [isRequired]="familyMemberConfig.memberEmail.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+
+            @if (!familyMemberConfig.memberContactNumber.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="familyMemberConfig.memberContactNumber.id"
+                  [parentFormGroup]="entry"
+                  [label]="familyMemberConfig.memberContactNumber.label!"
+                  [placeholder]="familyMemberConfig.memberContactNumber.placeholder ?? ''"
+                  [minLength]="familyMemberConfig.memberContactNumber.minLength"
+                  [maxLength]="familyMemberConfig.memberContactNumber.maxLength"
+                  [isRequired]="familyMemberConfig.memberContactNumber.isRequired!"
+                ></ui-text-box>
+              </div>
             }
           </div>
 
-          <form [formGroup]="entry">
-            <div class="grid grid-cols-3 gap-[10px]">
-              @if (!familyMemberConfig.memberName.isHide) {
-                <div class="form-group">
-                  <ui-text-box
-                    [id]="familyMemberConfig.memberName.id"
-                    [parentFormGroup]="entry"
-                    [label]="familyMemberConfig.memberName.label!"
-                    [placeholder]="
-                      familyMemberConfig.memberName.placeholder ?? ''
-                    "
-                    [minLength]="familyMemberConfig.memberName.minLength"
-                    [maxLength]="familyMemberConfig.memberName.maxLength"
-                    [isRequired]="familyMemberConfig.memberName.isRequired!"
-                  ></ui-text-box>
-                </div>
-              }
-
-              @if (!familyMemberConfig.memberRelationship.isHide) {
-                <div class="form-group">
-                  <ui-dropdown
-                    [id]="familyMemberConfig.memberRelationship.id"
-                    [parentFormGroup]="entry"
-                    [label]="familyMemberConfig.memberRelationship.label!"
-                    [placeholder]="
-                      familyMemberConfig.memberRelationship.placeholder ?? ''
-                    "
-                    [isRequired]="
-                      familyMemberConfig.memberRelationship.isRequired!
-                    "
-                    [options]="relationOptions$ | async"
-                  ></ui-dropdown>
-                </div>
-              }
-
-              @if (!familyMemberConfig.memberGender.isHide) {
-                <div class="form-group">
-                  <ui-dropdown
-                    [id]="familyMemberConfig.memberGender.id"
-                    [parentFormGroup]="entry"
-                    [label]="familyMemberConfig.memberGender.label!"
-                    [placeholder]="
-                      familyMemberConfig.memberGender.placeholder ?? ''
-                    "
-                    [isRequired]="familyMemberConfig.memberGender.isRequired!"
-                    [options]="genderOptions$ | async"
-                  ></ui-dropdown>
-                </div>
-              }
-
-              @if (!familyMemberConfig.memberDateOfBirth.isHide) {
-                <div class="form-group">
-                  <ui-calendar
-                    [id]="familyMemberConfig.memberDateOfBirth.id"
-                    [parentFormGroup]="entry"
-                    [label]="familyMemberConfig.memberDateOfBirth.label!"
-                    [isRequired]="
-                      familyMemberConfig.memberDateOfBirth.isRequired!
-                    "
-                  ></ui-calendar>
-                </div>
-              }
-
-              @if (!familyMemberConfig.memberMaritalStatus.isHide) {
-                <div class="form-group">
-                  <ui-dropdown
-                    [id]="familyMemberConfig.memberMaritalStatus.id"
-                    [parentFormGroup]="entry"
-                    [label]="familyMemberConfig.memberMaritalStatus.label!"
-                    [placeholder]="
-                      familyMemberConfig.memberMaritalStatus.placeholder ?? ''
-                    "
-                    [isRequired]="
-                      familyMemberConfig.memberMaritalStatus.isRequired!
-                    "
-                    [options]="maritalStatusOptions$ | async"
-                  ></ui-dropdown>
-                </div>
-              }
-
-              @if (!familyMemberConfig.memberOccupation.isHide) {
-                <div class="form-group">
-                  <ui-text-box
-                    [id]="familyMemberConfig.memberOccupation.id"
-                    [parentFormGroup]="entry"
-                    [label]="familyMemberConfig.memberOccupation.label!"
-                    [placeholder]="
-                      familyMemberConfig.memberOccupation.placeholder ?? ''
-                    "
-                    [minLength]="familyMemberConfig.memberOccupation.minLength"
-                    [maxLength]="familyMemberConfig.memberOccupation.maxLength"
-                    [isRequired]="
-                      familyMemberConfig.memberOccupation.isRequired!
-                    "
-                  ></ui-text-box>
-                </div>
-              }
-
-               @if (!familyMemberConfig.memberEmail.isHide) {
-                <div class="form-group">
-                  <ui-text-box
-                    [id]="familyMemberConfig.memberEmail.id"
-                    [parentFormGroup]="entry"
-                    [label]="familyMemberConfig.memberEmail.label!"
-                    [placeholder]="familyMemberConfig.memberEmail.placeholder ?? ''"
-                    [minLength]="familyMemberConfig.memberEmail.minLength"
-                    [maxLength]="familyMemberConfig.memberEmail.maxLength"
-                    [isRequired]="familyMemberConfig.memberEmail.isRequired!"
-                  ></ui-text-box>
-                </div>
-              }
-
-              @if (!familyMemberConfig.memberContactNumber.isHide) {
-                <div class="form-group">
-                  <ui-text-box
-                    [id]="familyMemberConfig.memberContactNumber.id"
-                    [parentFormGroup]="entry"
-                    [label]="familyMemberConfig.memberContactNumber.label!"
-                    [placeholder]="
-                      familyMemberConfig.memberContactNumber.placeholder ?? ''
-                    "
-                    [minLength]="
-                      familyMemberConfig.memberContactNumber.minLength
-                    "
-                    [maxLength]="
-                      familyMemberConfig.memberContactNumber.maxLength
-                    "
-                    [isRequired]="
-                      familyMemberConfig.memberContactNumber.isRequired!
-                    "
-                  ></ui-text-box>
-                </div>
-              }
-
-              @if (!familyMemberConfig.livesWithEmployee.isHide) {
-                <div class="form-group flex items-end pb-2">
-                  <ui-checkbox
-                    [id]="familyMemberConfig.livesWithEmployee.id"
-                    [parentFormGroup]="entry"
-                    [label]="familyMemberConfig.livesWithEmployee.label!"
-                  ></ui-checkbox>
-                </div>
-              }
-              @if (!familyMemberConfig.addressSameasEmployee.isHide) {
-                <div class="form-group flex items-end pb-2">
-                  <ui-checkbox
-                    [id]="familyMemberConfig.addressSameasEmployee.id"
-                    [parentFormGroup]="entry"
-                    [label]="familyMemberConfig.addressSameasEmployee.label!"
-                  ></ui-checkbox>
-                </div>
-              }  
-            </div>
-            
-            @if (!familyMemberConfig.memberNotes.isHide) {
-              <div class="mt-4">
-                <ui-text-area
-                  [id]="familyMemberConfig.memberNotes.id"
-                  [parentFormGroup]="entry"
-                  [label]="familyMemberConfig.memberNotes.label!"
-                  [placeholder]="
-                    familyMemberConfig.memberNotes.placeholder ?? ''
-                  "
-                  [maxLength]="familyMemberConfig.memberNotes.maxLength"
-                  [isRequired]="familyMemberConfig.memberNotes.isRequired!"
-                ></ui-text-area>
-              </div>
+          <div class="ae-checks">
+            @if (!familyMemberConfig.livesWithEmployee.isHide) {
+              <ui-checkbox
+                [id]="familyMemberConfig.livesWithEmployee.id"
+                [parentFormGroup]="entry"
+                [label]="familyMemberConfig.livesWithEmployee.label!"
+              ></ui-checkbox>
             }
-          </form>
-        </section>
-      </ng-container>
+            @if (!familyMemberConfig.addressSameasEmployee.isHide) {
+              <ui-checkbox
+                [id]="familyMemberConfig.addressSameasEmployee.id"
+                [parentFormGroup]="entry"
+                [label]="familyMemberConfig.addressSameasEmployee.label!"
+              ></ui-checkbox>
+            }
+          </div>
 
-      <div class="flex items-center justify-between pt-1">
-        <p class="text-xs text-slate-500">
-          {{ familyMember.length }} / {{ familyRepeatTimes }} family members
-        </p>
-        <ui-text-button
-          text="Add Family Member"
-          variant="secondary"
-          [disabled]="!canAddFamilyMember()"
-          (buttonClick)="addFamilyMember()"
-        ></ui-text-button>
-      </div>
+          @if (!familyMemberConfig.memberNotes.isHide) {
+            <div class="mt-4">
+              <ui-text-area
+                [id]="familyMemberConfig.memberNotes.id"
+                [parentFormGroup]="entry"
+                [label]="familyMemberConfig.memberNotes.label!"
+                [placeholder]="familyMemberConfig.memberNotes.placeholder ?? ''"
+                [maxLength]="familyMemberConfig.memberNotes.maxLength"
+                [isRequired]="familyMemberConfig.memberNotes.isRequired!"
+              ></ui-text-area>
+            </div>
+          }
+        </form>
+      </section>
+    </ng-container>
+
+    <div class="flex items-center justify-between pt-1">
+      <p class="text-xs text-slate-500">{{ familyMember.length }} / {{ familyRepeatTimes }} family members</p>
+      <ui-text-button
+        text="Add Family Member"
+        variant="secondary"
+        [disabled]="!canAddFamilyMember()"
+        (buttonClick)="addFamilyMember()"
+      ></ui-text-button>
     </div>
   }
 
-  <!-- Tab B: Dependents -->
+  <!-- Dependents -->
   @if (!isFamilyTab()) {
-    <div class="space-y-4">
-      <ng-container
-        *ngFor="
-          let entry of dependent.controls;
-          let index = index;
-          trackBy: trackByIndex
-        "
-      >
-        <section
-          class="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm"
-        >
-          <div class="mb-4 flex items-center justify-between gap-4">
-            <div>
-              <p class="text-sm font-semibold text-slate-700">
-                Dependent {{ index + 1 }}
-              </p>
-              <p class="text-xs text-slate-500">
-                Enter one dependent per card.
-              </p>
-            </div>
+    <ng-container *ngFor="let entry of dependent.controls; let index = index; trackBy: trackByIndex">
+      <section class="rounded-2xl border border-blue-100 bg-white p-4">
+        <div class="mb-4 flex items-center justify-between gap-4">
+          <div>
+            <p class="text-sm font-semibold text-slate-700">Dependent {{ index + 1 }}</p>
+            <p class="text-xs text-slate-500">Enter one dependent per card.</p>
+          </div>
 
-            @if (dependent.length > 1) {
+          @if (dependent.length > 1) {
             <ui-text-button
-  text="Remove"
-  variant="danger"
-  size="small"
-  type="button"
-  (buttonClick)="removeDependent(index)"
-></ui-text-button>
+              text="Remove"
+              variant="danger"
+              size="small"
+              type="button"
+              (buttonClick)="removeDependent(index)"
+            ></ui-text-button>
+          }
+        </div>
+
+        <form [formGroup]="entry">
+          <div class="grid grid-cols-3 gap-[10px]">
+            @if (!dependentConfig.dependentName.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="dependentConfig.dependentName.id"
+                  [parentFormGroup]="entry"
+                  [label]="dependentConfig.dependentName.label!"
+                  [placeholder]="dependentConfig.dependentName.placeholder ?? ''"
+                  [minLength]="dependentConfig.dependentName.minLength"
+                  [maxLength]="dependentConfig.dependentName.maxLength"
+                  [isRequired]="dependentConfig.dependentName.isRequired!"
+                ></ui-text-box>
+              </div>
+            }
+
+            @if (!dependentConfig.dependentRelationship.isHide) {
+              <div class="form-group">
+                <ui-dropdown
+                  [id]="dependentConfig.dependentRelationship.id"
+                  [parentFormGroup]="entry"
+                  [label]="dependentConfig.dependentRelationship.label!"
+                  [placeholder]="dependentConfig.dependentRelationship.placeholder ?? ''"
+                  [isRequired]="dependentConfig.dependentRelationship.isRequired!"
+                  [options]="relationOptions$ | async"
+                ></ui-dropdown>
+              </div>
+            }
+
+            @if (!dependentConfig.dependentGender.isHide) {
+              <div class="form-group">
+                <ui-dropdown
+                  [id]="dependentConfig.dependentGender.id"
+                  [parentFormGroup]="entry"
+                  [label]="dependentConfig.dependentGender.label!"
+                  [placeholder]="dependentConfig.dependentGender.placeholder ?? ''"
+                  [isRequired]="dependentConfig.dependentGender.isRequired!"
+                  [options]="genderOptions$ | async"
+                ></ui-dropdown>
+              </div>
+            }
+
+            @if (!dependentConfig.dependentDateOfBirth.isHide) {
+              <div class="form-group">
+                <ui-calendar
+                  [id]="dependentConfig.dependentDateOfBirth.id"
+                  [parentFormGroup]="entry"
+                  [label]="dependentConfig.dependentDateOfBirth.label!"
+                  [isRequired]="dependentConfig.dependentDateOfBirth.isRequired!"
+                ></ui-calendar>
+              </div>
+            }
+
+            @if (!dependentConfig.dependencyStartDate.isHide) {
+              <div class="form-group">
+                <ui-calendar
+                  [id]="dependentConfig.dependencyStartDate.id"
+                  [parentFormGroup]="entry"
+                  [label]="dependentConfig.dependencyStartDate.label!"
+                  [isRequired]="dependentConfig.dependencyStartDate.isRequired!"
+                ></ui-calendar>
+              </div>
+            }
+
+            @if (!dependentConfig.dependencyEndDate.isHide) {
+              <div class="form-group">
+                <ui-calendar
+                  [id]="dependentConfig.dependencyEndDate.id"
+                  [parentFormGroup]="entry"
+                  [label]="dependentConfig.dependencyEndDate.label!"
+                ></ui-calendar>
+              </div>
+            }
+
+            @if (!dependentConfig.monthlyIncomeOrPension.isHide) {
+              <div class="form-group">
+                <ui-number-box
+                  [id]="dependentConfig.monthlyIncomeOrPension.id"
+                  [parentFormGroup]="entry"
+                  [label]="dependentConfig.monthlyIncomeOrPension.label!"
+                  [placeholder]="dependentConfig.monthlyIncomeOrPension.placeholder ?? ''"
+                  [isRequired]="dependentConfig.monthlyIncomeOrPension.isRequired!"
+                ></ui-number-box>
+              </div>
+            }
+
+            @if (!dependentConfig.linkedFamilyRecord.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="dependentConfig.linkedFamilyRecord.id"
+                  [parentFormGroup]="entry"
+                  [label]="dependentConfig.linkedFamilyRecord.label!"
+                  [placeholder]="dependentConfig.linkedFamilyRecord.placeholder ?? ''"
+                ></ui-text-box>
+              </div>
+            }
+
+            @if (!dependentConfig.proofDocumentLink.isHide) {
+              <div class="form-group">
+                <ui-text-box
+                  [id]="dependentConfig.proofDocumentLink.id"
+                  [parentFormGroup]="entry"
+                  [label]="dependentConfig.proofDocumentLink.label!"
+                  [placeholder]="dependentConfig.proofDocumentLink.placeholder ?? ''"
+                ></ui-text-box>
+              </div>
             }
           </div>
 
-          <form [formGroup]="entry">
-            <div class="grid grid-cols-3 gap-[10px]">
-              @if (!dependentConfig.dependentName.isHide) {
-                <div class="form-group">
-                  <ui-text-box
-                    [id]="dependentConfig.dependentName.id"
-                    [parentFormGroup]="entry"
-                    [label]="dependentConfig.dependentName.label!"
-                    [placeholder]="
-                      dependentConfig.dependentName.placeholder ?? ''
-                    "
-                    [minLength]="dependentConfig.dependentName.minLength"
-                    [maxLength]="dependentConfig.dependentName.maxLength"
-                    [isRequired]="dependentConfig.dependentName.isRequired!"
-                  ></ui-text-box>
-                </div>
-              }
-
-              @if (!dependentConfig.dependentRelationship.isHide) {
-                <div class="form-group">
-                  <ui-dropdown
-                    [id]="dependentConfig.dependentRelationship.id"
-                    [parentFormGroup]="entry"
-                    [label]="dependentConfig.dependentRelationship.label!"
-                    [placeholder]="
-                      dependentConfig.dependentRelationship.placeholder ?? ''
-                    "
-                    [isRequired]="
-                      dependentConfig.dependentRelationship.isRequired!
-                    "
-                    [options]="relationOptions$ | async"
-                  ></ui-dropdown>
-                </div>
-              }
-
-              @if (!dependentConfig.dependentDateOfBirth.isHide) {
-                <div class="form-group">
-                  <ui-calendar
-                    [id]="dependentConfig.dependentDateOfBirth.id"
-                    [parentFormGroup]="entry"
-                    [label]="dependentConfig.dependentDateOfBirth.label!"
-                    [isRequired]="
-                      dependentConfig.dependentDateOfBirth.isRequired!
-                    "
-                  ></ui-calendar>
-                </div>
-              }
-
-              @if (!dependentConfig.dependentGender.isHide) {
-                <div class="form-group">
-                  <ui-dropdown
-                    [id]="dependentConfig.dependentGender.id"
-                    [parentFormGroup]="entry"
-                    [label]="dependentConfig.dependentGender.label!"
-                    [placeholder]="
-                      dependentConfig.dependentGender.placeholder ?? ''
-                    "
-                    [isRequired]="dependentConfig.dependentGender.isRequired!"
-                    [options]="genderOptions$ | async"
-                  ></ui-dropdown>
-                </div>
-              }
-
-              @if (!dependentConfig.dependencyStartDate.isHide) {
-                <div class="form-group">
-                  <ui-calendar
-                    [id]="dependentConfig.dependencyStartDate.id"
-                    [parentFormGroup]="entry"
-                    [label]="dependentConfig.dependencyStartDate.label!"
-                    [isRequired]="
-                      dependentConfig.dependencyStartDate.isRequired!
-                    "
-                  ></ui-calendar>
-                </div>
-              }
-
-              <div class="form-group flex flex-col gap-2 pt-2">
-                @if (!dependentConfig.financiallyDependent.isHide) {
-                  <ui-checkbox
-                    [id]="dependentConfig.financiallyDependent.id"
-                    [parentFormGroup]="entry"
-                    [label]="dependentConfig.financiallyDependent.label!"
-                  ></ui-checkbox>
-                }
-                @if (!dependentConfig.studentStatus.isHide) {
-                  <ui-checkbox
-                    [id]="dependentConfig.studentStatus.id"
-                    [parentFormGroup]="entry"
-                    [label]="dependentConfig.studentStatus.label!"
-                  ></ui-checkbox>
-                }
-                @if (!dependentConfig.disabilityStatus.isHide) {
-                  <ui-checkbox
-                    [id]="dependentConfig.disabilityStatus.id"
-                    [parentFormGroup]="entry"
-                    [label]="dependentConfig.disabilityStatus.label!"
-                  ></ui-checkbox>
-                }
-                @if (!dependentConfig.eligibleForBenefits.isHide) {
-                  <ui-checkbox
-                    [id]="dependentConfig.eligibleForBenefits.id"
-                    [parentFormGroup]="entry"
-                    [label]="dependentConfig.eligibleForBenefits.label!"
-                  ></ui-checkbox>
-                }
-                 @if (!dependentConfig.linkedFamilyRecord.isHide) {
-                <div class="form-group">
-                  <ui-text-box
-                    [id]="dependentConfig.linkedFamilyRecord.id"
-                    [parentFormGroup]="entry"
-                    [label]="dependentConfig.linkedFamilyRecord.label!"
-                    [placeholder]="dependentConfig.linkedFamilyRecord.placeholder ?? ''"
-                  ></ui-text-box>
-                </div>
-              }
-                @if (!dependentConfig.monthlyIncomeOrPension.isHide) {
-        <ui-number-box
-          [id]="dependentConfig.monthlyIncomeOrPension.id"
-          [parentFormGroup]="entry"
-          [label]="dependentConfig.monthlyIncomeOrPension.label!"
-          [placeholder]="dependentConfig.monthlyIncomeOrPension.placeholder ?? ''"
-          [isRequired]="dependentConfig.monthlyIncomeOrPension.isRequired!"
-        ></ui-number-box>
-    }
-      @if (!dependentConfig.dependencyEndDate.isHide) {
-                <div class="form-group">
-                  <ui-calendar
-                    [id]="dependentConfig.dependencyEndDate.id"
-                    [parentFormGroup]="entry"
-                    [label]="dependentConfig.dependencyEndDate.label!"
-                  ></ui-calendar>
-                </div>
-              }
-               @if (!dependentConfig.proofDocumentLink.isHide) {
-                <div class="form-group">
-                  <ui-text-box
-                    [id]="dependentConfig.proofDocumentLink.id"
-                    [parentFormGroup]="entry"
-                    [label]="dependentConfig.proofDocumentLink.label!"
-                    [placeholder]="dependentConfig.proofDocumentLink.placeholder ?? ''"
-                  ></ui-text-box>
-                </div>
-              }
-              </div>
-            </div>
-
-            @if (!dependentConfig.dependentRemarks.isHide) {
-              <div class="mt-4">
-                <ui-text-area
-                  [id]="dependentConfig.dependentRemarks.id"
-                  [parentFormGroup]="entry"
-                  [label]="dependentConfig.dependentRemarks.label!"
-                  [placeholder]="
-                    dependentConfig.dependentRemarks.placeholder ?? ''
-                  "
-                ></ui-text-area>
-              </div>
+          <div class="ae-checks">
+            @if (!dependentConfig.financiallyDependent.isHide) {
+              <ui-checkbox
+                [id]="dependentConfig.financiallyDependent.id"
+                [parentFormGroup]="entry"
+                [label]="dependentConfig.financiallyDependent.label!"
+              ></ui-checkbox>
             }
-          </form>
-        </section>
-      </ng-container>
+            @if (!dependentConfig.studentStatus.isHide) {
+              <ui-checkbox
+                [id]="dependentConfig.studentStatus.id"
+                [parentFormGroup]="entry"
+                [label]="dependentConfig.studentStatus.label!"
+              ></ui-checkbox>
+            }
+            @if (!dependentConfig.disabilityStatus.isHide) {
+              <ui-checkbox
+                [id]="dependentConfig.disabilityStatus.id"
+                [parentFormGroup]="entry"
+                [label]="dependentConfig.disabilityStatus.label!"
+              ></ui-checkbox>
+            }
+            @if (!dependentConfig.eligibleForBenefits.isHide) {
+              <ui-checkbox
+                [id]="dependentConfig.eligibleForBenefits.id"
+                [parentFormGroup]="entry"
+                [label]="dependentConfig.eligibleForBenefits.label!"
+              ></ui-checkbox>
+            }
+          </div>
 
-      <div class="flex items-center justify-between pt-1">
-        <p class="text-xs text-slate-500">
-          {{ dependent.length }} / {{ dependentRepeatTimes }} dependents
-        </p>
-        <ui-text-button
-          text="Add Dependent"
-          variant="secondary"
-          [disabled]="!canAddDependent()"
-          (buttonClick)="addDependent()"
-        ></ui-text-button>
-      </div>
+          @if (!dependentConfig.dependentRemarks.isHide) {
+            <div class="mt-4">
+              <ui-text-area
+                [id]="dependentConfig.dependentRemarks.id"
+                [parentFormGroup]="entry"
+                [label]="dependentConfig.dependentRemarks.label!"
+                [placeholder]="dependentConfig.dependentRemarks.placeholder ?? ''"
+              ></ui-text-area>
+            </div>
+          }
+        </form>
+      </section>
+    </ng-container>
+
+    <div class="flex items-center justify-between pt-1">
+      <p class="text-xs text-slate-500">{{ dependent.length }} / {{ dependentRepeatTimes }} dependents</p>
+      <ui-text-button
+        text="Add Dependent"
+        variant="secondary"
+        [disabled]="!canAddDependent()"
+        (buttonClick)="addDependent()"
+      ></ui-text-button>
     </div>
   }
 </div>
