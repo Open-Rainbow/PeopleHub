@@ -16,6 +16,8 @@
     "validate:structure": "node scripts/validate-structure-rules.mjs",
     "validate:angular-guidelines": "node scripts/validate-angular-guidelines.mjs",
     "validate:standards": "npm run validate:structure && npm run validate:angular-guidelines",
+    "tw:report": "node scripts/tailwind-normalize.mjs",
+    "tw:fix": "node scripts/tailwind-normalize.mjs --write",
     "units:report": "node scripts/px-to-rem.mjs",
     "units:fix": "node scripts/px-to-rem.mjs --write",
     "units:check": "node scripts/px-to-rem.mjs --check",
