@@ -22,15 +22,10 @@
 		color: var(--ui-icon-hover-color);
 	}
 
-	// size the Lucide svg from font-size so Tailwind text-[Npx] and [size] both work
-	::ng-deep lucide-icon {
-		display: inline-flex;
+	// icon size follows font-size, so Tailwind text-[Npx] and [size] both work
+	svg {
 		width: 1em;
 		height: 1em;
-	}
-
-	::ng-deep svg {
-		width: 1em;
-		height: 1em;
+		flex-shrink: 0;
 	}
 }
