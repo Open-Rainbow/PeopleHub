@@ -17,11 +17,25 @@ public sealed class AddEmployeeServiceTests
         service = new AddEmployeeService(repository.Object, new PersonalInfoValidator());
     }
 
+    private static PersonalInfoRequest ValidPersonalInfo() => new()
+    {
+        Salutation = "Mr",
+        FirstName = "Venkat",
+        LastName = "Jangili",
+        DateOfBirth = new DateTime(1995, 5, 10),
+        DateOfJoining = new DateTime(2020, 1, 1),
+        Gender = "Male",
+        MaritalStatus = "Single",
+        BloodGroup = "O+",
+    };
+
     [Fact]
     public async Task PersonalInfo_without_first_name_is_rejected()
     {
+        var request = ValidPersonalInfo() with { FirstName = null };
+
         var error = await Assert.ThrowsAsync<RequestValidationException>(
-            () => service.SavePersonalInfoAsync(new PersonalInfoRequest { LastName = "Jangili" }, CancellationToken.None));
+            () => service.SavePersonalInfoAsync(request, CancellationToken.None));
 
         Assert.Contains(nameof(PersonalInfoRequest.FirstName), error.Errors.Keys);
         repository.VerifyNoOtherCalls();
@@ -30,7 +44,7 @@ public sealed class AddEmployeeServiceTests
     [Fact]
     public async Task PersonalInfo_under_age_is_rejected()
     {
-        var request = new PersonalInfoRequest { FirstName = "Venkat", DateOfBirth = DateTime.Today.AddYears(-10) };
+        var request = ValidPersonalInfo() with { DateOfBirth = DateTime.Today.AddYears(-10), DateOfJoining = DateTime.Today };
 
         var error = await Assert.ThrowsAsync<RequestValidationException>(
             () => service.SavePersonalInfoAsync(request, CancellationToken.None));
@@ -41,13 +55,7 @@ public sealed class AddEmployeeServiceTests
     [Fact]
     public async Task Valid_personal_info_is_saved()
     {
-        var request = new PersonalInfoRequest
-        {
-            FirstName = "Venkat",
-            LastName = "Jangili",
-            DateOfBirth = new DateTime(1995, 5, 10),
-            DateOfJoining = new DateTime(2020, 1, 1),
-        };
+        var request = ValidPersonalInfo();
         repository
             .Setup(r => r.SavePersonalInfoAsync(request, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new SaveResponse(1, "EMP001", "ok"));
