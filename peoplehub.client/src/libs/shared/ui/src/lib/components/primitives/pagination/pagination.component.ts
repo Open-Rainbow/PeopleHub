@@ -7,7 +7,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs';
 import { DropdownOption } from '../../../models/value-configs/dropdown-option.model';
 import { DropdownConfigService } from '../../../services/dropdown.service';
 import { TextButtonComponent } from '../../controls/text-button/text-button.component';

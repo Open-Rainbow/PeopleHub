@@ -66,7 +66,12 @@ function listTsFiles(rootDir) {
         continue;
       }
 
-      if (entry.isFile() && entry.name.endsWith('.ts') && !entry.name.endsWith('.spec.ts')) {
+      if (
+        entry.isFile() &&
+        entry.name.endsWith('.ts') &&
+        !entry.name.endsWith('.spec.ts') &&
+        !entry.name.endsWith('.stories.ts')
+      ) {
         files.push(fullPath);
       }
     }
