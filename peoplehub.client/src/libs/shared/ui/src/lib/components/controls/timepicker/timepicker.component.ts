@@ -10,6 +10,7 @@ import { AfterViewInit,
     ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import type { TimeState } from '../../../models/component-models/time-state.model';
+import { IconComponent } from '../../primitives/icon/icon.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,7 +18,7 @@ import type { TimeState } from '../../../models/component-models/time-state.mode
   templateUrl: './timepicker.component.html',
   styleUrls: ['./timepicker.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule]
+  imports: [ReactiveFormsModule, IconComponent]
 })
 export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() use24HourFormat = false;
