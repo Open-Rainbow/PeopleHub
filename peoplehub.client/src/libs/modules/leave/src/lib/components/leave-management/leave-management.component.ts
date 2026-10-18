@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ToggleComponent, DropdownComponent, NumberBoxComponent, TextButtonComponent, IconTextButtonComponent, AccordionComponent, ChipComponent, AccordionGroupComponent } from 'ui';
+import { DropdownComponent, IconTextButtonComponent, AccordionComponent, ChipComponent, AccordionGroupComponent } from 'ui';
 import { LeaveCategory, LeaveItem, LeaveManagementSummary } from '../../config/form-configs/leave-management.types';
 import { AddLeaveType } from '../add-leave-type/add-leave-type';
 
@@ -11,10 +11,7 @@ import { AddLeaveType } from '../add-leave-type/add-leave-type';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ToggleComponent,
     DropdownComponent,
-    NumberBoxComponent,
-    TextButtonComponent,
     IconTextButtonComponent,
     AccordionComponent,
     AccordionGroupComponent,

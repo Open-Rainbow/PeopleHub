@@ -11,7 +11,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import {
   ChipComponent,
-  DropdownComponent,
   SearchComponent,
   TableComponent,
   TextButtonComponent,
@@ -33,7 +32,6 @@ import { ConfirmPopupService } from 'ui';
     CommonModule,
     ReactiveFormsModule,
     ChipComponent,
-    DropdownComponent,
     SearchComponent,
     TableComponent,
     TextButtonComponent,
@@ -318,4 +316,3 @@ export class SummaryComponent implements OnInit {
     return (cell as any).value;
   }
 }
-
