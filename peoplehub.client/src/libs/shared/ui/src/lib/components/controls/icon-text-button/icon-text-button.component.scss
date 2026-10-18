@@ -33,7 +33,7 @@
 }
 
 .ui-icon-text-button:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -86,15 +86,16 @@
   border-color: var(--color-primary-hover);
 }
 
+/* neutral outline: clearly clickable, clearly less important than primary */
 .ui-icon-text-button--secondary {
-  background-color: var(--color-text-secondary);
-  border-color: var(--color-text-secondary);
-  color: var(--color-surface);
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
 }
 
 .ui-icon-text-button--secondary:hover:not(:disabled) {
-  background-color: var(--color-text-secondary);
-  border-color: var(--color-text-secondary);
+  background-color: var(--color-surface-muted);
+  border-color: var(--color-border-strong);
 }
 
 .ui-icon-text-button--success {
