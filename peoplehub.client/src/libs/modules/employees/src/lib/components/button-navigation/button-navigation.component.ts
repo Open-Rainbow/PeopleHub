@@ -1,4 +1,4 @@
-﻿import {
+import {
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -8,6 +8,7 @@
   output,
   signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
@@ -37,11 +38,15 @@ export class ButtonNavigationComponent implements OnInit {
   readonly previewToggle = output<boolean>();
 
   private readonly steps = signal<Step[]>([]);
-  readonly isFirstStep = computed(
-    () => this.stepperService.getCurrentStep() === 0,
-  );
+
+  /** Reactive copy of the stepper's current index (the service exposes a BehaviorSubject). */
+  private readonly currentIndex = toSignal(this.stepperService.currentStep$, {
+    initialValue: this.stepperService.getCurrentStep(),
+  });
+
+  readonly isFirstStep = computed(() => this.currentIndex() === 0);
   readonly isLastStep = computed(
-    () => this.stepperService.getCurrentStep() === this.steps().length - 1,
+    () => this.steps().length > 0 && this.currentIndex() === this.steps().length - 1,
   );
   readonly nextButtonLabel = computed(() =>
     this.isLastStep() ? 'Submit' : 'Next',
@@ -51,26 +56,12 @@ export class ButtonNavigationComponent implements OnInit {
 
   ngOnInit(): void {
     this.steps.set(this.stepperService.getSteps('addEmployee'));
+    this.syncIndexFromUrl();
 
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        const currentRoute = this.stepperService.getLastRouteSegment(
-          this.router.url,
-        );
-        const currentIndex = this.steps().findIndex(
-          (s) => s.route === currentRoute,
-        );
-
-        if (currentIndex >= 0) {
-          this.stepperService.setCurrentStep(currentIndex);
-
-          const savedData = this.dataService.getDataByRoute(currentRoute);
-          if (savedData) {
-            this.stepperService.setStepValidity(true);
-          }
-        }
-
+        this.syncIndexFromUrl();
         this.steps.set(this.stepperService.getSteps('addEmployee'));
       });
   }
@@ -156,6 +147,22 @@ export class ButtonNavigationComponent implements OnInit {
   goPreview(): void {
     this.isPreviewVisible = !this.isPreviewVisible;
     this.previewToggle.emit(this.isPreviewVisible);
+  }
+
+  /** Keeps the stepper index in line with the URL (direct links, refresh, stepper clicks). */
+  private syncIndexFromUrl(): void {
+    const currentRoute = this.stepperService.getLastRouteSegment(this.router.url);
+    const index = this.stepperService
+      .getSteps('addEmployee')
+      .findIndex((s) => s.route === currentRoute);
+
+    if (index < 0) return;
+
+    this.stepperService.setCurrentStep(index);
+
+    if (this.dataService.getDataByRoute(currentRoute)) {
+      this.stepperService.setStepValidity(true);
+    }
   }
 
   private findFormGroup(
