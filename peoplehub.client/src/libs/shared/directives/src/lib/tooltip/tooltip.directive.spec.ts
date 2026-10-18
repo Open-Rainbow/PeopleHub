@@ -1,28 +1,29 @@
+import type { MockedObject } from "vitest";
 import { ElementRef, Renderer2 } from '@angular/core';
 
 import { TooltipDirective } from './tooltip.directive';
 
 describe('TooltipDirective', () => {
-  let elementRefMock: ElementRef;
-  let rendererMock: jasmine.SpyObj<Renderer2>;
+    let elementRefMock: ElementRef;
+    let rendererMock: MockedObject<Renderer2>;
 
-  beforeEach(() => {
-    elementRefMock = new ElementRef(document.createElement('div'));
+    beforeEach(() => {
+        elementRefMock = new ElementRef(document.createElement('div'));
 
-    rendererMock = jasmine.createSpyObj('Renderer2', [
-      'createElement',
-      'createText',
-      'appendChild',
-      'setStyle',
-      'removeChild',
-    ]);
+        rendererMock = {
+            createElement: vi.fn().mockName("Renderer2.createElement"),
+            createText: vi.fn().mockName("Renderer2.createText"),
+            appendChild: vi.fn().mockName("Renderer2.appendChild"),
+            setStyle: vi.fn().mockName("Renderer2.setStyle"),
+            removeChild: vi.fn().mockName("Renderer2.removeChild")
+        };
 
-    rendererMock.createElement.and.returnValue(document.createElement('div'));
-    rendererMock.createText.and.callFake((text: string) => document.createTextNode(text));
-  });
+        rendererMock.createElement.mockReturnValue(document.createElement('div'));
+        rendererMock.createText.mockImplementation((text: string) => document.createTextNode(text));
+    });
 
-  it('should create an instance', () => {
-    const directive = new TooltipDirective(elementRefMock, rendererMock);
-    expect(directive).toBeTruthy();
-  });
+    it('should create an instance', () => {
+        const directive = new TooltipDirective(elementRefMock, rendererMock);
+        expect(directive).toBeTruthy();
+    });
 });
