@@ -1,13 +1,12 @@
 <div class="checkbox-wrapper" [formGroup]="parentFormGroup">
   
-  <!-- Label on left -->
+  <!-- Label on left. Native label activation toggles the input; no manual toggle (avoids double toggle). -->
   @if (labelPosition === 'left') {
     <label 
-      [for]="id" 
+      [attr.for]="labelClick ? id : null" 
       class="checkbox-label" 
       [class.disabled]="disabled"
-      [class.label-clickable]="labelClick"
-      (click)="labelClick ? onLabelClick() : null">
+      [class.label-clickable]="labelClick">
       <span class="checkbox-label-text">
         {{ label }}
         @if (isRequired) {
@@ -27,7 +26,6 @@
     (blur)="handleBlur()"
     class="checkbox-input"
     [class.invalid]="isInvalid"
-    aria-role="checkbox"
   />
   
   <!-- Visual checkbox representation -->
@@ -36,11 +34,10 @@
   <!-- Label on right -->
   @if (labelPosition === 'right') {
     <label 
-      [for]="id" 
+      [attr.for]="labelClick ? id : null" 
       class="checkbox-label checkbox-label-right" 
       [class.disabled]="disabled"
-      [class.label-clickable]="labelClick"
-      (click)="labelClick ? onLabelClick() : null">
+      [class.label-clickable]="labelClick">
       <span class="checkbox-label-text">
         {{ label }}
         @if (isRequired) {

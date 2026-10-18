@@ -1,7 +1,7 @@
 @if (totalItems > 5 && bottomPagination) {
 <div class="sticky left-0">
-  <ui-pagination [backgroundcolor]="'rgb(183 183 183)'" [totalItems]="totalItems" [pageSize]="itemsPerPage"
-    [currentPage]="currentPage" [isdropcount]="true" [ispagination]="true" [isgoto]="true" [isShowingentries]="true"
+  <ui-pagination [backgroundColor]="'rgb(183 183 183)'" [totalItems]="totalItems" [pageSize]="itemsPerPage"
+    [currentPage]="currentPage" [isDropCount]="true" [isPagination]="true" [isGoto]="true" [isShowingEntries]="true"
     (pageChange)="pageChange($event)">
   </ui-pagination>
 </div>
@@ -9,12 +9,8 @@
 
 <div class="justify-between items-center overflow-x-auto text-xs [scrollbar-width:thin]">
   <table class="min-w-full border-collapse table-fixed [&_td]:!overflow-visible [&_th]:font-semibold">
-    <!-- <nav [style.border-radius]="thradius" style=" background-color: #dbeafe;"> -->
    <thead class="!rounded-[50px]">
       <tr [style.border-radius]="thradius" class="bg-[#dbeafe]">
-
-       <!-- <thead class="bg-blue-100" [style.border-radius]="thradius">
-      <tr [style.border-radius]="trradius"> -->
         @if (showUndoRedo) {
         <th [style.border-top-left-radius]="thradius" [style.border-bottom-left-radius]="thradius"
           class="p-2 whitespace-nowrap font-semibold text-left">
@@ -32,9 +28,8 @@
         <th [style.border-top-left-radius]="(!showUndoRedo) ? thradius : '0px'"
           [style.border-bottom-left-radius]="(!showUndoRedo) ? thradius : '0px'"
           class="p-2 whitespace-nowrap font-semibold text-left">
-          <ui-toggle [checked]="false" [color]="'#4CAF50'" [tickColor]="'#fff'" [label]="''" [labelPosition]="'right'"
-            [labelColor]="'#333'" [size]="'medium'" [useCheckbox]="true" (click)="thcheck()"
-            [checked]="isCurrentPageSelected"></ui-toggle>
+          <ui-toggle [checked]="isCurrentPageSelected" [color]="'#4CAF50'" [label]="''" [labelPosition]="'right'"
+            [labelColor]="'#333'" [size]="'medium'" (toggleChange)="thcheck()"></ui-toggle>
         </th> }
 
         @if (showserialNo) {
@@ -62,12 +57,6 @@
               {{ head.colName }}
             </span>
 
-            <!-- @if (head.showColIcon) {
-            <span (click)="sortColumn(i)">
-              <ui-icon [name]="head.colIconName || 'arrow_up_outline'"></ui-icon>
-              <ui-icon [name]="head.colIconName2"></ui-icon>
-            </span>
-            } -->
             @if (head.showColIcon) {
             <span (click)="sortColumn(i)" class="cursor-pointer flex items-center">
 
@@ -101,24 +90,21 @@
 
         }
 
-
       </tr>
 
     </thead>
-    <!-- </nav> -->
-
 
     <tbody>
       @if (tableRows.length > 0) {
 
       @for (row of tableRows; let i = $index; let isOdd = $odd; track trackByFn(row, i)) {
 
-      <tr class="active:!opacity-100" 
+      <tr class="active:!opacity-100"
       [ngClass]="{
         'opacity-100 !bg-[rgb(175,174,174)] !border-3 !border-dotted !border-[#202020] z-[999] [&_td>*]:invisible': isDragging && draggedRowIndex === i,
         '!bg-[#47f684]': !isDragging && lastDroppedIndex === i
-      }" 
-      [style.background-color]="(alternateRowColor && isOdd && draggedRowIndex !== i) ? customRowColor : 'white'" 
+      }"
+      [style.background-color]="(alternateRowColor && isOdd && draggedRowIndex !== i) ? customRowColor : 'white'"
       [draggable]="showUndoRedo" (dragstart)="showUndoRedo && onDragStart($event, i)"
       (dragover)="showUndoRedo && onDragOver($event, i)" (dragend)="onDragEnd()">
 
@@ -134,8 +120,8 @@
         <td [style.border-top-left-radius]="(!showUndoRedo) ? trradius : '0px'"
           [style.border-bottom-left-radius]="(!showUndoRedo) ? trradius : '0px'"
           class="p-2 whitespace-nowrap font-semibold text-left">
-          <ui-toggle [checked]="selectedRows.has(row)" [color]="'#4CAF50'" [tickColor]="'#fff'" [label]="''"
-            [labelPosition]="'right'" [labelColor]="'#333'" [size]="'small'" [useCheckbox]="true" (click)="check(row)">
+          <ui-toggle [checked]="selectedRows.has(row)" [color]="'#4CAF50'" [label]="''"
+            [labelPosition]="'right'" [labelColor]="'#333'" [size]="'small'" (toggleChange)="check(row)">
           </ui-toggle>
         </td>
         }
@@ -158,7 +144,7 @@
           [style.border-bottom-right-radius]="isLastCell ? trradius : '0px'" [attr.colspan]="cell.tdColspan"
           [attr.rowspan]="cell.tdRowspan" class="p-2 border-b whitespace-nowrap text-ellipsis"
           [style.background-color]="cell.tdProperties?.BGColor"
-          [ngClass]="cell.type === CellType.ICONPANNEL || cell.type === CellType.VALUEDROPDOWN ? 'overflow-visible' : 'overflow-hidden'">
+          [ngClass]="cell.type === CellType.ICON_PANEL || cell.type === CellType.VALUE_DROPDOWN ? 'overflow-visible' : 'overflow-hidden'">
 
           <div class="flex items-center gap-3" [style.justify-content]="cell.tdProperties?.fontProperties?.fontAlign"
             [style.width]="cell.width">
@@ -202,13 +188,13 @@
               }
             </div>
             }
-            @case (CellType.VALUEDROPDOWN) {
+            @case (CellType.VALUE_DROPDOWN) {
             <div class="relative overflow-visible">
 
-              <ui-value-dropdown [dropdownValues]="mapToDropdownValues(asDropdown(cell).options)"
+              <ui-value-select [dropdownValues]="mapToDropdownValues(asDropdown(cell).options)"
                 [defaultSelected]="getDefaultDropdownValue(asDropdown(cell))" [showIcon]="true"
                 (onSelect)="onDropdownChange(row, asDropdown(cell), $event)">
-              </ui-value-dropdown>
+              </ui-value-select>
 
             </div>
             }
@@ -229,21 +215,19 @@
             }
 
 
-            @case (CellType.ICONPANNEL) {
+            @case (CellType.ICON_PANEL) {
             <div class="flex items-center justify-center w-full">
               <div class="relative inline-block">
                 <div class="panel-trigger-box"
                   (click)="$event.stopPropagation(); activePanelCell = activePanelCell === cell ? null : cell">
-                  <ui-icon-button [iconName]="asiconPannel(cell).value?.iconName || 'dots_horizontal'"
-                    [bgColor]="'#fff'" [color]="asiconPannel(cell).value?.iconColor || 'black'" [hoverBGColor]="'#fff'"
-                    [hoverColor]="asiconPannel(cell).value?.iconColor || 'black'" [borderRadius]="6"
-                    [borderColor]="'lightgray'"></ui-icon-button>
+                  <ui-icon-button [iconName]="asIconPanel(cell).value?.iconName || 'dots_horizontal'"
+                    [ariaLabel]="'Row actions'"></ui-icon-button>
                 </div>
 
                 @if (activePanelCell === cell) {
                 <div class="absolute right-0 top-full mt-1 min-w-[120px] bg-white border border-gray-200 rounded-md shadow-lg z-[999] flex flex-col py-1" (click)="$event.stopPropagation()">
                   <ng-container
-                    *ngTemplateOutlet="asiconPannel(cell).value?.pannelContent || null; context: { $implicit: row, cell: cell }">
+                    *ngTemplateOutlet="asIconPanel(cell).value?.panelContent || null; context: { $implicit: row, cell: cell }">
                   </ng-container>
                 </div>
                 }
@@ -253,15 +237,13 @@
             </div>
             }
 
-            @case (CellType.ICONPOPOVER) {
+            @case (CellType.ICON_POPOVER) {
             <div class="flex items-center justify-center w-full">
-              @let iconData = asiconPopover(cell).value;
+              @let iconData = asIconPopover(cell).value;
               <ui-icon-button-popup [iconName]="iconData?.iconName || 'home'"
                 [description]="iconData?.description || ''" [popupPosition]="iconData?.popupPosition || 'bottom'"
-                [bgColor]="iconData?.bgColor || 'transparent'" [color]="'black'"
-                [hoverBGColor]="iconData?.hoverBGColor || '#f3f4f6'" [hoverColor]="iconData?.hoverColor || 'black'"
                 [popupBgColor]="iconData?.popupBgColor || '#1f2937'"
-                [popupTxtColor]="iconData?.popupTxtColor || '#ffffff'" [borderColor]="'#e5e7eb'">
+                [popupTxtColor]="iconData?.popupTxtColor || '#ffffff'">
               </ui-icon-button-popup>
             </div>
             }
@@ -283,10 +265,9 @@
               <!-- SUB TITLE -->
               <span class="text-xs text-gray-500">
                 {{
-                (asUser(cell).value?.subTitle ?? '').length > 20
-                ? (asUser(cell).value?.subTitle ?? '').slice(0, 20) + '...'
-                : (asUser(cell).value?.subTitle ?? '')
-
+                (asUser(cell).value?.subtitle ?? '').length > 20
+                ? (asUser(cell).value?.subtitle ?? '').slice(0, 20) + '...'
+                : (asUser(cell).value?.subtitle ?? '')
                 }}
               </span>
               }
@@ -311,8 +292,6 @@
               }
 
             </div>
-
-
             }
 
           </div>
@@ -328,7 +307,9 @@
       }
 
       @else {
-      <p>No matching result</p>
+      <tr>
+        <td class="p-4 text-center text-gray-500" [attr.colspan]="(tableHeaders?.length || 0) + 3">No matching result</td>
+      </tr>
       }
     </tbody>
   </table>
@@ -336,8 +317,8 @@
 
 @if (totalItems > 5 && topPagination) {
 <div class="sticky left-0">
-  <ui-pagination [backgroundcolor]="'rgb(183 183 183)'" [totalItems]="totalItems" [pageSize]="itemsPerPage"
-    [currentPage]="currentPage" [isdropcount]="true" [ispagination]="true" [isgoto]="true" [isShowingentries]="true"
+  <ui-pagination [backgroundColor]="'rgb(183 183 183)'" [totalItems]="totalItems" [pageSize]="itemsPerPage"
+    [currentPage]="currentPage" [isDropCount]="true" [isPagination]="true" [isGoto]="true" [isShowingEntries]="true"
     (pageChange)="pageChange($event)">
   </ui-pagination>
 </div>

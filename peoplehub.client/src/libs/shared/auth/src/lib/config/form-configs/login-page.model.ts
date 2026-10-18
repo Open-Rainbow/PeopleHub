@@ -1,4 +1,4 @@
-﻿import { IFormFieldConfig } from '../../../../common/src/public-api';
+import { IFormFieldConfig } from 'common';
 
 export interface ILoginFormFields {
     username: IFormFieldConfig;
@@ -6,6 +6,3 @@ export interface ILoginFormFields {
 }
 
 export type { ILoginPageForm } from './login-page.types';
-
-
-

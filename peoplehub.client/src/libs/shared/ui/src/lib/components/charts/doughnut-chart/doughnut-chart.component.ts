@@ -26,6 +26,7 @@ export class DoughnutChartComponent implements OnInit, OnDestroy {
   @ViewChild('chartCanvas', { static: true })
   chartRef!: ElementRef<HTMLCanvasElement>;
   private chart!: Chart;
+  private animationTimer: ReturnType<typeof setInterval> | null = null;
 
   @Input() showLegends: boolean = true;
   @Input() centerText: boolean = true;
@@ -42,7 +43,6 @@ export class DoughnutChartComponent implements OnInit, OnDestroy {
   animatedTotal: number = 0;
   animatedPercentages: number[] = [];
   animatedValues: number[] = [];
-
 
   ngOnInit() {
     this.originalColors = [...this.legendData.map(d => d.color)];
@@ -70,7 +70,7 @@ export class DoughnutChartComponent implements OnInit, OnDestroy {
         if (this.centerText) {
           if (this.activeLabel && this.activeLabel.trim() !== '') {
             ctx.font = `bold 30px Arial`;
-             ctx.fillStyle = '#9CA3AF';
+            ctx.fillStyle = '#9CA3AF';
             ctx.fillText(this.activeValue, width / 2, height / 2 - 8);
             ctx.font = `12px Arial`;
             ctx.fillStyle = '#9CA3AF';
@@ -110,7 +110,7 @@ export class DoughnutChartComponent implements OnInit, OnDestroy {
               label: (context) => {
                 const index = context.dataIndex;
                 const item = this.legendData[index];
-                const percentage = Math.round((item.value / this.total) * 100);
+                const percentage = this.toPercentage(item.value);
 
                 return this.showAsValue
                   ? `${item.label}: ${item.value}`
@@ -121,25 +121,24 @@ export class DoughnutChartComponent implements OnInit, OnDestroy {
         },
 
         onHover: (event, elements) => {
-  if (elements.length > 0) {
-    const index = elements[0].index;
-    this.updateHighlight(index);
+          if (elements.length > 0) {
+            const index = elements[0].index;
+            this.updateHighlight(index);
 
-    const item = this.legendData[index];
-    const percentage = Math.round((item.value / this.total) * 100);
+            const item = this.legendData[index];
+            const percentage = this.toPercentage(item.value);
 
-    this.activeValue = this.showAsValue
-      ? `${item.value}`
-      : `${percentage}%`;
+            this.activeValue = this.showAsValue
+              ? `${item.value}`
+              : `${percentage}%`;
 
-    this.activeLabel = item.label;
-  } else {
-    this.updateHighlight(null);
-    this.activeValue = this.total.toString();
-    this.activeLabel = this.defaultLabel;
-  }
-},
-
+            this.activeLabel = item.label;
+          } else {
+            this.updateHighlight(null);
+            this.activeValue = this.total.toString();
+            this.activeLabel = this.defaultLabel;
+          }
+        },
       },
       plugins: [centerTextPlugin],
     };
@@ -151,95 +150,104 @@ export class DoughnutChartComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.stopAnimation();
     this.chart?.destroy();
   }
 
-getDisplayValue(index: number): string {
-  return `${this.animatedValues[index]}`;
-}
-
-private updateHighlight(index: number | null) {
-  const dataset = this.chart.data.datasets[0] as any;
-
-  if (index === null) {
-  
-    dataset.backgroundColor = [...this.originalColors];
-    dataset.borderWidth = 0;
-  } else {
-    dataset.backgroundColor = this.originalColors.map((color, i) =>
-      i === index ? color : '#E5E7EB' 
-    );
-
-    dataset.borderWidth = this.originalColors.map((_, i) =>
-      i === index ? 3 : 0
-    );
-    dataset.borderColor = this.originalColors;
+  getDisplayValue(index: number): string {
+    return `${this.animatedValues[index]}`;
   }
 
-  this.activeIndex = index;
-  this.chart.update();
-}
+  private toPercentage(value: number): number {
+    return this.total > 0 ? Math.round((value / this.total) * 100) : 0;
+  }
 
+  private updateHighlight(index: number | null) {
+    if (!this.chart) return;
+    const dataset = this.chart.data.datasets[0] as any;
 
+    if (index === null) {
+      dataset.backgroundColor = [...this.originalColors];
+      dataset.borderWidth = 0;
+    } else {
+      dataset.backgroundColor = this.originalColors.map((color, i) =>
+        i === index ? color : '#E5E7EB'
+      );
 
-onLegendHover(index: number) {
-  this.updateHighlight(index);
-
-  const item = this.legendData[index];
-  const percentage = Math.round((item.value / this.total) * 100);
-
-  this.activeValue = this.showAsValue
-    ? `${item.value}`
-    : `${percentage}%`;
-
-  this.activeLabel = item.label;
-}
-
-onLegendLeave() {
-  this.updateHighlight(null);
-  this.activeValue = this.total.toString();
-  this.activeLabel = this.defaultLabel;
-}
-private animateNumbers() {
-  const duration = 1000; 
-  const frameRate = 16; 
-  const totalFrames = duration / frameRate;
-
-  let frame = 0;
-  const targetValues = this.legendData.map(item => item.value);
-
-
-  const counter = setInterval(() => {
-    frame++;
-
-    const progress = frame / totalFrames;
-
-    this.animatedTotal = Math.round(this.total * progress);
-
-    this.animatedValues = targetValues.map(v =>
-      Math.round(v * progress)
-    );
-
-
-    if (frame >= totalFrames) {
-      this.animatedTotal = this.total;
-      this.animatedValues = targetValues;
-      clearInterval(counter);
+      dataset.borderWidth = this.originalColors.map((_, i) =>
+        i === index ? 3 : 0
+      );
+      dataset.borderColor = this.originalColors;
     }
 
-    this.activeValue = this.animatedTotal.toString();
-    this.chart?.draw();
-  }, frameRate);
-}
-resetChart() {
-  this.chart.setActiveElements([]);  
-  this.updateHighlight(null);
-  this.activeIndex = null;
-  this.activeValue = this.total.toString();
-  this.activeLabel = this.defaultLabel;
-  this.chart.update();
-}
+    this.activeIndex = index;
+    this.chart.update();
+  }
 
+  onLegendHover(index: number) {
+    this.updateHighlight(index);
 
+    const item = this.legendData[index];
+    const percentage = this.toPercentage(item.value);
 
+    this.activeValue = this.showAsValue
+      ? `${item.value}`
+      : `${percentage}%`;
+
+    this.activeLabel = item.label;
+  }
+
+  onLegendLeave() {
+    this.updateHighlight(null);
+    this.activeValue = this.total.toString();
+    this.activeLabel = this.defaultLabel;
+  }
+
+  private stopAnimation() {
+    if (this.animationTimer !== null) {
+      clearInterval(this.animationTimer);
+      this.animationTimer = null;
+    }
+  }
+
+  private animateNumbers() {
+    this.stopAnimation();
+    const duration = 1000;
+    const frameRate = 16;
+    const totalFrames = duration / frameRate;
+
+    let frame = 0;
+    const targetValues = this.legendData.map(item => item.value);
+
+    this.animationTimer = setInterval(() => {
+      frame++;
+
+      const progress = frame / totalFrames;
+
+      this.animatedTotal = Math.round(this.total * progress);
+
+      this.animatedValues = targetValues.map(v =>
+        Math.round(v * progress)
+      );
+
+      if (frame >= totalFrames) {
+        this.animatedTotal = this.total;
+        this.animatedValues = targetValues;
+        this.stopAnimation();
+      }
+
+      this.activeValue = this.animatedTotal.toString();
+      this.chart?.draw();
+    }, frameRate);
+  }
+
+  resetChart() {
+    if (!this.chart) return;
+    this.chart.setActiveElements([]);
+    this.updateHighlight(null);
+    this.activeIndex = null;
+    this.activeValue = this.total.toString();
+    this.activeLabel = this.defaultLabel;
+    this.chart.update();
+  }
 }

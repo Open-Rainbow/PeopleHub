@@ -1,4 +1,4 @@
-﻿import { IFormFieldConfig } from '../../../../common/src/public-api';
+import { IFormFieldConfig } from 'common';
 
 export interface ITempLoginFormFields {
     temporaryUsername: IFormFieldConfig;
@@ -6,6 +6,3 @@ export interface ITempLoginFormFields {
 }
 
 export type { ITempLoginCredentialsForm } from './temp-login-credentials.types';
-
-
-

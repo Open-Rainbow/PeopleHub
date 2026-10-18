@@ -16,10 +16,10 @@ import { ToggleComponent } from '../../controls/toggle/toggle.component';
 import { IconButtonPopupComponent } from '../../controls/icon-button-popup/icon-button-popup.component';
 import { IconButtonComponent } from '../../controls/icon-button/icon-button.component';
 import { ChipComponent } from '../../controls/chip/chip.component';
+import { ValueSelectComponent } from '../../controls/value-select/value-select.component';
 import { IconComponent } from '../icon/icon.component';
 import { TableData } from '../../../models/table.types';
-import { BaseCell, FontProperties, IconCell, IconPopoverCell, ImageCell, TableCell, TableCellType, TableRow, TextCell, UserCell, ValueDropdownCell } from '../../../models/table.model';
-type PopupTarget = { type: 'day' | 'leave' | 'name'; index?: number } | null;
+import { BaseCell, FontProperties, IconCell, IconPanelCell, IconPopoverCell, ImageCell, TableCell, TableCellType, TableRow, TextCell, UserCell, ValueDropdownCell } from '../../../models/table.model';
 
 @Component({
   selector: 'app-table',
@@ -32,10 +32,10 @@ type PopupTarget = { type: 'day' | 'leave' | 'name'; index?: number } | null;
     IconComponent,
     PaginationComponent,
     ToggleComponent,
-
     IconButtonPopupComponent,
     IconButtonComponent,
     ChipComponent,
+    ValueSelectComponent,
   ],
 })
 export class TableComponent {
@@ -109,22 +109,11 @@ export class TableComponent {
 
     if (!this.tableHeaders || this.tableHeaders.length === 0) {
       this.tableHeaders = this.tableData[0].map((col) => ({
-        // colName: col.colName,
-        // type: col.type,
-        // showColIcon: col.showColIcon,
-        // colIconName: col.colIconName,
-        // colIconName2: col.colIconName2,
-        // hoverIconName: col.hoverIconName,
-        // showHoverIcon: col.showHoverIcon,
-        // freeze: col.freeze,
-        // thProperties: col.thProperties,
-
         colName: col.colName,
         showColIcon: col.showColIcon,
         colIconName: col.colIconName,
         colIconName2: col.colIconName2,
         hoverIconName: col.hoverIconName,
-        // showHoverIcon: col.showHoverIcon,
         showHoverIcon: false,
         freeze: col.freeze,
         thProperties: col.thProperties,
@@ -169,27 +158,12 @@ export class TableComponent {
   asIcon(cell: TableCell): IconCell {
     return cell as IconCell;
   }
-  asiconPopover(cell: TableCell): IconPopoverCell {
+  asIconPopover(cell: TableCell): IconPopoverCell {
     return cell as IconPopoverCell;
   }
-  asiconPannel(cell: TableCell): IconPopoverCell {
-    return cell as IconPopoverCell;
+  asIconPanel(cell: TableCell): IconPanelCell {
+    return cell as IconPanelCell;
   }
-
-  // sortEmployeeName(): void {
-  //   this.count++;
-  //   const data = this.getDeepCopy(this.originalTable);
-  //   if (this.count === 1) {
-  //     this.sortedTable = data.sort((a, b) => (a[0].value || '').toString().localeCompare((b[0].value || '').toString()));
-  //   } else if (this.count === 2) {
-  //     this.sortedTable = data.sort((a, b) => (b[0].value || '').toString().localeCompare((a[0].value || '').toString()));
-  //   } else {
-  //     this.sortedTable = [];
-  //     this.count = 0;
-  //   }
-  //   this.currentPage = 1;
-  //   this.processTableData();
-  // }
 
   sortEmployeeName(): void {
     this.count++;
@@ -220,27 +194,6 @@ export class TableComponent {
     this.currentPage = 1;
     this.processTableData();
   }
-
-  // sortColumn(colIndex: number): void {
-  //   if (colIndex === 0) return;
-  //   this.colSortState = this.currentSortColIndex !== colIndex ? 1 : (this.colSortState + 1) % 3;
-  //   this.currentSortColIndex = colIndex;
-
-  //   if (this.colSortState === 0) {
-  //     this.sortedTable = [];
-  //   }
-
-  //   else {
-  //     const data = this.getDeepCopy(this.originalTable);
-  //     if(data == 'Apply Date' && ){}
-  //     this.sortedTable = data.sort((a, b) => {
-  //       const vA = (a[colIndex]?.value || '').toString().toLowerCase();
-  //       const vB = (b[colIndex]?.value || '').toString().toLowerCase();
-  //       return this.colSortState === 1 ? vA.localeCompare(vB) : vB.localeCompare(vA);
-  //     });
-  //   }
-  //   this.currentPage = 1;
-  // }
 
   sortColumn(colIndex: number): void {
     if (colIndex === 0) {

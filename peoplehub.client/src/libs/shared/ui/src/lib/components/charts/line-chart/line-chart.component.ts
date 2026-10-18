@@ -1,4 +1,3 @@
-import { httpResource } from '@angular/common/http';
 import {
   Component,
   ElementRef,
@@ -22,7 +21,6 @@ import {
   ChartConfiguration,
   TooltipModel,
 } from 'chart.js';
-import { formatFileContent } from 'storybook/internal/common';
 
 type LegendShape = 'circle' | 'rectRounded' | 'rect';
 
@@ -322,17 +320,11 @@ export class LineChartComponent implements OnInit, OnChanges, OnDestroy {
 
     if (this.chart.options.scales?.['y']) {
       const yScale: any = this.chart.options.scales['y'];
-      
-      
       yScale.ticks.stepSize = this.yAxisStep ?? undefined;
-      
-      // Add these lines to dynamically toggle the axis line:
       if (yScale.border) yScale.border.display = this.showYAxisLine;
-     
     }
     this.chart.update();
   }
-  
 
   ngOnDestroy() {
     const tooltipEl = document.getElementById('chartjs-tooltip');

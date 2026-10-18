@@ -1,8 +1,7 @@
-<div class="w-[240px] h-screen bg-[#e5e7eb] transition-[width] duration-300 ease-in-out sticky top-0 overflow-hidden z-[3000]"
-   class="h-screen sticky top-0 z-[3000] transition-[width] duration-300 ease-in-out"
-  [class]="isSidebarExpanded 
-    ? 'w-[240px] overflow-hidden' 
-    : 'w-[64px] bg-transparent overflow-hidden'"
+<div class="h-screen sticky top-0 z-[3000] overflow-hidden transition-[width] duration-300 ease-in-out"
+  [class]="isSidebarExpanded
+    ? 'w-[240px] bg-[#e5e7eb]'
+    : 'w-[64px] bg-transparent'"
   (mouseenter)="onMouseEnter()"
   (mouseleave)="onMouseLeave()">
 
@@ -12,6 +11,7 @@
 
   <img
     class="w-[32px]"
+    alt="Open Rainbow"
     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDtV5o8uP07w1WZBt1RhCfk6qtv37V3HpzkQ&s"
   />
 
@@ -53,7 +53,7 @@
         @for (route of item.routes; track $index) {
         <div class="p-2 px-6 mt-1 rounded-lg cursor-pointer transition-all hover:text-blue-600"
           [class.active-submenu]="activeSubRoute === route.route" (click)="onSubMenuClick(i, route.route)" [routerLink]="route.route">
-          {{ route.label }} One
+          {{ route.label }}
         </div>
         }
       }
@@ -75,5 +75,3 @@
 
   </div>
 </div>
-
-

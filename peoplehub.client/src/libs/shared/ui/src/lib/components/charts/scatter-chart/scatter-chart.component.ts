@@ -2,6 +2,9 @@ import { AfterViewInit,
     Component,
     ElementRef,
     Input,
+    OnChanges,
+    OnDestroy,
+    SimpleChanges,
     ViewChild, ChangeDetectionStrategy } from '@angular/core';
 
 import {
@@ -32,13 +35,12 @@ Chart.register(
   templateUrl: './scatter-chart.component.html',
   styleUrls: ['./scatter-chart.component.scss'],
 })
-export class ScatterChartComponent implements AfterViewInit {
+export class ScatterChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   @ViewChild('scatterCanvas', { static: true })
   scatterCanvas!: ElementRef<HTMLCanvasElement>;
 
-  chart!: Chart<'scatter', { x: number; y: number }[]>;
-
+  chart?: Chart<'scatter', { x: number; y: number }[]>;
 
   @Input() title = '';
 
@@ -68,16 +70,26 @@ export class ScatterChartComponent implements AfterViewInit {
     this.createChart();
   }
 
+  ngOnChanges(_changes: SimpleChanges): void {
+    if (!this.chart) return;
+    this.chart.data = this.buildData();
+    this.chart.options = this.buildOptions();
+    this.chart.update();
+  }
+
+  ngOnDestroy(): void {
+    this.chart?.destroy();
+    this.chart = undefined;
+  }
 
   private createChart(): void {
+    this.chart?.destroy();
     this.chart = new Chart(this.scatterCanvas.nativeElement, {
       type: 'scatter',
       data: this.buildData(),
       options: this.buildOptions(),
     });
   }
-
-
 
   private buildData(): {
     datasets: ChartDataset<'scatter', { x: number; y: number }[]>[];
@@ -94,8 +106,6 @@ export class ScatterChartComponent implements AfterViewInit {
       })),
     };
   }
-
-
 
   private buildOptions(): ChartOptions<'scatter'> {
     return {
