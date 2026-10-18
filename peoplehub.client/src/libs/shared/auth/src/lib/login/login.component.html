@@ -1,66 +1,102 @@
-<div class="min-h-[100dvh] grid grid-cols-1 lg:grid-cols-2 bg-[#f4f6fb]">
+<div class="fixed inset-0 z-10 overflow-y-auto grid grid-cols-1 lg:grid-cols-2 bg-white text-left">
+  <!-- Brand panel (desktop) -->
   <section
-    class="hidden lg:flex flex-col justify-center px-16 xl:px-20 bg-gradient-to-br from-[#0f172a] via-[#1e3a8a] to-[#2563eb] text-white"
+    class="hidden lg:flex flex-col justify-center items-start text-left px-16 xl:px-24 bg-gradient-to-br from-[#0f172a] via-[#1e3a8a] to-[#2563eb] text-white"
   >
-    <h1 class="text-4xl xl:text-5xl font-semibold mb-5 tracking-tight">Welcome to </h1>
-    <p class="text-[16px] xl:text-[17px] leading-7 max-w-[560px] text-blue-100/95">
+    <div class="flex items-center gap-3 mb-10">
+      <img src="assets/logo.png" alt="" class="h-10 w-10 rounded-lg bg-white/10 p-1.5" />
+      <span class="text-lg font-semibold tracking-tight">PeopleHub</span>
+    </div>
+
+    <h1 class="text-4xl xl:text-5xl font-semibold mb-5 tracking-tight leading-tight">
+      Welcome to <span class="text-blue-300">PeopleHub</span>
+    </h1>
+    <p class="text-[16px] xl:text-[17px] leading-7 max-w-[520px] text-blue-100/90">
       Manage employees, attendance, leave, payroll, and organization workflows from one unified workspace.
     </p>
-    <div class="mt-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm w-fit">
+    <div class="mt-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm">
       <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
       Secure enterprise access
     </div>
   </section>
 
-  <section class="flex items-center justify-center px-5 py-8 sm:px-8 lg:px-10 bg-white">
-    <div class="w-full max-w-[420px] rounded-2xl border border-[#e9edf6] bg-white shadow-[0_18px_45px_rgba(25,35,65,0.12)] p-6 sm:p-8">
-      <h2 class="text-[#6d28d9] text-[24px] font-semibold text-center">USER LOGIN</h2>
-      <hr class="my-4 border-0 h-px bg-[#e4e7ef]" />
+  <!-- Form panel -->
+  <section class="flex flex-col items-center justify-center px-5 py-10 sm:px-8 lg:px-10 bg-[#f8fafc] lg:bg-white">
+    <!-- Brand (mobile) -->
+    <div class="lg:hidden flex items-center gap-2 mb-6">
+      <img src="assets/logo.png" alt="" class="h-8 w-8" />
+      <span class="text-lg font-semibold text-[#0f172a]">PeopleHub</span>
+    </div>
 
-      <form [formGroup]="form" (ngSubmit)="login()" class="space-y-4">
+    <div class="w-full max-w-[420px] rounded-2xl border border-[#e9edf6] bg-white shadow-[0_18px_45px_rgba(25,35,65,0.10)] p-6 sm:p-8 text-left">
+      <h2 class="text-[24px] font-semibold text-[#0f172a]">Sign in</h2>
+      <p class="mt-1 text-[14px] text-[#64748b]">Use your PeopleHub account to continue.</p>
+
+      <form [formGroup]="form" (ngSubmit)="login()" class="mt-6 space-y-4" novalidate>
         <div>
-          <label for="username" class="block text-[13px] font-medium text-[#4b5563] mb-1.5">Username</label>
+          <label for="username" class="block text-left text-[13px] font-medium text-[#334155] mb-1.5">Username</label>
           <input
             id="username"
             type="text"
             formControlName="username"
             placeholder="Enter username"
-            class="w-full h-11 rounded-lg border border-[#d8deea] px-3 text-[14px] outline-none transition focus:border-[#6d28d9] focus:ring-2 focus:ring-[#6d28d9]/15"
+            autocomplete="username"
+            class="w-full h-11 rounded-lg border px-3 text-[14px] outline-none transition focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/15"
+            [class.border-[#d8deea]]="!isInvalid('username')"
+            [class.border-[#ef4444]]="isInvalid('username')"
           />
         </div>
 
         <div>
-          <label for="password" class="block text-[13px] font-medium text-[#4b5563] mb-1.5">Password</label>
-          <input
-            id="password"
-            type="password"
-            formControlName="password"
-            placeholder="Enter password"
-            class="w-full h-11 rounded-lg border border-[#d8deea] px-3 text-[14px] outline-none transition focus:border-[#6d28d9] focus:ring-2 focus:ring-[#6d28d9]/15"
-          />
+          <label for="password" class="block text-left text-[13px] font-medium text-[#334155] mb-1.5">Password</label>
+          <div class="relative">
+            <input
+              id="password"
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Enter password"
+              autocomplete="current-password"
+              class="w-full h-11 rounded-lg border pl-3 pr-11 text-[14px] outline-none transition focus:border-[#2563eb] focus:ring-2 focus:ring-[#2563eb]/15"
+              [class.border-[#d8deea]]="!isInvalid('password')"
+              [class.border-[#ef4444]]="isInvalid('password')"
+            />
+            <button
+              type="button"
+              class="absolute right-1 top-1/2 -translate-y-1/2 h-9 w-9 flex items-center justify-center rounded-md text-[#64748b] hover:text-[#0f172a] hover:bg-[#f1f5f9]"
+              [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+              (click)="togglePassword()"
+            >
+              <ui-icon [name]="showPassword() ? 'eye_off' : 'eye'" class="text-[18px]"></ui-icon>
+            </button>
+          </div>
         </div>
 
         <div class="flex items-center justify-between gap-3 pt-1">
-          <label class="inline-flex items-center gap-2 cursor-pointer text-[13px] text-[#6b7280]">
-            <input type="checkbox" formControlName="rememberMe" class="h-4 w-4 rounded border-[#c9d1e1] text-[#6d28d9] focus:ring-[#6d28d9]/30" />
+          <label class="inline-flex items-center gap-2 cursor-pointer text-[13px] text-[#475569]">
+            <input type="checkbox" formControlName="rememberMe" class="h-4 w-4 rounded border-[#c9d1e1] accent-[#2563eb]" />
             <span>Remember me</span>
           </label>
-          <a href="#" class="text-[13px] text-[#6b7280] hover:text-[#4338ca]">Forgot password?</a>
+          <button type="button" class="text-[13px] font-medium text-[#2563eb] hover:underline" (click)="forgotPassword()">
+            Forgot password?
+          </button>
         </div>
 
-        @if (showError()) {
-          <div class="rounded-lg border border-[#f6b9b9] bg-[#fff4f4] px-3 py-2.5 text-[13px] text-[#dc2626]">
-            Login ID and Password are required. Please enter valid credentials to continue.
+        @if (errorMessage()) {
+          <div role="alert" class="rounded-lg border border-[#fecaca] bg-[#fef2f2] px-3 py-2.5 text-[13px] text-[#dc2626]">
+            {{ errorMessage() }}
           </div>
         }
 
         <button
           type="submit"
-          class="w-full h-11 rounded-xl bg-gradient-to-r from-[#a103f6] to-[#7c3aed] text-white text-[15px] font-semibold transition hover:brightness-110 active:translate-y-px"
+          class="w-full h-11 rounded-lg bg-[#2563eb] text-white text-[15px] font-semibold transition hover:bg-[#1d4ed8] active:translate-y-px disabled:opacity-60"
+          [disabled]="loading()"
         >
-          Login
+          {{ loading() ? 'Signing in...' : 'Sign in' }}
         </button>
       </form>
     </div>
+
+    <p class="mt-6 text-[12px] text-[#94a3b8]">&copy; {{ year }} PeopleHub</p>
   </section>
 </div>
