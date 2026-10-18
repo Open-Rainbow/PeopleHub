@@ -1,6 +1,6 @@
-﻿import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChipComponent, HorizontalBarChartComponent } from 'ui';
+import { ChipComponent, HorizontalBarChartComponent, IconComponent } from 'ui';
 import { Activity, QuickAnnouncements, RecentPayslip } from 'common';
 import { DurationPipe } from 'pipes';
 
@@ -12,9 +12,9 @@ import { DurationPipe } from 'pipes';
     CommonModule,
     HorizontalBarChartComponent,
     ChipComponent,
+    IconComponent,
     DurationPipe,
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
@@ -47,9 +47,9 @@ export class DashboardComponent {
   ];
 
   recentPayslips: RecentPayslip[] = [
-    { month: 'December 2024', date: '31 Dec 2024', amount: 'â‚¹4,250.00' },
-    { month: 'November 2024', date: '30 Nov 2024', amount: 'â‚¹4,250.00' },
-    { month: 'October 2024', date: '31 Oct 2024', amount: 'â‚¹4,250.00' },
+    { month: 'December 2024', date: '31 Dec 2024', amount: '₹4,250.00' },
+    { month: 'November 2024', date: '30 Nov 2024', amount: '₹4,250.00' },
+    { month: 'October 2024', date: '31 Oct 2024', amount: '₹4,250.00' },
   ];
 
   teamMembers = [
@@ -76,6 +76,3 @@ export class DashboardComponent {
     this.activePayslipIndex = this.activePayslipIndex === index ? null : index;
   }
 }
-
-
-

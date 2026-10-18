@@ -42,6 +42,7 @@ export type {
 export * from './lib/components/primitives/count-widget/count-widget.component';
 export * from './lib/components/primitives/dot/dot.component';
 export * from './lib/components/primitives/icon/icon.component';
+export * from './lib/components/primitives/icon/icon-registry';
 export * from './lib/components/primitives/loader/loader.component';
 export * from './lib/components/primitives/menu-bar/menu-bar.component';
 export * from './lib/components/primitives/notice-banner/notice-banner';

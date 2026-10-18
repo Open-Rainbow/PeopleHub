@@ -38,7 +38,7 @@
           [routerLink]="item.route"
         >
           <div class="flex items-center gap-2">
-            <iconify-icon [icon]="item.icon" class="text-[20px]"></iconify-icon>
+            <ui-icon [name]="item.icon" class="text-[20px]"></ui-icon>
             @if (isSidebarExpanded) {
               <span>{{ item.label }}</span>
             }
@@ -46,14 +46,14 @@
 
           @if (item.routes && item.routes.length > 0) {
             @if (item.routes && isSidebarExpanded) {
-              <iconify-icon
+              <ui-icon
                 class="text-[18px]"
-                [icon]="
+                [name]="
                   viewSubMenu && activeIndex === i
-                    ? 'mdi:arrow-down'
-                    : 'mdi:arrow-right'
+                    ? 'arrow_down'
+                    : 'arrow_right'
                 "
-              ></iconify-icon>
+              ></ui-icon>
             }
           }
         </div>

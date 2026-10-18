@@ -1,5 +1,4 @@
 import type { Preview } from '@storybook/angular';
-import '../src/libs/shared/common/src/lib/assets/icons/icon-registry';
 
 const preview: Preview = {
   parameters: {

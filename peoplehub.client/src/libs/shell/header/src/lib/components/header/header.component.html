@@ -3,7 +3,7 @@
     <button
       class="hamburger-btn w-[36px] h-[36px] bg-[var(--bg-color)] rounded-[8px] flex items-center justify-center cursor-pointer hover:bg-[#f3f6fb]"
       (click)="toggleSidebar()">
-      <iconify-icon [icon]="isUserCollapsed() ? 'mdi:close' : 'mdi:menu'" class="text-[20px]"></iconify-icon>
+      <ui-icon [name]="isUserCollapsed() ? 'close' : 'hamburger_menu'" class="text-[20px]"></ui-icon>
     </button>
   </div>
 
@@ -14,14 +14,14 @@
         class="brightness_icon theme-toggle-btn w-[36px] h-[36px] flex items-center justify-center rounded-[8px] cursor-pointer"
         aria-label="Toggle theme"
         (click)="toggleTheme()">
-        <iconify-icon [icon]="currentTheme() === 'dark' ? 'mdi:moon-waning-crescent' : 'mdi:brightness-7'" class="text-[20px]"></iconify-icon>
+        <ui-icon [name]="currentTheme() === 'dark' ? 'moon' : 'brightness'" class="text-[20px]"></ui-icon>
       </button>
 
       <span class="vertical-divider w-[1px] h-[28px] bg-[#97a1c0] mx-[12px]"></span>
 
       <div class="bell-container relative inline-flex items-center justify-center">
         <button class="bell-button w-[36px] h-[36px] flex items-center justify-center rounded-[8px] p-[10px] cursor-pointer hover:bg-[#F3F3F3] hover:outline hover:outline-2 hover:outline-[#E1E1E1]">
-          <iconify-icon icon="mdi:bell-outline" class="text-[20px]"></iconify-icon>
+          <ui-icon name="bell" class="text-[20px]"></ui-icon>
         </button>
         <span class="notification-dot absolute top-[-4px] right-[-4px] w-[13px] h-[13px] bg-[#e11d48] rounded-full"></span>
       </div>
@@ -61,7 +61,7 @@
         <div
           class="dropdown-item profile-action flex items-center justify-start text-[14px] rounded-[8px] px-[4px] py-[2px] my-[3px] cursor-pointer hover:bg-[#e8ebf1]"
           (click)="profileOpen()">
-          <iconify-icon icon="mdi:account" class="mr-[5px]"></iconify-icon>
+          <ui-icon name="person" class="mr-[5px]"></ui-icon>
           <span>View Profile</span>
         </div>
 
@@ -70,7 +70,7 @@
         <div
           class="dropdown-item logout-action flex items-center justify-start text-[14px] rounded-[8px] px-[4px] py-[2px] my-[3px] cursor-pointer hover:bg-[#e8ebf1]"
           (click)="logOut()">
-          <iconify-icon icon="mdi:logout" class="mr-[5px]"></iconify-icon>
+          <ui-icon name="logout" class="mr-[5px]"></ui-icon>
           <span>Logout</span>
         </div>
       </div>

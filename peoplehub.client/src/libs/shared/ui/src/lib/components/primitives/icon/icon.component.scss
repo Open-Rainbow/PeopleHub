@@ -1,3 +1,11 @@
+:host {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
+	vertical-align: middle;
+}
+
 .ui-icon {
 	--ui-icon-color: currentColor;
 	--ui-icon-hover-color: var(--ui-icon-color);
@@ -12,5 +20,17 @@
 
 	&:hover {
 		color: var(--ui-icon-hover-color);
+	}
+
+	// size the Lucide svg from font-size so Tailwind text-[Npx] and [size] both work
+	::ng-deep lucide-icon {
+		display: inline-flex;
+		width: 1em;
+		height: 1em;
+	}
+
+	::ng-deep svg {
+		width: 1em;
+		height: 1em;
 	}
 }

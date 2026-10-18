@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  CUSTOM_ELEMENTS_SCHEMA,
   HostListener,
   inject,
   input,
@@ -13,14 +12,14 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { InitialsPipe } from 'pipes';
 import { ThemeTokensService } from 'theme-tokens';
+import { IconComponent } from 'ui';
 import { UserProfileModel } from '../../models/user-profile.model';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'header-root',
   standalone: true,
-  imports: [CommonModule, InitialsPipe],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [CommonModule, InitialsPipe, IconComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })

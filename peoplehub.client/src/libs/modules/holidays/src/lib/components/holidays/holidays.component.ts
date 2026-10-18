@@ -1,7 +1,7 @@
-﻿import { Component, ChangeDetectionStrategy, OnInit, inject, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ChipComponent, TextBoxComponent, TextAreaComponent, DropdownComponent, CalendarComponent, TextButtonComponent } from 'ui';
+import { ChipComponent, TextBoxComponent, TextAreaComponent, DropdownComponent, CalendarComponent, TextButtonComponent, IconComponent } from 'ui';
 import { HolidayList } from 'common';
 
 interface ProcessedHoliday extends HolidayList {
@@ -13,8 +13,7 @@ interface ProcessedHoliday extends HolidayList {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'holidays-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ChipComponent, TextBoxComponent, TextAreaComponent, DropdownComponent, CalendarComponent, TextButtonComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [CommonModule, ReactiveFormsModule, ChipComponent, TextBoxComponent, TextAreaComponent, DropdownComponent, CalendarComponent, TextButtonComponent, IconComponent],
   templateUrl: './holidays.component.html',
 })
 export class HolidaysComponent implements OnInit {
@@ -105,6 +104,3 @@ export class HolidaysComponent implements OnInit {
     }
   }
 }
-
-
-

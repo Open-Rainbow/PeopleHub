@@ -1,15 +1,15 @@
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { IconComponent } from 'ui';
 import { SidebarService, MenuItem } from '../../services/sidebar.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'sidebar-root',
   standalone: true,
-  imports: [CommonModule, RouterModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [CommonModule, RouterModule, IconComponent],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
@@ -91,7 +91,7 @@ export class SidebarComponent implements OnInit {
 
     this.menuItems.forEach(
       (item, index) => {
-     
+
         if (item.routes?.length) {
           const subRoute = item.routes.find((sub) => cleanUrl.includes(`/${sub.route}`));
           if (subRoute) {
@@ -110,4 +110,3 @@ export class SidebarComponent implements OnInit {
       });
   }
 }
-

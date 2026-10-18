@@ -7,6 +7,7 @@
     "@angular/forms": "21.2.12",
     "@angular/router": "21.2.12",
     "chart.js": "^4.5.1",
+    "lucide-angular": "^1.0.0",
     "rxjs": "~7.8.0"
   },
   "dependencies": {
