@@ -11,11 +11,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { IconButtonComponent } from '../../controls/icon-button/icon-button.component';
-
-export interface TabButtonItem {
-  id: string;
-  label: string;
-}
+import type { TabButtonItem } from '../../../models/component-models/tab-button.model';
 
 @Component({
   selector: 'ui-tab-button',
@@ -26,11 +22,8 @@ export interface TabButtonItem {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabButtonComponent implements AfterViewInit, OnDestroy {
-
   @Input() tabs: TabButtonItem[] = [];
-
   @Input() activeTab = '';
-
   @Output() tabChange = new EventEmitter<string>();
 
   @ViewChild('tabContainer')
@@ -41,9 +34,8 @@ export class TabButtonComponent implements AfterViewInit, OnDestroy {
 
   private resizeObserver?: ResizeObserver;
   private mutationObserver?: MutationObserver;
-  constructor(
-    private readonly changeDetectorRef: ChangeDetectorRef
-  ) {}
+
+  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
     const element = this.tabContainer.nativeElement;
@@ -51,7 +43,7 @@ export class TabButtonComponent implements AfterViewInit, OnDestroy {
       this.updateArrowVisibility();
       this.changeDetectorRef.markForCheck();
     });
-   
+
     setTimeout(() => {
       this.updateArrowVisibility();
       this.changeDetectorRef.markForCheck();
@@ -61,13 +53,12 @@ export class TabButtonComponent implements AfterViewInit, OnDestroy {
       this.updateArrowVisibility();
       this.changeDetectorRef.markForCheck();
     });
-
     this.resizeObserver.observe(element);
+
     this.mutationObserver = new MutationObserver(() => {
       this.updateArrowVisibility();
       this.changeDetectorRef.markForCheck();
     });
-
     this.mutationObserver.observe(element, {
       childList: true,
       subtree: true,
@@ -86,18 +77,12 @@ export class TabButtonComponent implements AfterViewInit, OnDestroy {
 
   scrollLeft(): void {
     const element = this.tabContainer.nativeElement;
-    element.scrollBy({
-      left: -(element.clientWidth * 0.7),
-      behavior: 'smooth'
-    });
+    element.scrollBy({ left: -(element.clientWidth * 0.7), behavior: 'smooth' });
   }
 
   scrollRight(): void {
     const element = this.tabContainer.nativeElement;
-    element.scrollBy({
-      left: element.clientWidth * 0.7,
-      behavior: 'smooth'
-    });
+    element.scrollBy({ left: element.clientWidth * 0.7, behavior: 'smooth' });
   }
 
   onScroll(): void {
@@ -106,17 +91,10 @@ export class TabButtonComponent implements AfterViewInit, OnDestroy {
   }
 
   private updateArrowVisibility(): void {
-    if (!this.tabContainer) {
-      return;
-    }
-
+    if (!this.tabContainer) return;
     const element = this.tabContainer.nativeElement;
-
     const maxScrollLeft = element.scrollWidth - element.clientWidth;
-
     this.showLeftArrow = element.scrollLeft > 1;
-
-    this.showRightArrow =
-      maxScrollLeft > 1 && element.scrollLeft < maxScrollLeft - 1;
+    this.showRightArrow = maxScrollLeft > 1 && element.scrollLeft < maxScrollLeft - 1;
   }
 }

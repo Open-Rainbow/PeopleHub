@@ -1,5 +1,5 @@
 {
-  "extends": "../../../../tsconfig.json",
+  "extends": "../../../../tsconfig.lib.base.json",
   "compilerOptions": {
     "outDir": "../../../../out-tsc/lib",
     "declaration": true,
@@ -7,11 +7,5 @@
     "inlineSources": true,
     "types": []
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "**/*.spec.ts",
-    "**/*.stories.ts"
-  ]
+  "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }

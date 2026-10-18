@@ -9,102 +9,41 @@
     "strict": true,
     "noImplicitOverride": true,
     "paths": {
-      "announcements": [
-        "./src/libs/modules/announcements/src"
-      ],
-      "attendance": [
-        "./src/libs/modules/attendance/src"
-      ],
-      "dashboard": [
-        "./src/libs/modules/dashboard/src"
-      ],
-      "documents": [
-        "./src/libs/modules/documents/src"
-      ],
-      "employees": [
-        "./src/libs/modules/employees/src"
-      ],
-      "holidays": [
-        "./src/libs/modules/holidays/src"
-      ],
-      "leave": [
-        "./src/libs/modules/leave/src"
-      ],
-      "notifications": [
-        "./src/libs/modules/notifications/src"
-      ],
-      "payroll": [
-        "./src/libs/modules/payroll/src"
-      ],
-      "performance": [
-        "./src/libs/modules/performance/src"
-      ],
-      "recruitment": [
-        "./src/libs/modules/recruitment/src"
-      ],
-      "reports": [
-        "./src/libs/modules/reports/src"
-      ],
-      "settings": [
-        "./src/libs/modules/settings/src"
-      ],
-      "app-shell": [
-        "./src/libs/base/app-shell/src"
-      ],
-      "branding": [
-        "./src/libs/base/branding/src"
-      ],
-      "feature-flags": [
-        "./src/libs/base/feature-flags/src"
-      ],
-      "navigation": [
-        "./src/libs/base/navigation/src"
-      ],
-      "organization-config": [
-        "./src/libs/base/organization-config/src"
-      ],
-      "organization-context": [
-        "./src/libs/base/organization-context/src"
-      ],
-      "breadcrumbs": [
-        "./src/libs/shell/breadcrumbs/src"
-      ],
-      "header": [
-        "./src/libs/shell/header/src"
-      ],
-      "layout": [
-        "./src/libs/shell/layout/src"
-      ],
-      "quick-actions": [
-        "./src/libs/shell/quick-actions/src"
-      ],
-      "sidebar": [
-        "./src/libs/shell/sidebar/src"
-      ],
-      "ui": [
-        "./src/libs/shared/ui/src"
-      ],
-      "common": [
-        "./src/libs/shared/common/src"
-      ],
-      "api": [
-        "./src/libs/shared/api/src"
-      ],
-      "directives": [
-        "./src/libs/shared/directives/src"
-      ],
-      "forms": [
-        "./src/libs/shared/forms/src"
-      ],
-      "pipes": [
-        "./src/libs/shared/pipes/src"
-      ],
-      "theme-tokens": [
-        "./src/libs/shared/theme-tokens/src"
-      ],
-      "auth": [
-        "./src/libs/shared/auth/src"
-      ]
+      "api": ["./src/libs/shared/api/src"],
+      "auth": ["./src/libs/shared/auth/src"],
+      "common": ["./src/libs/shared/common/src"],
+      "directives": ["./src/libs/shared/directives/src"],
+      "forms": ["./src/libs/shared/forms/src"],
+      "pipes": ["./src/libs/shared/pipes/src"],
+      "theme-tokens": ["./src/libs/shared/theme-tokens/src"],
+      "ui": ["./src/libs/shared/ui/src"],
+      "utils": ["./src/libs/shared/utils/src"],
+      "app-shell": ["./src/libs/base/app-shell/src"],
+      "branding": ["./src/libs/base/branding/src"],
+      "feature-flags": ["./src/libs/base/feature-flags/src"],
+      "navigation": ["./src/libs/base/navigation/src"],
+      "organization-config": ["./src/libs/base/organization-config/src"],
+      "organization-context": ["./src/libs/base/organization-context/src"],
+      "breadcrumbs": ["./src/libs/shell/breadcrumbs/src"],
+      "header": ["./src/libs/shell/header/src"],
+      "layout": ["./src/libs/shell/layout/src"],
+      "quick-actions": ["./src/libs/shell/quick-actions/src"],
+      "sidebar": ["./src/libs/shell/sidebar/src"],
+      "announcements": ["./src/libs/modules/announcements/src"],
+      "attendance": ["./src/libs/modules/attendance/src"],
+      "dashboard": ["./src/libs/modules/dashboard/src"],
+      "documents": ["./src/libs/modules/documents/src"],
+      "employees": ["./src/libs/modules/employees/src"],
+      "holidays": ["./src/libs/modules/holidays/src"],
+      "leave": ["./src/libs/modules/leave/src"],
+      "notifications": ["./src/libs/modules/notifications/src"],
+      "payroll": ["./src/libs/modules/payroll/src"],
+      "performance": ["./src/libs/modules/performance/src"],
+      "recruitment": ["./src/libs/modules/recruitment/src"],
+      "reports": ["./src/libs/modules/reports/src"],
+      "settings": ["./src/libs/modules/settings/src"],
+      "super-admin": ["./src/libs/modules/super-admin/src"],
+      "org-a": ["./src/libs/extensions/org-a/src"]
     },
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
@@ -130,5 +69,5 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  },
+  }
 }

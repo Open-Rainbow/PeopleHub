@@ -64,11 +64,11 @@
   </div>
 </div>
 
-<ui-table
+<app-table
   [tableData]="normalizedTableData"
   [topPagination]="true"
   [bottomPagination]="false"
-  [showSerialNo]="false"
+  [showserialNo]="false"
   [showUndoRedo]="false"
   [canDrag]="false"
   [showCheckbox]="false"
@@ -77,4 +77,4 @@
   (editClicked)="editClicked($event)"
   (deleteClicked)="deleteClicked($event)"
 >
-</ui-table>
+</app-table>

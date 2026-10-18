@@ -1,0 +1,43 @@
+/* Library builds consume sibling libraries from their built output in dist/ (build order handled by scripts/run-*.mjs). */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "api": ["./dist/api"],
+      "auth": ["./dist/auth"],
+      "common": ["./dist/common"],
+      "directives": ["./dist/directives"],
+      "forms": ["./dist/forms"],
+      "pipes": ["./dist/pipes"],
+      "theme-tokens": ["./dist/theme-tokens"],
+      "ui": ["./dist/ui"],
+      "utils": ["./dist/utils"],
+      "app-shell": ["./dist/app-shell"],
+      "branding": ["./dist/branding"],
+      "feature-flags": ["./dist/feature-flags"],
+      "navigation": ["./dist/navigation"],
+      "organization-config": ["./dist/organization-config"],
+      "organization-context": ["./dist/organization-context"],
+      "breadcrumbs": ["./dist/breadcrumbs"],
+      "header": ["./dist/header"],
+      "layout": ["./dist/layout"],
+      "quick-actions": ["./dist/quick-actions"],
+      "sidebar": ["./dist/sidebar"],
+      "announcements": ["./dist/announcements"],
+      "attendance": ["./dist/attendance"],
+      "dashboard": ["./dist/dashboard"],
+      "documents": ["./dist/documents"],
+      "employees": ["./dist/employees"],
+      "holidays": ["./dist/holidays"],
+      "leave": ["./dist/leave"],
+      "notifications": ["./dist/notifications"],
+      "payroll": ["./dist/payroll"],
+      "performance": ["./dist/performance"],
+      "recruitment": ["./dist/recruitment"],
+      "reports": ["./dist/reports"],
+      "settings": ["./dist/settings"],
+      "super-admin": ["./dist/super-admin"],
+      "org-a": ["./dist/org-a"]
+    }
+  }
+}

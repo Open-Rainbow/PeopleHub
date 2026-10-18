@@ -2,8 +2,10 @@
   "name": "announcements",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^21.2.0",
-    "@angular/core": "^21.2.0"
+    "@angular/common": "21.2.12",
+    "@angular/core": "21.2.12",
+    "@angular/forms": "21.2.12",
+    "rxjs": "~7.8.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"

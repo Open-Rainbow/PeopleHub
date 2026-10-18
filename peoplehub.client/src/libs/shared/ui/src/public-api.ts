@@ -33,6 +33,7 @@ export { TimepickerComponent } from './lib/components/controls/timepicker/timepi
 export { ToggleComponent } from './lib/components/controls/toggle/toggle.component';
 export { ValueSelectComponent } from './lib/components/controls/value-select/value-select.component';
 export * from './lib/components/primitives/accordion/accordion.component';
+export * from './lib/components/primitives/accordion/accordion-group.component';
 export * from './lib/components/primitives/button-group/button-group.component';
 export type {
   ConfirmPopup,
@@ -45,6 +46,8 @@ export * from './lib/components/primitives/loader/loader.component';
 export * from './lib/components/primitives/menu-bar/menu-bar.component';
 export * from './lib/components/primitives/notice-banner/notice-banner';
 export * from './lib/components/primitives/pagination/pagination.component';
+export * from './lib/components/primitives/tab-button/tab-button';
+export type { TabButtonItem } from './lib/models/component-models/tab-button.model';
 export * from './lib/components/primitives/table/table.component';
 export * from './lib/components/primitives/toast-stack/toast-stack.component';
 export * from './lib/components/primitives/toast/toast.component';
