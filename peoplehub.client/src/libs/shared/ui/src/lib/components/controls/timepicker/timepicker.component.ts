@@ -25,7 +25,7 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() timeChange = new EventEmitter<string>();
   @Output() blurEvent = new EventEmitter<void>();
 
-   @Input() parentFormGroup!: FormGroup;
+  @Input() parentFormGroup!: FormGroup;
   @Input() id!: string;
   get control() {
     return this.parentFormGroup?.get(this.id);
@@ -43,7 +43,6 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
   secondsList = Array.from({ length: 60 }, (_, i) => i);
   ampmList: string[] = ['AM', 'PM'];
 
-
   visibleHours: number[] = [];
   visibleMinutes: number[] = [];
   visibleSeconds: number[] = [];
@@ -55,8 +54,6 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
   private scrollTimers = new Map<string, any>();
   private liveClockInterval: any;
   private lastMinute = 0;
-
-  
 
   @ViewChild('hoursCol', { static: false }) hoursCol!: ElementRef<HTMLDivElement>;
   @ViewChild('minutesCol', { static: false }) minutesCol!: ElementRef<HTMLDivElement>;
@@ -84,6 +81,8 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopLiveClock();
+    this.scrollTimers.forEach((timer) => clearTimeout(timer));
+    this.scrollTimers.clear();
   }
 
   private initializeLists(): void {
@@ -92,10 +91,15 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
       : Array.from({ length: 12 }, (_, i) => i + 1);
   }
 
+  // 12h mode must show 1..12, not 0..23
+  private toDisplayHours(hours24: number): number {
+    return this.use24HourFormat ? hours24 : hours24 % 12 || 12;
+  }
+
   private setInitialTime(): void {
     const istTime = this.getIstTime();
     this.setTimeState({
-      hours: istTime.getHours(),
+      hours: this.toDisplayHours(istTime.getHours()),
       minutes: istTime.getMinutes(),
       seconds: istTime.getSeconds(),
       ampm: istTime.getHours() >= 12 ? 'PM' : 'AM'
@@ -108,14 +112,20 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
     return new Date(utc + 5.5 * 60 * 60 * 1000);
   }
 
+  // Keeps the parent form control in sync (previously only emitted timeChange)
   private setTimeState(time: TimeState): void {
-  this._time = { ...this._time, ...time };
-  this.timeChange.emit(this.formatDisplayTime());
-}
+    this._time = { ...this._time, ...time };
+    const formatted = this.formatDisplayTime();
+    if (this.control && this.control.value !== formatted) {
+      this.control.setValue(formatted);
+    }
+    this.timeChange.emit(formatted);
+  }
 
-onBlur() {
-  this.blurEvent.emit();
-}
+  onBlur() {
+    this.control?.markAsTouched();
+    this.blurEvent.emit();
+  }
 
   togglePicker(): void {
     if (this.isPickerOpen) {
@@ -128,7 +138,7 @@ onBlur() {
   private openPicker(): void {
     this.isPickerOpen = true;
     this.setInitialTime();
-    
+
     setTimeout(() => {
       this.setScrollBehavior(false);
       requestAnimationFrame(() => {
@@ -149,7 +159,7 @@ onBlur() {
     this.liveClockInterval = setInterval(() => {
       const istTime = this.getIstTime();
       const newTime: TimeState = {
-        hours: this.use24HourFormat ? istTime.getHours() : istTime.getHours() % 12 || 12,
+        hours: this.toDisplayHours(istTime.getHours()),
         minutes: istTime.getMinutes(),
         seconds: istTime.getSeconds(),
         ampm: istTime.getHours() >= 12 ? 'PM' : 'AM'
@@ -158,12 +168,12 @@ onBlur() {
       if (!this.userInteracted) {
         this.setTimeState(newTime);
         this.scrollToCurrentSeconds();
-        
+
         if (this.minutes !== this.lastMinute) {
           this.lastMinute = this.minutes;
           this.scrollToCurrentMinutes();
         }
-        
+
         if (this.minutes === 0 && this.seconds === 0) {
           this.scrollToCurrentHours();
         }
@@ -215,6 +225,7 @@ onBlur() {
     this.userInteracted = true;
     this.stopLiveClock();
     this.updateTimeFromScroll(type, value);
+    this.control?.markAsDirty();
     setTimeout(() => this.centerOnSelected(true), 0);
   }
 
@@ -223,7 +234,8 @@ onBlur() {
     this.userInteracted = true;
     this.stopLiveClock();
     this.setTimeState({ ...this._time, ampm: normalizedValue });
-    
+    this.control?.markAsDirty();
+
     if (this.ampmCol?.nativeElement) {
       this.ampmCol.nativeElement.scrollTo({
         top: normalizedValue === 'AM' ? 0 : this.itemHeight,
@@ -255,7 +267,7 @@ onBlur() {
 
   private updateVisibleLists(): void {
     const repeat = <T>(arr: T[]): T[] => Array.from({ length: this.repeatCount }, () => arr).flat();
-    
+
     this.visibleHours = repeat(this.hoursList);
     this.visibleMinutes = repeat(this.minutesList);
     this.visibleAmPm = repeat(this.ampmList);
@@ -272,12 +284,12 @@ onBlur() {
 
     const hoursIndex = this.hoursList.indexOf(this.hours);
     const minutesIndex = this.minutesList.indexOf(this.minutes);
-    
+
     this.hoursCol.nativeElement.scrollTo({
       top: (this.hoursList.length + hoursIndex) * this.itemHeight - centerOffset,
       behavior
     });
-    
+
     this.minutesCol.nativeElement.scrollTo({
       top: (this.minutesList.length + minutesIndex) * this.itemHeight - centerOffset,
       behavior

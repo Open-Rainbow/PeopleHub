@@ -1,15 +1,22 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * Relative time ("5 mins ago" / "in 2 days").
+ * Pure pipe: only recalculates when the input changes. For a live-ticking UI,
+ * re-emit the value from the component on a timer.
+ */
 @Pipe({
   name: 'duration',
-  standalone:true
+  standalone: true
 })
 export class DurationPipe implements PipeTransform {
-    transform(value: Date | string | number): string {
-    if (!value) return '';
+  transform(value: Date | string | number | null | undefined): string {
+    if (value === null || value === undefined || value === '') return '';
 
     const inputDate = new Date(value).getTime();
-    const now = new Date().getTime();
+    if (Number.isNaN(inputDate)) return '';
+
+    const now = Date.now();
 
     const diffInSeconds = Math.floor((now - inputDate) / 1000);
     const absDiff = Math.abs(diffInSeconds);
@@ -33,5 +40,3 @@ export class DurationPipe implements PipeTransform {
     return isPast ? `${result} ago` : `in ${result}`;
   }
 }
-
-
