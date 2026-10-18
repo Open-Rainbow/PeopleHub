@@ -1,25 +1,25 @@
 <!-- Reserves the rail width in the layout; the panel below may overlay content when hover-expanded -->
 <div
   class="relative h-full transition-[width] duration-300 ease-in-out"
-  [style.width.px]="hoverEnabled ? 72 : 240"
+  [style.width.rem]="hoverEnabled ? 4.5 : 15"
 >
   <aside
     class="absolute inset-y-0 left-0 z-[3000] flex flex-col bg-[var(--bg-color)] border-r border-gray-200 overflow-x-hidden overflow-y-auto transition-[width,box-shadow] duration-300 ease-in-out"
-    [style.width.px]="isSidebarExpanded ? 240 : 72"
+    [style.width.rem]="isSidebarExpanded ? 15 : 4.5"
     [class.shadow-xl]="hoverEnabled && isSidebarExpanded"
     (mouseenter)="onMouseEnter()"
     (mouseleave)="onMouseLeave()"
   >
     <!-- Brand -->
     <div
-      class="flex items-center gap-[10px] h-[64px] shrink-0 px-3"
+      class="flex items-center gap-2.5 h-16 shrink-0 px-3"
       [ngClass]="isSidebarExpanded ? 'justify-start px-4' : 'justify-center'"
     >
-      <img class="w-[36px] h-[36px] shrink-0" src="assets/logo.svg" alt="PeopleHub" />
+      <img class="w-9 h-9 shrink-0" src="assets/logo.svg" alt="PeopleHub" />
       @if (isSidebarExpanded) {
-        <div class="flex flex-col gap-[2px] min-w-0">
+        <div class="flex flex-col gap-0.5 min-w-0">
           <span class="text-[var(--text-color)] font-semibold whitespace-nowrap">PeopleHub</span>
-          <span class="text-[10px] text-[var(--color-text-secondary)] whitespace-nowrap">Management System</span>
+          <span class="text-[0.625rem] text-[var(--color-text-secondary)] whitespace-nowrap">Management System</span>
         </div>
       }
     </div>
@@ -29,9 +29,9 @@
       @for (item of menuItems; track item.label; let i = $index) {
         <div class="relative">
           <div
-            class="flex items-center h-11 rounded-[10px] cursor-pointer transition-colors duration-200 hover:bg-blue-600 hover:text-white"
+            class="flex items-center h-11 rounded-[0.625rem] cursor-pointer transition-colors duration-200 hover:bg-blue-600 hover:text-white"
             [ngClass]="[
-              isSidebarExpanded ? 'justify-between gap-3 px-[14px]' : 'justify-center',
+              isSidebarExpanded ? 'justify-between gap-3 px-3.5' : 'justify-center',
               activeIndex === i ? 'bg-blue-600 text-white' : 'text-[var(--text-color)]'
             ]"
             [attr.title]="isSidebarExpanded ? null : item.label"
@@ -40,7 +40,7 @@
             [routerLink]="item.route"
           >
             <div class="flex items-center gap-3 min-w-0">
-              <ui-icon [name]="item.icon" class="text-[20px] shrink-0"></ui-icon>
+              <ui-icon [name]="item.icon" class="text-xl shrink-0"></ui-icon>
               @if (isSidebarExpanded) {
                 <span class="whitespace-nowrap truncate">{{ item.label }}</span>
               }
@@ -48,7 +48,7 @@
 
             @if (isSidebarExpanded && item.routes?.length) {
               <ui-icon
-                class="text-[18px] shrink-0"
+                class="text-lg shrink-0"
                 [name]="viewSubMenu && activeIndex === i ? 'arrow_down' : 'arrow_right'"
               ></ui-icon>
             }
@@ -58,7 +58,7 @@
             <div class="flex flex-col mt-1">
               @for (route of item.routes; track route.route) {
                 <div
-                  class="py-2 pl-[46px] pr-3 rounded-lg cursor-pointer whitespace-nowrap text-[14px] transition-colors hover:text-blue-600"
+                  class="py-2 pl-[2.875rem] pr-3 rounded-lg cursor-pointer whitespace-nowrap text-sm transition-colors hover:text-blue-600"
                   [ngClass]="activeSubRoute === route.route ? 'text-blue-600 font-medium' : 'text-[var(--text-color)]'"
                   (click)="onSubMenuClick(i, route.route)"
                   [routerLink]="route.route"
