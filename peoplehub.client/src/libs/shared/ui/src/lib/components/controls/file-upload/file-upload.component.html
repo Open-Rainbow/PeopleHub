@@ -16,8 +16,9 @@
       (focus)="onFocus()"
       (blur)="onBlur()"
     >
+      <!-- Placeholder only shows once the label has floated up, same as ui-text-box -->
       <span class="file-upload-value" [class.placeholder]="!hasValue">{{
-        displayValue
+        hasValue || isFocused || isFileDialogOpen ? displayValue : ''
       }}</span>
       <ui-icon
         [name]="

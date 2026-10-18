@@ -1,23 +1,22 @@
-<div class="flex items-stretch w-full min-h-screen bg-[#f9fbfd]">
+<div class="flex items-start gap-6 w-full">
   <ui-toast-stack
     [toasts]="toasts()"
     position="top-right"
     (toastClosed)="removeToast($event)"
   ></ui-toast-stack>
 
-  <aside class="bg-[#f9fbfd] border-r border-gray-200 min-h-full">
+  <!-- Stepper stays pinned while the form scrolls; scrolls on its own if taller than the viewport -->
+  <aside class="sticky top-0 self-start shrink-0 max-h-[calc(100dvh-124px)] overflow-y-auto">
     <employees-stepper></employees-stepper>
   </aside>
 
-  <main class="flex-1 bg-[#f9fbfd] flex flex-col min-h-full p-0">
-    <section class="flex flex-col w-full p-4 box-border bg-[#f9fbfd]">
-      <router-outlet (activate)="onComponentActivate($event)"></router-outlet>
+  <section class="flex-1 min-w-0 flex flex-col gap-4">
+    <router-outlet (activate)="onComponentActivate($event)"></router-outlet>
 
-      <employees-button-navigation
-        [activeComponent]="currentComponent()"
-        (stepSaved)="handleStepSuccess($event)"
-        (previewToggle)="togglePreview($event)"
-      ></employees-button-navigation>
-    </section>
-  </main>
+    <employees-button-navigation
+      [activeComponent]="currentComponent()"
+      (stepSaved)="handleStepSuccess($event)"
+      (previewToggle)="togglePreview($event)"
+    ></employees-button-navigation>
+  </section>
 </div>

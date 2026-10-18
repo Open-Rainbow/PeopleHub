@@ -1,34 +1,30 @@
-<div class="flex flex-col w-[260px] min-h-screen bg-[#f9fbfd] border-r border-[#e6e9ef] px-5 py-5">
-  <h3 class="font-semibold text-[16px] text-[#333] mb-3">Add New Employee</h3>
+<div class="flex flex-col w-[260px] bg-white border border-[#e6e9ef] rounded-2xl px-4 py-5">
+  <h3 class="font-semibold text-[16px] text-[#1f2937] mb-3 px-1">Add New Employee</h3>
 
-  <div class="mb-5">
+  <div class="mb-5 px-1">
     <div class="h-[6px] bg-[#f0f2f6] rounded-full mb-1.5">
       <div
-        class="h-[6px] bg-[#0066ff] rounded-full transition-[width] duration-300 ease-in-out"
+        class="h-[6px] bg-[#2563eb] rounded-full transition-[width] duration-300 ease-in-out"
         [style.width.%]="progressPercent()"
       ></div>
     </div>
-    <p class="text-[13px] text-[#666] m-0">{{ completedCount() }} of {{ totalCount() }} steps completed</p>
+    <p class="text-[12px] text-[#6b7280] m-0">{{ completedCount() }} of {{ totalCount() }} steps completed</p>
   </div>
 
-  <ul class="list-none p-0 m-0 flex flex-col gap-1.5">
+  <ul class="list-none p-0 m-0 flex flex-col gap-1">
     @for (step of steps(); let i = $index; track step.route) {
       <li
-        class="flex items-center px-3 py-2.5 rounded-md cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#f5f7fa]"
-        [class.bg-[#e8f0ff]]="step.status === 'active'"
-        [class.border-l-4]="step.status === 'active' || step.status === 'completed' || step.status === 'notComplete'"
-        [class.border-[#0a58ff]]="step.status === 'active'"
-        [class.text-[#0a58ff]]="step.status === 'active'"
-        [class.bg-[#e8f5e9]]="step.status === 'completed'"
-        [class.border-[#2e7d32]]="step.status === 'completed'"
-        [class.text-[#2e7d32]]="step.status === 'completed'"
-        [class.bg-[#f4dede]]="step.status === 'notComplete'"
-        [class.border-[#f52525]]="step.status === 'notComplete'"
-        [class.text-[#8e3434]]="step.status === 'notComplete'"
+        class="flex items-center px-3 py-2.5 rounded-lg cursor-pointer border-l-4 transition-colors duration-200 ease-in-out"
+        [ngClass]="{
+          'bg-[#e8f0ff] border-[#2563eb] text-[#2563eb]': step.status === 'active',
+          'bg-[#e8f5e9] border-[#2e7d32] text-[#2e7d32]': step.status === 'completed',
+          'bg-[#fdecec] border-[#f52525] text-[#8e3434]': step.status === 'notComplete',
+          'border-transparent text-[#374151] hover:bg-[#f5f7fa]': step.status !== 'active' && step.status !== 'completed' && step.status !== 'notComplete'
+        }"
         (click)="onStepClick(step, i)"
       >
-        <div class="flex items-center gap-3 w-full">
-          <span class="flex items-center justify-center w-[22px] h-[22px] flex-shrink-0">
+        <div class="flex items-center gap-3 w-full min-w-0">
+          <span class="flex items-center justify-center w-[22px] h-[22px] flex-shrink-0 text-[18px]">
             @if (step.status === 'completed') {
               <ui-icon name="charm:tick"></ui-icon>
             } @else if (step.status === 'notComplete') {
@@ -37,7 +33,7 @@
               <ui-icon [name]="step.icon"></ui-icon>
             }
           </span>
-          <div class="flex flex-col">
+          <div class="flex flex-col min-w-0">
             <span class="text-[13px] font-medium leading-snug">{{ step.title }}</span>
             @if (step.status === 'active') {
               <small class="text-[11px]">Current step</small>

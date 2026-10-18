@@ -4,7 +4,7 @@
   [style.width.px]="hoverEnabled ? 72 : 240"
 >
   <aside
-    class="sticky top-0 z-[3000] h-screen flex flex-col bg-[var(--bg-color)] border-r border-gray-200 overflow-x-hidden overflow-y-auto transition-[width,box-shadow] duration-300 ease-in-out"
+    class="absolute inset-y-0 left-0 z-[3000] flex flex-col bg-[var(--bg-color)] border-r border-gray-200 overflow-x-hidden overflow-y-auto transition-[width,box-shadow] duration-300 ease-in-out"
     [style.width.px]="isSidebarExpanded ? 240 : 72"
     [class.shadow-xl]="hoverEnabled && isSidebarExpanded"
     (mouseenter)="onMouseEnter()"
