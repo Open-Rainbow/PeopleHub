@@ -3,15 +3,13 @@
   [formGroup]="parentFormGroup"
   [class.border-red-500]="isInvalid"
 >
-
-  
   <button
     type="button"
     #selectedYearRef
     id="selected-year"
     (click)="toggleDropdown($event)"
-    class="relative overflow-hidden py-[0.35rem] px-[0.7rem] text-[0.8125rem] min-h-[36px] w-full
-           flex items-left justify-between
+    class="relative overflow-hidden py-[0.35rem] px-3 text-[0.875rem] min-h-[40px] w-full
+           flex items-center justify-between
            border rounded-lg transition-colors duration-200"
     [style.color]="isOpen ? activeTextColor : textColor"
     [style.background-color]="isOpen ? activeBackgroundColor : backgroundColor"
@@ -21,17 +19,14 @@
       <span>{{ selectedYear }}</span>
 
       @if (showIcon === true) {
-      <ui-icon
-        name="icon_park_outline_down"
-        class="text-[0.8125rem] transition-transform duration-200"
-        [class.rotate-180]="isOpen">
-      </ui-icon>
-
+        <ui-icon
+          name="icon_park_outline_down"
+          class="text-[0.875rem] transition-transform duration-200"
+          [class.rotate-180]="isOpen">
+        </ui-icon>
       }
     </div>
 
-
-    
     <span
       #ripple
       class="absolute rounded-full scale-0 pointer-events-none
@@ -39,34 +34,24 @@
     </span>
   </button>
 
-  
-  @if(isOpen){
-    <div class="absolute right-0 top-full mt-2 z-50
-               bg-white shadow-lg rounded-lg
-               py-[0.35rem] px-[0.7rem] text-[0.8125rem] min-h-[36px] min-w-full w-max p-2">
-      <div class="flex flex-col gap-1">
-    
+  @if (isOpen) {
+    <div class="absolute right-0 top-full mt-1.5 z-[1000]
+                bg-white border border-gray-200 shadow-lg rounded-lg
+                p-1 text-[0.875rem] min-w-full w-max">
+      <div class="flex flex-col gap-0.5">
         @for (value of dropdownValues; track value) {
-        <div>
-          <button type="button" class="w-full text-left px-2 py-1
-                      rounded-md whitespace-nowrap
-                      transition-all duration-200
-                      hover:bg-gray-100" [class.opacity-30]="value.isDisabled"
-            [class.cursor-not-allowed]="value.isDisabled" [style.color]="
-                  value.value === selectedYear 
-                    ? activeTextColor 
-                    : value.textColor
-                " [style.backgroundColor]="
-                  value.value === selectedYear 
-                    ? value.backgroundColor 
-                    : null
-                " (click)="selectYear(value.value)" [disabled]="value.isDisabled">
+          <button
+            type="button"
+            class="w-full text-left px-3 py-2 rounded-md whitespace-nowrap transition-colors duration-150 hover:bg-gray-100"
+            [class.opacity-30]="value.isDisabled"
+            [class.cursor-not-allowed]="value.isDisabled"
+            [style.color]="value.value === selectedYear ? activeTextColor : value.textColor"
+            [style.backgroundColor]="value.value === selectedYear ? value.backgroundColor : null"
+            (click)="selectYear(value.value)"
+            [disabled]="value.isDisabled">
             {{ value.value }}
           </button>
-    
-        </div>
         }
-    
       </div>
     </div>
   }

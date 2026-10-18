@@ -10,8 +10,6 @@ import { IconComponent } from '../../primitives/icon/icon.component';
   imports: [IconComponent, ReactiveFormsModule]
 })
 export class PasswordComponent {
- 
-
   @Input() label: string = 'Temporary Password';
   @Input() isRequired: boolean = true;
   @Input() placeholder: string = 'Enter Temporary password';
@@ -22,10 +20,13 @@ export class PasswordComponent {
   @Output() activeChange = new EventEmitter<boolean>();
 
   @Input() value: string = '';
+  /** True while the input has focus (label floats on focus OR value). */
   isActive: boolean = false;
 
   @Input() parentFormGroup!: FormGroup;
   @Input() id!: string;
+
+  @Output() valueChange = new EventEmitter<string>();
 
   get control() {
     return this.parentFormGroup?.get(this.id);
@@ -40,38 +41,31 @@ export class PasswordComponent {
     return currentValue.length > 0;
   }
 
-  @Output() valueChange = new EventEmitter<string>();
-
   togglePassword() {
     this.passwordVisible = !this.passwordVisible;
   }
 
-onFocus() {
-  this.isActive = true;
-}
+  onFocus() {
+    this.isActive = true;
+    this.activeChange.emit(true);
+  }
 
-onBlur() {
-  if (!this.hasValue) {
+  onBlur() {
     this.isActive = false;
+    this.activeChange.emit(false);
+    this.control?.markAsTouched();
   }
 
-  this.control?.markAsTouched();
-}
+  onInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    let v = input.value;
 
-onInput(event: Event) {
-  const input = event.target as HTMLInputElement;
-  let v = input.value;
+    if (v.length > this.maxLength) {
+      v = v.slice(0, this.maxLength);
+      input.value = v;
+    }
 
-  if (v.length > this.maxLength) {
-    v = v.slice(0, this.maxLength);
-    input.value = v;
+    this.value = v;
+    this.valueChange.emit(this.value);
   }
-
-  this.value = v;
-  this.valueChange.emit(this.value);
-
-  
-}
-
-
 }

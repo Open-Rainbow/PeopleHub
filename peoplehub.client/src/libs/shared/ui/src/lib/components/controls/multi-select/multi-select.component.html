@@ -1,154 +1,97 @@
-<div
-  class="custom-dropdown relative w-full bg-white rounded-lg multi-select"
-  [formGroup]="parentFormGroup"
-  [class.error]="isInvalid"
->
-  <span
-    class="absolute left-3 z-10 font-medium px-1 pointer-events-none transition-all duration-200 ease-out"
-    [class]="
-      !isOpen && !hasSelectedValues
-        ? 'top-3 text-sm text-gray-500 bg-transparent'
-        : '-top-2 text-xs text-gray-500 bg-white'
-    "
-    [class.text-red-600]="isInvalid"
-  >
-    {{ label }}
-    @if (isRequired) {
-      <span class="ml-px inline text-[12px] text-red-600">*</span>
-    }
-  </span>
-
-  <input
-    type="hidden"
-    [formControlName]="id"
-    [value]="selectedValues"
-  />
+<div class="ui-field custom-dropdown multi-select" [formGroup]="parentFormGroup">
+  <input type="hidden" [formControlName]="id" [value]="selectedValues" />
 
   <div
-    class="relative min-h-[48px] h-auto w-full rounded-lg border bg-white px-3 pr-12 py-2 text-sm flex items-center gap-2 transition-colors duration-200 flex-wrap content-start"
-    [class.border-red-600]="isInvalid"
-    [class.border-blue-600]="!isInvalid && isOpen"
-    [class.border-gray-300]="!isInvalid && !isOpen"
+    class="ui-field__box"
+    [class.is-open]="isOpen"
+    [class.is-invalid]="isInvalid"
+    [class.is-floating]="isOpen || hasSelectedValues"
     (click)="isActive = true; isOpen = true"
     (blur)="onBlur()"
   >
-    <!-- Selected chips -->
-    @for (option of getSelectedOptions(); track option.value) {
-      <span
-        class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-md bg-[#e8f2ff] px-2.5 py-1 text-[13px] text-[#2563eb]"
-      >
-        @if (option.avatar) {
-          <img
-            [src]="option.avatar"
-            [alt]="option.name"
-            class="inline-block w-5 h-5 rounded-full object-cover"
-          />
-        }
-        {{ option.name }}
-        <ui-icon
-          name="cross_2"
-          class="inline-flex h-4 w-4 items-center justify-center cursor-pointer hover:text-[#1d47a0]"
-          (click)="
-            $event.preventDefault();
-            $event.stopPropagation();
-            removeSelected(option.value)
-          "
-        >
-        </ui-icon>
-      </span>
-    }
-
-    <!-- Search input integrated -->
-    @if (isOpen && !areAllOptionsSelected) {
-      <input
-        type="text"
-        placeholder="Type something..."
-        class="flex-1 min-w-[150px] border-none outline-none bg-transparent text-sm"
-        [formControl]="searchForm.controls['search']!"
-        (input)="onSearchTextChange($event)"
-        (click)="$event.stopPropagation()"
-      />
-    }
-
-    @if (!hasSelectedValues && !isOpen) {
-      <span class="text-gray-500 font-normal">{{ placeholder }}</span>
-    }
-
-    <div
-      class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1"
-    >
-      @if (selectedValues.length > 2) {
-        <ui-icon
-          name="delete"
-          class="w-5 h-5 inline-flex items-center justify-center cursor-pointer text-red-500 hover:text-red-600"
-          (click)="
-            $event.preventDefault(); $event.stopPropagation(); clearAll()
-          "
-        >
-        </ui-icon>
+    <div class="ms-control">
+      @for (option of getSelectedOptions(); track option.value) {
+        <span class="ms-chip">
+          @if (option.avatar) {
+            <img [src]="option.avatar" [alt]="option.name" class="ms-chip__avatar" />
+          }
+          {{ option.name }}
+          <button
+            type="button"
+            class="ms-chip__remove"
+            [attr.aria-label]="'Remove ' + option.name"
+            (click)="$event.preventDefault(); $event.stopPropagation(); removeSelected(option.value)"
+          >
+            <ui-icon name="cross_2"></ui-icon>
+          </button>
+        </span>
       }
 
-      <ui-icon
-        [name]="'arrow_down'"
-        class="inline-flex h-5 w-5 items-center justify-center transition-transform duration-200"
-        [class.rotate-180]="isOpen"
-      >
-      </ui-icon>
+      @if (isOpen && !areAllOptionsSelected) {
+        <input
+          type="text"
+          class="ms-search"
+          [placeholder]="placeholder || 'Type to search...'"
+          [formControl]="searchForm.controls['search']!"
+          (input)="onSearchTextChange($event)"
+          (click)="$event.stopPropagation()"
+        />
+      }
     </div>
-  </div>
 
-  <!-- Dropdown list - only show unselected items -->
-  <ul
-    class="custom-dropdown-list absolute left-0 right-0 z-[1000] hidden w-full max-w-full box-border rounded-lg border border-gray-300 bg-white shadow-[0_4px_12px_rgba(0,0,0,0.1)]"
-    [class.hidden]="!isOpen"
-    [class.top-[calc(100%+4px)]]="!isOpenUp"
-    [class.bottom-[calc(100%+4px)]]="isOpenUp"
-    (click)="$event.stopPropagation()"
-  >
-    <!-- Select All option -->
-    @if (options.length > 0) {
-      <li
-        class="border-b border-gray-200 px-3 py-2.5 cursor-pointer hover:bg-blue-50 flex items-center justify-between"
-        (click)="toggleSelectAllClick()"
-      >
-        <span class="text-sm font-medium">Select All</span>
-        @if (areAllOptionsSelected) {
-          <ui-icon
-            name="mdi:check"
-            class="inline-flex h-4 w-4 items-center justify-center text-blue-600"
-          >
-          </ui-icon>
-        }
-      </li>
-    }
+    <label class="ui-field__label">
+      {{ label }}
+      @if (isRequired) {
+        <span class="ui-field__required">*</span>
+      }
+    </label>
 
-    @if (getAvailableOptions().length === 0 && selectedValues.length === 0) {
-      <li class="px-3 py-2 text-sm text-gray-400 italic">No results found</li>
-    }
-
-    <div class="overflow-y-auto max-h-64">
-      @for (option of getAvailableOptions(); track option.value) {
-        <li
-          (click)="selectOption(option)"
-          class="dropdown-option relative flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-blue-50 transition-colors"
+    <span class="ui-field__suffix">
+      @if (selectedValues.length > 2) {
+        <button
+          type="button"
+          class="ui-field__icon-btn ms-clear"
+          aria-label="Clear all"
+          (click)="$event.preventDefault(); $event.stopPropagation(); clearAll()"
         >
-          @if (option.avatar) {
-            <img
-              [src]="option.avatar"
-              [alt]="option.name"
-              class="w-8 h-8 rounded-full object-cover flex-shrink-0"
-            />
+          <ui-icon name="delete"></ui-icon>
+        </button>
+      }
+      <ui-icon name="arrow_down" class="ui-field__chevron"></ui-icon>
+    </span>
+
+    <ul
+      class="ui-field__popup custom-dropdown-list"
+      [class.hidden]="!isOpen"
+      [class.open-up]="isOpenUp"
+      (click)="$event.stopPropagation()"
+    >
+      @if (options.length > 0) {
+        <li class="ui-field__option ms-select-all" (click)="toggleSelectAllClick()">
+          <span>Select All</span>
+          @if (areAllOptionsSelected) {
+            <ui-icon name="mdi:check" class="ms-check"></ui-icon>
           }
-          <div class="flex-1">
-            <div class="text-sm font-medium text-gray-900">
-              {{ option.name }}
-            </div>
+        </li>
+      }
+
+      @if (getAvailableOptions().length === 0 && selectedValues.length === 0) {
+        <li class="ui-field__option is-empty">No results found</li>
+      }
+
+      @for (option of getAvailableOptions(); track option.value) {
+        <li class="ui-field__option dropdown-option" (click)="selectOption(option)">
+          @if (option.avatar) {
+            <img [src]="option.avatar" [alt]="option.name" class="ms-option__avatar" />
+          }
+          <div class="ms-option__text">
+            <div class="ms-option__name">{{ option.name }}</div>
             @if (option.email) {
-              <div class="text-xs text-gray-500">{{ option.email }}</div>
+              <div class="ms-option__email">{{ option.email }}</div>
             }
           </div>
         </li>
       }
-    </div>
-  </ul>
+    </ul>
+  </div>
 </div>

@@ -1,155 +1,65 @@
-<div 
-  class="relative inline-block font-['Poppins',sans-serif]" 
-  [formGroup]="parentFormGroup" 
-  [class.error]="isInvalid"
->
-
-  <div 
-    class="w-[250px] h-[36px] px-[16px] py-[5px] bg-white 
-           border border-[#ccc] rounded-[8px]
-           cursor-pointer font-semibold text-center
-           focus:border-[#007BFF] focus:bg-[#f0f8ff]
-           transition-all duration-300 ease-in-out"
-    tabindex="0"
-    (click)="togglePicker()"
-    (blur)="onBlur()"
-    [class.border-[#007BFF]]="isPickerOpen"
-    [class.bg-[#f0f8ff]]="isPickerOpen"
-  >
-    {{ formatDisplayTime() }}
-  </div>
-
-  @if (isPickerOpen) {
-    <div class="absolute top-[50px] left-0 bg-white 
-                rounded-[12px] px-[18px] py-[12px]">
-
-      <div class="flex items-center justify-center relative">
-
-        
-        <div class="absolute left-0 right-0 h-[1px] bg-[#ccc] 
-                    top-[calc(50%-20px)]"></div>
-        <div class="absolute left-0 right-0 h-[1px] bg-[#ccc] 
-                    top-[calc(50%+20px)]"></div>
-
-        
-        <div 
-          class="h-[120px] w-[60px] overflow-y-auto text-center
-                 [scrollbar-width:none]
-                 [&::-webkit-scrollbar]:hidden"
-          #hoursCol 
-          (scroll)="onScroll('hours')"
-        >
-          @for (h of visibleHours; track h) {
-            <div
-              class="relative h-[40px] leading-[40px] 
-                     opacity-[0.4] text-[16px] cursor-pointer 
-                     transition duration-200
-                     [&.active]:opacity-100
-                     [&.active]:font-bold
-                     [&.active]:text-[#1565d8]
-                     [&.active]:scale-[1.15]"
-              [class.active]="isActive('hours', h)"
-              (click)="selectValue('hours', h)"
-            >
-              {{ h < 10 ? '0' + h : h }}
-            </div>
-          }
-        </div>
-
-        <div class="text-[18px] font-semibold mx-[10px] text-[#222]">
-          :
-        </div>
-
-        
-        <div 
-          class="h-[120px] w-[60px] overflow-y-auto text-center
-                 [scrollbar-width:none]
-                 [&::-webkit-scrollbar]:hidden"
-          #minutesCol 
-          (scroll)="onScroll('minutes')"
-        >
-          @for (m of visibleMinutes; track m) {
-            <div
-              class="relative h-[40px] leading-[40px]
-                     opacity-[0.4] text-[16px] cursor-pointer
-                     transition duration-200
-                     [&.active]:opacity-100
-                     [&.active]:font-bold
-                     [&.active]:text-[#1565d8]
-                     [&.active]:scale-[1.15]"
-              [class.active]="isActive('minutes', m)"
-              (click)="selectValue('minutes', m)"
-            >
-              {{ m < 10 ? '0' + m : m }}
-            </div>
-          }
-        </div>
-
-        @if (showSeconds) {
-          <div class="text-[18px] font-semibold mx-[10px] text-[#222]">
-            :
-          </div>
-
-          <div 
-            class="h-[120px] w-[60px] overflow-y-auto text-center
-                   [scrollbar-width:none]
-                   [&::-webkit-scrollbar]:hidden"
-            #secondsCol 
-            (scroll)="onScroll('seconds')"
-          >
-            @for (s of visibleSeconds; track s) {
-              <div
-                class="relative h-[40px] leading-[40px]
-                       opacity-[0.4] text-[16px] cursor-pointer
-                       transition duration-200
-                       [&.active]:opacity-100
-                       [&.active]:font-bold
-                       [&.active]:text-[#1565d8]
-                       [&.active]:scale-[1.15]"
-                [class.active]="isActive('seconds', s)"
-                (click)="selectValue('seconds', s)"
-              >
-                {{ s < 10 ? '0' + s : s }}
-              </div>
-            }
-          </div>
-        }
-
-        
-        @if (!use24HourFormat) {
-          <div 
-            class="relative w-[60px] ml-[10px] h-[113px] mt-[20px] mb-[18px]
-                   overflow-y-auto text-center
-                   [scrollbar-width:none]
-                   [&::-webkit-scrollbar]:hidden"
-            #ampmCol 
-            (scroll)="onScroll('ampm')"
-          >
-            @for (a of visibleAmPm; track a; let i = $index) {
-              <div
-                class="h-[40px] leading-[40px]
-                       text-[14px]
-                       opacity-[0.4]
-                       cursor-pointer
-                       transition duration-200
-                       [&.active]:opacity-100
-                       [&.active]:font-bold
-                       [&.active]:text-[#1565d8]"
-                [class.active]="ampm === a"
-                (click)="setAmPm(a)"
-              >
-                {{ a }}
-              </div>
-            }
-
-            <div class="absolute top-1/2 left-0 right-0 h-[40px]
-                        rounded-[6px] -translate-y-1/2
-                        pointer-events-none">
-            </div>
-          </div>
-        }
-
-      </div>
+<div class="ui-field timepicker-container" [formGroup]="parentFormGroup">
+  <div class="ui-field__box" [class.is-open]="isPickerOpen" [class.is-invalid]="isInvalid">
+    <div
+      class="ui-field__control ui-field__control--suffix tp-trigger"
+      role="button"
+      tabindex="0"
+      [attr.aria-expanded]="isPickerOpen"
+      (click)="togglePicker()"
+      (keydown.enter)="togglePicker()"
+      (blur)="onBlur()"
+    >
+      <span class="ui-field__value">{{ formatDisplayTime() }}</span>
     </div>
-  }
+
+    <span class="ui-field__suffix">
+      <ui-icon name="arrow_down" class="ui-field__chevron"></ui-icon>
+    </span>
+
+    @if (isPickerOpen) {
+      <div class="ui-field__popup tp-panel">
+        <div class="tp-columns">
+          <div class="tp-band"></div>
+
+          <div class="tp-col" #hoursCol (scroll)="onScroll('hours')">
+            @for (h of visibleHours; track h) {
+              <div class="tp-cell" [class.active]="isActive('hours', h)" (click)="selectValue('hours', h)">
+                {{ h < 10 ? '0' + h : h }}
+              </div>
+            }
+          </div>
+
+          <div class="tp-sep">:</div>
+
+          <div class="tp-col" #minutesCol (scroll)="onScroll('minutes')">
+            @for (m of visibleMinutes; track m) {
+              <div class="tp-cell" [class.active]="isActive('minutes', m)" (click)="selectValue('minutes', m)">
+                {{ m < 10 ? '0' + m : m }}
+              </div>
+            }
+          </div>
+
+          @if (showSeconds) {
+            <div class="tp-sep">:</div>
+
+            <div class="tp-col" #secondsCol (scroll)="onScroll('seconds')">
+              @for (s of visibleSeconds; track s) {
+                <div class="tp-cell" [class.active]="isActive('seconds', s)" (click)="selectValue('seconds', s)">
+                  {{ s < 10 ? '0' + s : s }}
+                </div>
+              }
+            </div>
+          }
+
+          @if (!use24HourFormat) {
+            <div class="tp-col tp-col--ampm" #ampmCol (scroll)="onScroll('ampm')">
+              @for (a of visibleAmPm; track a) {
+                <div class="tp-cell" [class.active]="ampm === a" (click)="setAmPm(a)">{{ a }}</div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
 </div>

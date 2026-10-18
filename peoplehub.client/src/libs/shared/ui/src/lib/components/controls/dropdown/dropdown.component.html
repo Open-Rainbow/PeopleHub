@@ -1,13 +1,16 @@
-<div class="dropdown-container" [attr.data-width-text]="label || placeholder || ''">
-  <div class="input-wrapper">
+<div class="ui-field dropdown-container">
+  <div
+    class="ui-field__box"
+    [class.is-open]="isOpen"
+    [class.is-invalid]="isInvalid"
+    [class.is-disabled]="isDisabled"
+    [class.is-floating]="isOpen || hasValue"
+  >
     <button
       [id]="triggerId"
       type="button"
-      class="dropdown-input inputBoxHeight"
+      class="ui-field__control ui-field__control--suffix"
       [disabled]="isDisabled"
-      [class.border-gray]="!isOpen && !isInvalid"
-      [class.border-blue]="isOpen && !isInvalid"
-      [class.border-red]="isInvalid"
       [attr.aria-required]="isRequired"
       [attr.aria-invalid]="isInvalid"
       [attr.aria-expanded]="isOpen"
@@ -16,56 +19,52 @@
       [attr.aria-labelledby]="labelId + ' ' + valueId"
       (click)="toggleDropdown($event)"
       (blur)="onBlur()"
-      (keydown)="onTriggerKeydown($event)">
-      <span [id]="valueId" class="dropdown-value" [class.placeholder]="!hasValue">{{ displayText }}</span>
+      (keydown)="onTriggerKeydown($event)"
+    >
+      <span [id]="valueId" class="ui-field__value" [class.is-placeholder]="!hasValue">{{ displayText }}</span>
     </button>
 
-    <label
-      [id]="labelId"
-      [attr.for]="triggerId"
-      class="input-label"
-      [class.floating]="isOpen || hasValue"
-      [class.blue]="isOpen && !isInvalid"
-      [class.gray]="!isOpen && !isInvalid"
-      [class.red]="isInvalid">
+    <label [id]="labelId" [attr.for]="triggerId" class="ui-field__label">
       {{ label }}
       @if (isRequired) {
-        <span class="required-asterisk">*</span>
+        <span class="ui-field__required">*</span>
       }
     </label>
 
-    <ui-icon [name]="'arrow_down'" class="dropdown-icon" [class.rotated]="isOpen"></ui-icon>
+    <span class="ui-field__suffix">
+      <ui-icon name="arrow_down" class="ui-field__chevron"></ui-icon>
+    </span>
 
     @if (isOpen) {
-      <div class="dropdown-popup" [class.open-up]="isOpenUp">
-        <ul [id]="listboxId" class="custom-dropdown-list" role="listbox" tabindex="-1">
-          @if (optionLength === 0) {
-            <li class="dropdown-empty" aria-disabled="true">No options available</li>
+      <ul
+        [id]="listboxId"
+        class="ui-field__popup custom-dropdown-list"
+        [class.open-up]="isOpenUp"
+        role="listbox"
+        tabindex="-1"
+      >
+        @if (optionLength === 0) {
+          <li class="ui-field__option is-empty" aria-disabled="true">No options available</li>
+        } @else {
+          @for (option of options; track trackByOption($index, option)) {
+            <li
+              role="option"
+              tabindex="0"
+              class="ui-field__option"
+              [class.is-selected]="selectedValue === option.value"
+              [attr.aria-selected]="selectedValue === option.value"
+              (click)="selectOption(option)"
+              (keydown)="onOptionKeydown($event, option)"
+            >
+              {{ option.name }}
+            </li>
           }
-
-          @if (optionLength > 0) {
-            @for (option of options; track trackByOption($index, option)) {
-              <li
-                role="option"
-                tabindex="0"
-                [class.selected]="selectedValue === option.value"
-                [attr.aria-selected]="selectedValue === option.value"
-                (click)="selectOption(option)"
-                (keydown)="onOptionKeydown($event, option)">
-                {{ option.name }}
-              </li>
-            }
-          }
-
-          @if (draggable) {
-            <hr class="resize-hr" />
-          }
-        </ul>
-      </div>
+        }
+      </ul>
     }
   </div>
 
   @if (isInvalid) {
-    <p class="dropdown-error">Please select a valid option.</p>
+    <p class="ui-field__error">Please select a valid option.</p>
   }
 </div>

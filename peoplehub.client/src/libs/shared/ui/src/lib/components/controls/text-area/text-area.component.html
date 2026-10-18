@@ -1,47 +1,36 @@
-<div class="textarea-container" [attr.data-width-text]="label || placeholder || ''" [formGroup]="parentFormGroup">
-  <div class="input-wrapper">
-    <div
-      #textareaInput
-      class="textarea-input"
-      [class.border-gray]="!isFocused && !isInvalid"
-      [class.border-blue]="isFocused && !isInvalid"
-      [class.border-red]="isInvalid"
-      [style.--border-color]="borderColor">
-      
-      <textarea
-        #textareaField
-        class="textarea-field"
-        [id]="id"
-        [formControl]="control"
-        [placeholder]="placeholder"
-        [attr.maxlength]="maxLength"
-        [rows]="rows"
-        (input)="onInput($event)"
-        (focus)="onFocus()"
-        (blur)="onBlur()">
-      </textarea>
+<div class="ui-field textarea-container" [formGroup]="parentFormGroup">
+  <div
+    #textareaInput
+    class="ui-field__box is-multiline"
+    [class.is-focused]="isFocused"
+    [class.is-invalid]="isInvalid"
+    [class.is-floating]="isFocused || hasValue"
+  >
+    <textarea
+      #textareaField
+      class="ui-field__control"
+      [id]="id"
+      [formControl]="control"
+      [placeholder]="placeholder"
+      [attr.maxlength]="maxLength"
+      [attr.aria-invalid]="isInvalid"
+      [rows]="rows"
+      (input)="onInput($event)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+    ></textarea>
 
-      <label
-        class="textarea-label"
-        [for]="id"
-        [class.floating]="isFocused || hasValue"
-        [class.blue]="isFocused && !isInvalid"
-        [class.gray]="!isFocused && !isInvalid"
-        [class.red]="isInvalid">
-        {{ label }}
-        @if (isRequired) {
-          <span class="required-asterisk">*</span>
-        }
-      </label>
-    </div>
-
-    @if (showCharCount && (isFocused || hasValue)) {
-      <p
-        class="char-count"
-        [class.char-count-active]="isFocused || hasValue"
-        [class.char-count-invalid]="isInvalid">
-        {{ currentCharCount }} of {{ maxLength }} characters left
-      </p>
-    }
+    <label class="ui-field__label" [for]="id">
+      {{ label }}
+      @if (isRequired) {
+        <span class="ui-field__required">*</span>
+      }
+    </label>
   </div>
+
+  @if (showCharCount && (isFocused || hasValue)) {
+    <p class="ui-field__hint" [class.ui-field__error]="isInvalid">
+      {{ currentCharCount }} of {{ maxLength }} characters left
+    </p>
+  }
 </div>

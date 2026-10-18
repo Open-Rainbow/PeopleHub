@@ -1,64 +1,50 @@
-<div class="search-dropdown-container" [attr.data-width-text]="label || placeholderText || ''" [formGroup]="parentFormGroup">
-  <div class="input-wrapper">
-    <div
-      class="search-input"
-      [class.border-gray]="!isOpen && !isInvalid"
-      [class.border-blue]="isOpen && !isInvalid"
-      [class.border-red]="isInvalid"
-    >
-      <input
-        type="text"
-        class="input-field"
-        [formControl]="searchControl"
-        [placeholder]="placeholderText"
-        (focus)="onInputFocus()"
-        (blur)="onInputBlur()"
-      />
+<div class="ui-field search-dropdown-container" [formGroup]="parentFormGroup">
+  <div
+    class="ui-field__box"
+    [class.is-open]="isOpen"
+    [class.is-invalid]="isInvalid"
+    [class.is-floating]="isOpen || searchControl.value"
+  >
+    <input
+      type="text"
+      class="ui-field__control ui-field__control--suffix"
+      [id]="id + '-search'"
+      [formControl]="searchControl"
+      [placeholder]="placeholderText ?? ''"
+      autocomplete="off"
+      (focus)="onInputFocus()"
+      (blur)="onInputBlur()"
+    />
 
-      <label
-        class="input-label"
-        [class.floating]="isOpen || searchControl.value"
-        [class.blue]="isOpen && !isInvalid"
-        [class.gray]="!isOpen && !isInvalid"
-        [class.red]="isInvalid">
-        {{ label }}
-      </label>
+    <label class="ui-field__label" [for]="id + '-search'">{{ label }}</label>
 
+    <span class="ui-field__suffix">
       @if (searchControl.value) {
-        <button
-          type="button"
-          class="clear-button"
-          (click)="clearSearch()"
-          aria-label="Clear search">
-          <ui-icon [name]="'mdi:close'"></ui-icon>
+        <button type="button" class="ui-field__icon-btn" aria-label="Clear search" (mousedown)="$event.preventDefault()" (click)="clearSearch()">
+          <ui-icon name="mdi:close"></ui-icon>
         </button>
+      } @else {
+        <ui-icon name="iconamoon:search" aria-hidden="true"></ui-icon>
       }
+    </span>
 
-    </div>
-
-    @if (isOpen && filteredList.length > 0) {
-      <ul class="dropdown-list">
+    @if (isOpen) {
+      <ul class="ui-field__popup">
         @for (item of filteredList; track $index) {
-          <li
-            class="dropdown-item"
-            (mousedown)="selectItem(item)">
-            <div class="item-display">{{ getFieldValue(item, config?.displayField || 'name') }}</div>
-            <div class="item-meta">
+          <li class="ui-field__option sd-item" (mousedown)="selectItem(item)">
+            <div class="sd-item__title">{{ getFieldValue(item, config?.displayField || 'name') }}</div>
+            <div class="sd-item__meta">
               @if (config?.subtitleField) {
                 <span>{{ getFieldValue(item, config!.subtitleField!) }}</span>
               }
               @if (config?.descriptionField) {
-                <span> • {{ getFieldValue(item, config!.descriptionField!) }}</span>
+                <span> &bull; {{ getFieldValue(item, config!.descriptionField!) }}</span>
               }
             </div>
           </li>
+        } @empty {
+          <li class="ui-field__option is-empty">No results found</li>
         }
-      </ul>
-    }
-
-    @if (isOpen && filteredList.length === 0) {
-      <ul class="dropdown-list">
-        <li class="dropdown-empty">No results found</li>
       </ul>
     }
   </div>

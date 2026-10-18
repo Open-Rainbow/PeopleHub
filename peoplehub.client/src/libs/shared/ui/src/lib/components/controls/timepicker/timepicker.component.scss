@@ -1,3 +1,77 @@
-.timepicker-container {
-  height: 36px;
+@use '../../../styles/field';
+
+.tp-trigger {
+  cursor: pointer;
+  font-weight: 500;
+  user-select: none;
+}
+
+.tp-panel {
+  right: auto;
+  min-width: 100%;
+  width: max-content;
+  max-height: none;
+  overflow: visible;
+  padding: 0.75rem 1rem;
+}
+
+.tp-columns {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* highlight band behind the selected row */
+.tp-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2.5rem;
+  transform: translateY(-50%);
+  border-radius: 0.375rem;
+  background-color: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  pointer-events: none;
+}
+
+.tp-col {
+  position: relative;
+  height: 7.5rem;
+  width: 3.5rem;
+  overflow-y: auto;
+  text-align: center;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &--ampm {
+    margin-left: 0.5rem;
+  }
+}
+
+.tp-cell {
+  height: 2.5rem;
+  line-height: 2.5rem;
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+  opacity: 0.4;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease, color 0.15s ease;
+
+  &.active {
+    opacity: 1;
+    font-weight: 600;
+    color: var(--color-primary);
+    transform: scale(1.1);
+  }
+}
+
+.tp-sep {
+  margin: 0 0.375rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
 }

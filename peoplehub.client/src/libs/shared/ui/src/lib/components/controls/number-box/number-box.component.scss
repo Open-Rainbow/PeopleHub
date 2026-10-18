@@ -1,3 +1,9 @@
-.number-box-container {
-  height: 36px;
+@use '../../../styles/field';
+
+.flex-col {
+  flex-direction: column;
+}
+
+.\!gap-0 {
+  gap: 0 !important;
 }

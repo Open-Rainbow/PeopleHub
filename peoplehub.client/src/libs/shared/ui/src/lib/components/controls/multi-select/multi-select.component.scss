@@ -1,3 +1,111 @@
-﻿.multi-select-container {
-  height: 36px;
+@use '../../../styles/field';
+
+.ms-control {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+  min-height: calc(var(--ui-field-height) - 2px);
+  padding: 0.3125rem 4rem 0.3125rem 0.75rem;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.ms-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 100%;
+  padding: 0.125rem 0.25rem 0.125rem 0.5rem;
+  border-radius: 0.375rem;
+  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  color: var(--color-primary);
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  white-space: nowrap;
+}
+
+.ms-chip__avatar,
+.ms-option__avatar {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 9999px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.ms-option__avatar {
+  width: 2rem;
+  height: 2rem;
+}
+
+.ms-chip__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-primary) 18%, transparent);
+  }
+}
+
+.ms-search {
+  flex: 1 1 8rem;
+  min-width: 8rem;
+  height: 1.75rem;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+}
+
+.ms-clear {
+  color: var(--color-danger);
+}
+
+.ms-select-all {
+  justify-content: space-between;
+  font-weight: 500;
+  border-bottom: 1px solid var(--color-surface-muted);
+  border-radius: 0.375rem 0.375rem 0 0;
+  margin-bottom: 0.25rem;
+}
+
+.ms-check {
+  color: var(--color-primary);
+}
+
+.ms-option__text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ms-option__name {
+  font-weight: 500;
+}
+
+.ms-option__email {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.hidden {
+  display: none;
 }

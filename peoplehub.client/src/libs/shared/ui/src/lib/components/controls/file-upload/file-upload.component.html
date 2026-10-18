@@ -1,13 +1,16 @@
-<div class="file-upload-container">
-  <div class="input-wrapper">
+<div class="ui-field file-upload-container">
+  <div
+    class="ui-field__box"
+    [class.is-focused]="isFocused || isFileDialogOpen"
+    [class.is-invalid]="isInvalid"
+    [class.is-disabled]="isDisabled"
+    [class.is-floating]="isFocused || isFileDialogOpen || hasValue"
+  >
     <button
       [id]="triggerId"
       type="button"
-      class="file-upload-input inputBoxHeight"
+      class="ui-field__control ui-field__control--suffix"
       [disabled]="isDisabled"
-      [class.border-gray]="!isFocused && !isFileDialogOpen && !isInvalid"
-      [class.border-blue]="(isFocused || isFileDialogOpen) && !isInvalid"
-      [class.border-red]="isInvalid"
       [attr.aria-required]="isRequired"
       [attr.aria-invalid]="isInvalid"
       [attr.aria-describedby]="helperId"
@@ -16,21 +19,7 @@
       (focus)="onFocus()"
       (blur)="onBlur()"
     >
-      <!-- Placeholder only shows once the label has floated up, same as ui-text-box -->
-      <span class="file-upload-value" [class.placeholder]="!hasValue">{{
-        hasValue || isFocused || isFileDialogOpen ? displayValue : ''
-      }}</span>
-      <ui-icon
-        [name]="
-          hasValue
-            ? 'material-symbols:close-rounded'
-            : 'material-symbols:upload-rounded'
-        "
-        class="upload-icon"
-        [class.actionable]="hasValue && !isDisabled"
-        [attr.aria-label]="hasValue ? 'Remove selected file' : 'Upload file'"
-        (click)="hasValue && !isDisabled ? clearFiles($event) : null"
-      ></ui-icon>
+      <span class="ui-field__value" [class.is-placeholder]="!hasValue">{{ displayValue }}</span>
     </button>
 
     <input
@@ -45,25 +34,25 @@
       (click)="$event.stopPropagation()"
     />
 
-    <label
-      [id]="id + '-label'"
-      [attr.for]="triggerId"
-      class="input-label"
-      [class.floating]="isFocused || isFileDialogOpen || hasValue"
-      [class.blue]="(isFocused || isFileDialogOpen) && !isInvalid"
-      [class.gray]="!(isFocused || isFileDialogOpen) && !isInvalid"
-      [class.red]="isInvalid"
-    >
+    <label [id]="id + '-label'" [attr.for]="triggerId" class="ui-field__label">
       {{ label }}
       @if (isRequired) {
-        <span class="required-asterisk">*</span>
+        <span class="ui-field__required">*</span>
       }
     </label>
+
+    <span class="ui-field__suffix">
+      @if (hasValue && !isDisabled) {
+        <button type="button" class="ui-field__icon-btn" aria-label="Remove selected file" (click)="clearFiles($event)">
+          <ui-icon name="material-symbols:close-rounded"></ui-icon>
+        </button>
+      } @else {
+        <ui-icon name="material-symbols:upload-rounded" aria-hidden="true"></ui-icon>
+      }
+    </span>
   </div>
 
   @if (isInvalid) {
-    <span [id]="helperId" class="helper-text error-text">
-      {{ errorNote }}
-    </span>
+    <p [id]="helperId" class="ui-field__error">{{ errorNote }}</p>
   }
 </div>

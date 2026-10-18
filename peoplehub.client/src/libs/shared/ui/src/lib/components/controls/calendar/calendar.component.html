@@ -1,52 +1,37 @@
-<div class="calendar-container" [formGroup]="parentFormGroup">
-  
-  <div class="input-wrapper">
-
+<div class="ui-field calendar-container" [formGroup]="parentFormGroup">
+  <div
+    class="ui-field__box"
+    [class.is-open]="showCalendar"
+    [class.is-invalid]="isInvalid"
+    [class.is-floating]="showCalendar || formattedDate || control?.value"
+  >
     <input
       type="text"
       readonly
+      class="ui-field__control ui-field__control--suffix cursor-pointer"
       [id]="id"
       [formControlName]="id"
       [value]="formattedDate"
-      [placeholder]="(showCalendar || formattedDate || control?.value) ? 'dd-mm-yyyy' : ''"
+      placeholder="dd-mm-yyyy"
       (click)="openDatePicker($event)"
-      class="calendar-input"
-      [class.border-gray]="!showCalendar && !isInvalid"
-      [class.border-blue]="showCalendar && !isInvalid"
-      [class.border-red]="isInvalid"
     />
 
-    <label
-      [for]="id"
-      class="input-label"
-      [class.floating]="showCalendar || formattedDate || control?.value"
-      [class.blue]="showCalendar && !isInvalid"
-      [class.gray]="!showCalendar && !isInvalid"
-      [class.red]="isInvalid"
-    >
+    <label [for]="id" class="ui-field__label">
       {{ label }}
       @if (isRequired) {
-        <span class="required-asterisk">*</span>
+        <span class="ui-field__required">*</span>
       }
     </label>
 
-    <ui-icon 
-      [name]="'lineicons:calendar-days'" 
-      width="20" 
-      height="20"
-      class="calendar-icon"
-    ></ui-icon>
+    <span class="ui-field__suffix">
+      <ui-icon name="lineicons:calendar-days"></ui-icon>
+    </span>
 
     @if (showCalendar) {
       <div class="calendar-popup" (click)="closeCalendar()">
-
-        <div class="calendar-panel"
-          (click)="$event.stopPropagation(); closeMonthDropdown(); closeYearDropdown()">
-
+        <div class="calendar-panel" (click)="$event.stopPropagation(); closeMonthDropdown(); closeYearDropdown()">
           <div class="calendar-header">
-
             <div class="month-year-selectors">
-
               <div class="month-selector" (click)="$event.stopPropagation()">
                 <div class="selector-trigger" (click)="toggleMonthDropdown()">
                   {{ months[currentMonth] }}
@@ -55,11 +40,7 @@
                 @if (showMonthDropdown) {
                   <ul class="dropdown">
                     @for (month of months; track month; let i = $index) {
-                      <li 
-                        [class.selected]="i === currentMonth" 
-                        (click)="selectMonth(i)">
-                        {{ month }}
-                      </li>
+                      <li [class.selected]="i === currentMonth" (click)="selectMonth(i)">{{ month }}</li>
                     }
                   </ul>
                 }
@@ -73,37 +54,25 @@
                 @if (showYearDropdown) {
                   <ul class="dropdown">
                     @for (year of years; track year) {
-                      <li 
-                        [class.selected]="year === currentYear" 
-                        (click)="selectYear(year)">
-                        {{ year }}
-                      </li>
+                      <li [class.selected]="year === currentYear" (click)="selectYear(year)">{{ year }}</li>
                     }
                   </ul>
                 }
               </div>
-
             </div>
 
             <div class="calendar-nav">
-              <button 
-                type="button"
-                (click)="previousMonth()"
-                aria-label="Previous month">
-                <ui-icon [name]="'ic:round-keyboard-arrow-left'"></ui-icon>
+              <button type="button" (click)="previousMonth()" aria-label="Previous month">
+                <ui-icon name="ic:round-keyboard-arrow-left"></ui-icon>
               </button>
-
-              <button 
-                type="button"
-                (click)="nextMonth()"
-                aria-label="Next month">
-                <ui-icon [name]="'ic:round-keyboard-arrow-right'"></ui-icon>
+              <button type="button" (click)="nextMonth()" aria-label="Next month">
+                <ui-icon name="ic:round-keyboard-arrow-right"></ui-icon>
               </button>
             </div>
           </div>
 
           <div class="weekdays">
-            @for (weekday of weekdays; track weekday) {
+            @for (weekday of weekdays; track $index) {
               <div>{{ weekday }}</div>
             }
           </div>
@@ -115,34 +84,19 @@
                 [class.other-month]="!day.isCurrentMonth"
                 [class.today]="day.isToday && !day.isSelected"
                 [class.selected]="day.isSelected"
-                (click)="selectDate(day)">
+                (click)="selectDate(day)"
+              >
                 {{ day.day }}
               </div>
             }
           </div>
 
           <div class="calendar-footer">
-
-            <button 
-              type="button"
-              (click)="clearSelection()"
-              class="clear-btn">
-              Clear
-            </button>
-
-            <button 
-              type="button"
-              (click)="goToToday()"
-              class="today-btn">
-              Today
-            </button>
-
+            <button type="button" (click)="clearSelection()" class="clear-btn">Clear</button>
+            <button type="button" (click)="goToToday()" class="today-btn">Today</button>
           </div>
-
         </div>
       </div>
     }
-
   </div>
-
 </div>
