@@ -14,7 +14,8 @@ public sealed class AddEmployeeServiceTests
 
     public AddEmployeeServiceTests()
     {
-        service = new AddEmployeeService(repository.Object, new PersonalInfoValidator());
+        var validators = new ValidatorProvider(new PersonalInfoValidator(), new SkillsRequestValidator());
+        service = new AddEmployeeService(repository.Object, validators);
     }
 
     private static PersonalInfoRequest ValidPersonalInfo() => new()
@@ -63,5 +64,22 @@ public sealed class AddEmployeeServiceTests
         var result = await service.SavePersonalInfoAsync(request, CancellationToken.None);
 
         Assert.Equal("EMP001", result.EmployeeId);
+    }
+
+    [Fact]
+    public async Task Skills_without_employee_id_never_reach_the_database()
+    {
+        var request = new SkillsRequest { Skills = [new SkillItem { SkillName = "Angular" }] };
+
+        await Assert.ThrowsAsync<RequestValidationException>(
+            () => service.SaveSkillsAsync(request, CancellationToken.None));
+
+        repository.VerifyNoOtherCalls();
+    }
+
+    /// <summary>Tiny stand-in for DI: returns whichever validator matches the requested type.</summary>
+    private sealed class ValidatorProvider(params object[] validators) : IServiceProvider
+    {
+        public object? GetService(Type serviceType) => validators.FirstOrDefault(serviceType.IsInstanceOfType);
     }
 }
