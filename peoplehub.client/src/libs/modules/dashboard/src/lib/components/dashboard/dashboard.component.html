@@ -1,11 +1,28 @@
-<div class="dashboard-content">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5 items-stretch">
-    <div></div>
-    <div class="w-full border border-[#b7b7b7] rounded-[14px] bg-white p-5">
-      <h3 class="text-[16px] font-semibold mb-4">Leave Balance</h3>
+<div class="dashboard-content text-left">
+  <!-- Row 1: welcome + leave balance -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
+    <div class="rounded-[14px] p-6 bg-gradient-to-br from-[#1e3a8a] to-[#2563eb] text-white flex flex-col justify-between">
+      <div>
+        <p class="text-[13px] text-blue-100">{{ today | date: 'EEEE, d MMMM y' }}</p>
+        <h2 class="text-[24px] font-semibold mt-1 capitalize">{{ greeting }}, {{ userName }}</h2>
+        <p class="text-[14px] text-blue-100 mt-1">Here's what's happening with your team today.</p>
+      </div>
+      <div class="grid grid-cols-3 gap-3 mt-6">
+        @for (stat of quickStats; track stat.label) {
+          <div class="rounded-[10px] bg-white/10 border border-white/15 p-3">
+            <ui-icon [name]="stat.icon" class="text-[18px] text-blue-100"></ui-icon>
+            <p class="text-[20px] font-semibold mt-1">{{ stat.value }}</p>
+            <p class="text-[12px] text-blue-100">{{ stat.label }}</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="w-full border border-gray-200 rounded-[14px] bg-white p-5">
+      <h3 class="text-[16px] font-semibold text-gray-900 mb-4">Leave Balance</h3>
       <div class="grid grid-cols-2 gap-3">
         @for (leave of leaveBalance; track leave.label) {
-          <div class="p-3 rounded-[10px] border" [style.background]="leave.bg">
+          <div class="p-3 rounded-[10px]" [style.background]="leave.bg">
             <p class="text-[12px] text-gray-500">{{ leave.label }}</p>
             <p class="text-[22px] font-bold" [style.color]="leave.color">{{ leave.value }}</p>
           </div>
@@ -14,59 +31,61 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-2 gap-5 my-5 items-stretch">
-    <div class="bg-white border border-[#b7b7b7] rounded-[14px] p-5">
-      <h3 class="text-[16px] font-semibold mb-4">Announcements</h3>
+  <!-- Row 2: announcements + activity -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5 items-stretch">
+    <div class="bg-white border border-gray-200 rounded-[14px] p-5">
+      <h3 class="text-[16px] font-semibold text-gray-900 mb-4">Announcements</h3>
       @for (a of announcements; track a.name) {
-        <div class="flex justify-between items-start py-2 border-b border-gray-100 last:border-0">
+        <div class="flex justify-between items-start gap-3 py-2 border-b border-gray-100 last:border-0">
           <p class="text-[13px] text-gray-700">{{ a.name }}</p>
-          <span class="text-[11px] text-gray-400 ml-2 whitespace-nowrap">{{ a.date | duration }}</span>
+          <span class="text-[11px] text-gray-400 whitespace-nowrap">{{ a.date | duration }}</span>
         </div>
       }
     </div>
 
-    <div class="bg-white border border-[#b7b7b7] rounded-[14px] p-5">
-      <h3 class="text-[16px] font-semibold mb-4">Recent Activities</h3>
+    <div class="bg-white border border-gray-200 rounded-[14px] p-5">
+      <h3 class="text-[16px] font-semibold text-gray-900 mb-4">Recent Activities</h3>
       @for (activity of activities; track activity.name) {
-        <div class="flex justify-between items-start py-2 border-b border-gray-100 last:border-0">
+        <div class="flex justify-between items-start gap-3 py-2 border-b border-gray-100 last:border-0">
           <p class="text-[13px] text-gray-700">{{ activity.name }}</p>
-          <span class="text-[11px] text-gray-400 ml-2 whitespace-nowrap">{{ activity.date | duration }}</span>
+          <span class="text-[11px] text-gray-400 whitespace-nowrap">{{ activity.date | duration }}</span>
         </div>
       }
     </div>
   </div>
 
-  <div class="grid grid-cols-2 gap-5 my-5">
-    <div class="p-5 border border-gray-300 rounded-[25px] bg-white">
-      <div class="flex items-center gap-2 py-2 mb-5">
-        <span class="text-[16px] font-light">Recent Payslips</span>
-      </div>
+  <!-- Row 3: payslips + team -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5 items-stretch">
+    <div class="bg-white border border-gray-200 rounded-[14px] p-5">
+      <h3 class="text-[16px] font-semibold text-gray-900 mb-4">Recent Payslips</h3>
       @for (payslip of recentPayslips; let i = $index; track payslip.month) {
-        <div class="flex justify-between items-center gap-3 px-5 py-4 rounded-lg bg-gray-100/60 hover:bg-gray-200 transition mb-2">
+        <div class="flex justify-between items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition mb-2 last:mb-0">
           <div>
-            <h3 class="text-[14px] font-semibold m-0">{{ payslip.month }}</h3>
-            <p class="text-[12px] opacity-90 m-0">{{ payslip.date }}</p>
+            <p class="text-[14px] font-semibold text-gray-900 m-0">{{ payslip.month }}</p>
+            <p class="text-[12px] text-gray-500 m-0">{{ payslip.date }}</p>
           </div>
           <div class="flex items-center gap-2">
-            <h3 class="text-[14px] font-semibold">{{ activePayslipIndex === i ? payslip.amount : 'Net Pay' }}</h3>
-            <ui-icon
-              [name]="activePayslipIndex === i ? 'eye_off' : 'eye'"
-              class="cursor-pointer text-[18px]"
+            <span class="text-[14px] font-semibold text-gray-900">{{ activePayslipIndex === i ? payslip.amount : 'Net Pay' }}</span>
+            <button
+              type="button"
+              class="h-8 w-8 flex items-center justify-center rounded-md text-gray-500 hover:bg-white hover:text-gray-900"
+              [attr.aria-label]="activePayslipIndex === i ? 'Hide amount' : 'Show amount'"
               (click)="togglePayslip(i)">
-            </ui-icon>
+              <ui-icon [name]="activePayslipIndex === i ? 'eye_off' : 'eye'" class="text-[18px]"></ui-icon>
+            </button>
           </div>
         </div>
       }
     </div>
 
-    <div class="bg-white border border-[#b7b7b7] rounded-[14px] p-5">
-      <h3 class="text-[16px] font-semibold mb-4">Team Members</h3>
+    <div class="bg-white border border-gray-200 rounded-[14px] p-5">
+      <h3 class="text-[16px] font-semibold text-gray-900 mb-4">Team Members</h3>
       @for (member of teamMembers; track member.name) {
         <div class="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0">
-          <div class="w-[36px] h-[36px] rounded-full bg-blue-600 flex items-center justify-center text-white text-[13px] font-semibold">
+          <div class="w-[36px] h-[36px] shrink-0 rounded-full bg-blue-600 flex items-center justify-center text-white text-[13px] font-semibold">
             {{ member.name.charAt(0).toUpperCase() }}
           </div>
-          <div>
+          <div class="min-w-0">
             <p class="text-[13px] font-medium text-gray-800 m-0">{{ member.name }}</p>
             <p class="text-[11px] text-gray-400 m-0">{{ member.designation }}</p>
           </div>
@@ -75,9 +94,10 @@
     </div>
   </div>
 
-  <div class="bg-white px-[25px] py-5 rounded-[14px] mt-5 border border-[#b7b7b7]">
-    <label class="block text-[16px] font-semibold text-[#2B2B2B] mb-3 pl-2">Performance Overview</label>
-    <div class="p-5 h-[400px]">
+  <!-- Row 4: performance -->
+  <div class="bg-white p-5 rounded-[14px] mt-5 border border-gray-200">
+    <h3 class="text-[16px] font-semibold text-gray-900 mb-4">Performance Overview</h3>
+    <div class="h-[400px]">
       <ui-horizontal-bar-chart
         [labels]="['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']"
         [data]="chartData"
@@ -89,26 +109,25 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-2 gap-5 my-5">
-    <div class="w-full p-6 bg-white border border-gray-200 rounded-2xl shadow-sm">
-      <div class="flex mb-5 text-xl font-bold">
-        <h1>Holiday Statistics</h1>
-      </div>
+  <!-- Row 5: holidays -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5 items-stretch">
+    <div class="bg-white border border-gray-200 rounded-[14px] p-5">
+      <h3 class="text-[16px] font-semibold text-gray-900 mb-4">Holiday Statistics</h3>
       @for (item of holidayStats; track item.name) {
-        <div class="flex items-center justify-between gap-4 p-3 mb-5 rounded-lg last:mb-0" [style.background-color]="item.bg">
-          <p>{{ item.name }}</p>
-          <span class="text-xl font-bold" [style.color]="item.color">{{ item.number }}</span>
+        <div class="flex items-center justify-between gap-4 px-4 py-3 mb-2 rounded-lg last:mb-0" [style.background-color]="item.bg">
+          <p class="text-[14px] text-gray-700">{{ item.name }}</p>
+          <span class="text-[18px] font-bold" [style.color]="item.color">{{ item.number }}</span>
         </div>
       }
     </div>
 
-    <div class="w-full h-full bg-white rounded-[20px] border border-gray-300 p-5">
-      <p class="text-black font-medium mb-6">Upcoming Holidays</p>
+    <div class="bg-white border border-gray-200 rounded-[14px] p-5">
+      <h3 class="text-[16px] font-semibold text-gray-900 mb-4">Upcoming Holidays</h3>
       @for (holiday of upcomingHolidays; track holiday.name) {
-        <div class="flex justify-between items-center bg-gray-50 hover:bg-[#e6e7e9] rounded-lg px-4 py-3 w-full mb-2">
+        <div class="flex justify-between items-center gap-3 bg-gray-50 hover:bg-gray-100 rounded-lg px-4 py-3 w-full mb-2 last:mb-0">
           <div>
-            <div class="text-[15px] font-semibold text-black">{{ holiday.name }}</div>
-            <div class="text-[13px] text-gray-500">{{ holiday.date }}</div>
+            <p class="text-[14px] font-semibold text-gray-900 m-0">{{ holiday.name }}</p>
+            <p class="text-[12px] text-gray-500 m-0">{{ holiday.date }}</p>
           </div>
           <ui-chip [text]="holiday.type" [bgColor]="'#eceef2'" [color]="'#323232'"></ui-chip>
         </div>

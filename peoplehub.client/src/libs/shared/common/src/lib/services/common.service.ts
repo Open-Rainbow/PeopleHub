@@ -6,6 +6,8 @@ import { ApiNames } from '../constants/api-names';
 import { AddAnnouncementModel, HolidayList } from '../models/common.model';
 import { RequesterService } from './requester.service';
 
+const DEMO_ROLES = ['employee', 'hr', 'admin'];
+
 @Injectable({
   providedIn: 'root',
 })
@@ -43,26 +45,21 @@ export class CommonService {
     });
   }
 
-
-
-
-
   addAnnouncement(model: AddAnnouncementModel) {
-  return this.requesterService.post(
-    this.apiUrl + ApiNames.ADD_ANNOUNCEMENT,
-    model
-  );
-}
-addOtp(payload: any) {
-  return this.http.post(
-    'https://localhost:60313/api/Common/addOtp',
-    payload
-  );
-}
+    return this.requesterService.post(
+      this.apiUrl + ApiNames.ADD_ANNOUNCEMENT,
+      model
+    );
+  }
+
+  addOtp(payload: any) {
+    return this.http.post(
+      'https://localhost:60313/api/Common/addOtp',
+      payload
+    );
+  }
 
   getMyReportees(parameters: any): Observable<any> {
-
-
     return this.requesterService.get(
       this.apiUrl + ApiNames.GET_MY_REPORTEES,
       parameters
@@ -70,60 +67,45 @@ addOtp(payload: any) {
   }
 
   getTeamMembers(parameters: any): Observable<any> {
-
-
     return this.requesterService.get(
       this.apiUrl + ApiNames.GET_TEAM_MEMBERS,
       parameters
     );
   }
-  getRecentPayslips(parameters: any): Observable<any> {
 
+  getRecentPayslips(parameters: any): Observable<any> {
     return this.requesterService.get(this.apiUrl + ApiNames.GET_RECENT_PAYSLIPS, parameters);
   }
 
   getQuickAnnouncement(parameters: any): Observable<any> {
-
     return this.requesterService.get(this.apiUrl + ApiNames.GET_QUICK_ANNOUNCEMENT, parameters);
   }
 
   getQuickActivities(parameters: any): Observable<any> {
-
     return this.requesterService.get(this.apiUrl + ApiNames.GET_QUICK_ACTIVITIES, parameters);
   }
 
   getLeaveBalanceOverview(parameters: any): Observable<any> {
-
     return this.requesterService.get(this.apiUrl + ApiNames.GET_LEAVE_BALANCE_OVERVIEW, parameters);
   }
 
   getSalaryDetails(parameters: any): Observable<any> {
-
     return this.requesterService.get(this.apiUrl + ApiNames.GET_SALARY_DETAILS, parameters);
   }
 
   getSalaryData(parameters: any): Observable<any> {
-
     return this.requesterService.get(this.apiUrl + ApiNames.GET_SALARY_DATA, parameters);
   }
 
-
   getExpiredAnnouncements(): Observable<any> {
-
-
     return this.requesterService.get(this.apiUrl + ApiNames.GET_EXPIRED_ANNOUNCEMENT, null);
   }
 
-
   getAddAnnouncements(): Observable<any> {
-
-
     return this.requesterService.get(this.apiUrl + ApiNames.GET_ADD_ANNOUNCEMENT, null);
   }
 
   getHolidayStatistics(parameters: any): Observable<HolidayList[]> {
-
-
     return this.requesterService.get(
       this.apiUrl + ApiNames.GET_HOLIDAY_STATISTICS,
       parameters
@@ -131,8 +113,6 @@ addOtp(payload: any) {
   }
 
   getHolidayList(parameters: any): Observable<HolidayList[]> {
-
-
     return this.requesterService.get(
       this.apiUrl + ApiNames.GET_UPCOMING_HOLIDAYS,
       parameters
@@ -140,59 +120,49 @@ addOtp(payload: any) {
   }
 
   getLeaveApprovals(parameters: any) {
-
-
     return this.requesterService.get(this.apiUrl + ApiNames.GET_LEAVE_APPROVALS, parameters);
   }
 
-  
+  /**
+   * Demo login until the auth API is wired up: the role is the username
+   * (employee / hr / admin). Previously every user fell through to "admin".
+   */
   getLogin(parameters: any): Observable<string> {
-    if (parameters.username == "Employee" && parameters.password == "Employee@123") {
-      return of("employee");
-    }
-    else if (parameters.username == "HR" && parameters.password == "Hr@123") {
-      return of("hr");
-    }
-    else {//if (data.username == "Admin" && data.password == "Admin@123") {
-      return of("admin");
-    }
+    const username = String(parameters?.username ?? '').trim().toLowerCase();
+    return of(DEMO_ROLES.includes(username) ? username : 'employee');
   }
 
   getUsers(parameters: any): Observable<any> {
-
-
     return this.requesterService.get(
       this.apiUrl + ApiNames.GET_USERS_PROFILE,
       parameters
     );
   }
 
-
   getAttendance(parameters: any): Observable<any> {
-  return this.requesterService.get(
-    this.apiUrl + ApiNames.GET_ATTENDANCE, 
-    parameters
-  );
+    return this.requesterService.get(
+      this.apiUrl + ApiNames.GET_ATTENDANCE,
+      parameters
+    );
+  }
 
-}
-getAttendanceHorizontalBarChart(parameters: any): Observable<any>{
-  return this.requesterService.get(
-    this.apiUrl + ApiNames.GET_ATTENDANCE_HORIZONTAL_BAR_CHART, 
-    parameters
-  );
-}
+  getAttendanceHorizontalBarChart(parameters: any): Observable<any> {
+    return this.requesterService.get(
+      this.apiUrl + ApiNames.GET_ATTENDANCE_HORIZONTAL_BAR_CHART,
+      parameters
+    );
+  }
 
-getAttendanceDoughnutBarChart(parameters: any): Observable<any>{
-  return this.requesterService.get(
-    this.apiUrl + ApiNames.GET_ATTENDANCE_DOUGHNUT_BAR_CHART, 
-    parameters
-  );
-}
+  getAttendanceDoughnutBarChart(parameters: any): Observable<any> {
+    return this.requesterService.get(
+      this.apiUrl + ApiNames.GET_ATTENDANCE_DOUGHNUT_BAR_CHART,
+      parameters
+    );
+  }
 
   postEmployee(parameters: string) {
     return this.http.post(this.apiUrl + ApiNames.POST_Employee, { employee: parameters }, {
       responseType: 'text'
     });
   }
-
 }
