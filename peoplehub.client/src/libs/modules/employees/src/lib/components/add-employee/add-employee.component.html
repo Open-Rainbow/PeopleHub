@@ -12,9 +12,6 @@
 
   <section class="ae-content flex-1 min-w-0 flex flex-col gap-4">
     <header class="ae-step-header">
-      <p class="text-[12px] font-semibold uppercase tracking-wide text-blue-600">
-        Step {{ stepIndex() + 1 }} of {{ stepCount }}
-      </p>
       <h2 class="text-[20px] font-semibold text-gray-900 mt-0.5">{{ currentStep().title }}</h2>
       @if (stepDescription()) {
         <p class="text-[13px] text-gray-500 mt-0.5">{{ stepDescription() }}</p>
