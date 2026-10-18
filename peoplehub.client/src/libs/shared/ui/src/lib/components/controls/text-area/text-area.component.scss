@@ -1,1 +1,28 @@
 @use '../../../styles/field';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.textarea-container {
+  width: 100%;
+}
+
+.ui-field__box.is-multiline {
+  width: 100%;
+  height: auto;
+  min-height: 6rem;
+}
+
+textarea.ui-field__control {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.textarea-hint.is-hidden {
+  visibility: hidden;
+}

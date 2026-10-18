@@ -1,13 +1,11 @@
 <div class="ui-field textarea-container" [formGroup]="parentFormGroup">
   <div
-    #textareaInput
     class="ui-field__box is-multiline"
     [class.is-focused]="isFocused"
     [class.is-invalid]="isInvalid"
     [class.is-floating]="isFocused || hasValue"
   >
     <textarea
-      #textareaField
       class="ui-field__control"
       [id]="id"
       [formControl]="control"
@@ -28,8 +26,13 @@
     </label>
   </div>
 
-  @if (showCharCount && (isFocused || hasValue)) {
-    <p class="ui-field__hint" [class.ui-field__error]="isInvalid">
+  <!-- hint row is always reserved so focusing never shifts/resizes layout -->
+  @if (showCharCount) {
+    <p
+      class="ui-field__hint textarea-hint"
+      [class.is-hidden]="!(isFocused || hasValue)"
+      [class.ui-field__error]="isInvalid"
+    >
       {{ currentCharCount }} of {{ maxLength }} characters left
     </p>
   }

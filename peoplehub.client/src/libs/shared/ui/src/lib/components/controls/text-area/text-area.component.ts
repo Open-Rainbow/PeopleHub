@@ -10,9 +10,6 @@ import {
   SimpleChanges,
   Output,
   EventEmitter,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
 } from '@angular/core';
 import {
   FormControl,
@@ -31,9 +28,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./text-area.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextAreaComponent
-  implements OnInit, AfterViewInit, OnDestroy, OnChanges
-{
+export class TextAreaComponent implements OnInit, OnDestroy, OnChanges {
   @Input() label?: string = 'Text Area';
   @Input() placeholder?: string = 'Enter text';
   @Input() isRequired?: boolean = true;
@@ -48,22 +43,17 @@ export class TextAreaComponent
 
   @Output() textValueChange = new EventEmitter<string>();
 
-  @ViewChild('textareaField') textareaField!: ElementRef<HTMLTextAreaElement>;
-  @ViewChild('textareaInput') textareaInput!: ElementRef<HTMLDivElement>;
-
   isFocused = false;
   currentCharCount = 0;
+
+  private destroy$ = new Subject<void>();
+
+  constructor(private cdr: ChangeDetectorRef) {}
 
   get isInvalid(): boolean {
     const ctrl = this.parentFormGroup?.get(this.id);
     return !!(ctrl?.invalid && (ctrl?.dirty || ctrl?.touched));
   }
-  private destroy$ = new Subject<void>();
-  private resizeObserver?: ResizeObserver;
-  private initialWidth = 0;
-  private initialHeight = 0;
-
-  constructor(private cdr: ChangeDetectorRef) {}
 
   get control(): FormControl {
     const ctrl = this.parentFormGroup?.get(this.id);
@@ -75,23 +65,6 @@ export class TextAreaComponent
 
   get hasValue() {
     return (this.control?.value ?? '').trim().length > 0;
-  }
-
-  ngAfterViewInit(): void {
-    const el = this.textareaField.nativeElement;
-    const wrapper = this.textareaInput.nativeElement;
-    this.initialWidth = el.offsetWidth;
-    this.initialHeight = el.offsetHeight;
-
-    this.resizeObserver = new ResizeObserver(() => {
-      const newWidth = el.offsetWidth;
-      const newHeight = el.offsetHeight;
-      if (newWidth !== this.initialWidth || newHeight !== this.initialHeight) {
-        wrapper.style.width = newWidth + 'px';
-        wrapper.style.height = newHeight + 'px';
-      }
-    });
-    this.resizeObserver.observe(el);
   }
 
   ngOnInit(): void {
@@ -124,13 +97,10 @@ export class TextAreaComponent
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.resizeObserver?.disconnect();
   }
 
   onInput(event: Event): void {
-    const textarea = event.target as HTMLTextAreaElement;
-    const value = textarea.value;
-    this.control.setValue(value, { emitEvent: false });
+    const value = (event.target as HTMLTextAreaElement).value;
     this.textValueChange.emit(value);
     this.updateCharCount();
     this.cdr.markForCheck();
