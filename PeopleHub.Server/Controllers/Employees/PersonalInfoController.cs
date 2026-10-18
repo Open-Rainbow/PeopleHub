@@ -1,27 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
-using PeopleHub.Application.Modules.Employees.PersonalInfo.DTOs;
-using PeopleHub.Application.Modules.Employees.PersonalInfo.Interfaces;
+using PeopleHub.Application.Abstractions.Messaging;
+using PeopleHub.Application.Modules.Employees.Common;
+using PeopleHub.Application.Modules.Employees.PersonalInfo.Commands.SavePersonalInfo;
+using PeopleHub.Server.Common;
 
 namespace PeopleHub.Server.Controllers.Employees;
 
-[ApiController]
-[Route("api/employees/personal-info")]
-public sealed class PersonalInfoController : ControllerBase
+[Route(ApiRoutes.Employees.Root + "/personal-info")]
+[Tags("Employees")]
+public sealed class PersonalInfoController(IDispatcher dispatcher) : ApiControllerBase(dispatcher)
 {
-    private readonly IPersonalInfoService personalInfoService;
-
-    public PersonalInfoController(IPersonalInfoService personalInfoService)
-    {
-        this.personalInfoService = personalInfoService;
-    }
-
+    /// <summary>Insert (no Id) or update (with Id) the Personal Info step.</summary>
     [HttpPost]
-    public async Task<ActionResult<PersonalInfoSaveResponseDto>> SaveAsync(
-        PersonalInfoSaveRequestDto request,
-        CancellationToken cancellationToken)
-    {
-        var response = await personalInfoService.SaveAsync(request, cancellationToken);
-
-        return Ok(response);
-    }
+    [ProducesResponseType(typeof(EmployeeSectionSaveResult), StatusCodes.Status200OK)]
+    public async Task<ActionResult<EmployeeSectionSaveResult>> Save(
+        [FromBody] SavePersonalInfoCommand command,
+        CancellationToken cancellationToken) =>
+        Ok(await Dispatcher.SendAsync(command, cancellationToken));
 }

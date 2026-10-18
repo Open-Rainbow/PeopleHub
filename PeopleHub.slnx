@@ -8,4 +8,7 @@
   <Project Path="core/PeopleHub.Domain/PeopleHub.Domain.csproj" />
   <Project Path="core/PeopleHub.Infrastructure/PeopleHub.Infrastructure.csproj" />
   <Project Path="core/PeopleHub.Worker/PeopleHub.Worker.csproj" />
+  <Folder Name="/tests/">
+    <Project Path="tests/PeopleHub.Application.Tests/PeopleHub.Application.Tests.csproj" />
+  </Folder>
 </Solution>

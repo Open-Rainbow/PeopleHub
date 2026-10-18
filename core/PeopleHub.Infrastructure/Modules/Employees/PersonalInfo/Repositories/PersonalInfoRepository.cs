@@ -1,122 +1,49 @@
 using System.Data;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using PeopleHub.Application.Modules.Employees.PersonalInfo.DTOs;
+using Dapper;
+using PeopleHub.Application.Modules.Employees.Common;
+using PeopleHub.Application.Modules.Employees.PersonalInfo.Commands.SavePersonalInfo;
 using PeopleHub.Application.Modules.Employees.PersonalInfo.Interfaces;
 using PeopleHub.Infrastructure.Modules.Employees.PersonalInfo.DTAs;
+using PeopleHub.Infrastructure.Persistence;
 
 namespace PeopleHub.Infrastructure.Modules.Employees.PersonalInfo.Repositories;
 
-public sealed class PersonalInfoRepository : IPersonalInfoRepository
+internal sealed class PersonalInfoRepository(IStoredProcedureExecutor executor) : IPersonalInfoRepository
 {
-    private const string StoredProcedureName = "dbo.sp_ins_emp_per_info";
-    private readonly string connectionString;
+    private const string SaveProcedure = "dbo.sp_ins_emp_per_info";
 
-    public PersonalInfoRepository(IConfiguration configuration)
+    public async Task<EmployeeSectionSaveResult> SaveAsync(
+        SavePersonalInfoCommand command,
+        CancellationToken cancellationToken)
     {
-        connectionString = configuration.GetConnectionString("PeopleHubDb")
-            ?? throw new InvalidOperationException(
-                "Connection string 'PeopleHubDb' was not found.");
-    }
+        var data = PersonalInfoDta.From(command);
+        var p = new DynamicParameters();
 
-    public async Task<PersonalInfoSaveResponseDto> SaveAsync(
-        PersonalInfoSaveRequestDto request,
-        CancellationToken cancellationToken = default)
-    {
-        var data = PersonalInfoDta.From(request);
+        p.Add("@Id", data.Id, DbType.Int32, ParameterDirection.InputOutput);
+        p.Add("@Employee_Id", data.EmployeeId, DbType.AnsiString, ParameterDirection.InputOutput, 50);
+        p.Add("@OperationType", data.OperationType, DbType.AnsiString, size: 10);
+        p.Add("@Salutation", data.Salutation, DbType.AnsiString, size: 10);
+        p.Add("@FirstName", data.FirstName, DbType.AnsiString, size: 250);
+        p.Add("@MiddleName", data.MiddleName, DbType.AnsiString, size: 250);
+        p.Add("@LastName", data.LastName, DbType.AnsiString, size: 250);
+        p.Add("@PreferredName", data.PreferredName, DbType.AnsiString, size: 250);
+        p.Add("@DateOfBirth", data.DateOfBirth, DbType.DateTime);
+        p.Add("@DateOfJoining", data.DateOfJoining, DbType.DateTime);
+        p.Add("@Gender", data.Gender, DbType.AnsiString, size: 50);
+        p.Add("@MaritalStatus", data.MaritalStatus, DbType.AnsiString, size: 20);
+        p.Add("@BloodGroup", data.BloodGroup, DbType.AnsiString, size: 20);
+        p.Add("@Nationality", data.Nationality, DbType.AnsiString, size: 50);
+        p.Add("@PlaceOfBirth", data.PlaceOfBirth, DbType.AnsiString, size: 100);
+        p.Add("@Religion", data.Religion, DbType.AnsiString, size: 50);
+        p.Add("@Category", data.Category, DbType.AnsiString, size: 100);
+        p.Add("@EmployeePhoto", data.EmployeePhoto, DbType.Binary, size: -1);
+        p.Add("@ResultMessage", null, DbType.AnsiString, ParameterDirection.Output, 200);
 
-        await using var connection = new SqlConnection(connectionString);
-        await using var command = new SqlCommand(StoredProcedureName, connection)
-        {
-            CommandType = CommandType.StoredProcedure,
-        };
+        await executor.ExecuteAsync(SaveProcedure, p, cancellationToken);
 
-        AddOutputInt(command, "@Id", data.Id);
-        AddOutputString(command, "@Employee_Id", data.EmployeeId, 50);
-        AddInputString(command, "@OperationType", data.OperationType, 10);
-        AddInputString(command, "@Salutation", data.Salutation, 10);
-        AddInputString(command, "@FirstName", data.FirstName, 250);
-        AddInputString(command, "@MiddleName", data.MiddleName, 250);
-        AddInputString(command, "@LastName", data.LastName, 250);
-        AddInputString(command, "@PreferredName", data.PreferredName, 250);
-        AddInputDateTime(command, "@DateOfBirth", data.DateOfBirth);
-        AddInputDateTime(command, "@DateOfJoining", data.DateOfJoining);
-        AddInputString(command, "@Gender", data.Gender, 50);
-        AddInputString(command, "@MaritalStatus", data.MaritalStatus, 20);
-        AddInputString(command, "@BloodGroup", data.BloodGroup, 20);
-        AddInputString(command, "@Nationality", data.Nationality, 50);
-        AddInputString(command, "@PlaceOfBirth", data.PlaceOfBirth, 100);
-        AddInputString(command, "@Religion", data.Religion, 50);
-        AddInputString(command, "@Category", data.Category, 100);
-        AddInputBinary(command, "@EmployeePhoto", data.EmployeePhoto);
-        AddOutputString(command, "@ResultMessage", null, 200);
-
-        await connection.OpenAsync(cancellationToken);
-        await command.ExecuteNonQueryAsync(cancellationToken);
-
-        var savedIdValue = command.Parameters["@Id"].Value;
-        int? savedId = savedIdValue == DBNull.Value
-            ? null
-            : Convert.ToInt32(savedIdValue);
-
-        var savedEmployeeId = command.Parameters["@Employee_Id"].Value as string;
-        var message = command.Parameters["@ResultMessage"].Value as string;
-
-        return new PersonalInfoSaveResponseDto
-        {
-            Id = savedId,
-            EmployeeId = savedEmployeeId ?? data.EmployeeId,
-            Message = message ?? "Personal info saved successfully.",
-        };
-    }
-
-    private static void AddInputString(
-        SqlCommand command,
-        string parameterName,
-        string? value,
-        int size)
-    {
-        command.Parameters.Add(new SqlParameter(parameterName, SqlDbType.VarChar, size)
-        {
-            Value = value is null ? DBNull.Value : value,
-        });
-    }
-
-    private static void AddOutputString(
-        SqlCommand command,
-        string parameterName,
-        string? value,
-        int size)
-    {
-        command.Parameters.Add(new SqlParameter(parameterName, SqlDbType.VarChar, size)
-        {
-            Direction = ParameterDirection.InputOutput,
-            Value = value is null ? DBNull.Value : value,
-        });
-    }
-
-    private static void AddOutputInt(SqlCommand command, string parameterName, int? value)
-    {
-        command.Parameters.Add(new SqlParameter(parameterName, SqlDbType.Int)
-        {
-            Direction = ParameterDirection.InputOutput,
-            Value = value is null ? DBNull.Value : value,
-        });
-    }
-
-    private static void AddInputDateTime(SqlCommand command, string parameterName, DateTime? value)
-    {
-        command.Parameters.Add(new SqlParameter(parameterName, SqlDbType.DateTime)
-        {
-            Value = value is null ? DBNull.Value : value,
-        });
-    }
-
-    private static void AddInputBinary(SqlCommand command, string parameterName, byte[]? value)
-    {
-        command.Parameters.Add(new SqlParameter(parameterName, SqlDbType.VarBinary, -1)
-        {
-            Value = value is null ? DBNull.Value : value,
-        });
+        return new EmployeeSectionSaveResult(
+            p.Get<int?>("@Id"),
+            p.Get<string?>("@Employee_Id") ?? data.EmployeeId,
+            p.Get<string?>("@ResultMessage") ?? "Personal info saved successfully.");
     }
 }

@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.*" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>10.*-*</Version>
@@ -18,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\core\PeopleHub.Application\PeopleHub.Application.csproj" />
     <ProjectReference Include="..\core\PeopleHub.Infrastructure\PeopleHub.Infrastructure.csproj" />
     <ProjectReference Include="..\peoplehub.client\peoplehub.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

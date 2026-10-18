@@ -1,7 +1,9 @@
-using PeopleHub.Application.Modules.Employees.PersonalInfo.DTOs;
+using PeopleHub.Application.Common.Utilities;
+using PeopleHub.Application.Modules.Employees.PersonalInfo.Commands.SavePersonalInfo;
 
 namespace PeopleHub.Infrastructure.Modules.Employees.PersonalInfo.DTAs;
 
+/// <summary>Data-transfer shape for the stored procedure: trimmed strings, decoded photo.</summary>
 internal sealed record PersonalInfoDta
 {
     public int? Id { get; init; }
@@ -40,60 +42,27 @@ internal sealed record PersonalInfoDta
 
     public string OperationType => Id is null or 0 ? "INS" : "UPD";
 
-    public string EmployeeName => string.Join(
-        " ",
-        new[] { Salutation, FirstName, MiddleName, LastName }
-            .Where(value => !string.IsNullOrWhiteSpace(value))
-            .Select(value => value!.Trim()));
-
-    public static PersonalInfoDta From(PersonalInfoSaveRequestDto request)
+    public static PersonalInfoDta From(SavePersonalInfoCommand command) => new()
     {
-        return new PersonalInfoDta
-        {
-            Id = request.Id,
-            EmployeeId = Normalize(request.EmployeeId),
-            Salutation = Normalize(request.Salutation),
-            FirstName = Normalize(request.FirstName),
-            MiddleName = Normalize(request.MiddleName),
-            LastName = Normalize(request.LastName),
-            PreferredName = Normalize(request.PreferredName),
-            DateOfBirth = request.DateOfBirth,
-            DateOfJoining = request.DateOfJoining,
-            Gender = Normalize(request.Gender),
-            MaritalStatus = Normalize(request.MaritalStatus),
-            BloodGroup = Normalize(request.BloodGroup),
-            Nationality = Normalize(request.Nationality),
-            PlaceOfBirth = Normalize(request.PlaceOfBirth),
-            Religion = Normalize(request.Religion),
-            Category = Normalize(request.Category),
-            EmployeePhoto = DecodeEmployeePhoto(request.EmployeePhoto),
-        };
-    }
+        Id = command.Id,
+        EmployeeId = Normalize(command.EmployeeId),
+        Salutation = Normalize(command.Salutation),
+        FirstName = Normalize(command.FirstName),
+        MiddleName = Normalize(command.MiddleName),
+        LastName = Normalize(command.LastName),
+        PreferredName = Normalize(command.PreferredName),
+        DateOfBirth = command.DateOfBirth,
+        DateOfJoining = command.DateOfJoining,
+        Gender = Normalize(command.Gender),
+        MaritalStatus = Normalize(command.MaritalStatus),
+        BloodGroup = Normalize(command.BloodGroup),
+        Nationality = Normalize(command.Nationality),
+        PlaceOfBirth = Normalize(command.PlaceOfBirth),
+        Religion = Normalize(command.Religion),
+        Category = Normalize(command.Category),
+        EmployeePhoto = Base64Payload.TryDecode(command.EmployeePhoto),
+    };
 
-    private static string? Normalize(string? value)
-    {
-        return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
-    }
-
-    private static byte[]? DecodeEmployeePhoto(string? employeePhoto)
-    {
-        if (string.IsNullOrWhiteSpace(employeePhoto))
-        {
-            return null;
-        }
-
-        var base64Index = employeePhoto.IndexOf("base64,", StringComparison.OrdinalIgnoreCase);
-        var base64Value = base64Index >= 0
-            ? employeePhoto[(base64Index + "base64,".Length)..]
-            : employeePhoto;
-
-        try
-        {
-            return Convert.FromBase64String(base64Value);
-        }
-        catch (FormatException)
-        {
-            return null;
-        }
-    }
+    private static string? Normalize(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }

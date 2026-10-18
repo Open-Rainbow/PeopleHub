@@ -1,10 +1,12 @@
-using PeopleHub.Application.Modules.Employees.PersonalInfo.DTOs;
+using PeopleHub.Application.Modules.Employees.Common;
+using PeopleHub.Application.Modules.Employees.PersonalInfo.Commands.SavePersonalInfo;
 
 namespace PeopleHub.Application.Modules.Employees.PersonalInfo.Interfaces;
 
+/// <summary>Port. Implemented in Infrastructure.</summary>
 public interface IPersonalInfoRepository
 {
-    Task<PersonalInfoSaveResponseDto> SaveAsync(
-        PersonalInfoSaveRequestDto request,
-        CancellationToken cancellationToken = default);
+    Task<EmployeeSectionSaveResult> SaveAsync(
+        SavePersonalInfoCommand command,
+        CancellationToken cancellationToken);
 }
