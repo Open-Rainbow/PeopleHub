@@ -1,9 +1,11 @@
 <div class="header flex items-center justify-between bg-white px-4 py-2 shadow-sm h-[60px] w-full box-border font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
   <div class="design_1 flex gap-[10px]">
     <button
+      type="button"
       class="hamburger-btn w-[36px] h-[36px] bg-[var(--bg-color)] rounded-[8px] flex items-center justify-center cursor-pointer hover:bg-[#f3f6fb]"
+      [attr.aria-label]="isUserCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
       (click)="toggleSidebar()">
-      <ui-icon [name]="isUserCollapsed() ? 'close' : 'hamburger_menu'" class="text-[20px]"></ui-icon>
+      <ui-icon name="hamburger_menu" class="text-[20px]"></ui-icon>
     </button>
   </div>
 
