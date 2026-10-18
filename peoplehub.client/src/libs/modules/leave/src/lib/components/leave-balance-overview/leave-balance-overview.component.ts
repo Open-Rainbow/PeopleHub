@@ -15,10 +15,14 @@ export class LeaveBalanceOverviewComponent {
     year: new FormControl<string | null>(String(new Date().getFullYear())),
   });
 
-  readonly yearOptions = [0, 1, 2].map((offset) => {
-    const year = String(new Date().getFullYear() - offset);
-    return { value: year, isDefault: offset === 0, isDisabled: false };
-  });
+  /** Current year + previous two, shaped like the ui DropdownValues model. */
+  readonly yearOptions = [0, 1, 2].map((offset) => ({
+    value: String(new Date().getFullYear() - offset),
+    isDefault: offset === 0,
+    isDisabled: false,
+    textColor: '#111827',
+    backgroundColor: '#ecf2fd',
+  }));
 
   readonly legendData = [
     { color: '#ffb6c1', value: 40, label: 'Used' },
