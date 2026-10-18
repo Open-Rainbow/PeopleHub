@@ -124,7 +124,7 @@
     "start:directives": "ng serve directives",
     "build:theme-tokens": "ng build theme-tokens --configuration production",
     "start:theme-tokens": "ng serve theme-tokens",
-    "build:shared": "npm run build:ui && npm run build:pipes && npm run build:api && npm run build:auth && npm run build:common && npm run build:forms && npm run build:utils && npm run build:directives && npm run build:theme-tokens",
+    "build:shared": "npm run build:common && npm run build:ui && npm run build:pipes && npm run build:api && npm run build:auth && npm run build:forms && npm run build:utils && npm run build:directives && npm run build:theme-tokens",
     "build:app-shell": "ng build app-shell --configuration production",
     "start:app-shell": "ng serve app-shell",
     "build:branding": "ng build branding --configuration production",
