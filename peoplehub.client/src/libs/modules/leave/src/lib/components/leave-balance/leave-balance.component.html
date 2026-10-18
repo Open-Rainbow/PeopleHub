@@ -1,152 +1,104 @@
 <section class="space-y-4">
-  <div class="flex items-center justify-between">
-    <h2 class="text-lg font-semibold text-foreground" style="font-size: 14px;">
-      Leave Categories
-    </h2>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h2 class="text-[14px] font-semibold text-gray-900">Leave Categories</h2>
 
-    <div class="flex gap-2">
-      <orms-buttonlist [buttons]="buttonData" [selectedId]="selectedCategoryId" [textColor]="'#3b82f6'" [bgColor]="'red'"
-        [selectedBgColor]="'#3b82f6'" [selectedTextColor]="'#ffffff'" [hoverTextColor]="'#3b82f6'"
-        [hoverBgColor]="'#ffffff'" (buttonClick)="buttonClick($event)">
-      </orms-buttonlist>
-    </div>
+    <ui-button-group
+      [items]="categoryButtons"
+      [selectedValues]="[selectedCategory]"
+      size="sm"
+      ariaLabel="Filter leave categories"
+      (buttonClick)="onCategoryClick($event)"
+    ></ui-button-group>
   </div>
 
-
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-    @for(leave of filteredLeaveCards; track leave;){
-      <div class="box group relative rounded-xl border-[1.5px] border-border bg-card overflow-hidden
-          transition-all duration-300 hover:border-[var(--hover-border)]"
-      [style.--hover-border]="leave.color">
-
-      <div class="p-4" style="background-color: white;">
-
-
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2.5 min-w-0">
-
-            <span class="text-sm font-semibold text-foreground leading-tight truncate" style="font-size: 13px;">
+    @for (leave of filteredLeaveCards; track leave.leaveTypeName) {
+      <div
+        class="box group relative rounded-xl border-[1.5px] border-gray-200 bg-white overflow-hidden transition-all duration-300 hover:border-[var(--hover-border)]"
+        [style.--hover-border]="leave.color"
+      >
+        <div class="p-4">
+          <div class="flex items-center justify-between">
+            <span class="text-[13px] font-semibold text-gray-900 leading-tight truncate">
               {{ leave.leaveTypeName }}
             </span>
+
+            <div
+              class="flex items-center gap-1 px-2 py-0.5 rounded-md flex-shrink-0"
+              [ngStyle]="{ backgroundColor: leave.accentColor + '12', color: leave.accentColor }"
+            >
+              <span class="text-[12px] font-bold font-mono leading-none">{{ remaining(leave.total, leave.used) }}</span>
+              <span class="text-[10px] font-medium opacity-80">left</span>
+            </div>
           </div>
 
-          <div class="flex items-center gap-1 px-2 py-0.5 rounded-md flex-shrink-0" [ngStyle]="{
-        backgroundColor: leave.accentColor + '12',
-        color: leave.accentColor
-      }">
-            <span class="text-base font-bold font-mono leading-none" style="font-size: 12px;">
-              {{ remaining(leave.total,leave.used) }}
-            </span>
-            <span class="text-[10px] font-medium opacity-80">
-              left
-            </span>
-          </div>
-        </div>
+          <ui-progress-bar
+            [parentFormGroup]="leaveBalance"
+            [total]="leave.total"
+            [used]="leave.used"
+            [barColor]="leave.color"
+            [remainingTextColor]="'#353d43'"
+            [hideDetails]="true"
+          ></ui-progress-bar>
 
-        <ui-progress-bar [parentFormGroup]="leaveBalance" [total]="leave.total" [used]="leave.used"
-          [barColor]="leave.color" [remainingTextColor]="'#353d43'" [hideDetails]="true"></ui-progress-bar>
-
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>
-              <span class="font-semibold font-mono" [style.color]="leave.color">
-                {{ leave.used }}
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <span>
+                <span class="font-semibold font-mono" [style.color]="leave.color">{{ leave.used }}</span>
+                used
               </span>
-              used
-            </span>
-            <span class="text-border">/</span>
-            <span>
-              <span class="font-semibold text-foreground font-mono">
-                {{ leave.total }}
+              <span class="text-gray-300">/</span>
+              <span>
+                <span class="font-semibold text-gray-900 font-mono">{{ leave.total }}</span>
+                total
               </span>
-              total
-            </span>
+            </div>
+
+            <button
+              type="button"
+              (click)="toggleExpanded(leave)"
+              class="flex items-center justify-center w-6 h-6 rounded-full hover:bg-gray-200 transition-colors text-gray-500 hover:text-gray-900"
+              [attr.aria-label]="leave.expanded ? 'Collapse details' : 'Expand details'"
+            >
+              <ui-icon
+                name="arrow_down"
+                class="transition-transform duration-200"
+                [ngStyle]="{ transform: leave.expanded ? 'rotate(180deg)' : 'rotate(0deg)' }"
+              ></ui-icon>
+            </button>
           </div>
 
-          <button type="button" (click)="toggleExpanded(leave)" class="flex items-center justify-center w-6 h-6 rounded-full
-                hover:bg-gray-200 transition-colors
-                text-muted-foreground hover:text-foreground"
-            [attr.aria-label]="leave.expanded ? 'Collapse details' : 'Expand details'">
-            <ui-icon [name]="'arrow_down'" [ngStyle]="{
-      transform: leave.expanded ? 'rotate(180deg)' : 'rotate(0deg)'
-    }">
-            </ui-icon>
+          <div
+            class="grid transition-all duration-300 ease-out"
+            [ngClass]="leave.expanded ? 'grid-rows-[1fr] opacity-100 mt-3' : 'grid-rows-[0fr] opacity-0'"
+          >
+            <div class="overflow-hidden">
+              <div class="pt-3 border-t border-gray-200 space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-gray-500">Carry Forward</span>
+                  <span class="text-xs font-semibold text-gray-900 font-mono">{{ leave.carryForward }} days</span>
+                </div>
 
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-gray-500">Encashable</span>
+                  <span class="text-xs font-semibold text-gray-900 font-mono">
+                    {{ leave.encashable == 0 ? 'N/A' : leave.encashable }}
+                  </span>
+                </div>
 
-
-          </button>
-        </div>
-
-        <div class="grid transition-all duration-300 ease-out"
-          [ngClass]="leave.expanded ? 'grid-rows-[1fr] opacity-100 mt-3' : 'grid-rows-[0fr] opacity-0'">
-          <div class="overflow-hidden">
-            <div class="pt-3 border-t border-border space-y-2.5">
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-muted-foreground">Carry Forward</span>
-                <span class="text-xs font-semibold text-foreground font-mono">
-                  {{ leave.carryForward }} days
-                </span>
+                <button
+                  type="button"
+                  (click)="onApplyClick(leave)"
+                  class="w-full mt-1 py-1.5 text-xs font-medium rounded-lg text-white transition-opacity hover:opacity-90"
+                  [ngStyle]="{ backgroundColor: leave.color }"
+                >
+                  Apply {{ leave.leaveTypeName }}
+                </button>
               </div>
-
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-muted-foreground">Encashable</span>
-                <span class="text-xs font-semibold text-foreground font-mono">
-                  {{ leave.encashable == 0 ? 'N/A' : leave.encashable }}
-                </span>
-              </div>
-
-              <button type="button" (click)="onApplyClick(leave)" class="w-full mt-1 py-1.5 text-xs font-medium rounded-lg
-                    transition-colors text-primary-foreground"
-                [ngStyle]="{ backgroundColor: leave.color, color: 'white' }">
-                Apply {{ leave.leaveTypeName }}
-              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
     }
-    
   </div>
 </section>
-
-<!-- <div class="container anycard">
-  <div class="header">
-    <h1>Your Leave Balance</h1>
-  </div>
-
-  <div class="card">
-    <p>Sick Leave</p>
-    <ui-progress-bar [parentFormGroup]="leaveBalance"></ui-progress-bar>
-  </div>
-
-  <div class="card">
-    <p>Casual Leave</p>
-    <ui-progress-bar [used]="7" [parentFormGroup]="leaveBalance"></ui-progress-bar>
-  </div>
-
-  <div class="card">
-    <p>Earned Leave</p>
-    <ui-progress-bar [used]="10" [parentFormGroup]="leaveBalance"></ui-progress-bar>
-  </div>
-
-  <div class="card">
-    <p>Maternity Leave</p>
-    <ui-progress-bar [used]="10" [parentFormGroup]="leaveBalance"></ui-progress-bar>
-  </div>
-
-  <div class="card">
-    <p>Paternity Leave</p>
-    <ui-progress-bar [used]="10" [parentFormGroup]="leaveBalance"></ui-progress-bar>
-  </div>
-
-  <div class="card">
-    <p>Comp-off Leave</p>
-    <ui-progress-bar [used]="10" [parentFormGroup]="leaveBalance"></ui-progress-bar>
-  </div>
-
-  <div class="card">
-    <p>Unpaid Leave</p>
-    <ui-progress-bar [used]="10" [parentFormGroup]="leaveBalance"></ui-progress-bar>
-  </div>
-</div> -->
