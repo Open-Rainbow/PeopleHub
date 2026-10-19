@@ -1,4 +1,5 @@
-export type LeaveTypeKey = 'earned' | 'casual' | 'sick' | 'comp-off' | 'loss-of-pay';
+/** Built-in codes, plus any code HR adds in the Leave Policy Manager. */
+export type LeaveTypeKey = 'earned' | 'casual' | 'sick' | 'comp-off' | 'loss-of-pay' | (string & {});
 
 export type LeaveStatus = 'Pending' | 'Approved' | 'Rejected' | 'Cancelled';
 
@@ -44,6 +45,10 @@ export interface LeaveTypeConfig {
   maxConsecutive: number | null;
   /** Extra hint shown in the form when the request is long. */
   documentAfterDays?: number;
+  /** Auto | Manager | HR | Manager + HR (from the published leave policy). */
+  approvalType?: string;
+  /** Days carried forward from last year (already part of entitlement). */
+  carryIn?: number;
   styles: { chip: string; bar: string; soft: string; ring: string };
 }
 
