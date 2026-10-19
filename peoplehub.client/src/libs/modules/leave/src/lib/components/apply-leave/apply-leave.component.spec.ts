@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ApplyLeaveComponent } from './apply-leave.component';
 import { LeaveService } from '../../services/leave.service';
 
@@ -10,6 +12,7 @@ describe('ApplyLeaveComponent', () => {
     localStorage.clear();
     await TestBed.configureTestingModule({
       imports: [ApplyLeaveComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ApplyLeaveComponent);

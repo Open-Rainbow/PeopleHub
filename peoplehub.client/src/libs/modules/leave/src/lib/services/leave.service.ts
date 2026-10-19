@@ -1,38 +1,70 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { forkJoin, of } from 'rxjs';
+import { catchError, finalize, timeout } from 'rxjs/operators';
 import {
+  DayPart,
   LeaveBalance,
   LeaveDraft,
   LeaveDraftErrors,
   LeaveRequest,
+  LeaveTypeConfig,
   LeaveTypeKey,
 } from '../models/leave-request.model';
-import { LEAVE_TYPE_MAP, LEAVE_TYPES, REASON_MAX, REASON_MIN } from '../config/leave-policy';
-import { addDaysIso, rangesOverlap, todayIso, workingDays } from '../utils/leave-date.utils';
+import { LEAVE_HOLIDAYS, LEAVE_TYPES, REASON_MAX, REASON_MIN } from '../config/leave-policy';
+import { addDaysIso, rangesOverlap, skippedDays, todayIso, workingDays } from '../utils/leave-date.utils';
+
+/** Backend: PeopleHub.Server LeaveController (proxied by proxy.conf.js). */
+export const LEAVE_API = '/api/v1/leave';
+
+/** Until login is wired up, every call is made as this employee (seeded in PeopleHub.sql). */
+export const DEMO_EMPLOYEE_ID = 'EMP00001';
 
 const STORE_KEY = 'ph.leave.requests.v1';
+const API_TIMEOUT_MS = 5000;
 
 /** Statuses that block the same dates and count against the balance. */
 const ACTIVE: ReadonlyArray<LeaveRequest['status']> = ['Pending', 'Approved'];
 
+type Row = Record<string, unknown>;
+
 /**
  * Leave requests + balances for the signed-in employee.
- * Offline-first (localStorage, seeded with demo data) until the leave API exists.
+ *
+ * - When the API answers, it is the source of truth: types, holidays and requests come
+ *   from the server and every write goes to it (the database re-checks every rule).
+ * - When it doesn't, the page keeps working on local demo data (localStorage).
  */
 @Injectable({
   providedIn: 'root',
 })
 export class LeaveService {
+  private readonly http = inject(HttpClient);
   private readonly requestsSignal = signal<LeaveRequest[]>(this.readStore());
+  private readonly typesSignal = signal<LeaveTypeConfig[]>(LEAVE_TYPES);
+  private readonly holidaysSignal = signal<Record<string, string>>(LEAVE_HOLIDAYS);
+  private readonly onlineSignal = signal(false);
+  private tempId = 0;
+
+  readonly employeeId = DEMO_EMPLOYEE_ID;
+  readonly loading = signal(false);
+  readonly isOnline = this.onlineSignal.asReadonly();
+  readonly lastError = signal<string | null>(null);
+  readonly types = this.typesSignal.asReadonly();
+  readonly holidays = this.holidaysSignal.asReadonly();
+  readonly typeMap = computed(() =>
+    this.typesSignal().reduce((map, t) => ({ ...map, [t.key]: t }), {} as Record<LeaveTypeKey, LeaveTypeConfig>),
+  );
 
   readonly requests = computed(() =>
     [...this.requestsSignal()].sort((a, b) => b.fromDate.localeCompare(a.fromDate) || b.id - a.id),
   );
 
-  /** Balances for the current calendar year. */
+  /** Balances for the current calendar year (same formula as sp_get_leave_balances). */
   readonly balances = computed<LeaveBalance[]>(() => {
     const year = todayIso().slice(0, 4);
     const thisYear = this.requestsSignal().filter((r) => r.fromDate.startsWith(year));
-    return LEAVE_TYPES.map((type) => {
+    return this.typesSignal().map((type) => {
       const used = sum(thisYear.filter((r) => r.type === type.key && r.status === 'Approved'));
       const pending = sum(thisYear.filter((r) => r.type === type.key && r.status === 'Pending'));
       return {
@@ -65,14 +97,54 @@ export class LeaveService {
     );
   });
 
-  balanceOf(type: LeaveTypeKey): LeaveBalance {
-    return this.balances().find((b) => b.type.key === type)!;
+  /** Loads types, holidays (this + next year) and my requests. Keeps local data if the API is down. */
+  refresh(): void {
+    const year = Number(todayIso().slice(0, 4));
+    const get = <T>(url: string) => this.http.get<T>(url).pipe(timeout(API_TIMEOUT_MS));
+    this.loading.set(true);
+    forkJoin({
+      types: get<Row[]>(`${LEAVE_API}/types`),
+      thisYear: get<Row[]>(`${LEAVE_API}/holidays?year=${year}`),
+      nextYear: get<Row[]>(`${LEAVE_API}/holidays?year=${year + 1}`),
+      requests: get<Row[]>(`${LEAVE_API}/requests?employeeId=${encodeURIComponent(this.employeeId)}`),
+    })
+      .pipe(
+        catchError(() => of(null)),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe((data) => {
+        if (!data || !Array.isArray(data.requests)) return;
+        this.onlineSignal.set(true);
+        if (Array.isArray(data.types) && data.types.length > 0) this.typesSignal.set(this.mergeTypes(data.types));
+        const holidays: Record<string, string> = {};
+        for (const h of [...(data.thisYear ?? []), ...(data.nextYear ?? [])]) {
+          if (!h['isOptional']) holidays[String(h['date']).slice(0, 10)] = String(h['name']);
+        }
+        this.holidaysSignal.set(holidays);
+        this.requestsSignal.set(data.requests.map((row) => this.fromApi(row)));
+      });
   }
 
-  /** Field-level problems with a draft. Empty object = OK to submit. */
+  typeOf(key: LeaveTypeKey): LeaveTypeConfig {
+    return this.typeMap()[key] ?? LEAVE_TYPES[0];
+  }
+
+  balanceOf(type: LeaveTypeKey): LeaveBalance {
+    return this.balances().find((b) => b.type.key === type) ?? this.balances()[0];
+  }
+
+  countDays(from: string, to: string, dayPart: DayPart = 'full'): number {
+    return workingDays(from, to, dayPart, this.holidaysSignal());
+  }
+
+  skippedDays(from: string, to: string): { weekends: number; holidays: string[] } {
+    return skippedDays(from, to, this.holidaysSignal());
+  }
+
+  /** Field-level problems with a draft. Empty object = OK to submit. The server re-checks all of these. */
   validate(draft: LeaveDraft): LeaveDraftErrors {
     const errors: LeaveDraftErrors = {};
-    const type = LEAVE_TYPE_MAP[draft.type];
+    const type = this.typeMap()[draft.type];
     const today = todayIso();
     const reason = draft.reason.trim();
 
@@ -89,8 +161,7 @@ export class LeaveService {
       return errors;
     }
 
-    const earliest = addDaysIso(today, -type.backdateDays);
-    if (draft.fromDate < earliest) {
+    if (draft.fromDate < addDaysIso(today, -type.backdateDays)) {
       errors.fromDate = type.backdateDays > 0
         ? `${type.label} can start at most ${type.backdateDays} days ago.`
         : `${type.label} can't start in the past.`;
@@ -100,7 +171,7 @@ export class LeaveService {
       errors.toDate = 'Half day applies to a single date only.';
     }
 
-    const days = workingDays(draft.fromDate, draft.toDate, draft.dayPart);
+    const days = this.countDays(draft.fromDate, draft.toDate, draft.dayPart);
     if (days === 0) {
       errors.toDate = 'These dates are all weekends or holidays.';
       return errors;
@@ -118,52 +189,125 @@ export class LeaveService {
       (r) => ACTIVE.includes(r.status) && rangesOverlap(r.fromDate, r.toDate, draft.fromDate, draft.toDate),
     );
     if (clash) {
-      errors.overlap = `Overlaps your ${LEAVE_TYPE_MAP[clash.type].label.toLowerCase()} on ${clash.fromDate}${clash.toDate !== clash.fromDate ? ' to ' + clash.toDate : ''} (${clash.status.toLowerCase()}).`;
+      errors.overlap = `Overlaps your ${this.typeOf(clash.type).label.toLowerCase()} on ${clash.fromDate}${clash.toDate !== clash.fromDate ? ' to ' + clash.toDate : ''} (${clash.status.toLowerCase()}).`;
     }
 
     return errors;
   }
 
-  /** Returns the created request, or the validation errors. */
+  /** Returns the created request (optimistic when online), or the validation errors. */
   apply(draft: LeaveDraft): { request?: LeaveRequest; errors?: LeaveDraftErrors } {
     const errors = this.validate(draft);
     if (Object.keys(errors).length > 0) return { errors };
 
+    const online = this.onlineSignal();
+    const dayPart: DayPart = draft.fromDate === draft.toDate ? draft.dayPart : 'full';
     const request: LeaveRequest = {
-      id: this.requestsSignal().reduce((max, r) => Math.max(max, r.id), 0) + 1,
+      id: online ? --this.tempId : this.requestsSignal().reduce((max, r) => Math.max(max, r.id), 0) + 1,
       type: draft.type,
       fromDate: draft.fromDate,
       toDate: draft.toDate,
-      dayPart: draft.fromDate === draft.toDate ? draft.dayPart : 'full',
-      days: workingDays(draft.fromDate, draft.toDate, draft.dayPart),
+      dayPart,
+      days: this.countDays(draft.fromDate, draft.toDate, dayPart),
       reason: draft.reason.trim(),
       status: 'Pending',
       appliedOn: new Date().toISOString(),
       approver: 'Reporting Manager',
     };
     this.save([request, ...this.requestsSignal()]);
+
+    if (online) {
+      this.http
+        .post<Row>(`${LEAVE_API}/requests`, {
+          employeeId: this.employeeId,
+          leaveType: request.type,
+          fromDate: request.fromDate,
+          toDate: request.toDate,
+          dayPart: request.dayPart,
+          reason: request.reason,
+        })
+        .subscribe({
+          next: (saved) => this.replace(request.id, this.fromApi(saved)),
+          error: (error) => this.fail(error, 'Could not send your leave request.'),
+        });
+    }
     return { request };
   }
 
   /** Pending requests and approved ones that haven't started can be withdrawn. */
   canCancel(request: LeaveRequest): boolean {
-    return request.status === 'Pending' || (request.status === 'Approved' && request.fromDate > todayIso());
+    return request.id > 0
+      && (request.status === 'Pending' || (request.status === 'Approved' && request.fromDate > todayIso()));
   }
 
   cancel(id: number): void {
-    this.save(
-      this.requestsSignal().map((r) =>
-        r.id === id && this.canCancel(r) ? { ...r, status: 'Cancelled', decisionNote: 'Withdrawn by you' } : r,
-      ),
-    );
+    const target = this.requestsSignal().find((r) => r.id === id);
+    if (!target || !this.canCancel(target)) return;
+    this.save(this.requestsSignal().map((r) => (r.id === id ? { ...r, status: 'Cancelled', decisionNote: 'Withdrawn by you' } : r)));
+
+    if (this.onlineSignal()) {
+      this.http.post<Row>(`${LEAVE_API}/requests/${id}/withdraw`, { employeeId: this.employeeId }).subscribe({
+        next: (saved) => this.replace(id, this.fromApi(saved)),
+        error: (error) => this.fail(error, 'Could not withdraw the request.'),
+      });
+    }
   }
 
   resetDemoData(): void {
     this.save(seedRequests());
   }
 
+  private replace(id: number, next: LeaveRequest): void {
+    this.save(this.requestsSignal().map((r) => (r.id === id ? next : r)));
+  }
+
+  /** A write failed: show the server's reason and re-sync with the server. */
+  private fail(error: unknown, fallback: string): void {
+    const body = (error as { error?: { detail?: string; title?: string; errors?: Record<string, string[]> } })?.error;
+    const firstFieldError = body?.errors ? Object.values(body.errors)[0]?.[0] : undefined;
+    this.lastError.set(body?.detail || firstFieldError || body?.title || fallback);
+    this.refresh();
+  }
+
+  /** Server rules (entitlement, limits) + local styles. */
+  private mergeTypes(rows: Row[]): LeaveTypeConfig[] {
+    const num = (v: unknown) => (v === null || v === undefined || v === '' ? null : Number(v));
+    return LEAVE_TYPES.map((local) => {
+      const row = rows.find((r) => r['code'] === local.key);
+      if (!row) return local;
+      return {
+        ...local,
+        label: String(row['label'] ?? local.label),
+        short: String(row['shortCode'] ?? local.short),
+        description: String(row['description'] ?? local.description),
+        entitlement: num(row['annualEntitlement']),
+        backdateDays: Number(row['backdateDays'] ?? local.backdateDays),
+        maxConsecutive: num(row['maxConsecutive']),
+        documentAfterDays: num(row['documentAfterDays']) ?? undefined,
+      };
+    });
+  }
+
+  private fromApi(row: Row): LeaveRequest {
+    const text = (key: string) => (row[key] === null || row[key] === undefined ? '' : String(row[key]));
+    return {
+      id: Number(row['id']),
+      type: (text('leaveType') || 'earned') as LeaveTypeKey,
+      fromDate: text('fromDate').slice(0, 10),
+      toDate: text('toDate').slice(0, 10),
+      dayPart: (text('dayPart') || 'full') as DayPart,
+      days: Number(row['days'] ?? 0),
+      reason: text('reason'),
+      status: (text('status') || 'Pending') as LeaveRequest['status'],
+      appliedOn: text('appliedAt') || new Date().toISOString(),
+      approver: text('approverName') || 'Reporting Manager',
+      decisionNote: text('decisionNote') || undefined,
+    };
+  }
+
   private save(requests: LeaveRequest[]): void {
     this.requestsSignal.set(requests);
+    if (this.onlineSignal()) return; // online data always comes from the API
     try {
       if (typeof localStorage !== 'undefined') localStorage.setItem(STORE_KEY, JSON.stringify(requests));
     } catch {
@@ -187,7 +331,7 @@ function sum(requests: LeaveRequest[]): number {
   return requests.reduce((n, r) => n + r.days, 0);
 }
 
-/** Demo history relative to today, so balances and "upcoming" always look realistic. */
+/** Demo history relative to today (mirrors the seed in PeopleHub.sql). */
 export function seedRequests(now = new Date()): LeaveRequest[] {
   const today = todayIso(now);
   const at = (offset: number) => addDaysIso(today, offset);
