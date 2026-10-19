@@ -23,6 +23,11 @@ import { IconComponent } from '../../primitives/icon/icon.component';
 export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() use24HourFormat = false;
   @Input() showSeconds = true;
+  /**
+   * When the form control starts empty the picker follows the current IST time until the user picks a value
+   * (original behaviour). Set to false to start at 00:00 instead. A pre-filled control value always wins.
+   */
+  @Input() liveClock = true;
   @Output() timeChange = new EventEmitter<string>();
   @Output() blurEvent = new EventEmitter<void>();
 
@@ -38,6 +43,8 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isPickerOpen = false;
   userInteracted = false;
+  /** A value was pre-filled or picked: keep it instead of jumping back to "now". */
+  private keepValue = false;
 
   hoursList: number[] = [];
   minutesList = Array.from({ length: 60 }, (_, i) => i);
@@ -72,8 +79,19 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeLists();
-    this.setInitialTime();
-    this.startLiveClock();
+    const preset = this.parseTime(this.control?.value);
+    if (preset) {
+      this.keepValue = true;
+      this.setTimeState(preset);
+      return;
+    }
+    if (this.liveClock) {
+      this.setInitialTime();
+      this.startLiveClock();
+    } else {
+      this.keepValue = true;
+      this.setTimeState({ hours: this.use24HourFormat ? 0 : 12, minutes: 0, seconds: 0, ampm: 'AM' });
+    }
   }
 
   ngAfterViewInit(): void {
@@ -95,6 +113,21 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
   // 12h mode must show 1..12, not 0..23
   private toDisplayHours(hours24: number): number {
     return this.use24HourFormat ? hours24 : hours24 % 12 || 12;
+  }
+
+  /** Accepts "HH:mm", "HH:mm:ss", optionally followed by AM/PM. */
+  private parseTime(value: unknown): TimeState | null {
+    if (typeof value !== 'string') return null;
+    const match = /^\s*(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?\s*$/i.exec(value);
+    if (!match) return null;
+    let hours = Number(match[1]);
+    const minutes = Number(match[2]);
+    const seconds = Number(match[3] ?? 0);
+    const suffix = match[4]?.toUpperCase() as 'AM' | 'PM' | undefined;
+    if (minutes > 59 || seconds > 59 || hours > 23) return null;
+    const hours24 = suffix ? (hours % 12) + (suffix === 'PM' ? 12 : 0) : hours;
+    hours = this.toDisplayHours(hours24);
+    return { hours, minutes, seconds, ampm: hours24 >= 12 ? 'PM' : 'AM' };
   }
 
   private setInitialTime(): void {
@@ -138,7 +171,9 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private openPicker(): void {
     this.isPickerOpen = true;
-    this.setInitialTime();
+    if (!this.keepValue) {
+      this.setInitialTime();
+    }
 
     setTimeout(() => {
       this.setScrollBehavior(false);
@@ -166,7 +201,7 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
         ampm: istTime.getHours() >= 12 ? 'PM' : 'AM'
       };
 
-      if (!this.userInteracted) {
+      if (!this.userInteracted && !this.keepValue) {
         this.setTimeState(newTime);
         this.scrollToCurrentSeconds();
 
@@ -195,6 +230,7 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (!this.userInteracted) {
       this.userInteracted = true;
+      this.keepValue = true;
       this.stopLiveClock();
     }
 
@@ -224,6 +260,7 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   selectValue(type: 'hours' | 'minutes' | 'seconds', value: number): void {
     this.userInteracted = true;
+    this.keepValue = true;
     this.stopLiveClock();
     this.updateTimeFromScroll(type, value);
     this.control?.markAsDirty();
@@ -233,6 +270,7 @@ export class TimepickerComponent implements OnInit, AfterViewInit, OnDestroy {
   setAmPm(value: string): void {
     const normalizedValue: 'AM' | 'PM' = value === 'AM' ? 'AM' : 'PM';
     this.userInteracted = true;
+    this.keepValue = true;
     this.stopLiveClock();
     this.setTimeState({ ...this._time, ampm: normalizedValue });
     this.control?.markAsDirty();

@@ -9,6 +9,11 @@ export type {
   IconPosition,
   NativeButtonType,
 } from './lib/models/button-control.types';
+export type { DropdownOption } from './lib/models/value-configs/dropdown-option.model';
+export type { ButtonGroupItem } from './lib/models/component-models/button-list-item.model';
+export { CHIP_VARIANTS, CHIP_VARIANT_PALETTE } from './lib/models/component-models/chip.types';
+export type { ChipVariant, ChipPalette } from './lib/models/component-models/chip.types';
+export * from './lib/utils/control-helpers';
 export { IconTextButtonComponent } from './lib/components/controls/icon-text-button/icon-text-button.component';
 export { CalendarComponent } from './lib/components/controls/calendar/calendar.component';
 export { CheckboxComponent } from './lib/components/controls/checkbox/checkbox.component';

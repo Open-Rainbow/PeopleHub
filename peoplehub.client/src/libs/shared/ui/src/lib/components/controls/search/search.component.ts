@@ -28,8 +28,12 @@ export class SearchComponent implements OnInit {
   @Input() id!: string;
   @Input() displaySuggestions?: boolean;
   @Input() searchData?: string[] = [];
+  /** Initial text (optional). */
+  @Input() value?: string = '';
 
   @Output() onSelect = new EventEmitter<string>();
+  /** Emits on every keystroke (live filtering). `onSelect` still fires for suggestions / clear. */
+  @Output() searchChange = new EventEmitter<string>();
   suggestionsVisible: boolean = false;
 
   get control() {
@@ -46,8 +50,13 @@ export class SearchComponent implements OnInit {
   filteredSuggestions: string[] = [];
 
   ngOnInit() {
+    if (this.value) {
+      this.searchControl.setValue(this.value, { emitEvent: false });
+    }
+
     this.searchControl.valueChanges.subscribe((value) => {
       const query = value ?? '';
+      this.searchChange.emit(query);
 
       if (query.length === 0) {
         this.filteredSuggestions = [];
@@ -79,6 +88,7 @@ export class SearchComponent implements OnInit {
   selectSuggestion(value: string) {
     this.searchControl.setValue(value, { emitEvent: false });
     this.suggestionsVisible = false;
+    this.searchChange.emit(value);
     this.onSelect.emit(value);
   }
 
