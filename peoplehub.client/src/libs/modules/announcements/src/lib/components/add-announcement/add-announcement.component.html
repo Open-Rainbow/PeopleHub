@@ -1,225 +1,470 @@
-<div class="w-full h-full p-5">
-  <!-- HEADER -->
-  <div class="flex">
-    <ui-text-button
-      class="ml-auto"
-      text="Add Announcement"
-      (buttonClick)="toggleForm()"
-    >
-    </ui-text-button>
+<section class="flex flex-col gap-6 p-6">
+  <!-- Header -->
+  <header class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-semibold text-gray-900">Announcements</h1>
+      <p class="mt-1 text-sm text-gray-500">
+        Create, schedule and manage company-wide announcements.
+      </p>
+    </div>
+    <div class="flex items-center gap-3">
+      <ui-text-button text="Export CSV" variant="secondary" (buttonClick)="exportCsv()"></ui-text-button>
+      <ui-text-button text="New announcement" (buttonClick)="openCreate()"></ui-text-button>
+    </div>
+  </header>
+
+  <!-- Stats (click to filter) -->
+  <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    @for (stat of stats(); track stat.key) {
+      <button
+        type="button"
+        class="flex items-center gap-4 rounded-2xl border bg-white p-4 text-left shadow-sm transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        [ngClass]="status() === stat.key ? 'border-blue-500 ring-1 ring-blue-500' : 'border-gray-200'"
+        [attr.aria-pressed]="status() === stat.key"
+        (click)="setStatus(stat.key)"
+      >
+        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-xl" [ngClass]="stat.tone">
+          <ui-icon [name]="stat.icon"></ui-icon>
+        </span>
+        <span class="flex flex-col">
+          <span class="text-2xl font-semibold leading-tight text-gray-900">{{ stat.count }}</span>
+          <span class="text-sm text-gray-500">{{ stat.label }}</span>
+        </span>
+      </button>
+    }
   </div>
 
-  <!-- MODAL -->
-  @if (isModalOpen) {
-    <div
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
-      (click)="closeModal()"
-    >
-      <div
-        class="bg-white rounded-xl shadow-lg w-[600px] max-h-[85vh] overflow-auto p-5"
-        (click)="$event.stopPropagation()"
-      >
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold">
-            {{
-              mode === 'add'
-                ? 'Add Announcement'
-                : mode === 'edit'
-                  ? 'Edit Announcement'
-                  : 'View Announcement'
-            }}
-          </h3>
-          <ui-icon
-            class="cursor-pointer"
-            [name]="'cross_2'"
-            (click)="closeModal()"
-          ></ui-icon>
-        </div>
+  <!-- List card -->
+  <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <!-- Toolbar -->
+    <div class="flex flex-wrap items-center gap-3 border-b border-gray-100 p-4">
+      <label class="relative min-w-64 flex-1">
+        <span class="sr-only">Search announcements</span>
+        <ui-icon class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" name="search"></ui-icon>
+        <input
+          type="search"
+          class="h-10 w-full rounded-lg border border-gray-200 bg-white pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          placeholder="Search by title, description, author or audience"
+          [value]="search()"
+          (input)="onSearch($any($event.target).value)"
+        />
+      </label>
 
-        @if (mode === 'view') {
-          <ng-container *ngTemplateOutlet="viewTemplate"></ng-container>
-        } @else {
-          <ng-container *ngTemplateOutlet="announcementTemplate"></ng-container>
+      <div class="flex rounded-lg bg-gray-100 p-1" role="tablist" aria-label="Status">
+        @for (tab of statusTabs; track tab) {
+          <button
+            type="button"
+            role="tab"
+            class="rounded-md px-3 py-1.5 text-sm font-medium transition"
+            [ngClass]="status() === tab ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'"
+            [attr.aria-selected]="status() === tab"
+            (click)="setStatus(tab)"
+          >
+            {{ tab }} <span class="ml-1 text-xs text-gray-400">{{ counts()[tab] }}</span>
+          </button>
         }
+      </div>
+
+      <select
+        class="h-10 rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+        aria-label="Filter by priority"
+        (change)="setPriorityFilter($any($event.target).value)"
+      >
+        @for (option of priorityFilters; track option) {
+          <option [value]="option" [selected]="priorityFilter() === option">
+            {{ option === 'All' ? 'All priorities' : option + ' priority' }}
+          </option>
+        }
+      </select>
+
+      <select
+        class="h-10 rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+        aria-label="Sort"
+        (change)="setSort($any($event.target).value)"
+      >
+        @for (option of sortOptions; track option.key) {
+          <option [value]="option.key" [selected]="sort() === option.key">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+
+    @if (paged().length > 0) {
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-100 text-sm">
+          <thead class="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+            <tr>
+              <th scope="col" class="px-4 py-3">Announcement</th>
+              <th scope="col" class="px-4 py-3">Priority</th>
+              <th scope="col" class="px-4 py-3">Audience</th>
+              <th scope="col" class="px-4 py-3">Publish</th>
+              <th scope="col" class="px-4 py-3">Expires</th>
+              <th scope="col" class="px-4 py-3">Status</th>
+              <th scope="col" class="px-4 py-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            @for (item of paged(); track item.id) {
+              <tr class="group transition hover:bg-gray-50">
+                <td class="max-w-md px-4 py-3">
+                  <button type="button" class="flex w-full items-start gap-3 text-left" (click)="view(item)">
+                    <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full" [ngClass]="priorityStyles[item.priority].dot"></span>
+                    <span class="min-w-0">
+                      <span class="flex items-center gap-2">
+                        <span class="truncate font-medium text-gray-900 group-hover:text-blue-700">{{ item.title }}</span>
+                        @if (item.isPinned) {
+                          <ui-icon class="shrink-0 text-blue-600" name="pin" aria-label="Pinned"></ui-icon>
+                        }
+                      </span>
+                      <span class="mt-0.5 line-clamp-1 text-xs text-gray-500">{{ item.description }}</span>
+                    </span>
+                  </button>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset" [ngClass]="priorityStyles[item.priority].chip">
+                    {{ item.priority }}
+                  </span>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="text-gray-900">{{ item.targetAudience }}</div>
+                  <div class="text-xs text-gray-500">{{ item.category }} · {{ item.department }}</div>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 text-gray-700">{{ formatDate(item.publishOn) }}</td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <div class="text-gray-700">{{ formatDate(item.expiresOn) }}</div>
+                  <div class="text-xs" [ngClass]="isExpiringSoon(item) ? 'font-medium text-red-600' : 'text-gray-500'">
+                    {{ expiryHint(item) }}
+                  </div>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset" [ngClass]="statusStyles[statusOf(item)]">
+                    {{ statusOf(item) }}
+                  </span>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <div class="flex justify-end gap-1">
+                    <button type="button" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" title="View" aria-label="View" (click)="view(item)">
+                      <ui-icon name="eye"></ui-icon>
+                    </button>
+                    <button type="button" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" title="Edit" aria-label="Edit" (click)="openEdit(item)">
+                      <ui-icon name="edit"></ui-icon>
+                    </button>
+                    <button type="button" class="inline-flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" [ngClass]="item.isPinned ? 'text-blue-600' : 'text-gray-500 hover:text-gray-900'" [title]="item.isPinned ? 'Unpin' : 'Pin to top'" [attr.aria-label]="item.isPinned ? 'Unpin' : 'Pin to top'" (click)="togglePin(item)">
+                      <ui-icon [name]="item.isPinned ? 'pin_off' : 'pin'"></ui-icon>
+                    </button>
+                    <button type="button" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition hover:bg-red-50 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500" title="Delete" aria-label="Delete" (click)="askDelete(item)">
+                      <ui-icon name="delete"></ui-icon>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 px-4 py-3 text-sm text-gray-500">
+        <span>{{ rangeLabel() }}</span>
+        <div class="flex items-center gap-2">
+          <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40" [disabled]="currentPage() <= 1" (click)="goToPage(currentPage() - 1)">
+            Previous
+          </button>
+          <span class="px-1">Page {{ currentPage() }} of {{ totalPages() }}</span>
+          <button type="button" class="rounded-lg border border-gray-200 px-3 py-1.5 font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40" [disabled]="currentPage() >= totalPages()" (click)="goToPage(currentPage() + 1)">
+            Next
+          </button>
+        </div>
+      </div>
+    } @else {
+      <!-- Empty state -->
+      <div class="flex flex-col items-center justify-center gap-3 px-6 py-16 text-center">
+        <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-blue-600">
+          <ui-icon name="announcement_megaphone"></ui-icon>
+        </span>
+        @if (items().length === 0) {
+          <h2 class="text-base font-semibold text-gray-900">No announcements yet</h2>
+          <p class="max-w-sm text-sm text-gray-500">Share news, policies and events with everyone. Your first announcement is one click away.</p>
+          <ui-text-button text="New announcement" (buttonClick)="openCreate()"></ui-text-button>
+        } @else {
+          <h2 class="text-base font-semibold text-gray-900">Nothing matches your filters</h2>
+          <p class="max-w-sm text-sm text-gray-500">Try a different search or clear the filters.</p>
+          @if (hasFilters()) {
+            <ui-text-button text="Clear filters" variant="secondary" (buttonClick)="clearFilters()"></ui-text-button>
+          }
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ========== Create / edit drawer ========== -->
+@if (formOpen()) {
+  <div class="fixed inset-0 z-50 flex justify-end bg-gray-900/40" (click)="closeForm()">
+    <div
+      class="flex h-full w-full max-w-5xl flex-col bg-gray-50 shadow-2xl"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="announcement-form-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
+        <div>
+          <h2 id="announcement-form-title" class="text-lg font-semibold text-gray-900">
+            {{ isEdit() ? 'Edit announcement' : 'New announcement' }}
+          </h2>
+          <p class="text-sm text-gray-500">Fields marked * are required. The preview updates as you type.</p>
+        </div>
+        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition hover:bg-gray-100 hover:text-gray-900" aria-label="Close" (click)="closeForm()">
+          <ui-icon name="close"></ui-icon>
+        </button>
+      </div>
+
+      <div class="grid flex-1 gap-6 overflow-y-auto p-6 lg:grid-cols-5">
+        <form class="flex flex-col gap-5 lg:col-span-3" [formGroup]="form" (ngSubmit)="save()">
+          <div class="flex flex-col gap-5 rounded-2xl border border-gray-200 bg-white p-5">
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Content</h3>
+            <ui-text-box
+              id="title"
+              [parentFormGroup]="form"
+              [label]="'Title'"
+              [placeholder]="'e.g. Office closed on Friday'"
+              [isRequired]="true"
+              [maxLength]="titleMax"
+            ></ui-text-box>
+            <ui-text-area
+              id="description"
+              [parentFormGroup]="form"
+              [label]="'Description'"
+              [placeholder]="'What do people need to know?'"
+              [isRequired]="true"
+              [maxLength]="descriptionMax"
+              [rows]="6"
+              [showCharCount]="true"
+            ></ui-text-area>
+
+            <div>
+              <span class="mb-2 block text-sm font-medium text-gray-700">Priority <span class="text-red-500">*</span></span>
+              <div class="grid grid-cols-3 gap-2">
+                @for (option of priorityOptions; track option.value) {
+                  <button
+                    type="button"
+                    class="flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition"
+                    [ngClass]="selectedPriority() === option.name ? priorityStyles[$any(option.name)].button : 'border-gray-200 text-gray-600 hover:bg-gray-50'"
+                    [attr.aria-pressed]="selectedPriority() === option.name"
+                    (click)="setPriority($any(option.name))"
+                  >
+                    <span class="h-2 w-2 rounded-full" [ngClass]="priorityStyles[$any(option.name)].dot"></span>
+                    {{ option.name }}
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-5 rounded-2xl border border-gray-200 bg-white p-5">
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Audience</h3>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <ui-dropdown
+                id="category"
+                [parentFormGroup]="form"
+                [label]="'Category'"
+                [placeholder]="'Select category'"
+                [isRequired]="true"
+                [options]="categoryOptions"
+              ></ui-dropdown>
+              <ui-dropdown
+                id="targetAudience"
+                [parentFormGroup]="form"
+                [label]="'Target audience'"
+                [placeholder]="'Select audience'"
+                [isRequired]="true"
+                [options]="audienceOptions"
+              ></ui-dropdown>
+              <ui-dropdown
+                class="sm:col-span-2"
+                id="department"
+                [parentFormGroup]="form"
+                [label]="'Department'"
+                [placeholder]="'Select department'"
+                [isRequired]="true"
+                [options]="departmentOptions"
+              ></ui-dropdown>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-5 rounded-2xl border border-gray-200 bg-white p-5">
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Schedule</h3>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <ui-calendar id="publishOn" [parentFormGroup]="form" [label]="'Publish on'"></ui-calendar>
+              <ui-calendar id="expiresOn" [parentFormGroup]="form" [label]="'Expires on'"></ui-calendar>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs text-gray-500">Quick expiry:</span>
+              @for (preset of expiryPresets; track preset.days) {
+                <button type="button" class="rounded-full border border-gray-200 px-3 py-1 text-xs font-medium text-gray-600 transition hover:border-blue-500 hover:text-blue-700" (click)="setExpiryPreset(preset.days)">
+                  {{ preset.label }}
+                </button>
+              }
+            </div>
+            <label class="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-gray-200 p-4">
+              <span>
+                <span class="block text-sm font-medium text-gray-900">Pin to top</span>
+                <span class="block text-xs text-gray-500">Pinned announcements always appear first for everyone.</span>
+              </span>
+              <input type="checkbox" class="peer sr-only" formControlName="isPinned" />
+              <span class="relative h-6 w-11 shrink-0 rounded-full bg-gray-200 transition after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition peer-checked:bg-blue-600 peer-checked:after:translate-x-5 peer-focus-visible:ring-2 peer-focus-visible:ring-blue-500"></span>
+            </label>
+          </div>
+        </form>
+
+        <!-- Live preview -->
+        <aside class="lg:col-span-2">
+          <div class="sticky top-0 flex flex-col gap-3">
+            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Preview</h3>
+            <article class="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <span class="absolute inset-y-0 left-0 w-1" [ngClass]="priorityStyles[preview().priority].bar"></span>
+              <div class="flex items-start justify-between gap-3">
+                <h4 class="text-base font-semibold text-gray-900" [class.text-gray-400]="!preview().title">
+                  {{ preview().title || 'Your title appears here' }}
+                </h4>
+                @if (preview().isPinned) {
+                  <ui-icon class="shrink-0 text-blue-600" name="pin"></ui-icon>
+                }
+              </div>
+              <div class="mt-2 flex flex-wrap gap-2 text-xs">
+                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 font-medium ring-1 ring-inset" [ngClass]="priorityStyles[preview().priority].chip">{{ preview().priority }}</span>
+                <span class="rounded-md bg-gray-100 px-2 py-0.5 text-gray-700">{{ preview().category }}</span>
+                <span class="rounded-md bg-gray-100 px-2 py-0.5 text-gray-700">{{ preview().targetAudience }}</span>
+              </div>
+              <p class="mt-3 line-clamp-6 whitespace-pre-line text-sm leading-6" [ngClass]="preview().description ? 'text-gray-600' : 'text-gray-400'">
+                {{ preview().description || 'The description shows here, exactly as employees will read it.' }}
+              </p>
+              <div class="mt-4 flex items-center justify-between border-t border-gray-100 pt-4 text-xs text-gray-500">
+                <span>{{ formatDate(preview().publishOn) }} → {{ formatDate(preview().expiresOn) }}</span>
+                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 font-medium ring-1 ring-inset" [ngClass]="statusStyles[previewStatus()]">{{ previewStatus() }}</span>
+              </div>
+            </article>
+            @if (previewStatus() === 'Scheduled') {
+              <p class="rounded-lg bg-blue-50 px-3 py-2 text-xs text-blue-700">
+                This will go live {{ relativeDay(preview().publishOn) }} and stay hidden from employees until then.
+              </p>
+            }
+          </div>
+        </aside>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-3 border-t border-gray-200 bg-white px-6 py-4">
+        <div class="min-h-5 text-sm text-red-600" role="alert">{{ formError() }}</div>
+        <div class="flex items-center gap-3">
+          <ui-text-button text="Cancel" variant="secondary" (buttonClick)="closeForm()"></ui-text-button>
+          <ui-text-button
+            [text]="isEdit() ? 'Save changes' : previewStatus() === 'Scheduled' ? 'Schedule' : 'Publish'"
+            (buttonClick)="save()"
+          ></ui-text-button>
+        </div>
       </div>
     </div>
-  }
+  </div>
+}
 
-  <!-- FORM TEMPLATE -->
-  <ng-template #announcementTemplate>
-    <form [formGroup]="addEditAnnouncement">
-      @if (!formConfig.title.isHide) {
-        <div class="h-12">
-          <ui-text-box
-            [label]="formConfig.title.label"
-            [parentFormGroup]="addEditAnnouncement"
-            [id]="formConfig.title.id"
-            [placeholder]="'Enter the title'"
-            [isRequired]="!!formConfig.title.isRequired"
-          >
-          </ui-text-box>
+<!-- ========== View modal ========== -->
+@if (viewing(); as item) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 p-4" (click)="closeView()">
+    <div
+      class="relative flex max-h-full w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="announcement-view-title"
+      (click)="$event.stopPropagation()"
+    >
+      <span class="absolute inset-x-0 top-0 h-1" [ngClass]="priorityStyles[item.priority].bar"></span>
+      <div class="flex items-start justify-between gap-4 px-6 pb-4 pt-6">
+        <div class="min-w-0">
+          <div class="mb-2 flex flex-wrap gap-2 text-xs">
+            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 font-medium ring-1 ring-inset" [ngClass]="priorityStyles[item.priority].chip">{{ item.priority }} priority</span>
+            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 font-medium ring-1 ring-inset" [ngClass]="statusStyles[statusOf(item)]">{{ statusOf(item) }}</span>
+            @if (item.isPinned) {
+              <span class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 font-medium text-blue-700"><ui-icon name="pin"></ui-icon> Pinned</span>
+            }
+          </div>
+          <h2 id="announcement-view-title" class="text-xl font-semibold text-gray-900">{{ item.title }}</h2>
         </div>
-      }
-      @if (!formConfig.description.isHide) {
-        <div class="pt-5 pb-3">
-          <ui-text-area
-            [label]="formConfig.description.label"
-            [parentFormGroup]="addEditAnnouncement"
-            [id]="formConfig.description.id"
-            [placeholder]="'Enter the description'"
-            [isRequired]="!!formConfig.description.isRequired"
-          >
-          </ui-text-area>
-        </div>
-      }
-
-      <div class="grid grid-cols-2 gap-4 w-full py-1">
-        @if (!formConfig.priority.isHide) {
-          <ui-dropdown
-            [label]="formConfig.priority.label"
-            [parentFormGroup]="addEditAnnouncement"
-            [id]="formConfig.priority.id"
-            [placeholder]="'Select severity type'"
-            [isRequired]="!!formConfig.priority.isRequired"
-            [options]="priorityOptions$ | async"
-          >
-          </ui-dropdown>
-        }
-        <!-- @if (!formConfig.category.isHide) {
-          <ui-dropdown
-            [label]="formConfig.category.label"
-            [parentFormGroup]="addEditAnnouncement"
-            [id]="formConfig.category.id"
-            [placeholder]="'Select category'"
-            [isRequired]="!!formConfig.category.isRequired"
-            [options]="categoryOptions$ | async"
-          >
-          </ui-dropdown>
-        } -->
+        <button type="button" class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-500 transition hover:bg-gray-100 hover:text-gray-900" aria-label="Close" (click)="closeView()">
+          <ui-icon name="close"></ui-icon>
+        </button>
       </div>
 
-      <div class="grid grid-cols-2 gap-4 w-full py-1">
-        @if (!formConfig.department.isHide) {
-          <ui-dropdown
-            [label]="formConfig.department.label"
-            [parentFormGroup]="addEditAnnouncement"
-            [id]="formConfig.department.id"
-            [placeholder]="'Select department'"
-            [isRequired]="!!formConfig.department.isRequired"
-            [options]="departmentOptions$ | async"
-          >
-          </ui-dropdown>
-        }
-        @if (!formConfig.targetAudience.isHide) {
-          <ui-dropdown
-            [label]="formConfig.targetAudience.label"
-            [parentFormGroup]="addEditAnnouncement"
-            [id]="formConfig.targetAudience.id"
-            [placeholder]="'Select target audience'"
-            [isRequired]="!!formConfig.targetAudience.isRequired"
-            [options]="targetAudienceOptions$ | async"
-          >
-          </ui-dropdown>
-        }
-      </div>
-
-      @if (!formConfig.expiresOn.isHide) {
-        <div class="py-2">
-          <ui-calendar
-            [label]="formConfig.expiresOn.label"
-            [parentFormGroup]="addEditAnnouncement"
-            [id]="formConfig.expiresOn.id"
-          >
-          </ui-calendar>
+      <div class="overflow-y-auto px-6">
+        <div class="flex items-center gap-3">
+          <span class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700">{{ initials(item.postedBy) }}</span>
+          <div class="text-sm">
+            <div class="font-medium text-gray-900">{{ item.postedBy }}</div>
+            <div class="text-gray-500">Published {{ formatDate(item.publishOn) }}</div>
+          </div>
         </div>
-      }
+        <p class="mt-5 whitespace-pre-line text-sm leading-7 text-gray-700">{{ item.description }}</p>
 
-      <div class="flex justify-end items-center gap-5 pt-4">
-        <ui-text-button
-          text="Cancel"
-          variant="secondary"
-          (buttonClick)="closeModal()"
-        >
-        </ui-text-button>
-        @if (!isEditMode) {
-          <ui-text-button text="Save" (buttonClick)="onSave()"></ui-text-button>
-        }
-        @if (isEditMode && isEditedClick) {
-          <ui-text-button
-            text="Update Announcement"
-            (buttonClick)="onUpdate()"
-          >
-          </ui-text-button>
-        }
+        <dl class="mt-6 grid grid-cols-2 gap-3 pb-6 sm:grid-cols-4">
+          <div class="rounded-xl bg-gray-50 p-3">
+            <dt class="text-xs font-medium uppercase tracking-wide text-gray-400">Category</dt>
+            <dd class="mt-1 text-sm font-medium text-gray-900">{{ item.category }}</dd>
+          </div>
+          <div class="rounded-xl bg-gray-50 p-3">
+            <dt class="text-xs font-medium uppercase tracking-wide text-gray-400">Audience</dt>
+            <dd class="mt-1 text-sm font-medium text-gray-900">{{ item.targetAudience }}</dd>
+          </div>
+          <div class="rounded-xl bg-gray-50 p-3">
+            <dt class="text-xs font-medium uppercase tracking-wide text-gray-400">Department</dt>
+            <dd class="mt-1 text-sm font-medium text-gray-900">{{ item.department }}</dd>
+          </div>
+          <div class="rounded-xl bg-gray-50 p-3">
+            <dt class="text-xs font-medium uppercase tracking-wide text-gray-400">Expires</dt>
+            <dd class="mt-1 text-sm font-medium" [ngClass]="isExpiringSoon(item) ? 'text-red-600' : 'text-gray-900'">{{ formatDate(item.expiresOn) }}</dd>
+          </div>
+        </dl>
       </div>
-    </form>
-  </ng-template>
 
-  <!-- VIEW TEMPLATE -->
-  <ng-template #viewTemplate>
-    <div class="bg-white relative">
-      <h3 class="text-lg font-semibold mb-3">
-        {{ addEditAnnouncement.get('title')?.value }}
-      </h3>
-      <div class="flex items-center gap-3 mb-3">
-        <span
-          class="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-semibold text-sm"
-        >
-          {{ getInitials(postedBy) }}
+      <div class="flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 px-6 py-4">
+        <button type="button" class="text-sm font-medium text-red-600 transition hover:text-red-700" (click)="askDelete(item)">Delete</button>
+        <div class="flex items-center gap-3">
+          <ui-text-button text="Duplicate" variant="secondary" (buttonClick)="duplicate(item)"></ui-text-button>
+          <ui-text-button [text]="item.isPinned ? 'Unpin' : 'Pin'" variant="secondary" (buttonClick)="togglePin(item)"></ui-text-button>
+          <ui-text-button text="Edit" (buttonClick)="openEdit(item)"></ui-text-button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ========== Delete confirmation ========== -->
+@if (pendingDelete(); as item) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 p-4" (click)="cancelDelete()">
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl" role="alertdialog" aria-modal="true" aria-labelledby="delete-title" (click)="$event.stopPropagation()">
+      <div class="flex items-start gap-4">
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-50 text-lg text-red-600">
+          <ui-icon name="delete"></ui-icon>
         </span>
         <div>
-          <span class="font-semibold">{{ postedBy }}</span>
+          <h2 id="delete-title" class="text-base font-semibold text-gray-900">Delete announcement?</h2>
+          <p class="mt-1 text-sm text-gray-500">
+            “{{ item.title }}” will be removed for everyone. This can't be undone.
+          </p>
         </div>
-        <ui-chip
-          class="ml-auto"
-          [text]="'PRIORITY : ' + getPriorityLabel()"
-          [color]="getPriorityLabel() === 'MEDIUM' ? '#b38742' : (getPriorityLabel() === 'LOW' ? '#23816c' : '#aa355b')"
-          [activeColor]="getPriorityLabel() === 'MEDIUM' ? '#b38742' : (getPriorityLabel() === 'LOW' ? '#23816c' : '#aa355b')"
-          [activeBGColor]="getPriorityLabel() === 'MEDIUM' ? '#fef9c2' : (getPriorityLabel() === 'LOW' ? '#dbfce7' : '#ffe2e2')"
-          [bgColor]="getPriorityLabel() === 'MEDIUM' ? '#fef9c2' : (getPriorityLabel() === 'LOW' ? '#dbfce7' : '#ffe2e2')"
-        >
-        </ui-chip>
       </div>
-      <ui-text-area
-        [parentFormGroup]="addEditAnnouncement"
-        id="description"
-        [label]="'Description'"
-        [showCharCount]="false"
-      >
-      </ui-text-area>
-      <div class="flex flex-wrap gap-10 mt-4">
-        @for (info of viewAnnouncementInfo; track info) {
-          <div
-            class="bg-gray-100 px-4 py-2 rounded-lg flex flex-col gap-1 min-w-[140px] w-fit"
-          >
-            <div class="flex items-center gap-1">
-              <ui-icon [name]="info.icon"></ui-icon>
-              <span class="text-xs font-semibold text-gray-400 tracking-wide">
-                {{ info.label }}
-              </span>
-            </div>
-            <span class="text-sm text-gray-700 font-medium">
-              {{ info.value }}
-            </span>
-          </div>
-        }
-      </div>
-      <div class="flex justify-end pt-5">
-        <ui-text-button
-          text="Close"
-          variant="secondary"
-          (buttonClick)="closeModal()"
-        >
-        </ui-text-button>
+      <div class="mt-6 flex justify-end gap-3">
+        <ui-text-button text="Cancel" variant="secondary" (buttonClick)="cancelDelete()"></ui-text-button>
+        <button type="button" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500" (click)="confirmDelete()">
+          Delete
+        </button>
       </div>
     </div>
-  </ng-template>
+  </div>
+}
 
-  <!-- SUMMARY -->
-  <announcements-summary
-    (viewAnnouncement)="openViewModal($event)"
-    (editAnnouncement)="openEditModal($event)"
-  >
-  </announcements-summary>
-</div>
-
+<!-- ========== Toast ========== -->
+@if (toast()) {
+  <div class="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-3 text-sm font-medium text-white shadow-lg" role="status">
+    <ui-icon class="text-emerald-400" name="check_circle_outline"></ui-icon>
+    {{ toast() }}
+  </div>
+}
