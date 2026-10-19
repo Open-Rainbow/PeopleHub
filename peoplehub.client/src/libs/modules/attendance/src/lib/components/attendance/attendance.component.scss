@@ -1,0 +1,50 @@
+:host {
+  display: block;
+}
+
+// Overlays are moved to <body> (attBodyPortal). The app header is z-[2000], so stay above it.
+.ph-overlay {
+  z-index: 2100;
+}
+
+.ph-overlay--top {
+  z-index: 2110;
+}
+
+.att-cell {
+  min-height: 3.25rem;
+
+  @media (min-width: 640px) {
+    min-height: 4rem;
+  }
+}
+
+.att-input {
+  display: block;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #111827;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.2);
+  }
+}
+
+.att-input--bare {
+  width: auto;
+  border-color: transparent;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.att-input--error {
+  border-color: #f87171;
+}

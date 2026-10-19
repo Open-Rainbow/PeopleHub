@@ -1,65 +1,487 @@
-<div class="w-full h-auto bg-white rounded-[12px] p-[30px] border border-gray-400">
-  <div class="flex flex-row">
-    <span class="text-[x-large] font-semibold mb-[25px]">Attendance</span>
-  </div>
-
-  <div class="flex flex-row gap-[20px] mt-[25px] mb-[20px] items-stretch">
-    <div class="flex-1 border border-gray-300 rounded-[12px] p-[20px]">
-      <div class="flex flex-row justify-between mb-[15px]">
-        <span class="text-[20px] font-[400]">Attendance Rate</span>
-        <ui-text-button text="Download Reports" variant="secondary" size="small"></ui-text-button>
+<div class="mx-auto max-w-7xl space-y-6 p-4 sm:p-6">
+  <!-- Header -->
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-2xl font-semibold text-gray-900">Attendance</h1>
+        @if (!loading() && !isOnline()) {
+          <span class="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20" title="The API is not reachable. Changes are saved in this browser only.">Offline demo data</span>
+        }
       </div>
-      <ui-horizontal-bar-chart
-        [labels]="['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']"
-        [data]="horizontalChartData"
-        [datasetLabels]="['Present', 'Absent', 'Leave']"
-        [yAxisTicks]="[0, 5, 10, 15, 20, 25, 30]"
-        [dynamicYAxis]="true"
-        [singleLine]="true"
-        [showLegend]="true"
-        [backgroundColors]="['#2166E1', '#FF8800', '#13C9E4']">
-      </ui-horizontal-bar-chart>
+      <p class="mt-1 text-sm text-gray-500">Shift {{ policy().shiftStart }} – {{ policy().shiftEnd }} · {{ policy().graceMinutes }} min grace · {{ policy().fullDayHours }}h full day</p>
     </div>
 
-    <div class="flex flex-col w-[35%] border border-gray-300 rounded-[12px] p-[20px]">
-      <div class="flex flex-row justify-between items-center w-full mb-[20px]">
-        <span class="text-[20px] font-[400]">Employee Type</span>
+    @if (canManage()) {
+      <div class="inline-flex rounded-xl bg-gray-100 p-1" role="tablist">
+        <button type="button" role="tab" class="rounded-lg px-4 py-2 text-sm font-medium transition" [attr.aria-selected]="tab() === 'me'"
+                [ngClass]="tab() === 'me' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'" (click)="selectTab('me')">My attendance</button>
+        <button type="button" role="tab" class="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition" [attr.aria-selected]="tab() === 'team'"
+                [ngClass]="tab() === 'team' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'" (click)="selectTab('team')">
+          Team
+          @if (approvals().length) { <span class="rounded-full bg-rose-500 px-1.5 text-xs font-semibold text-white">{{ approvals().length }}</span> }
+        </button>
       </div>
+    }
+  </div>
 
-      <div class="flex items-center justify-center w-full mt-[15px]">
-        <ui-doughnut-chart [showLegends]="false" [legendData]="doughnutChartData"></ui-doughnut-chart>
-      </div>
+  @if (error()) {
+    <div class="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700" role="alert">
+      <ui-icon class="mt-0.5 shrink-0" name="info"></ui-icon>
+      <p class="flex-1">{{ error() }}</p>
+      <button type="button" class="text-red-500 hover:text-red-700" (click)="error.set(null)" aria-label="Dismiss"><ui-icon name="close"></ui-icon></button>
+    </div>
+  }
 
-      <div class="w-full mt-[40px] grid grid-cols-2 gap-y-[12px] gap-x-[25px] px-[30px]">
-        @for (item of doughnutChartData; track item.label) {
-          <div class="flex justify-between items-center">
-            <div class="flex items-center gap-[8px]">
-              <span class="w-[10px] h-[10px] rounded-full inline-block" [style.background-color]="item.color"></span>
-              <span class="text-[14px] text-[#666]">{{ item.label }}</span>
+  @if (loading()) {
+    <div class="grid gap-6 lg:grid-cols-3">
+      <div class="h-72 animate-pulse rounded-2xl bg-gray-100"></div>
+      <div class="h-72 animate-pulse rounded-2xl bg-gray-100 lg:col-span-2"></div>
+    </div>
+  } @else if (tab() === 'me') {
+    <!-- ================= MY ATTENDANCE ================= -->
+    <div class="grid gap-6 lg:grid-cols-3">
+      <!-- Today card -->
+      <section class="flex flex-col rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-white shadow-sm">
+        <p class="text-sm text-blue-100">{{ greeting() }}</p>
+        <p class="mt-1 font-mono text-4xl font-semibold tracking-tight tabular-nums" aria-live="off">{{ clockText() }}</p>
+        <p class="text-sm text-blue-100">{{ dateText() }}</p>
+
+        <div class="mt-6 flex-1">
+          @switch (todayState()) {
+            @case ('off') {
+              <div class="rounded-xl bg-white/10 p-4">
+                <p class="font-medium">{{ todayDay()?.status === 'Holiday' ? todayDay()?.holidayName || 'Holiday' : todayDay()?.status === 'On leave' ? 'You are on ' + (todayDay()?.leaveType || 'leave') : 'It’s the weekend' }}</p>
+                <p class="mt-1 text-sm text-blue-100">No check-in needed today. Enjoy!</p>
+              </div>
+            }
+            @case ('ready') {
+              <p class="text-sm text-blue-100">You haven't checked in yet.</p>
+              <div class="mt-3 grid grid-cols-2 gap-2" role="radiogroup" aria-label="Work mode">
+                @for (m of ['Office', 'Remote']; track m) {
+                  <button type="button" role="radio" class="rounded-xl border px-3 py-2 text-sm font-medium transition" [attr.aria-checked]="workMode() === m"
+                          [ngClass]="workMode() === m ? 'border-white bg-white text-blue-700' : 'border-white/30 text-white hover:bg-white/10'"
+                          (click)="workMode.set(m === 'Remote' ? 'Remote' : 'Office')">{{ m === 'Office' ? 'In office' : 'Remote' }}</button>
+                }
+              </div>
+              <input class="mt-3 w-full rounded-xl border border-white/30 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-blue-200 focus:border-white focus:outline-none"
+                     placeholder="Note (optional)" [maxlength]="limits.noteMax" [ngModel]="note()" (ngModelChange)="note.set($event)" />
+              <button type="button" class="mt-4 w-full rounded-xl bg-white py-3 text-base font-semibold text-blue-700 shadow-sm transition hover:bg-blue-50 disabled:opacity-60"
+                      [disabled]="busy()" (click)="checkIn()">{{ busy() ? 'Checking in…' : 'Check in' }}</button>
+            }
+            @case ('working') {
+              <div class="flex items-baseline justify-between">
+                <p class="text-sm text-blue-100">Checked in at <span class="font-semibold text-white">{{ clock(todayDay()?.checkInAt) }}</span>
+                  @if (todayDay()?.isLate) { <span class="ml-1 rounded bg-amber-400/20 px-1.5 py-0.5 text-xs text-amber-100">late</span> }
+                </p>
+                <span class="text-xs text-blue-100">{{ todayDay()?.workMode }}</span>
+              </div>
+              <p class="mt-2 text-3xl font-semibold tabular-nums">{{ duration(liveMinutes()) }}</p>
+              <div class="mt-3 h-2 overflow-hidden rounded-full bg-white/20" role="progressbar" [attr.aria-valuenow]="progressPct()" aria-valuemin="0" aria-valuemax="100">
+                <div class="h-full rounded-full bg-white transition-all" [style.width.%]="progressPct()"></div>
+              </div>
+              <p class="mt-2 text-xs text-blue-100">{{ progressPct() >= 100 ? 'Full day done 🎉' : 'Full day at ' + leaveAt() }}</p>
+              <input class="mt-4 w-full rounded-xl border border-white/30 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-blue-200 focus:border-white focus:outline-none"
+                     placeholder="Note (optional)" [maxlength]="limits.noteMax" [ngModel]="note()" (ngModelChange)="note.set($event)" />
+              <button type="button" class="mt-3 w-full rounded-xl bg-white py-3 text-base font-semibold text-blue-700 shadow-sm transition hover:bg-blue-50 disabled:opacity-60"
+                      [disabled]="busy()" (click)="checkOut()">{{ busy() ? 'Checking out…' : 'Check out' }}</button>
+            }
+            @case ('done') {
+              <div class="rounded-xl bg-white/10 p-4">
+                <div class="flex items-center gap-2"><ui-icon name="check_circle_outline"></ui-icon><p class="font-medium">Done for today</p></div>
+                <dl class="mt-3 grid grid-cols-3 gap-2 text-center">
+                  <div><dt class="text-xs text-blue-100">In</dt><dd class="font-semibold tabular-nums">{{ clock(todayDay()?.checkInAt) }}</dd></div>
+                  <div><dt class="text-xs text-blue-100">Out</dt><dd class="font-semibold tabular-nums">{{ clock(todayDay()?.checkOutAt) }}</dd></div>
+                  <div><dt class="text-xs text-blue-100">Worked</dt><dd class="font-semibold tabular-nums">{{ duration(todayDay()?.workedMinutes) }}</dd></div>
+                </dl>
+                <p class="mt-3 text-xs text-blue-100">{{ todayDay()?.status }}{{ todayDay()?.isLate ? ' · late check-in' : '' }}</p>
+              </div>
+            }
+          }
+        </div>
+
+        <button type="button" class="mt-4 text-left text-sm text-blue-100 underline-offset-2 hover:text-white hover:underline" (click)="openCorrection()">
+          Forgot to check in or out? Request a correction
+        </button>
+      </section>
+
+      <!-- Stats + calendar -->
+      <section class="space-y-6 lg:col-span-2">
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div class="rounded-2xl border border-gray-200 bg-white p-4">
+            <p class="text-xs font-medium uppercase tracking-wide text-gray-500">Days present</p>
+            <p class="mt-1 text-2xl font-semibold text-gray-900">{{ monthStats().present }}</p>
+            <p class="text-xs text-gray-500">{{ monthStats().rate === null ? '—' : monthStats().rate + '% attendance' }}</p>
+          </div>
+          <div class="rounded-2xl border border-gray-200 bg-white p-4">
+            <p class="text-xs font-medium uppercase tracking-wide text-gray-500">Avg hours</p>
+            <p class="mt-1 text-2xl font-semibold text-gray-900">{{ duration(monthStats().avg) }}</p>
+            <p class="text-xs text-gray-500">{{ duration(monthStats().total) }} total</p>
+          </div>
+          <div class="rounded-2xl border border-gray-200 bg-white p-4">
+            <p class="text-xs font-medium uppercase tracking-wide text-gray-500">Late check-ins</p>
+            <p class="mt-1 text-2xl font-semibold" [ngClass]="monthStats().late ? 'text-amber-600' : 'text-gray-900'">{{ monthStats().late }}</p>
+            <p class="text-xs text-gray-500">after {{ policy().shiftStart }} + {{ policy().graceMinutes }}m</p>
+          </div>
+          <div class="rounded-2xl border border-gray-200 bg-white p-4">
+            <p class="text-xs font-medium uppercase tracking-wide text-gray-500">Absent · Remote</p>
+            <p class="mt-1 text-2xl font-semibold text-gray-900"><span [class.text-red-600]="monthStats().absent">{{ monthStats().absent }}</span> <span class="text-gray-300">·</span> {{ monthStats().remote }}</p>
+            <p class="text-xs text-gray-500">{{ monthStats().leave }} on leave</p>
+          </div>
+        </div>
+
+        @if (monthStats().missed) {
+          <div class="flex items-center gap-3 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+            <ui-icon class="shrink-0" name="info"></ui-icon>
+            <p class="flex-1">{{ monthStats().missed }} day{{ monthStats().missed > 1 ? 's' : '' }} with a missed check-out this month. Pick the day in the calendar to fix it.</p>
+          </div>
+        }
+
+        <div class="rounded-2xl border border-gray-200 bg-white p-4 sm:p-5">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-semibold text-gray-900">{{ monthLabel() }}</h2>
+            <div class="flex items-center gap-1">
+              <button type="button" class="rounded-lg px-2.5 py-1.5 text-lg leading-none text-gray-600 hover:bg-gray-100" (click)="shiftMonth(-1)" aria-label="Previous month">‹</button>
+              <button type="button" class="rounded-lg px-2.5 py-1.5 text-lg leading-none text-gray-600 hover:bg-gray-100 disabled:opacity-30" [disabled]="isCurrentMonth()" (click)="shiftMonth(1)" aria-label="Next month">›</button>
             </div>
-            <span class="font-semibold text-[14px] text-[#111]">{{ item.value }}</span>
+          </div>
+
+          <div class="mt-4 grid grid-cols-7 gap-1.5 text-center text-xs font-medium text-gray-500">
+            @for (h of weekdayHeads; track h) { <div>{{ h }}</div> }
+          </div>
+          <div class="mt-1.5 grid grid-cols-7 gap-1.5">
+            @for (cell of calendar(); track $index) {
+              @if (cell.day) {
+                <button type="button" class="att-cell relative flex flex-col items-start rounded-lg border p-1.5 text-left text-xs transition"
+                        [ngClass]="[styles[cell.day.status]?.cell ?? '', selectedDate() === cell.day.date ? 'ring-2 ring-blue-600 ring-offset-1' : '', cell.day.status === 'Upcoming' ? 'cursor-default' : 'hover:shadow-sm']"
+                        [title]="dayTitle(cell.day)" [attr.aria-label]="longDate(cell.day.date) + ': ' + dayTitle(cell.day)" (click)="selectDay(cell)">
+                  <span class="font-semibold" [class.text-blue-700]="cell.today">{{ cell.num }}</span>
+                  @if (cell.day.checkInAt) {
+                    <span class="mt-auto hidden tabular-nums sm:block">{{ duration(cell.day.workedMinutes) }}</span>
+                  } @else if (cell.day.status === 'Holiday' || cell.day.status === 'On leave') {
+                    <span class="mt-auto hidden truncate sm:block">{{ cell.day.holidayName || cell.day.leaveType || cell.day.status }}</span>
+                  }
+                  @if (cell.day.isLate) { <span class="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-amber-500" title="Late"></span> }
+                  @if (pendingDates().has(cell.day.date)) { <span class="absolute bottom-1 right-1 h-1.5 w-1.5 rounded-full bg-blue-600" title="Correction pending"></span> }
+                </button>
+              } @else {
+                <div></div>
+              }
+            }
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
+            @for (s of legend; track s) {
+              <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full" [ngClass]="styles[s].dot"></span>{{ s }}</span>
+            }
+            <span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>Late</span>
+          </div>
+
+          @if (selectedDay(); as d) {
+            <div class="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-4">
+              <div class="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p class="text-sm font-semibold text-gray-900">{{ longDate(d.date) }}</p>
+                  <span class="mt-1 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset" [ngClass]="styles[d.status]?.chip ?? ''">{{ d.status }}</span>
+                  @if (d.isLate) { <span class="ml-1 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20">Late</span> }
+                  @if (d.source === 'Regularized') { <span class="ml-1 rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">Corrected</span> }
+                </div>
+                @if (canCorrect(d)) {
+                  <ui-text-button text="Request correction" variant="secondary" (buttonClick)="openCorrection(d)"></ui-text-button>
+                } @else if (pendingDates().has(d.date)) {
+                  <span class="text-xs text-blue-700">Correction pending approval</span>
+                }
+              </div>
+              @if (d.checkInAt) {
+                <dl class="mt-3 grid grid-cols-3 gap-3 text-sm">
+                  <div><dt class="text-xs text-gray-500">Check in</dt><dd class="font-medium tabular-nums text-gray-900">{{ clock(d.checkInAt) }}</dd></div>
+                  <div><dt class="text-xs text-gray-500">Check out</dt><dd class="font-medium tabular-nums text-gray-900">{{ clock(d.checkOutAt) }}</dd></div>
+                  <div><dt class="text-xs text-gray-500">Worked</dt><dd class="font-medium tabular-nums text-gray-900">{{ duration(d.workedMinutes) }} <span class="text-xs font-normal text-gray-500">{{ d.workMode }}</span></dd></div>
+                </dl>
+              }
+              @if (d.note) { <p class="mt-2 text-xs text-gray-500">“{{ d.note }}”</p> }
+              @if (d.holidayName) { <p class="mt-2 text-sm text-gray-600">{{ d.holidayName }}</p> }
+              @if (d.leaveType) { <p class="mt-2 text-sm text-gray-600">{{ d.leaveType }}{{ d.isHalfDayLeave ? ' (half day)' : '' }}</p> }
+            </div>
+          }
+        </div>
+
+        <!-- My corrections -->
+        <div class="rounded-2xl border border-gray-200 bg-white">
+          <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+            <div class="flex items-center gap-2">
+              <ui-icon class="text-gray-400" name="history"></ui-icon>
+              <h2 class="text-base font-semibold text-gray-900">My correction requests</h2>
+              @if (pendingMine()) { <span class="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">{{ pendingMine() }} pending</span> }
+            </div>
+            <ui-text-button text="New request" variant="secondary" (buttonClick)="openCorrection()"></ui-text-button>
+          </div>
+          @if (myRequests().length) {
+            <ul class="divide-y divide-gray-100">
+              @for (r of myRequests(); track r.id) {
+                <li class="flex flex-wrap items-center gap-3 px-5 py-3">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-sm font-medium text-gray-900">{{ longDate(r.workDate) }} · <span class="tabular-nums">{{ r.checkIn }} – {{ r.checkOut }}</span> <span class="text-xs font-normal text-gray-500">{{ r.workMode }}</span></p>
+                    <p class="truncate text-xs text-gray-500" [title]="r.reason">{{ r.reason }}</p>
+                    @if (r.decisionNote) { <p class="text-xs text-gray-600">{{ r.approverName || 'Manager' }}: “{{ r.decisionNote }}”</p> }
+                  </div>
+                  <span class="rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset"
+                        [ngClass]="r.status === 'Approved' ? 'bg-emerald-50 text-emerald-700 ring-emerald-600/20' : r.status === 'Rejected' ? 'bg-red-50 text-red-700 ring-red-600/20' : r.status === 'Pending' ? 'bg-blue-50 text-blue-700 ring-blue-600/20' : 'bg-gray-100 text-gray-600 ring-gray-500/20'">{{ r.status }}</span>
+                  @if (r.status === 'Pending') {
+                    <button type="button" class="text-xs font-medium text-gray-500 hover:text-red-600" (click)="pendingWithdraw.set(r)">Withdraw</button>
+                  }
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="px-5 py-6 text-center text-sm text-gray-500">No correction requests yet.</p>
+          }
+        </div>
+      </section>
+    </div>
+  } @else {
+    <!-- ================= TEAM ================= -->
+    <div class="space-y-6">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-1 rounded-xl border border-gray-200 bg-white p-1">
+          <button type="button" class="rounded-lg px-2.5 py-1 text-lg leading-none text-gray-600 hover:bg-gray-100" (click)="shiftTeamDate(-1)" aria-label="Previous day">‹</button>
+          <input type="date" class="att-input att-input--bare" [max]="todayIso()" [ngModel]="teamDate()" (ngModelChange)="setTeamDate($event)" aria-label="Day" />
+          <button type="button" class="rounded-lg px-2.5 py-1 text-lg leading-none text-gray-600 hover:bg-gray-100 disabled:opacity-30" [disabled]="teamDate() >= todayIso()" (click)="shiftTeamDate(1)" aria-label="Next day">›</button>
+        </div>
+        @if (teamDate() !== todayIso()) {
+          <button type="button" class="text-sm font-medium text-blue-600 hover:text-blue-800" (click)="setTeamDate(todayIso())">Today</button>
+        }
+        <div class="relative min-w-[14rem] flex-1">
+          <ui-icon class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" name="search"></ui-icon>
+          <input class="att-input pl-9" placeholder="Search name, ID or department" maxlength="100" [ngModel]="teamSearch()" (ngModelChange)="onSearch($event)" />
+        </div>
+        <ui-text-button text="Export CSV" variant="secondary" (buttonClick)="exportCsv()"></ui-text-button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        @for (s of teamCards(); track s.label) {
+          <div class="rounded-2xl border border-gray-200 bg-white p-4">
+            <p class="text-xs font-medium uppercase tracking-wide text-gray-500">{{ s.label }}</p>
+            <p class="mt-1 text-2xl font-semibold" [ngClass]="s.tone">{{ s.value }}</p>
+            <p class="text-xs text-gray-500">{{ s.sub }}</p>
           </div>
         }
       </div>
-    </div>
-  </div>
 
-  <div class="border border-gray-300 rounded-[12px] p-[20px]">
-    <div class="flex justify-between gap-[15px] mb-[25px]">
-      <span class="text-[20px] font-[400]">Employee Attendance</span>
-      <div class="flex items-center gap-3">
-        <ui-search [placeholderText]="'Search employee...'" [showBorder]="true"></ui-search>
-        <ui-text-button text="Download Reports" variant="secondary" size="small"></ui-text-button>
+      <div class="grid gap-6 lg:grid-cols-3">
+        <!-- Team table -->
+        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white lg:col-span-2">
+          <div class="flex flex-wrap gap-2 border-b border-gray-100 px-4 py-3">
+            @for (f of teamFilters; track f) {
+              <button type="button" class="rounded-full px-3 py-1 text-xs font-medium transition"
+                      [ngClass]="teamFilter() === f ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'" (click)="teamFilter.set(f)">{{ f }}</button>
+            }
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-sm">
+              <thead class="bg-gray-50 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+                <tr>
+                  <th class="px-4 py-3">Employee</th>
+                  <th class="px-4 py-3">Status</th>
+                  <th class="px-4 py-3">In</th>
+                  <th class="px-4 py-3">Out</th>
+                  <th class="px-4 py-3">Worked</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                @if (teamLoading()) {
+                  <tr><td colspan="5" class="px-4 py-8 text-center text-gray-500">Loading…</td></tr>
+                } @else {
+                  @for (r of filteredTeam(); track r.employeeId) {
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-4 py-3">
+                        <p class="font-medium text-gray-900">{{ r.employeeName }}</p>
+                        <p class="text-xs text-gray-500">{{ r.employeeId }}{{ r.department ? ' · ' + r.department : '' }}</p>
+                      </td>
+                      <td class="px-4 py-3">
+                        <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset" [ngClass]="styles[r.status]?.chip ?? ''">{{ r.status }}</span>
+                        @if (r.isLate) { <span class="ml-1 text-xs font-medium text-amber-600">late</span> }
+                        @if (r.workMode === 'Remote') { <span class="ml-1 text-xs text-blue-600">remote</span> }
+                        @if (r.leaveType) { <p class="mt-0.5 text-xs text-gray-500">{{ r.leaveType }}</p> }
+                      </td>
+                      <td class="px-4 py-3 tabular-nums text-gray-700">{{ clock(r.checkInAt) }}</td>
+                      <td class="px-4 py-3 tabular-nums text-gray-700">{{ clock(r.checkOutAt) }}</td>
+                      <td class="px-4 py-3 tabular-nums text-gray-700">{{ duration(r.workedMinutes) }}</td>
+                    </tr>
+                  } @empty {
+                    <tr><td colspan="5" class="px-4 py-8 text-center text-gray-500">Nobody matches this filter.</td></tr>
+                  }
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Approvals -->
+        <div class="rounded-2xl border border-gray-200 bg-white">
+          <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+            <h2 class="text-base font-semibold text-gray-900">Pending corrections</h2>
+            <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">{{ approvals().length }}</span>
+          </div>
+          @if (approvals().length) {
+            <ul class="divide-y divide-gray-100">
+              @for (r of approvals(); track r.id) {
+                <li class="px-5 py-4">
+                  <p class="text-sm font-medium text-gray-900">{{ r.employeeName }}</p>
+                  <p class="text-xs text-gray-500">{{ longDate(r.workDate) }} · <span class="tabular-nums">{{ r.checkIn }} – {{ r.checkOut }}</span> · {{ r.workMode }}</p>
+                  <p class="mt-1 text-sm text-gray-700">“{{ r.reason }}”</p>
+                  <div class="mt-3 flex gap-2">
+                    <button type="button" class="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700 disabled:opacity-60" [disabled]="busy()" (click)="approve(r)">Approve</button>
+                    <button type="button" class="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-60" [disabled]="busy()" (click)="openReject(r)">Reject</button>
+                  </div>
+                </li>
+              }
+            </ul>
+          } @else {
+            <div class="flex flex-col items-center gap-2 px-5 py-8 text-center">
+              <ui-icon class="text-emerald-500" name="check_circle_outline"></ui-icon>
+              <p class="text-sm text-gray-500">All caught up.</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- 30-day trend -->
+      <div class="rounded-2xl border border-gray-200 bg-white p-5">
+        <div class="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 class="text-base font-semibold text-gray-900">Last 30 days</h2>
+          <p class="text-sm text-gray-500">{{ trendAvg() === null ? '' : 'Avg attendance ' + trendAvg() + '% on working days' }}</p>
+        </div>
+        <div class="mt-4 flex h-40 items-end gap-1" role="img" aria-label="Daily attendance for the last 30 days">
+          @for (p of trend(); track p.date) {
+            <button type="button" class="group flex h-full flex-1 flex-col justify-end rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+                    [title]="shortDate(p.date) + (p.isOffDay ? ' · off day' : '') + ' · present ' + p.present + ', late ' + p.late + ', remote ' + p.remote + ', leave ' + p.onLeave + ', absent ' + p.absent"
+                    (click)="setTeamDate(p.date)">
+              @if (p.isOffDay && !p.present) {
+                <div class="h-1 w-full rounded-sm bg-gray-200"></div>
+              } @else {
+                <div class="w-full bg-red-300" [style.height.%]="trendHeight(p.absent)"></div>
+                <div class="w-full bg-violet-300" [style.height.%]="trendHeight(p.onLeave)"></div>
+                <div class="w-full rounded-t-sm bg-emerald-500 group-hover:bg-emerald-600" [ngClass]="{ 'ring-2 ring-blue-600': p.date === teamDate() }" [style.height.%]="trendHeight(p.present)"></div>
+              }
+            </button>
+          }
+        </div>
+        <div class="mt-2 flex justify-between text-xs text-gray-400">
+          <span>{{ trend().length ? shortDate(trend()[0].date) : '' }}</span>
+          <span class="flex gap-3">
+            <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-sm bg-emerald-500"></span>Present</span>
+            <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-sm bg-violet-300"></span>Leave</span>
+            <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-sm bg-red-300"></span>Absent</span>
+          </span>
+          <span>{{ trend().length ? shortDate(trend()[trend().length - 1].date) : '' }}</span>
+        </div>
       </div>
     </div>
+  }
+</div>
 
-    <div class="grid grid-cols-4 gap-4 mb-6">
-      @for (stat of attendanceStats; track stat.label) {
-        <div class="rounded-[10px] p-4 border border-gray-200" [style.background]="stat.bg">
-          <p class="text-[13px] text-gray-500">{{ stat.label }}</p>
-          <p class="text-[24px] font-bold" [style.color]="stat.color">{{ stat.value }}</p>
+<!-- Correction drawer -->
+@if (drawerOpen()) {
+  <div attBodyPortal class="ph-overlay fixed inset-0 flex justify-end bg-gray-900/40" (click)="closeDrawer()">
+    <div class="flex h-full w-full max-w-md flex-col bg-white shadow-xl" role="dialog" aria-modal="true" aria-labelledby="att-drawer-title" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+        <div>
+          <h2 id="att-drawer-title" class="text-lg font-semibold text-gray-900">Request a correction</h2>
+          <p class="text-xs text-gray-500">Your manager approves it, then the day is updated.</p>
         </div>
-      }
+        <button type="button" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100" (click)="closeDrawer()" aria-label="Close"><ui-icon name="close"></ui-icon></button>
+      </div>
+
+      <div class="flex-1 space-y-5 overflow-y-auto px-6 py-5">
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700" for="att-date">Day</label>
+          <input id="att-date" type="date" class="att-input" [class.att-input--error]="fieldError('workDate')" [min]="minCorrectionDate()" [max]="todayIso()"
+                 [ngModel]="form().workDate" (ngModelChange)="patch('workDate', $event)" />
+          <p class="mt-1 text-xs" [ngClass]="fieldError('workDate') ? 'text-red-600' : 'text-gray-500'">
+            {{ fieldError('workDate') || (pendingDates().has(form().workDate) ? 'A correction for this day is already pending.' : 'Last ' + policy().regularizeDays + ' days only.') }}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700" for="att-in">Check in</label>
+            <input id="att-in" type="time" class="att-input" [class.att-input--error]="fieldError('checkIn')" [ngModel]="form().checkIn" (ngModelChange)="patch('checkIn', $event)" />
+            <p class="mt-1 text-xs text-red-600">{{ fieldError('checkIn') }}</p>
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700" for="att-out">Check out</label>
+            <input id="att-out" type="time" class="att-input" [class.att-input--error]="fieldError('checkOut')" [ngModel]="form().checkOut" (ngModelChange)="patch('checkOut', $event)" />
+            <p class="mt-1 text-xs text-red-600">{{ fieldError('checkOut') }}</p>
+          </div>
+        </div>
+
+        <div>
+          <span class="mb-2 block text-sm font-medium text-gray-700">Worked from</span>
+          <div class="grid grid-cols-2 gap-2">
+            @for (m of ['Office', 'Remote']; track m) {
+              <button type="button" class="rounded-xl border p-3 text-left text-sm font-medium transition"
+                      [ngClass]="form().workMode === m ? 'border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600' : 'border-gray-200 text-gray-700 hover:bg-gray-50'"
+                      (click)="patch('workMode', m === 'Remote' ? 'Remote' : 'Office')">{{ m }}</button>
+            }
+          </div>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700" for="att-reason">Reason</label>
+          <textarea id="att-reason" rows="3" class="att-input" [class.att-input--error]="fieldError('reason')" [maxlength]="limits.reasonMax"
+                    placeholder="e.g. Forgot to check out before leaving for a client visit."
+                    [ngModel]="form().reason" (ngModelChange)="patch('reason', $event)"></textarea>
+          <div class="mt-1 flex justify-between text-xs">
+            <span class="text-red-600">{{ fieldError('reason') }}</span>
+            <span class="text-gray-400">{{ form().reason.length }}/{{ limits.reasonMax }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 border-t border-gray-200 px-6 py-4">
+        @if (submitted() && !formValid()) { <p class="mr-auto text-xs text-red-600">Fix the highlighted fields.</p> }
+        <ui-text-button text="Cancel" variant="secondary" (buttonClick)="closeDrawer()"></ui-text-button>
+        <ui-text-button [text]="busy() ? 'Sending…' : 'Send request'" (buttonClick)="submitCorrection()"></ui-text-button>
+      </div>
     </div>
   </div>
-</div>
+}
+
+<!-- Withdraw confirm -->
+@if (pendingWithdraw(); as r) {
+  <div attBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center bg-gray-900/50 p-4" (click)="pendingWithdraw.set(null)">
+    <div class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl" role="alertdialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <h3 class="text-base font-semibold text-gray-900">Withdraw this request?</h3>
+      <p class="mt-2 text-sm text-gray-600">{{ longDate(r.workDate) }} · {{ r.checkIn }} – {{ r.checkOut }}</p>
+      <div class="mt-6 flex justify-end gap-3">
+        <ui-text-button text="Keep it" variant="secondary" (buttonClick)="pendingWithdraw.set(null)"></ui-text-button>
+        <ui-text-button [text]="busy() ? 'Withdrawing…' : 'Withdraw'" (buttonClick)="withdraw()"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Reject dialog -->
+@if (rejecting(); as r) {
+  <div attBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center bg-gray-900/50 p-4" (click)="rejecting.set(null)">
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <h3 class="text-base font-semibold text-gray-900">Reject {{ r.employeeName }}'s correction</h3>
+      <p class="mt-1 text-sm text-gray-500">{{ longDate(r.workDate) }} · {{ r.checkIn }} – {{ r.checkOut }}</p>
+      <label class="mb-1 mt-4 block text-sm font-medium text-gray-700" for="att-reject">Note for the employee</label>
+      <textarea id="att-reject" rows="3" class="att-input" [class.att-input--error]="rejectTouched() && !rejectNote().trim()" [maxlength]="limits.decisionNoteMax"
+                [ngModel]="rejectNote()" (ngModelChange)="rejectNote.set($event)"></textarea>
+      @if (rejectTouched() && !rejectNote().trim()) { <p class="mt-1 text-xs text-red-600">Add a note when rejecting a request.</p> }
+      <div class="mt-6 flex justify-end gap-3">
+        <ui-text-button text="Cancel" variant="secondary" (buttonClick)="rejecting.set(null)"></ui-text-button>
+        <ui-text-button [text]="busy() ? 'Rejecting…' : 'Reject'" (buttonClick)="confirmReject()"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (toast()) {
+  <div attBodyPortal class="ph-overlay ph-overlay--top fixed bottom-6 right-6 flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-3 text-sm font-medium text-white shadow-lg" role="status">
+    <ui-icon class="text-emerald-400" name="check_circle_outline"></ui-icon>
+    {{ toast() }}
+  </div>
+}
