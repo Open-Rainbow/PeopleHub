@@ -63,10 +63,10 @@ public sealed class LeaveServiceTests
     }
 
     [Fact]
-    public async Task Unknown_leave_type_is_rejected()
+    public async Task Malformed_leave_type_is_rejected()
     {
         var error = await Assert.ThrowsAsync<RequestValidationException>(
-            () => service.ApplyAsync(Valid() with { LeaveType = "vacation" }, CancellationToken.None));
+            () => service.ApplyAsync(Valid() with { LeaveType = "Earned Leave!" }, CancellationToken.None));
 
         Assert.Contains(nameof(ApplyLeaveRequest.LeaveType), error.Errors.Keys);
     }
@@ -127,6 +127,30 @@ public sealed class LeaveServiceTests
             () => service.DecideAsync(5, new LeaveDecisionRequest { Approve = false }, CancellationToken.None));
 
         Assert.Contains(nameof(LeaveDecisionRequest.Note), error.Errors.Keys);
+    }
+
+    [Fact]
+    public async Task Types_for_an_employee_use_their_policy_year()
+    {
+        repository
+            .Setup(r => r.GetTypesAsync(OrgId, Emp, 2026, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<LeaveTypeDto> { new() { Code = "earned", CarryIn = 3 } });
+
+        var types = await service.GetTypesAsync(Emp, 2026, CancellationToken.None);
+
+        Assert.Equal(3m, types[0].CarryIn);
+    }
+
+    [Fact]
+    public async Task Types_without_employee_return_the_catalog()
+    {
+        repository
+            .Setup(r => r.GetTypesAsync(OrgId, null, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<LeaveTypeDto>());
+
+        await service.GetTypesAsync(null, 2026, CancellationToken.None);
+
+        repository.Verify(r => r.GetTypesAsync(OrgId, null, null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
