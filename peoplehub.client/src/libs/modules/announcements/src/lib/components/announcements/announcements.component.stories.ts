@@ -1,56 +1,53 @@
-import {Meta,StoryObj,} from '@storybook/angular';
-import { AnnouncementsComponent } from './announcements.component';
+import { applicationConfig, Meta, StoryObj } from '@storybook/angular';
+import { provideHttpClient } from '@angular/common/http';
 import { Announcement } from 'common';
+import { AnnouncementsComponent } from './announcements.component';
 
 type Story = StoryObj<AnnouncementsComponent>;
+
+const day = (offset: number) => {
+  const d = new Date();
+  d.setDate(d.getDate() + offset);
+  return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+};
+
 const announcements: Announcement[] = [
   {
-    announcementId: 123,
-    title: 'Holiday Schedule Update',
-    priority: 'Medium',
+    announcementId: 125,
+    title: 'Office closed for the holidays',
+    priority: 'High',
     description:
-      'Please note that the office will be closed from December 24th to January 2nd. Emergency contacts will be available during this period.',
-    postedDate: '30/12/2024',
+      'The office will be closed from December 24th to January 2nd. Emergency contacts will be available during this period.',
+    postedDate: day(-1),
     postedBy: 'HR Department',
-    expireDate: '24/12/2024',
-    expireOn: new Date(),
-    priorityDesc: '',
+    expireDate: day(14),
+  },
+  {
+    announcementId: 123,
+    title: 'Quarterly town hall',
+    priority: 'Medium',
+    description: 'Join the leadership team on Friday at 4 PM for the quarterly town hall. Questions can be submitted in advance.',
+    postedDate: day(-2),
+    postedBy: 'Leadership',
+    expireDate: day(5),
   },
   {
     announcementId: 124,
-    title: 'New Security Policy',
+    title: 'New security policy',
     priority: 'Low',
-    description:
-      'All employees must update their passwords by end of week following the new security guidelines.',
-    postedDate: '25/12/2024',
+    description: 'All employees must update their passwords by the end of the week following the new security guidelines.',
+    postedDate: day(-6),
     postedBy: 'IT Security',
-    expireDate: '24/12/2024',
-    expireOn: new Date(),
-    priorityDesc: '',
-  },
-  {
-    announcementId: 125,
-    title: 'Holiday Schedule Update 1',
-    priority: 'High',
-    description:
-      'Please note that the office will be closed from December 24th to January 2nd. Emergency contacts will be available during this period.',
-    postedDate: '29/12/2024',
-    postedBy: 'HR Department',
-    expireDate: '24/12/2024',
-    expireOn: new Date(),
-    priorityDesc: '',
+    expireDate: day(2),
   },
   {
     announcementId: 126,
-    title: 'Holiday Schedule Update 2',
-    priority: 'High',
-    description:
-      'Please note that the office will be closed from December 24th to January 2nd. Emergency contacts will be available during this period.',
-    postedDate: '29/12/2024',
+    title: 'Annual appraisal window closed',
+    priority: 'Medium',
+    description: 'Thanks to everyone who submitted their self-review on time.',
+    postedDate: day(-40),
     postedBy: 'HR Department',
-    expireDate: '24/12/2024',
-    expireOn: new Date(),
-    priorityDesc: '',
+    expireDate: day(-3),
   },
 ];
 
@@ -58,6 +55,7 @@ const meta: Meta<AnnouncementsComponent> = {
   component: AnnouncementsComponent,
   title: 'modules/announcements/Announcements',
   tags: ['autodocs'],
+  decorators: [applicationConfig({ providers: [provideHttpClient()] })],
   parameters: {
     layout: 'fullscreen',
   },
@@ -71,3 +69,4 @@ export const Default: Story = {
   },
 };
 
+export const FromService: Story = {};

@@ -1,90 +1,194 @@
-<div class="w-full h-full p-[20px]">
-  <p class="text-[20px] font-semibold mb-[25px]">Announcements &amp; Notifications</p>
-
-  @if (highPriorityAnnouncements.length > 0) {
-    <div
-      class="w-full h-full bg-white rounded-[12px] p-[20px] border border-[#e6e9f0] mx-auto"
-    >
-      <h3 class="text-black text-[16px] font-normal mb-[20px] flex items-center gap-[8px]">
-        Pinned Announcements
-      </h3>
-
-      @for (announcement of highPriorityAnnouncements; track announcement; let last = $last) {
-        <div>
-          <div class="flex items-center gap-[10px]">
-            <h4 class="text-[15px] font-semibold text-[#1a1a1a]">
-              {{ announcement.title }}
-            </h4>
-            <ui-chip
-              [text]="announcement.priority"
-              [color]="announcement.priority === 'Medium' ? '#b38742' : (announcement.priority === 'Low' ? '#23816c' : '#aa355b')"
-              [activeColor]="announcement.priority === 'Medium' ? '#b38742' : (announcement.priority === 'Low' ? '#23816c' : '#aa355b')"
-              [activeBGColor]="announcement.priority === 'Medium' ? '#fef9c2' : (announcement.priority === 'Low' ? '#dbfce7' : '#ffe2e2')"
-              [bgColor]="announcement.priority === 'Medium' ? '#fef9c2' : (announcement.priority === 'Low' ? '#dbfce7' : '#ffe2e2')"
-            >
-            </ui-chip>
-          </div>
-          <p class="text-[14px] text-[#4b4b4b] my-[10px] mb-[16px] leading-[1.4]">
-            {{ announcement.description }}
-          </p>
-          <div class="flex justify-between items-center text-[13px] text-[#6c6c6c]">
-            <div class="text-[12px] font-medium flex items-center gap-[4px]">
-              <span class="text-black">Expire on:</span>
-              <span class="text-[#C0171A]">{{ formatDate(announcement.expireDate) }}</span>
-            </div>
-            <span class="italic text-[#666]">
-              by {{ announcement.postedBy }} on {{ formatDate(announcement.postedDate) }}
+<section class="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6">
+  <!-- Header -->
+  <header class="flex flex-wrap items-end justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-blue-600">
+        <ui-icon name="announcement_megaphone"></ui-icon>
+      </span>
+      <div>
+        <h1 class="flex items-center gap-2 text-2xl font-semibold text-gray-900">
+          Announcements
+          @if (unreadIds().length > 0) {
+            <span class="rounded-full bg-blue-600 px-2 py-0.5 text-xs font-semibold text-white">
+              {{ unreadIds().length }} new
             </span>
-          </div>
-        </div>
-        @if (!last) {
-          <hr class="border-0 border-t border-[#e2e8f0] my-[30px] opacity-60" />
+          }
+        </h1>
+        <p class="mt-1 text-sm text-gray-500">Company news, policies and events in one place.</p>
+      </div>
+    </div>
+    @if (unreadIds().length > 0) {
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        (click)="markAllRead()"
+      >
+        <ui-icon name="check_circle_outline"></ui-icon>
+        Mark all as read
+      </button>
+    }
+  </header>
+
+  <!-- Toolbar -->
+  <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+    <div class="flex flex-wrap items-center gap-3">
+      <div class="flex rounded-lg bg-gray-100 p-1" role="tablist" aria-label="Announcements">
+        <button
+          type="button"
+          role="tab"
+          class="rounded-md px-3 py-1.5 text-sm font-medium transition"
+          [ngClass]="tab() === 'current' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'"
+          [attr.aria-selected]="tab() === 'current'"
+          (click)="setTab('current')"
+        >
+          Current <span class="ml-1 text-gray-400">{{ counts().current }}</span>
+        </button>
+        <button
+          type="button"
+          role="tab"
+          class="rounded-md px-3 py-1.5 text-sm font-medium transition"
+          [ngClass]="tab() === 'expired' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'"
+          [attr.aria-selected]="tab() === 'expired'"
+          (click)="setTab('expired')"
+        >
+          Archive <span class="ml-1 text-gray-400">{{ counts().expired }}</span>
+        </button>
+      </div>
+
+      <label class="relative min-w-64 flex-1">
+        <span class="sr-only">Search announcements</span>
+        <ui-icon class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" name="search"></ui-icon>
+        <input
+          type="search"
+          class="h-10 w-full rounded-lg border border-gray-200 bg-white pl-9 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          placeholder="Search announcements"
+          [value]="search()"
+          (input)="onSearch($any($event.target).value)"
+        />
+      </label>
+    </div>
+
+    @if (categories().length > 2) {
+      <div class="flex flex-wrap gap-2" aria-label="Categories">
+        @for (cat of categories(); track cat) {
+          <button
+            type="button"
+            class="rounded-full border px-3 py-1 text-xs font-medium transition"
+            [ngClass]="category() === cat ? 'border-blue-600 bg-blue-600 text-white' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'"
+            [attr.aria-pressed]="category() === cat"
+            (click)="category.set(cat)"
+          >
+            {{ cat }}
+          </button>
         }
+      </div>
+    }
+  </div>
+
+  @if (loading() && isEmpty()) {
+    <div class="flex flex-col gap-4">
+      @for (i of [1, 2, 3]; track i) {
+        <div class="h-32 animate-pulse rounded-2xl bg-gray-100"></div>
       }
     </div>
-  }
-
-  @if (otherAnnouncements.length > 0) {
-    <div
-      class="w-full h-full bg-white rounded-[12px] p-[20px] border border-[#e6e9f0] mx-auto mt-[25px]"
-    >
-      <h3 class="text-black text-[16px] font-normal mb-[20px] flex items-center gap-[8px]">
-        Recent Announcements
-      </h3>
-
-      @for (announcement of otherAnnouncements; track announcement; let last = $last) {
-        <div>
-          <div class="flex items-center gap-[10px]">
-            <h4 class="text-[15px] font-semibold text-[#1a1a1a]">
-              {{ announcement.title }}
-            </h4>
-            <ui-chip
-              [text]="announcement.priority"
-              [color]="announcement.priority === 'Medium' ? '#b38742' : (announcement.priority === 'Low' ? '#23816c' : '#aa355b')"
-              [activeColor]="announcement.priority === 'Medium' ? '#b38742' : (announcement.priority === 'Low' ? '#23816c' : '#aa355b')"
-              [activeBGColor]="announcement.priority === 'Medium' ? '#fef9c2' : (announcement.priority === 'Low' ? '#dbfce7' : '#ffe2e2')"
-              [bgColor]="announcement.priority === 'Medium' ? '#fef9c2' : (announcement.priority === 'Low' ? '#dbfce7' : '#ffe2e2')"
-            >
-            </ui-chip>
-          </div>
-          <p class="text-[14px] text-[#4b4b4b] my-[10px] mb-[16px] leading-[1.4]">
-            {{ announcement.description }}
-          </p>
-          <div class="flex justify-between items-center text-[13px] text-[#6c6c6c]">
-            <div class="text-[12px] font-medium flex items-center gap-[4px]">
-              <span class="text-black">Expire on:</span>
-              <span class="text-[#C0171A]">{{ formatDate(announcement.expireDate) }}</span>
-            </div>
-            <span class="italic text-[#666]">
-              by {{ announcement.postedBy }} on {{ formatDate(announcement.postedDate) }}
-            </span>
-          </div>
-        </div>
-        @if (!last) {
-          <hr class="border-0 border-t border-[#e2e8f0] my-[30px] opacity-60" />
-        }
+  } @else if (isEmpty()) {
+    <div class="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
+      <span class="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-2xl text-gray-400">
+        <ui-icon name="announcement_outline"></ui-icon>
+      </span>
+      <p class="text-base font-medium text-gray-900">
+        {{ hasFilters() ? 'Nothing matches your search' : tab() === 'current' ? 'You are all caught up' : 'No expired announcements' }}
+      </p>
+      <p class="text-sm text-gray-500">
+        {{ hasFilters() ? 'Try a different keyword or category.' : 'New announcements from HR will show up here.' }}
+      </p>
+      @if (hasFilters()) {
+        <button type="button" class="text-sm font-medium text-blue-600 hover:underline" (click)="clearFilters()">Clear filters</button>
       }
     </div>
-  }
-</div>
+  } @else {
+    @if (pinned().length > 0) {
+      <div class="flex flex-col gap-3">
+        <h2 class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+          <ui-icon name="pin"></ui-icon> Pinned
+        </h2>
+        @for (item of pinned(); track item.id) {
+          <ng-container *ngTemplateOutlet="card; context: { $implicit: item, pinned: true }"></ng-container>
+        }
+      </div>
+    }
 
+    @if (feed().length > 0) {
+      <div class="flex flex-col gap-3">
+        @if (pinned().length > 0) {
+          <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-500">Latest</h2>
+        }
+        @for (item of feed(); track item.id) {
+          <ng-container *ngTemplateOutlet="card; context: { $implicit: item, pinned: false }"></ng-container>
+        }
+      </div>
+    }
+  }
+</section>
+
+<ng-template #card let-item let-pinned="pinned">
+  <article
+    class="relative overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:shadow-md"
+    [ngClass]="[pinned ? 'border-blue-200 bg-blue-50/40' : 'border-gray-200', tab() === 'expired' ? 'opacity-75' : '']"
+    (click)="markRead(item)"
+  >
+    <span class="absolute inset-y-0 left-0 w-1" [ngClass]="priorityStyles[item.priority].bar" aria-hidden="true"></span>
+
+    <div class="flex flex-col gap-3 py-5 pl-6 pr-5">
+      <div class="flex flex-wrap items-center gap-2">
+        @if (isUnread(item)) {
+          <span class="h-2 w-2 rounded-full bg-blue-600" aria-label="Unread"></span>
+        }
+        <span class="rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset" [ngClass]="priorityStyles[item.priority].chip">
+          {{ item.priority }}
+        </span>
+        <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">{{ item.category }}</span>
+        @if (isNew(item) && tab() === 'current') {
+          <span class="rounded-full bg-blue-600 px-2 py-0.5 text-xs font-semibold text-white">New</span>
+        }
+        <span class="ml-auto text-xs" [ngClass]="expiryTone(item)">{{ expiryLabel(item) }}</span>
+      </div>
+
+      <h3 class="text-lg text-gray-900" [ngClass]="isUnread(item) ? 'font-semibold' : 'font-medium'">{{ item.title }}</h3>
+
+      <p class="whitespace-pre-line text-sm leading-relaxed text-gray-600">
+        @if (isLong(item) && !isExpanded(item)) {
+          {{ item.description.slice(0, previewLength).trimEnd() }}…
+        } @else {
+          {{ item.description }}
+        }
+      </p>
+      @if (isLong(item)) {
+        <button
+          type="button"
+          class="self-start text-sm font-medium text-blue-600 hover:underline"
+          [attr.aria-expanded]="isExpanded(item)"
+          (click)="toggleExpanded(item, $event)"
+        >
+          {{ isExpanded(item) ? 'Show less' : 'Read more' }}
+        </button>
+      }
+
+      <footer class="flex flex-wrap items-center gap-3 border-t border-gray-100 pt-3 text-xs text-gray-500">
+        <span class="flex h-7 w-7 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-700">
+          {{ initials(item.postedBy) }}
+        </span>
+        <span class="font-medium text-gray-700">{{ item.postedBy }}</span>
+        <span aria-hidden="true">·</span>
+        <span [title]="formatDate(item.publishOn)">{{ relativeDay(item.publishOn) }}</span>
+        <span class="ml-auto flex items-center gap-1">
+          <ui-icon name="group"></ui-icon>
+          {{ item.targetAudience }}
+          @if (item.department !== 'All Departments') {
+            · {{ item.department }}
+          }
+        </span>
+      </footer>
+    </div>
+  </article>
+</ng-template>
