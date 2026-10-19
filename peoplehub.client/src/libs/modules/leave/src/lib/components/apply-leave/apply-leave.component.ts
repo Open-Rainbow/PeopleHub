@@ -5,6 +5,7 @@ import {
   HostListener,
   inject,
   OnDestroy,
+  OnInit,
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -19,22 +20,15 @@ import {
   LeaveStatus,
   LeaveTypeKey,
 } from '../../models/leave-request.model';
-import {
-  LEAVE_STATUS_STYLES,
-  LEAVE_TYPE_MAP,
-  LEAVE_TYPES,
-  REASON_MAX,
-} from '../../config/leave-policy';
+import { LEAVE_STATUS_STYLES, REASON_MAX } from '../../config/leave-policy';
 import {
   addDaysIso,
   diffDays,
   formatDay,
   formatDays,
   formatRange,
-  skippedDays,
   todayIso,
   weekdayName,
-  workingDays,
 } from '../../utils/leave-date.utils';
 
 type StatusTab = 'All' | LeaveStatus;
@@ -48,12 +42,14 @@ type StatusTab = 'All' | LeaveStatus;
   templateUrl: './apply-leave.component.html',
   styleUrls: ['./apply-leave.component.scss'],
 })
-export class ApplyLeaveComponent implements OnDestroy {
+export class ApplyLeaveComponent implements OnInit, OnDestroy {
   private readonly service = inject(LeaveService);
   private toastTimer?: ReturnType<typeof setTimeout>;
 
-  readonly types = LEAVE_TYPES;
-  readonly typeMap = LEAVE_TYPE_MAP;
+  readonly types = this.service.types;
+  readonly typeMap = this.service.typeMap;
+  readonly apiError = this.service.lastError;
+  readonly isOnline = this.service.isOnline;
   readonly statusStyles = LEAVE_STATUS_STYLES;
   readonly reasonMax = REASON_MAX;
   readonly tabs: StatusTab[] = ['All', 'Pending', 'Approved', 'Rejected', 'Cancelled'];
@@ -115,15 +111,15 @@ export class ApplyLeaveComponent implements OnDestroy {
     return this.fromDate() && this.toDate() ? { balance, overlap, fromDate, toDate } : {};
   });
   readonly isSingleDay = computed(() => !!this.fromDate() && this.fromDate() === this.toDate());
-  readonly selectedType = computed(() => LEAVE_TYPE_MAP[this.type()]);
+  readonly selectedType = computed(() => this.service.typeOf(this.type()));
   readonly selectedBalance = computed(() => this.service.balanceOf(this.type()));
   readonly days = computed(() =>
     this.fromDate() && this.toDate() && this.toDate() >= this.fromDate()
-      ? workingDays(this.fromDate(), this.toDate(), this.draft().dayPart)
+      ? this.service.countDays(this.fromDate(), this.toDate(), this.draft().dayPart)
       : 0,
   );
   readonly skipped = computed(() =>
-    this.days() > 0 ? skippedDays(this.fromDate(), this.toDate()) : { weekends: 0, holidays: [] as string[] },
+    this.days() > 0 ? this.service.skippedDays(this.fromDate(), this.toDate()) : { weekends: 0, holidays: [] as string[] },
   );
   readonly balanceAfter = computed(() => {
     const available = this.selectedBalance().available;
@@ -138,6 +134,14 @@ export class ApplyLeaveComponent implements OnDestroy {
     const next = this.upcoming();
     return next ? diffDays(todayIso(), next.fromDate) : null;
   });
+
+  ngOnInit(): void {
+    this.service.refresh();
+  }
+
+  dismissError(): void {
+    this.apiError.set(null);
+  }
 
   // ---------- form ----------
   openForm(type?: LeaveTypeKey): void {
@@ -233,7 +237,7 @@ export class ApplyLeaveComponent implements OnDestroy {
 
   private nextWorkingDay(): string {
     let iso = addDaysIso(todayIso(), 1);
-    for (let i = 0; i < 14 && workingDays(iso, iso) === 0; i++) iso = addDaysIso(iso, 1);
+    for (let i = 0; i < 14 && this.service.countDays(iso, iso) === 0; i++) iso = addDaysIso(iso, 1);
     return iso;
   }
 
