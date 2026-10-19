@@ -934,20 +934,29 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM org.Holiday) AND EXISTS (SELECT 1 FROM org.Organization)
+-- Company holidays (safe to re-run: adds missing dates; fixes the old seed that had Diwali on 20 Oct).
+IF EXISTS (SELECT 1 FROM org.Organization)
 BEGIN
     DECLARE @HolOrg INT = (SELECT MIN(Id) FROM org.Organization);
-    INSERT org.Holiday (OrganizationId, HolidayDate, [Name]) VALUES
-    (@HolOrg, '2026-01-01', N'New Year'),
-    (@HolOrg, '2026-01-26', N'Republic Day'),
-    (@HolOrg, '2026-03-04', N'Holi'),
-    (@HolOrg, '2026-08-15', N'Independence Day'),
-    (@HolOrg, '2026-10-02', N'Gandhi Jayanti'),
-    (@HolOrg, '2026-10-20', N'Diwali'),
-    (@HolOrg, '2026-11-24', N'Guru Nanak Jayanti'),
-    (@HolOrg, '2026-12-25', N'Christmas'),
-    (@HolOrg, '2027-01-01', N'New Year'),
-    (@HolOrg, '2027-01-26', N'Republic Day');
+    MERGE org.Holiday AS t
+    USING (VALUES
+        (CAST('2026-01-01' AS DATE), N'New Year'),
+        ('2026-01-26', N'Republic Day'),
+        ('2026-03-04', N'Holi'),
+        ('2026-08-15', N'Independence Day'),
+        ('2026-10-02', N'Gandhi Jayanti'),
+        ('2026-10-20', N'Dussehra'),
+        ('2026-11-08', N'Diwali'),
+        ('2026-11-24', N'Guru Nanak Jayanti'),
+        ('2026-12-25', N'Christmas'),
+        ('2027-01-01', N'New Year'),
+        ('2027-01-26', N'Republic Day')
+    ) AS s (HolidayDate, [Name])
+    ON t.OrganizationId = @HolOrg AND t.HolidayDate = s.HolidayDate
+    WHEN MATCHED AND t.HolidayDate = '2026-10-20' AND t.[Name] = N'Diwali' THEN
+        UPDATE SET [Name] = s.[Name]
+    WHEN NOT MATCHED THEN
+        INSERT (OrganizationId, HolidayDate, [Name]) VALUES (@HolOrg, s.HolidayDate, s.[Name]);
 END
 GO
 
