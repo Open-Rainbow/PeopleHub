@@ -19,7 +19,6 @@ import {
   optionLabelOf,
   optionValueOf,
   SearchComponent,
-  staticChip,
   TabButtonComponent,
   TabButtonItem,
   TextAreaComponent,
@@ -38,7 +37,10 @@ import {
   POLICY_FILE_ACCEPT,
   POLICY_LIMITS,
   POLICY_STATUSES,
-  STATUS_CHIPS,
+  bannerTone,
+  PolicyTone,
+  STATUS_TONES,
+  TONES,
 } from '../../config/policy-options';
 import { PolicyBodyPortalDirective } from '../../directives/policy-body-portal.directive';
 import { Policy, PolicyAck, PolicyCategory, PolicyDraft, PolicyErrors, PolicyFileDraft, PolicyStatus } from '../../models/policy.model';
@@ -110,13 +112,16 @@ export class PoliciesComponent implements OnInit {
   readonly limits = POLICY_LIMITS;
   readonly accept = POLICY_FILE_ACCEPT;
   readonly categoryStyles = CATEGORY_STYLES;
-  readonly statusChips = STATUS_CHIPS;
-  readonly chip = staticChip;
+  readonly statusTones = STATUS_TONES;
+  readonly tones = TONES;
+  readonly errorBanner = bannerTone('danger');
+  readonly ackBanner = bannerTone('primary');
   readonly shortDate = shortDate;
   readonly fileKind = fileKind;
   readonly fileSize = fileSizeLabel;
   readonly ackPercent = ackPercent;
   readonly needsMyAck = needsMyAck;
+  readonly tone = (t: PolicyTone) => TONES[t];
 
   readonly categoryItems: ButtonGroupItem[] = [{ label: 'All', value: 'All' }, ...POLICY_CATEGORIES.map((c) => ({ label: c, value: c }))];
   readonly statusItems: ButtonGroupItem[] = [{ label: 'All', value: 'All' }, ...POLICY_STATUSES.map((s) => ({ label: s, value: s }))];
