@@ -2,6 +2,8 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using PeopleHub.Application.Modules.Announcements.Interfaces;
 using PeopleHub.Application.Modules.Announcements.Services;
+using PeopleHub.Application.Modules.Attendance.Interfaces;
+using PeopleHub.Application.Modules.Attendance.Services;
 using PeopleHub.Application.Modules.Employees.AddEmployee.Interfaces;
 using PeopleHub.Application.Modules.Employees.AddEmployee.Services;
 using PeopleHub.Application.Modules.Holidays.Interfaces;
@@ -24,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<ILeaveService, LeaveService>();
         services.AddScoped<ILeavePolicyService, LeavePolicyService>();
         services.AddScoped<IHolidayService, HolidayService>();
+        services.AddScoped<IAttendanceService, AttendanceService>();
 
         return services;
     }

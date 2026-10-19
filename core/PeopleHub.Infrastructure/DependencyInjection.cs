@@ -1,11 +1,13 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PeopleHub.Application.Modules.Announcements.Interfaces;
+using PeopleHub.Application.Modules.Attendance.Interfaces;
 using PeopleHub.Application.Modules.Employees.AddEmployee.Interfaces;
 using PeopleHub.Application.Modules.Holidays.Interfaces;
 using PeopleHub.Application.Modules.Leave.Interfaces;
 using PeopleHub.Infrastructure.Database;
 using PeopleHub.Infrastructure.Modules.Announcements;
+using PeopleHub.Infrastructure.Modules.Attendance;
 using PeopleHub.Infrastructure.Modules.Employees;
 using PeopleHub.Infrastructure.Modules.Holidays;
 using PeopleHub.Infrastructure.Modules.Leave;
@@ -26,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<ILeaveRepository, LeaveRepository>();
         services.AddScoped<ILeavePolicyRepository, LeavePolicyRepository>();
         services.AddScoped<IHolidayRepository, HolidayRepository>();
+        services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 
         return services;
     }
