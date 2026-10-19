@@ -136,6 +136,15 @@ const addEmployeeChildRoutes: Routes = [
   { path: '**', redirectTo: 'personal-info' },
 ];
 
+/** Company policies: everyone reads; admin / HR / super-admin also manage (decided from the URL). */
+const policiesRoute = {
+  path: 'policies',
+  loadComponent: () =>
+    import('../../libs/modules/documents/src/lib/components/policies/policies.component').then(
+      (m) => m.PoliciesComponent,
+    ),
+};
+
 export const appRoutes: Routes = [
   {
     path: '',
@@ -206,6 +215,7 @@ export const appRoutes: Routes = [
             (m) => m.OrgChartComponent,
           ),
       },
+      policiesRoute,
       {
         path: 'others',
         loadComponent: () =>
@@ -317,6 +327,7 @@ export const appRoutes: Routes = [
             (m) => m.OrgChartComponent,
           ),
       },
+      policiesRoute,
       {
         path: 'others',
         loadComponent: () =>
@@ -427,6 +438,7 @@ export const appRoutes: Routes = [
             (m) => m.OrgChartComponent,
           ),
       },
+      policiesRoute,
       {
         path: 'others',
         loadComponent: () =>
@@ -464,6 +476,24 @@ export const appRoutes: Routes = [
             (m) => m.OfferLetterComponent,
           ),
       },
+    ],
+  },
+  {
+    path: 'superadmin',
+    loadComponent: () =>
+      import('../../libs/shell/layout/src/lib/components/layout/layout.component').then(
+        (m) => m.LayoutComponent,
+      ),
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('../../libs/modules/dashboard/src/lib/components/dashboard/dashboard.component').then(
+            (m) => m.DashboardComponent,
+          ),
+      },
+      policiesRoute,
     ],
   },
   { path: '**', redirectTo: 'login' },

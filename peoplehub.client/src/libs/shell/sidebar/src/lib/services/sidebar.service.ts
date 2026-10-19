@@ -25,6 +25,7 @@ export const MENU_CONFIG: Record<string, MenuItem[]> = {
     { label: 'Attendance', icon: 'calendar', route: 'attendance' },
     { label: 'Holidays', icon: 'suitcase_line', route: 'holiday-calender' },
     { label: 'Org-Chart', icon: 'chart_growth', route: 'org-chart' },
+    { label: 'Policies', icon: 'copy', route: 'policies' },
     { label: 'Others', icon: 'dots_horizontal', route: 'others' },
   ],
  
@@ -60,6 +61,7 @@ export const MENU_CONFIG: Record<string, MenuItem[]> = {
     { label: 'Attendance', icon: 'calendar', route: 'attendance' },
     { label: 'Holidays', icon: 'suitcase_line', route: 'holidayList' },
     { label: 'Org Chart', icon: 'chart_growth', route: 'org-chart' },
+    { label: 'Policies', icon: 'copy', route: 'policies' },
     { label: 'Others', icon: 'dots_horizontal', route: 'others' },
   ],
 
@@ -94,11 +96,13 @@ export const MENU_CONFIG: Record<string, MenuItem[]> = {
     { label: 'Attendance', icon: 'calendar', route: 'attendance' },
    { label: 'Holidays', icon: 'suitcase_line', route: 'holidayList' },
     { label: 'Org Chart', icon: 'chart_growth', route: 'org-chart' },
+    { label: 'Policies', icon: 'copy', route: 'policies' },
     { label: 'Others', icon: 'dots_horizontal', route: 'others' },
   ],
 
   superadmin: [
     { label: 'Dashboard', icon: 'view_dashboard_outline', route: 'dashboard' },
+    { label: 'Policies', icon: 'copy', route: 'policies' },
     { label: 'Settings', icon: 'settings', route: 'settings' },
   ],
 };
