@@ -1,5 +1,8 @@
+// Every colour on this screen comes from the theme tokens (src/styles/theme-tokens.css),
+// so the page follows light / dark themes. No hard-coded palette colours.
 :host {
   display: block;
+  color: var(--color-text-primary);
 }
 
 // Overlays are moved to <body> (polBodyPortal). The app header is z-[2000], so stay above it.
@@ -11,11 +14,91 @@
   z-index: 2110;
 }
 
-.pol-card:focus-visible {
-  outline: 2px solid #6366f1;
-  outline-offset: 2px;
+// ---- Surfaces --------------------------------------------------------------------------------
+.pol-surface {
+  background-color: var(--color-surface);
+}
+
+.pol-surface-muted {
+  background-color: var(--color-surface-muted);
+}
+
+.pol-scrim {
+  background-color: color-mix(in srgb, var(--color-bg) 35%, rgb(0 0 0 / 0.55));
+}
+
+.pol-border {
+  border-color: var(--color-border);
+}
+
+.pol-divide > :not(:last-child) {
+  border-color: var(--color-border);
+}
+
+.pol-row:hover {
+  background-color: var(--color-surface-elevated);
+}
+
+// ---- Text ------------------------------------------------------------------------------------
+.pol-text {
+  color: var(--color-text-primary);
+}
+
+.pol-text-2 {
+  color: var(--color-text-secondary);
+}
+
+.pol-muted {
+  color: var(--color-text-muted);
+}
+
+.pol-error {
+  color: var(--color-danger);
+}
+
+.pol-success {
+  color: var(--color-success);
+}
+
+.pol-link:hover {
+  color: var(--color-primary);
+}
+
+// ---- Bits ------------------------------------------------------------------------------------
+.pol-badge {
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 14%, transparent);
+}
+
+.pol-track {
+  background-color: var(--color-surface-muted);
+}
+
+.pol-fill {
+  background-color: var(--color-success);
+}
+
+.pol-card {
+  &:hover {
+    border-color: var(--color-primary-soft);
+    box-shadow: 0 8px 24px -12px color-mix(in srgb, var(--color-primary) 45%, transparent);
+
+    h2 {
+      color: var(--color-primary);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
 }
 
 .pol-content {
   overflow-wrap: anywhere;
+}
+
+iframe,
+img {
+  background-color: var(--color-surface-elevated);
 }

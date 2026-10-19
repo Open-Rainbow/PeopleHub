@@ -3,12 +3,12 @@
   <div class="flex flex-wrap items-end justify-between gap-4">
     <div>
       <div class="flex items-center gap-2">
-        <h1 class="text-2xl font-semibold text-gray-900">Policies</h1>
+        <h1 class="text-2xl font-semibold pol-text">Policies</h1>
         @if (!isOnline() && !loading()) {
-          <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Offline demo data', v: 'amber' }"></ng-container>
+          <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Offline demo data', v: 'warning' }"></ng-container>
         }
       </div>
-      <p class="mt-1 text-sm text-gray-500">Company rules and guidelines: floor and desk management, remote work, IT use and more.</p>
+      <p class="mt-1 text-sm pol-text-2">Company rules and guidelines: floor and desk management, remote work, IT use and more.</p>
     </div>
     @if (canManage()) {
       <div class="flex items-center gap-3">
@@ -23,20 +23,22 @@
   @if (error()) {
     <div class="flex items-start gap-2" role="alert">
       <ui-notice-banner class="flex-1" heading="Something went wrong: " [content]="error()!"
-                        bannerColor="#FEE2E2" headingColor="#991B1B" contentColor="#7F1D1D" highlighterColor="#DC2626" iconColor="#DC2626"></ui-notice-banner>
+                        [bannerColor]="errorBanner.bannerColor" [headingColor]="errorBanner.headingColor" [contentColor]="errorBanner.contentColor"
+                        [highlighterColor]="errorBanner.highlighterColor" [iconColor]="errorBanner.iconColor"></ui-notice-banner>
       <ui-text-button text="Retry" variant="secondary" size="small" (buttonClick)="reload()"></ui-text-button>
     </div>
   }
 
   @if (loading()) {
-    <div class="flex h-72 items-center justify-center rounded-2xl border border-gray-200 bg-white"><ui-loader></ui-loader></div>
+    <div class="flex h-72 items-center justify-center rounded-2xl pol-border border pol-surface"><ui-loader></ui-loader></div>
   } @else if (tab() === 'library') {
     <!-- ================= LIBRARY (everyone) ================= -->
     @if (pendingAcks().length) {
       <div class="flex flex-wrap items-center gap-3">
         <ui-notice-banner class="min-w-[16rem] flex-1" heading="Action needed: "
                           [content]="pendingAcks().length + ' polic' + (pendingAcks().length > 1 ? 'ies need' : 'y needs') + ' your acknowledgement.'"
-                          bannerColor="#EEF2FF" headingColor="#3730A3" contentColor="#312E81" highlighterColor="#4F46E5" iconColor="#4F46E5"></ui-notice-banner>
+                          [bannerColor]="ackBanner.bannerColor" [headingColor]="ackBanner.headingColor" [contentColor]="ackBanner.contentColor"
+                          [highlighterColor]="ackBanner.highlighterColor" [iconColor]="ackBanner.iconColor"></ui-notice-banner>
         <ui-text-button [text]="onlyPending() ? 'Show all policies' : 'Show only these'" variant="secondary" size="small"
                         (buttonClick)="onlyPending.set(!onlyPending())"></ui-text-button>
       </div>
@@ -53,25 +55,26 @@
     @if (libraryView().length) {
       <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         @for (p of libraryView(); track p.id) {
-          <article class="pol-card group flex cursor-pointer flex-col rounded-2xl border border-gray-200 bg-white p-5 transition hover:border-indigo-300 hover:shadow-md"
+          <article class="pol-card group flex cursor-pointer flex-col rounded-2xl pol-border border pol-surface p-5 transition"
                    tabindex="0" role="button" [attr.aria-label]="'Read ' + p.title" (click)="open(p)" (keydown.enter)="open(p)">
             <div class="flex items-start justify-between gap-3">
-              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" [ngClass]="categoryStyles[p.category].tint">
+              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+                    [style.color]="tones[categoryStyles[p.category].tone].color" [style.background]="tones[categoryStyles[p.category].tone].bg">
                 <ui-icon [name]="categoryStyles[p.category].icon"></ui-icon>
               </span>
               <div class="flex flex-wrap justify-end gap-1">
-                @if (p.isPinned) { <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Pinned', v: 'darkBlue' }"></ng-container> }
+                @if (p.isPinned) { <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Pinned', v: 'primary' }"></ng-container> }
                 @if (needsMyAck(p)) {
-                  <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Acknowledge', v: 'red' }"></ng-container>
+                  <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Acknowledge', v: 'danger' }"></ng-container>
                 } @else if (p.acknowledgedAt) {
-                  <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Acknowledged', v: 'green' }"></ng-container>
+                  <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Acknowledged', v: 'success' }"></ng-container>
                 }
               </div>
             </div>
-            <h2 class="mt-4 text-base font-semibold text-gray-900 group-hover:text-indigo-700">{{ p.title }}</h2>
-            @if (p.summary) { <p class="mt-1 line-clamp-3 text-sm text-gray-600">{{ p.summary }}</p> }
-            <div class="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-4 text-xs text-gray-500">
-              <ng-container *ngTemplateOutlet="pill; context: { $implicit: p.category, v: categoryStyles[p.category].chip }"></ng-container>
+            <h2 class="mt-4 text-base font-semibold pol-text">{{ p.title }}</h2>
+            @if (p.summary) { <p class="mt-1 line-clamp-3 text-sm pol-text-2">{{ p.summary }}</p> }
+            <div class="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-4 text-xs pol-text-2">
+              <ng-container *ngTemplateOutlet="pill; context: { $implicit: p.category, v: categoryStyles[p.category].tone }"></ng-container>
               <span>v{{ p.version }}</span>
               @if (p.effectiveFrom) { <span>From {{ shortDate(p.effectiveFrom) }}</span> }
               @if (p.hasFile) { <span class="inline-flex items-center gap-1"><ui-icon name="copy"></ui-icon>{{ fileKind(p.fileName) }} {{ fileSize(p.fileSize) }}</span> }
@@ -81,31 +84,31 @@
         }
       </div>
     } @else {
-      <div class="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-14 text-center">
-        <p class="text-sm font-medium text-gray-900">No policies here</p>
-        <p class="mt-1 text-sm text-gray-500">{{ library().length ? 'Try another category or search.' : 'Published policies will show up here.' }}</p>
+      <div class="rounded-2xl border pol-border border-dashed pol-surface px-6 py-14 text-center">
+        <p class="text-sm font-medium pol-text">No policies here</p>
+        <p class="mt-1 text-sm pol-text-2">{{ library().length ? 'Try another category or search.' : 'Published policies will show up here.' }}</p>
       </div>
     }
   } @else {
     <!-- ================= MANAGE (admin / HR / super-admin) ================= -->
     <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
       @for (s of manageStats(); track s.label) {
-        <div class="rounded-2xl border border-gray-200 bg-white p-4">
-          <p class="text-xs font-medium uppercase tracking-wide text-gray-500">{{ s.label }}</p>
-          <p class="mt-1 text-2xl font-semibold text-gray-900">{{ s.value }}</p>
+        <div class="rounded-2xl pol-border border pol-surface p-4">
+          <p class="text-xs font-medium uppercase tracking-wide pol-text-2">{{ s.label }}</p>
+          <p class="mt-1 text-2xl font-semibold pol-text">{{ s.value }}</p>
         </div>
       }
     </div>
 
-    <div class="rounded-2xl border border-gray-200 bg-white">
-      <div class="flex flex-wrap items-center gap-3 border-b border-gray-100 px-5 py-4">
+    <div class="rounded-2xl pol-border border pol-surface">
+      <div class="flex flex-wrap items-center gap-3 pol-border border-b px-5 py-4">
         <ui-search class="min-w-[14rem] flex-1" id="search" placeholderText="Search title, category or department" [displaySuggestions]="false"
                    [parentFormGroup]="manageForm" (searchChange)="onManageSearch($event)"></ui-search>
         <ui-button-group ariaLabel="Status" size="sm" [items]="statusItems" [selectedValues]="[manageStatus()]" (selectionChange)="setStatus($event)"></ui-button-group>
       </div>
       <div class="overflow-x-auto">
         <table class="min-w-full text-sm">
-          <thead class="bg-gray-50 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+          <thead class="pol-surface-muted text-left text-xs font-medium uppercase tracking-wide pol-text-2">
             <tr>
               <th class="px-5 py-3">Policy</th>
               <th class="px-4 py-3">Status</th>
@@ -115,32 +118,32 @@
               <th class="px-4 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100">
+          <tbody class="pol-divide divide-y">
             @for (p of manageView(); track p.id) {
-              <tr class="hover:bg-gray-50">
+              <tr class="pol-row">
                 <td class="px-5 py-3">
-                  <button type="button" class="text-left font-medium text-gray-900 hover:text-indigo-700" (click)="open(p, true)">{{ p.title }}</button>
-                  <p class="mt-0.5 text-xs text-gray-500">
+                  <button type="button" class="text-left font-medium pol-text pol-link" (click)="open(p, true)">{{ p.title }}</button>
+                  <p class="mt-0.5 text-xs pol-text-2">
                     {{ p.category }} · v{{ p.version }}
                     @if (p.hasFile) { · {{ fileKind(p.fileName) }} {{ fileSize(p.fileSize) }} }
                     @if (p.isPinned) { · Pinned }
                   </p>
                 </td>
-                <td class="px-4 py-3"><ng-container *ngTemplateOutlet="pill; context: { $implicit: p.status, v: statusChips[p.status] }"></ng-container></td>
-                <td class="px-4 py-3 text-gray-700">{{ p.audience ?? 'Everyone' }}</td>
+                <td class="px-4 py-3"><ng-container *ngTemplateOutlet="pill; context: { $implicit: p.status, v: statusTones[p.status] }"></ng-container></td>
+                <td class="px-4 py-3 pol-text-2">{{ p.audience ?? 'Everyone' }}</td>
                 <td class="px-4 py-3">
                   @if (p.requiresAck && p.status === 'Published') {
                     <button type="button" class="w-36 text-left" (click)="openAcks(p)" [attr.aria-label]="'Who acknowledged ' + p.title">
-                      <span class="text-xs text-gray-700">{{ p.ackCount }} / {{ p.audienceCount }} ({{ ackPercent(p) }}%)</span>
-                      <span class="mt-1 block h-1.5 overflow-hidden rounded-full bg-gray-100">
-                        <span class="block h-full rounded-full bg-emerald-500" [style.width.%]="ackPercent(p)"></span>
+                      <span class="text-xs pol-text-2">{{ p.ackCount }} / {{ p.audienceCount }} ({{ ackPercent(p) }}%)</span>
+                      <span class="pol-track mt-1 block h-1.5 overflow-hidden rounded-full">
+                        <span class="pol-fill block h-full rounded-full" [style.width.%]="ackPercent(p)"></span>
                       </span>
                     </button>
                   } @else {
-                    <span class="text-xs text-gray-400">{{ p.requiresAck ? 'After publishing' : 'Not required' }}</span>
+                    <span class="text-xs pol-muted">{{ p.requiresAck ? 'After publishing' : 'Not required' }}</span>
                   }
                 </td>
-                <td class="px-4 py-3 text-xs text-gray-500">{{ shortDate(p.updatedAt) }}@if (p.updatedBy) { <br />{{ p.updatedBy }} }</td>
+                <td class="px-4 py-3 text-xs pol-text-2">{{ shortDate(p.updatedAt) }}@if (p.updatedBy) { <br />{{ p.updatedBy }} }</td>
                 <td class="px-4 py-3">
                   <div class="flex items-center justify-end gap-1">
                     @switch (p.status) {
@@ -155,7 +158,7 @@
                 </td>
               </tr>
             } @empty {
-              <tr><td colspan="6" class="px-5 py-12 text-center text-sm text-gray-500">
+              <tr><td colspan="6" class="px-5 py-12 text-center text-sm pol-text-2">
                 {{ all().length ? 'No policies match.' : 'No policies yet. Create the first one, e.g. your floor and desk rules.' }}
               </td></tr>
             }
@@ -168,16 +171,16 @@
 
 <!-- ================= READER DRAWER ================= -->
 @if (reading(); as p) {
-  <div polBodyPortal class="ph-overlay fixed inset-0 flex justify-end bg-gray-900/40" (click)="reading.set(null)">
-    <div class="flex h-full w-full max-w-3xl flex-col bg-white shadow-xl" role="dialog" aria-modal="true" aria-labelledby="pol-reader-title" (click)="$event.stopPropagation()">
-      <div class="flex items-start justify-between gap-4 border-b border-gray-200 px-6 py-4">
+  <div polBodyPortal class="ph-overlay fixed inset-0 flex justify-end pol-scrim" (click)="reading.set(null)">
+    <div class="flex h-full w-full max-w-3xl flex-col pol-surface shadow-xl" role="dialog" aria-modal="true" aria-labelledby="pol-reader-title" (click)="$event.stopPropagation()">
+      <div class="flex items-start justify-between gap-4 pol-border border-b px-6 py-4">
         <div class="min-w-0">
           <div class="flex flex-wrap items-center gap-2">
-            <ng-container *ngTemplateOutlet="pill; context: { $implicit: p.category, v: categoryStyles[p.category].chip }"></ng-container>
-            @if (p.status !== 'Published') { <ng-container *ngTemplateOutlet="pill; context: { $implicit: p.status, v: statusChips[p.status] }"></ng-container> }
+            <ng-container *ngTemplateOutlet="pill; context: { $implicit: p.category, v: categoryStyles[p.category].tone }"></ng-container>
+            @if (p.status !== 'Published') { <ng-container *ngTemplateOutlet="pill; context: { $implicit: p.status, v: statusTones[p.status] }"></ng-container> }
           </div>
-          <h2 id="pol-reader-title" class="mt-2 text-xl font-semibold text-gray-900">{{ p.title }}</h2>
-          <p class="mt-1 text-xs text-gray-500">
+          <h2 id="pol-reader-title" class="mt-2 text-xl font-semibold pol-text">{{ p.title }}</h2>
+          <p class="mt-1 text-xs pol-text-2">
             Version {{ p.version }}
             @if (p.effectiveFrom) { · Effective {{ shortDate(p.effectiveFrom) }} }
             @if (p.publishedAt) { · Published {{ shortDate(p.publishedAt) }} }
@@ -188,23 +191,23 @@
       </div>
 
       <div class="flex-1 space-y-5 overflow-y-auto px-6 py-5">
-        @if (p.summary) { <p class="rounded-xl bg-gray-50 px-4 py-3 text-sm text-gray-700">{{ p.summary }}</p> }
+        @if (p.summary) { <p class="rounded-xl pol-surface-muted px-4 py-3 text-sm pol-text-2">{{ p.summary }}</p> }
 
         @if (p.hasFile) {
-          <div class="flex flex-wrap items-center gap-3 rounded-xl border border-gray-200 px-4 py-3">
-            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50 text-xs font-semibold text-indigo-700">{{ fileKind(p.fileName) }}</span>
+          <div class="flex flex-wrap items-center gap-3 rounded-xl pol-border border px-4 py-3">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg pol-badge text-xs font-semibold">{{ fileKind(p.fileName) }}</span>
             <div class="min-w-0 flex-1">
-              <p class="truncate text-sm font-medium text-gray-900">{{ p.fileName }}</p>
-              <p class="text-xs text-gray-500">{{ fileSize(p.fileSize) }}</p>
+              <p class="truncate text-sm font-medium pol-text">{{ p.fileName }}</p>
+              <p class="text-xs pol-text-2">{{ fileSize(p.fileSize) }}</p>
             </div>
             <ui-text-button text="Open" variant="secondary" size="small" (buttonClick)="download(p, true)"></ui-text-button>
             <ui-text-button text="Download" variant="primary" size="small" (buttonClick)="download(p)"></ui-text-button>
           </div>
           @if (preview(); as pv) {
             @if (pv.kind === 'pdf') {
-              <iframe class="h-[28rem] w-full rounded-xl border border-gray-200" [src]="pv.url" [title]="p.fileName ?? 'Policy document'"></iframe>
+              <iframe class="h-[28rem] w-full rounded-xl pol-border border" [src]="pv.url" [title]="p.fileName ?? 'Policy document'"></iframe>
             } @else {
-              <img class="max-h-[28rem] w-full rounded-xl border border-gray-200 object-contain" [src]="pv.url" [alt]="p.fileName ?? 'Policy image'" />
+              <img class="max-h-[28rem] w-full rounded-xl pol-border border object-contain" [src]="pv.url" [alt]="p.fileName ?? 'Policy image'" />
             }
           }
         }
@@ -212,19 +215,19 @@
         @if (readingLoading()) {
           <div class="flex justify-center py-10"><ui-loader></ui-loader></div>
         } @else if (p.content) {
-          <div class="pol-content whitespace-pre-line text-sm leading-6 text-gray-800">{{ p.content }}</div>
+          <div class="pol-content whitespace-pre-line text-sm leading-6 pol-text">{{ p.content }}</div>
         } @else if (!p.hasFile) {
-          <p class="text-sm text-gray-500">This policy has no text.</p>
+          <p class="text-sm pol-text-2">This policy has no text.</p>
         }
       </div>
 
       @if (p.status === 'Published' && p.requiresAck && !readerManage()) {
-        <div class="border-t border-gray-200 px-6 py-4">
+        <div class="pol-border border-t px-6 py-4">
           @if (p.acknowledgedAt) {
-            <p class="flex items-center gap-2 text-sm text-emerald-700"><ui-icon name="check_circle_outline"></ui-icon>You acknowledged version {{ p.version }} on {{ shortDate(p.acknowledgedAt) }}.</p>
+            <p class="flex items-center gap-2 text-sm pol-success"><ui-icon name="check_circle_outline"></ui-icon>You acknowledged version {{ p.version }} on {{ shortDate(p.acknowledgedAt) }}.</p>
           } @else {
             <div class="flex flex-wrap items-center justify-between gap-3">
-              <p class="text-sm text-gray-600">Please read the policy, then confirm.</p>
+              <p class="text-sm pol-text-2">Please read the policy, then confirm.</p>
               <ui-text-button [text]="busy() ? 'Saving…' : 'I have read and understood'" variant="primary" [disabled]="busy() || readingLoading()" (buttonClick)="acknowledge(p)"></ui-text-button>
             </div>
           }
@@ -236,12 +239,12 @@
 
 <!-- ================= EDITOR DRAWER ================= -->
 @if (editing()) {
-  <div polBodyPortal class="ph-overlay fixed inset-0 flex justify-end bg-gray-900/40" (click)="closeEditor()">
-    <div class="flex h-full w-full max-w-2xl flex-col bg-white shadow-xl" role="dialog" aria-modal="true" aria-labelledby="pol-editor-title" (click)="$event.stopPropagation()">
-      <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+  <div polBodyPortal class="ph-overlay fixed inset-0 flex justify-end pol-scrim" (click)="closeEditor()">
+    <div class="flex h-full w-full max-w-2xl flex-col pol-surface shadow-xl" role="dialog" aria-modal="true" aria-labelledby="pol-editor-title" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between pol-border border-b px-6 py-4">
         <div>
-          <h2 id="pol-editor-title" class="text-lg font-semibold text-gray-900">{{ editingPolicy() ? 'Edit policy' : 'New policy' }}</h2>
-          <p class="text-xs text-gray-500">Write the policy, attach a document, or both. Employees can read and download it once published.</p>
+          <h2 id="pol-editor-title" class="text-lg font-semibold pol-text">{{ editingPolicy() ? 'Edit policy' : 'New policy' }}</h2>
+          <p class="text-xs pol-text-2">Write the policy, attach a document, or both. Employees can read and download it once published.</p>
         </div>
         <ui-icon-button iconName="close" ariaLabel="Close" variant="light" (buttonClick)="closeEditor()"></ui-icon-button>
       </div>
@@ -250,13 +253,13 @@
         <div class="flex-1 space-y-5 overflow-y-auto px-6 py-5">
           <div>
             <ui-text-box id="title" label="Title" placeholder="e.g. Floor and desk management" [maxLength]="limits.titleMax" [parentFormGroup]="editorForm"></ui-text-box>
-            @if (fieldError('title')) { <p class="mt-1 text-xs text-red-600">{{ fieldError('title') }}</p> }
+            @if (fieldError('title')) { <p class="mt-1 text-xs pol-error">{{ fieldError('title') }}</p> }
           </div>
 
           <div class="grid gap-4 sm:grid-cols-2">
             <div>
               <ui-dropdown id="category" label="Category" placeholder="Pick a category" [parentFormGroup]="editorForm" [options]="categoryOptions"></ui-dropdown>
-              @if (fieldError('category')) { <p class="mt-1 text-xs text-red-600">{{ fieldError('category') }}</p> }
+              @if (fieldError('category')) { <p class="mt-1 text-xs pol-error">{{ fieldError('category') }}</p> }
             </div>
             <ui-dropdown id="audience" label="Who it is for" placeholder="Everyone" [isRequired]="false" [parentFormGroup]="editorForm" [options]="audienceOptions"></ui-dropdown>
           </div>
@@ -265,23 +268,23 @@
 
           <div>
             <ui-text-area id="summary" label="Short summary" [rows]="2" [isRequired]="false" [maxLength]="limits.summaryMax" [parentFormGroup]="editorForm"></ui-text-area>
-            @if (fieldError('summary')) { <p class="mt-1 text-xs text-red-600">{{ fieldError('summary') }}</p> }
+            @if (fieldError('summary')) { <p class="mt-1 text-xs pol-error">{{ fieldError('summary') }}</p> }
           </div>
 
           <div>
             <ui-text-area id="content" label="Policy text" [rows]="12" [isRequired]="false" [maxLength]="limits.contentMax" [parentFormGroup]="editorForm"></ui-text-area>
-            <p class="mt-1 text-xs" [ngClass]="fieldError('content') ? 'text-red-600' : 'text-gray-500'">
+            <p class="mt-1 text-xs" [ngClass]="fieldError('content') ? 'pol-error' : 'pol-text-2'">
               {{ fieldError('content') || 'Plain text. Line breaks are kept. Leave empty if the attached document says it all.' }}
             </p>
           </div>
 
           <div class="space-y-2">
             @if (keptFile(); as kf) {
-              <div class="flex items-center gap-3 rounded-xl border border-gray-200 px-4 py-3">
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-xs font-semibold text-indigo-700">{{ fileKind(kf.fileName) }}</span>
+              <div class="flex items-center gap-3 rounded-xl pol-border border px-4 py-3">
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg pol-badge text-xs font-semibold">{{ fileKind(kf.fileName) }}</span>
                 <div class="min-w-0 flex-1">
-                  <p class="truncate text-sm font-medium text-gray-900">{{ kf.fileName }}</p>
-                  <p class="text-xs text-gray-500">{{ fileSize(kf.fileSize) }} · current file</p>
+                  <p class="truncate text-sm font-medium pol-text">{{ kf.fileName }}</p>
+                  <p class="text-xs pol-text-2">{{ fileSize(kf.fileSize) }} · current file</p>
                 </div>
                 <ui-text-button text="Remove" variant="link" size="small" (buttonClick)="dropExistingFile()"></ui-text-button>
               </div>
@@ -290,12 +293,12 @@
                             placeholder="PDF, Word, Excel, PowerPoint, text or image"
                             errorNote="Upload a PDF, Word, Excel, PowerPoint, text or image file."
                             [parentFormGroup]="editorForm" (fileSelectionChange)="onFilePicked($event)"></ui-file-upload>
-            <p class="text-xs" [ngClass]="fieldError('file') ? 'text-red-600' : 'text-gray-500'">
+            <p class="text-xs" [ngClass]="fieldError('file') ? 'pol-error' : 'pol-text-2'">
               {{ fieldError('file') || ('Up to ' + fileSize(limits.fileMaxBytes) + '.' + (removeFile() ? ' The current file will be removed when you save.' : '')) }}
             </p>
           </div>
 
-          <div class="space-y-3 rounded-xl bg-gray-50 px-4 py-4">
+          <div class="space-y-3 rounded-xl pol-surface-muted px-4 py-4">
             <ui-toggle id="requiresAck" label="Employees must acknowledge they have read it" [isRequired]="false" [parentFormGroup]="editorForm"></ui-toggle>
             <ui-toggle id="isPinned" label="Pin to the top of the library" [isRequired]="false" [parentFormGroup]="editorForm"></ui-toggle>
             @if (editingPolicy()?.status === 'Published') {
@@ -305,7 +308,7 @@
         </div>
       }
 
-      <div class="flex flex-wrap justify-end gap-3 border-t border-gray-200 px-6 py-4">
+      <div class="flex flex-wrap justify-end gap-3 pol-border border-t px-6 py-4">
         <ui-text-button text="Cancel" variant="secondary" [disabled]="busy()" (buttonClick)="closeEditor()"></ui-text-button>
         @if (editingPolicy()?.status === 'Published') {
           <ui-text-button [text]="busy() ? 'Saving…' : 'Save changes'" variant="primary" [disabled]="busy()" (buttonClick)="save(true)"></ui-text-button>
@@ -320,12 +323,12 @@
 
 <!-- ================= ACKNOWLEDGEMENTS DRAWER ================= -->
 @if (ackPolicy(); as p) {
-  <div polBodyPortal class="ph-overlay fixed inset-0 flex justify-end bg-gray-900/40" (click)="ackPolicy.set(null)">
-    <div class="flex h-full w-full max-w-lg flex-col bg-white shadow-xl" role="dialog" aria-modal="true" aria-labelledby="pol-ack-title" (click)="$event.stopPropagation()">
-      <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+  <div polBodyPortal class="ph-overlay fixed inset-0 flex justify-end pol-scrim" (click)="ackPolicy.set(null)">
+    <div class="flex h-full w-full max-w-lg flex-col pol-surface shadow-xl" role="dialog" aria-modal="true" aria-labelledby="pol-ack-title" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between pol-border border-b px-6 py-4">
         <div>
-          <h2 id="pol-ack-title" class="text-lg font-semibold text-gray-900">Acknowledgements</h2>
-          <p class="text-xs text-gray-500">{{ p.title }} · v{{ p.version }} · {{ p.ackCount }} of {{ p.audienceCount }}</p>
+          <h2 id="pol-ack-title" class="text-lg font-semibold pol-text">Acknowledgements</h2>
+          <p class="text-xs pol-text-2">{{ p.title }} · v{{ p.version }} · {{ p.ackCount }} of {{ p.audienceCount }}</p>
         </div>
         <ui-icon-button iconName="close" ariaLabel="Close" variant="light" (buttonClick)="ackPolicy.set(null)"></ui-icon-button>
       </div>
@@ -337,21 +340,21 @@
         @if (ackLoading()) {
           <div class="flex justify-center py-10"><ui-loader></ui-loader></div>
         } @else {
-          <ul class="divide-y divide-gray-100">
+          <ul class="pol-divide divide-y">
             @for (r of ackView(); track r.employeeId) {
               <li class="flex items-center gap-3 px-6 py-3">
                 <div class="min-w-0 flex-1">
-                  <p class="text-sm font-medium text-gray-900">{{ r.employeeName }}</p>
-                  <p class="text-xs text-gray-500">{{ r.employeeId }}{{ r.department ? ' · ' + r.department : '' }}</p>
+                  <p class="text-sm font-medium pol-text">{{ r.employeeName }}</p>
+                  <p class="text-xs pol-text-2">{{ r.employeeId }}{{ r.department ? ' · ' + r.department : '' }}</p>
                 </div>
                 @if (r.acknowledgedAt) {
-                  <span class="text-xs text-emerald-700">{{ shortDate(r.acknowledgedAt) }}</span>
+                  <span class="text-xs pol-success">{{ shortDate(r.acknowledgedAt) }}</span>
                 } @else {
-                  <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Pending', v: 'amber' }"></ng-container>
+                  <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Pending', v: 'warning' }"></ng-container>
                 }
               </li>
             } @empty {
-              <li class="px-6 py-10 text-center text-sm text-gray-500">Nobody here.</li>
+              <li class="px-6 py-10 text-center text-sm pol-text-2">Nobody here.</li>
             }
           </ul>
         }
@@ -362,10 +365,10 @@
 
 <!-- ================= DELETE CONFIRM ================= -->
 @if (deleting(); as p) {
-  <div polBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center bg-gray-900/50 p-4" (click)="deleting.set(null)">
-    <div class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl" role="alertdialog" aria-modal="true" (click)="$event.stopPropagation()">
-      <h3 class="text-base font-semibold text-gray-900">Delete "{{ p.title }}"?</h3>
-      <p class="mt-2 text-sm text-gray-600">Employees will no longer see it. Acknowledgement history is kept. To just hide it, archive it instead.</p>
+  <div polBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center pol-scrim p-4" (click)="deleting.set(null)">
+    <div class="w-full max-w-sm rounded-2xl pol-surface p-6 shadow-xl" role="alertdialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <h3 class="text-base font-semibold pol-text">Delete "{{ p.title }}"?</h3>
+      <p class="mt-2 text-sm pol-text-2">Employees will no longer see it. Acknowledgement history is kept. To just hide it, archive it instead.</p>
       <div class="mt-6 flex justify-end gap-3">
         <ui-text-button text="Keep it" variant="secondary" (buttonClick)="deleting.set(null)"></ui-text-button>
         <ui-text-button [text]="busy() ? 'Deleting…' : 'Delete'" variant="danger" [disabled]="busy()" (buttonClick)="confirmDelete()"></ui-text-button>
@@ -376,7 +379,8 @@
 
 <ui-toast-stack polBodyPortal class="ph-overlay ph-overlay--top" position="bottom-right" [toasts]="toasts()" (toastClosed)="dismissToast($event)"></ui-toast-stack>
 
-<!-- Non-interactive pills (shared ui-chip without the hover colour change). -->
+<!-- Non-interactive pills: shared ui-chip coloured from the theme tokens (no hover change). -->
 <ng-template #pill let-text let-v="v">
-  <ui-chip size="status" [text]="text" [usePointerCursor]="false" [variant]="v" [activeBGColor]="chip(v).bg" [activeColor]="chip(v).color"></ui-chip>
+  <ui-chip size="status" [text]="text" [usePointerCursor]="false" [color]="tone(v).color" [bgColor]="tone(v).bg"
+           [activeColor]="tone(v).color" [activeBGColor]="tone(v).bg"></ui-chip>
 </ng-template>

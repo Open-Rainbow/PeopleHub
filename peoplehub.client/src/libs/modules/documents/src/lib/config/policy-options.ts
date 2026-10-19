@@ -1,4 +1,3 @@
-import { ChipVariant } from 'ui';
 import { PolicyCategory, PolicyStatus } from '../models/policy.model';
 
 /** Until login exists the screens act as this employee. */
@@ -46,21 +45,55 @@ export const POLICY_FILE_TYPES: Record<string, string> = {
 
 export const POLICY_FILE_ACCEPT = Object.keys(POLICY_FILE_TYPES).join(',');
 
-export const CATEGORY_STYLES: Record<PolicyCategory, { chip: ChipVariant; icon: string; tint: string }> = {
-  Workplace: { chip: 'lightBlue', icon: 'group', tint: 'bg-sky-50 text-sky-700' },
-  HR: { chip: 'purple', icon: 'person', tint: 'bg-violet-50 text-violet-700' },
-  'IT & Security': { chip: 'darkBlue', icon: 'settings', tint: 'bg-indigo-50 text-indigo-700' },
-  'Leave & Attendance': { chip: 'green', icon: 'calendar', tint: 'bg-emerald-50 text-emerald-700' },
-  Finance: { chip: 'amber', icon: 'dollar', tint: 'bg-amber-50 text-amber-700' },
-  'Code of Conduct': { chip: 'pink', icon: 'info', tint: 'bg-pink-50 text-pink-700' },
-  'Health & Safety': { chip: 'red', icon: 'check_circle_outline', tint: 'bg-rose-50 text-rose-700' },
-  Other: { chip: 'lightGrey', icon: 'copy', tint: 'bg-gray-100 text-gray-700' },
+/** Semantic colours built only from the theme tokens (theme-tokens.css), so light / dark both work. */
+export type PolicyTone = 'primary' | 'info' | 'success' | 'warning' | 'danger' | 'neutral';
+
+const tone = (token: string) => ({
+  color: `color-mix(in srgb, var(${token}) 80%, var(--color-text-primary))`,
+  bg: `color-mix(in srgb, var(${token}) 14%, transparent)`,
+  solid: `var(${token})`,
+});
+
+export const TONES: Record<PolicyTone, { color: string; bg: string; solid: string }> = {
+  primary: tone('--color-primary'),
+  info: tone('--color-primary-soft'),
+  success: tone('--color-success'),
+  warning: tone('--color-warning'),
+  danger: tone('--color-danger'),
+  neutral: {
+    color: 'var(--color-text-secondary)',
+    bg: 'var(--color-surface-muted)',
+    solid: 'var(--color-text-secondary)',
+  },
 };
 
-export const STATUS_CHIPS: Record<PolicyStatus, ChipVariant> = {
-  Published: 'green',
-  Draft: 'amber',
-  Archived: 'lightGrey',
+/** Theme-tinted notice banner colours (ui-notice-banner inputs). */
+export function bannerTone(t: PolicyTone) {
+  const c = TONES[t];
+  return {
+    bannerColor: `color-mix(in srgb, ${c.solid} 10%, var(--color-surface))`,
+    headingColor: c.color,
+    contentColor: 'var(--color-text-primary)',
+    highlighterColor: c.solid,
+    iconColor: c.solid,
+  };
+}
+
+export const CATEGORY_STYLES: Record<PolicyCategory, { tone: PolicyTone; icon: string }> = {
+  Workplace: { tone: 'primary', icon: 'group' },
+  HR: { tone: 'info', icon: 'person' },
+  'IT & Security': { tone: 'primary', icon: 'settings' },
+  'Leave & Attendance': { tone: 'success', icon: 'calendar' },
+  Finance: { tone: 'warning', icon: 'dollar' },
+  'Code of Conduct': { tone: 'neutral', icon: 'info' },
+  'Health & Safety': { tone: 'danger', icon: 'check_circle_outline' },
+  Other: { tone: 'neutral', icon: 'copy' },
+};
+
+export const STATUS_TONES: Record<PolicyStatus, PolicyTone> = {
+  Published: 'success',
+  Draft: 'warning',
+  Archived: 'neutral',
 };
 
 export interface PolicyDemoEmployee {
