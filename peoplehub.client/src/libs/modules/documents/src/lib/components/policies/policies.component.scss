@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+// Overlays are moved to <body> (polBodyPortal). The app header is z-[2000], so stay above it.
+.ph-overlay {
+  z-index: 2100;
+}
+
+.ph-overlay--top {
+  z-index: 2110;
+}
+
+.pol-card:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+.pol-content {
+  overflow-wrap: anywhere;
+}
