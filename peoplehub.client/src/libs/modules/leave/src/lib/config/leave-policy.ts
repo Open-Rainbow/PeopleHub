@@ -68,10 +68,17 @@ export const LEAVE_STATUS_STYLES: Record<LeaveStatus, string> = {
 
 /**
  * Company holidays (yyyy-MM-dd) skipped when counting leave days.
- * Replace with the Holidays module/API once it exists.
+ * Offline fallback only: online, the list comes from GET /api/v1/leave/holidays (org.Holiday).
+ * Keep in sync with the holiday seed in database/leave.sql.
  */
 export const LEAVE_HOLIDAYS: Record<string, string> = {
-  '2026-10-20': 'Diwali',
+  '2026-01-01': 'New Year',
+  '2026-01-26': 'Republic Day',
+  '2026-03-04': 'Holi',
+  '2026-08-15': 'Independence Day',
+  '2026-10-02': 'Gandhi Jayanti',
+  '2026-10-20': 'Dussehra',
+  '2026-11-08': 'Diwali',
   '2026-11-24': 'Guru Nanak Jayanti',
   '2026-12-25': 'Christmas',
   '2027-01-01': 'New Year',
