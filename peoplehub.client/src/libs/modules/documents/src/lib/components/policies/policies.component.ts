@@ -59,7 +59,7 @@ type Tab = 'library' | 'manage';
 
 /** Payload of the shared ui-file-upload (fileSelectionChange). */
 interface UploadSelection {
-  files: { name: string; type: string; size: number; data: string }[];
+  files: { name: string; type: string; size?: number; data: string }[];
   source: string;
 }
 
@@ -383,7 +383,7 @@ export class PoliciesComponent implements OnInit {
   onFilePicked(selection: UploadSelection): void {
     if (selection.source !== 'user') return;
     const f = selection.files[0];
-    this.pickedFile.set(f ? { fileName: f.name, contentType: f.type, size: f.size, data: f.data } : null);
+    this.pickedFile.set(f ? { fileName: f.name, contentType: f.type, size: f.size ?? approxBytes(f.data), data: f.data } : null);
     if (f) this.removeFile.set(false);
     if (this.submitted()) this.errors.set(this.validate(this.draft(false)));
   }
@@ -530,6 +530,12 @@ export class PoliciesComponent implements OnInit {
     const id = ++this.toastId;
     this.toasts.update((list) => [...list, { id, title, type, duration: 4000 }]);
   }
+}
+
+/** Decoded size of a data URI when the upload did not report one. */
+function approxBytes(dataUri: string): number {
+  const i = dataUri.indexOf('base64,');
+  return Math.floor(((i >= 0 ? dataUri.length - i - 7 : dataUri.length) * 3) / 4);
 }
 
 function message(e: unknown): string {
