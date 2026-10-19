@@ -34,6 +34,7 @@ import {
   optionValue,
   PRIORITY_OPTIONS,
   PRIORITY_STYLES,
+  PriorityStyle,
   STATUS_STYLES,
 } from '../../config/announcements/announcement.options';
 import {
@@ -85,7 +86,8 @@ export class AddAnnouncementComponent implements OnInit, OnDestroy {
   readonly categoryOptions = CATEGORY_OPTIONS;
   readonly departmentOptions = DEPARTMENT_OPTIONS;
   readonly audienceOptions = AUDIENCE_OPTIONS;
-  readonly priorityStyles = PRIORITY_STYLES;
+  /** Keyed by string so templates can index it with untyped values (ng-template context, option names). */
+  readonly priorityStyles: Record<string, PriorityStyle> = PRIORITY_STYLES;
   readonly statusStyles = STATUS_STYLES;
   readonly statusTabs: StatusFilter[] = ['All', 'Active', 'Scheduled', 'Expired'];
   readonly priorityFilters: PriorityFilter[] = ['All', 'High', 'Medium', 'Low'];

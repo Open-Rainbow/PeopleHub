@@ -12,7 +12,7 @@ import { IconComponent } from 'ui';
 import { Announcement } from 'common';
 import { AnnouncementsService } from '../../services/announcements.service';
 import { AnnouncementItem } from '../../models/announcement.model';
-import { PRIORITY_STYLES } from '../../config/announcements/announcement.options';
+import { PRIORITY_STYLES, PriorityStyle } from '../../config/announcements/announcement.options';
 import {
   daysUntil,
   formatDate,
@@ -45,7 +45,8 @@ export class AnnouncementsComponent implements OnInit {
     this.inputItems.set(Array.isArray(value) ? value.map(fromLegacyAnnouncement) : null);
   }
 
-  readonly priorityStyles = PRIORITY_STYLES;
+  /** Keyed by string so templates can index it with untyped values (ng-template context, option names). */
+  readonly priorityStyles: Record<string, PriorityStyle> = PRIORITY_STYLES;
   readonly formatDate = formatDate;
   readonly relativeDay = relativeDay;
   readonly initials = initials;
