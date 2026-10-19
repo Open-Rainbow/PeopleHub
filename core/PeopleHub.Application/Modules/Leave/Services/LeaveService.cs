@@ -19,8 +19,11 @@ public sealed class LeaveService(
     private int OrgId => context.RequireOrganizationId();
     private string UserId => string.IsNullOrWhiteSpace(context.UserId) ? "anonymous" : context.UserId!;
 
-    public Task<IReadOnlyList<LeaveTypeDto>> GetTypesAsync(CancellationToken ct) =>
-        List(repository.GetTypesAsync(OrgId, ct));
+    public Task<IReadOnlyList<LeaveTypeDto>> GetTypesAsync(string? employeeId, int? year, CancellationToken ct)
+    {
+        var employee = OptionalEmployee(employeeId);
+        return List(repository.GetTypesAsync(OrgId, employee, employee is null ? null : Year(year), ct));
+    }
 
     public Task<IReadOnlyList<HolidayDto>> GetHolidaysAsync(int? year, CancellationToken ct) =>
         List(repository.GetHolidaysAsync(OrgId, Year(year), ct));
@@ -83,6 +86,11 @@ public sealed class LeaveService(
             ? throw Invalid("employeeId", "Employee id is required.")
             : fromRequest.Trim();
     }
+
+    private string? OptionalEmployee(string? fromRequest) =>
+        context.IsAuthenticated && !string.IsNullOrWhiteSpace(context.UserId)
+            ? context.UserId
+            : string.IsNullOrWhiteSpace(fromRequest) ? null : fromRequest.Trim();
 
     private string? Approver(string? fromRequest) =>
         context.IsAuthenticated && !string.IsNullOrWhiteSpace(context.UserId)

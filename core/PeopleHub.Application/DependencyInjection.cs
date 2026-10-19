@@ -20,6 +20,7 @@ public static class DependencyInjection
         services.AddScoped<IAddEmployeeService, AddEmployeeService>();
         services.AddScoped<IAnnouncementService, AnnouncementService>();
         services.AddScoped<ILeaveService, LeaveService>();
+        services.AddScoped<ILeavePolicyService, LeavePolicyService>();
 
         return services;
     }

@@ -6,7 +6,7 @@ public sealed record ApplyLeaveRequest
     /// <summary>Employee code (EMP00001). Ignored when the caller is authenticated (taken from the token).</summary>
     public string? EmployeeId { get; init; }
 
-    /// <summary>earned | casual | sick | comp-off | loss-of-pay</summary>
+    /// <summary>Leave type code: earned | casual | sick | comp-off | loss-of-pay | any code added in the policy manager.</summary>
     public string? LeaveType { get; init; }
 
     public DateTime? FromDate { get; init; }
@@ -37,11 +37,20 @@ public sealed class LeaveTypeDto
     public string Label { get; set; } = string.Empty;
     public string ShortCode { get; set; } = string.Empty;
     public string? Description { get; set; }
+
+    /// <summary>Allowance + days carried forward from last year. null = no limit.</summary>
     public decimal? AnnualEntitlement { get; set; }
+
+    /// <summary>Days carried forward from last year (already included in AnnualEntitlement).</summary>
+    public decimal CarryIn { get; set; }
+
     public int BackdateDays { get; set; }
     public decimal? MaxConsecutive { get; set; }
     public decimal? DocumentAfterDays { get; set; }
     public bool IsPaid { get; set; }
+
+    /// <summary>Auto | Manager | HR | Manager + HR (from the published leave policy).</summary>
+    public string ApprovalType { get; set; } = "Manager";
 }
 
 public sealed class HolidayDto
@@ -58,6 +67,9 @@ public sealed class LeaveBalanceDto
 
     /// <summary>null = no limit (Loss of Pay).</summary>
     public decimal? Entitlement { get; set; }
+
+    /// <summary>Carried forward from last year (part of Entitlement).</summary>
+    public decimal CarryIn { get; set; }
 
     public decimal Used { get; set; }
     public decimal Pending { get; set; }
@@ -97,7 +109,8 @@ public static class LeaveRules
     public const int NoteMax = 500;
     public const int MaxRangeDays = 366;
 
-    public static readonly string[] LeaveTypes = ["earned", "casual", "sick", "comp-off", "loss-of-pay"];
+    /// <summary>Leave types are configurable (policy manager), so only the code shape is checked here.</summary>
+    public const string LeaveTypePattern = "^[a-z0-9-]{2,20}$";
     public static readonly string[] DayParts = ["full", "first-half", "second-half"];
     public static readonly string[] Statuses = ["All", "Pending", "Approved", "Rejected", "Cancelled"];
 }

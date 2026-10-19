@@ -5,7 +5,7 @@ namespace PeopleHub.Application.Modules.Leave.Interfaces;
 /// <summary>Database calls for leave. Every call is scoped to one organization.</summary>
 public interface ILeaveRepository
 {
-    Task<List<LeaveTypeDto>> GetTypesAsync(int organizationId, CancellationToken ct);
+    Task<List<LeaveTypeDto>> GetTypesAsync(int organizationId, string? employeeId, int? year, CancellationToken ct);
     Task<List<HolidayDto>> GetHolidaysAsync(int organizationId, int year, CancellationToken ct);
     Task<List<LeaveBalanceDto>> GetBalancesAsync(int organizationId, string employeeId, int year, CancellationToken ct);
     Task<List<LeaveRequestDto>> GetRequestsAsync(int organizationId, string employeeId, string? status, CancellationToken ct);

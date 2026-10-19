@@ -9,8 +9,11 @@ namespace PeopleHub.Infrastructure.Modules.Leave;
 /// <summary>One method per leave stored procedure.</summary>
 internal sealed class LeaveRepository(SqlDb db) : ILeaveRepository
 {
-    public Task<List<LeaveTypeDto>> GetTypesAsync(int organizationId, CancellationToken ct) =>
-        db.QueryAsync<LeaveTypeDto>(StoredProcedures.GetTypes, new { OrganizationId = organizationId }, ct);
+    public Task<List<LeaveTypeDto>> GetTypesAsync(int organizationId, string? employeeId, int? year, CancellationToken ct) =>
+        db.QueryAsync<LeaveTypeDto>(
+            StoredProcedures.GetTypes,
+            new { OrganizationId = organizationId, Employee_Id = employeeId, Year = year },
+            ct);
 
     public Task<List<HolidayDto>> GetHolidaysAsync(int organizationId, int year, CancellationToken ct) =>
         db.QueryAsync<HolidayDto>(StoredProcedures.GetHolidays, new { OrganizationId = organizationId, Year = year }, ct);

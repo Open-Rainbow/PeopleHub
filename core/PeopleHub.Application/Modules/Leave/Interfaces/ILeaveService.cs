@@ -4,7 +4,8 @@ namespace PeopleHub.Application.Modules.Leave.Interfaces;
 
 public interface ILeaveService
 {
-    Task<IReadOnlyList<LeaveTypeDto>> GetTypesAsync(CancellationToken ct);
+    /// <summary>With an employee: the rules in force for them (published policy + carry forward). Without: the catalog.</summary>
+    Task<IReadOnlyList<LeaveTypeDto>> GetTypesAsync(string? employeeId, int? year, CancellationToken ct);
     Task<IReadOnlyList<HolidayDto>> GetHolidaysAsync(int? year, CancellationToken ct);
     Task<IReadOnlyList<LeaveBalanceDto>> GetBalancesAsync(string? employeeId, int? year, CancellationToken ct);
     Task<IReadOnlyList<LeaveRequestDto>> GetRequestsAsync(string? employeeId, string? status, CancellationToken ct);

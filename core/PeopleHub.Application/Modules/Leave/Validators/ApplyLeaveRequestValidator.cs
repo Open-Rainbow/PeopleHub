@@ -1,18 +1,21 @@
+using System.Text.RegularExpressions;
 using FluentValidation;
 using PeopleHub.Application.Modules.Leave.Contracts;
 
 namespace PeopleHub.Application.Modules.Leave.Validators;
 
-/// <summary>Shape checks. Balance, overlap, backdating and per-type limits are enforced by sp_apply_leave.</summary>
+/// <summary>Shape checks. Whether the type exists for the employee, balance, overlap, backdating and per-type limits are enforced by sp_apply_leave.</summary>
 public sealed class ApplyLeaveRequestValidator : AbstractValidator<ApplyLeaveRequest>
 {
+    private static readonly Regex TypeCode = new(LeaveRules.LeaveTypePattern, RegexOptions.Compiled);
+
     public ApplyLeaveRequestValidator()
     {
         RuleFor(x => x.LeaveType)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Leave type is required.")
-            .Must(v => LeaveRules.LeaveTypes.Contains(v!.Trim(), StringComparer.OrdinalIgnoreCase))
-            .WithMessage("Leave type must be earned, casual, sick, comp-off or loss-of-pay.");
+            .Must(v => TypeCode.IsMatch(v!.Trim().ToLowerInvariant()))
+            .WithMessage("Leave type is not valid.");
 
         RuleFor(x => x.FromDate).NotNull().WithMessage("Start date is required.");
 

@@ -12,9 +12,10 @@ namespace PeopleHub.Server.Controllers.Leave;
 [Route("api/v1/leave")]
 public sealed class LeaveController(ILeaveService service) : ControllerBase
 {
+    /// <summary>?employeeId=&amp;year= returns the rules in force for that employee (published policy + carry forward).</summary>
     [HttpGet("types")]
-    public async Task<ActionResult<IReadOnlyList<LeaveTypeDto>>> GetTypes(CancellationToken ct)
-        => Ok(await service.GetTypesAsync(ct));
+    public async Task<ActionResult<IReadOnlyList<LeaveTypeDto>>> GetTypes([FromQuery] string? employeeId, [FromQuery] int? year, CancellationToken ct)
+        => Ok(await service.GetTypesAsync(employeeId, year, ct));
 
     [HttpGet("holidays")]
     public async Task<ActionResult<IReadOnlyList<HolidayDto>>> GetHolidays([FromQuery] int? year, CancellationToken ct)

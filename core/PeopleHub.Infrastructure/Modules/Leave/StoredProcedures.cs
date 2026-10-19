@@ -12,4 +12,14 @@ internal static class StoredProcedures
     public const string Apply = "dbo.sp_apply_leave";
     public const string Withdraw = "dbo.sp_withdraw_leave";
     public const string Decide = "dbo.sp_decide_leave";
+
+    // Leave Policy Manager
+    public const string GetEmploymentTypes = "dbo.sp_get_employment_types";
+    public const string GetPolicies = "dbo.sp_get_leave_policies";
+    public const string GetPolicy = "dbo.sp_get_leave_policy";
+    public const string GetPolicyItems = "dbo.sp_get_leave_policy_items";
+    public const string SavePolicyDraft = "dbo.sp_save_leave_policy_draft";
+    public const string PublishPolicy = "dbo.sp_publish_leave_policy";
+    public const string DiscardPolicyDraft = "dbo.sp_discard_leave_policy_draft";
+    public const string CopyPolicy = "dbo.sp_copy_leave_policy";
 }
