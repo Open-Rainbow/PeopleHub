@@ -42,7 +42,7 @@ describe('LeaveService', () => {
   it('counts working days only', () => {
     const mon = monday();
     expect(workingDays(mon, addDaysIso(mon, 6))).toBeLessThanOrEqual(5);
-    expect(workingDays(mon, mon, 'first-half')).toBeLessThanOrEqual(0.5);
+    expect(workingDays(mon, mon, 'first-half')).toBe(0.5);
   });
 
   it('rejects past dates, reversed ranges and short reasons', () => {
@@ -56,7 +56,7 @@ describe('LeaveService', () => {
     expect(errors.fromDate).toBeUndefined();
   });
 
-  it('blocks requests beyond the limits and overlapping requests', () => {
+  it('blocks requests beyond the balance and overlapping requests', () => {
     const tooLong = service.validate(draft({ type: 'comp-off', toDate: addDaysIso(monday(60), 3) }));
     expect(tooLong.toDate || tooLong.balance).toBeTruthy();
 
@@ -78,7 +78,7 @@ describe('LeaveService', () => {
   it('uses server types, holidays and requests once the API answers', () => {
     service.refresh();
     const year = Number(todayIso().slice(0, 4));
-    http.expectOne(`${LEAVE_API}/types`).flush([
+    http.expectOne((req) => req.url.startsWith(`${LEAVE_API}/types?employeeId=`)).flush([
       { code: 'earned', label: 'Earned Leave', shortCode: 'EL', annualEntitlement: 20, backdateDays: 0, maxConsecutive: 15 },
     ]);
     http.expectOne(`${LEAVE_API}/holidays?year=${year}`).flush([{ date: `${year}-12-31T00:00:00`, name: 'Year end', isOptional: false }]);
@@ -93,10 +93,27 @@ describe('LeaveService', () => {
     expect(service.holidays()[`${year}-12-31`]).toBe('Year end');
   });
 
+  it('shows only the types in the employee\'s policy, including new ones', () => {
+    service.refresh();
+    const year = Number(todayIso().slice(0, 4));
+    http.expectOne((req) => req.url.startsWith(`${LEAVE_API}/types?employeeId=`)).flush([
+      { code: 'earned', label: 'Earned Leave', shortCode: 'EL', annualEntitlement: 17, carryIn: 5, backdateDays: 0, maxConsecutive: 15, approvalType: 'Manager' },
+      { code: 'bereavement-leave', label: 'Bereavement Leave', shortCode: 'BER', annualEntitlement: 3, backdateDays: 0, maxConsecutive: null, approvalType: 'Auto' },
+    ]);
+    http.expectOne(`${LEAVE_API}/holidays?year=${year}`).flush([]);
+    http.expectOne(`${LEAVE_API}/holidays?year=${year + 1}`).flush([]);
+    http.expectOne((req) => req.url.startsWith(`${LEAVE_API}/requests`)).flush([]);
+
+    expect(service.types().map((t) => t.key)).toEqual(['earned', 'bereavement-leave']);
+    expect(service.typeOf('earned').carryIn).toBe(5);
+    expect(service.typeOf('bereavement-leave').styles.bar).toBeTruthy();
+    expect(service.typeOf('bereavement-leave').approvalType).toBe('Auto');
+  });
+
   it('posts new requests and swaps in the server copy', () => {
     service.refresh();
     const year = Number(todayIso().slice(0, 4));
-    http.expectOne(`${LEAVE_API}/types`).flush([]);
+    http.expectOne((req) => req.url.startsWith(`${LEAVE_API}/types?employeeId=`)).flush([]);
     http.expectOne(`${LEAVE_API}/holidays?year=${year}`).flush([]);
     http.expectOne(`${LEAVE_API}/holidays?year=${year + 1}`).flush([]);
     http.expectOne((req) => req.url.startsWith(`${LEAVE_API}/requests`)).flush([]);

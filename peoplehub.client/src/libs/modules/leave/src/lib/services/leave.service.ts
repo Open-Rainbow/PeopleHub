@@ -11,7 +11,7 @@ import {
   LeaveTypeConfig,
   LeaveTypeKey,
 } from '../models/leave-request.model';
-import { LEAVE_HOLIDAYS, LEAVE_TYPES, REASON_MAX, REASON_MIN } from '../config/leave-policy';
+import { LEAVE_HOLIDAYS, LEAVE_TYPE_MAP, LEAVE_TYPES, REASON_MAX, REASON_MIN } from '../config/leave-policy';
 import { addDaysIso, rangesOverlap, skippedDays, todayIso, workingDays } from '../utils/leave-date.utils';
 
 /** Backend: PeopleHub.Server LeaveController (proxied by proxy.conf.js). */
@@ -103,7 +103,8 @@ export class LeaveService {
     const get = <T>(url: string) => this.http.get<T>(url).pipe(timeout(API_TIMEOUT_MS));
     this.loading.set(true);
     forkJoin({
-      types: get<Row[]>(`${LEAVE_API}/types`),
+      // Rules in force for this employee: published leave policy for their employment type + carry forward.
+      types: get<Row[]>(`${LEAVE_API}/types?employeeId=${encodeURIComponent(this.employeeId)}&year=${year}`),
       thisYear: get<Row[]>(`${LEAVE_API}/holidays?year=${year}`),
       nextYear: get<Row[]>(`${LEAVE_API}/holidays?year=${year + 1}`),
       requests: get<Row[]>(`${LEAVE_API}/requests?employeeId=${encodeURIComponent(this.employeeId)}`),
@@ -126,7 +127,7 @@ export class LeaveService {
   }
 
   typeOf(key: LeaveTypeKey): LeaveTypeConfig {
-    return this.typeMap()[key] ?? LEAVE_TYPES[0];
+    return this.typeMap()[key] ?? LEAVE_TYPE_MAP[key] ?? neutralType(key, 0);
   }
 
   balanceOf(type: LeaveTypeKey): LeaveBalance {
@@ -269,14 +270,18 @@ export class LeaveService {
     this.refresh();
   }
 
-  /** Server rules (entitlement, limits) + local styles. */
+  /**
+   * The server decides which types this employee has (their published leave policy) and the rules;
+   * the client only adds colors. Types HR created in the policy manager get a neutral style.
+   */
   private mergeTypes(rows: Row[]): LeaveTypeConfig[] {
     const num = (v: unknown) => (v === null || v === undefined || v === '' ? null : Number(v));
-    return LEAVE_TYPES.map((local) => {
-      const row = rows.find((r) => r['code'] === local.key);
-      if (!row) return local;
+    return rows.map((row, index) => {
+      const code = String(row['code'] ?? '');
+      const local = LEAVE_TYPE_MAP[code] ?? neutralType(code, index);
       return {
         ...local,
+        key: code,
         label: String(row['label'] ?? local.label),
         short: String(row['shortCode'] ?? local.short),
         description: String(row['description'] ?? local.description),
@@ -284,6 +289,8 @@ export class LeaveService {
         backdateDays: Number(row['backdateDays'] ?? local.backdateDays),
         maxConsecutive: num(row['maxConsecutive']),
         documentAfterDays: num(row['documentAfterDays']) ?? undefined,
+        approvalType: row['approvalType'] ? String(row['approvalType']) : undefined,
+        carryIn: Number(row['carryIn'] ?? 0),
       };
     });
   }
@@ -325,6 +332,29 @@ export class LeaveService {
     }
     return seedRequests();
   }
+}
+
+const NEUTRAL_STYLES: LeaveTypeConfig['styles'][] = [
+  { chip: 'bg-teal-50 text-teal-700 ring-teal-600/20', bar: 'bg-teal-500', soft: 'bg-teal-50 text-teal-600', ring: 'border-teal-500 ring-teal-500' },
+  { chip: 'bg-pink-50 text-pink-700 ring-pink-600/20', bar: 'bg-pink-500', soft: 'bg-pink-50 text-pink-600', ring: 'border-pink-500 ring-pink-500' },
+  { chip: 'bg-cyan-50 text-cyan-700 ring-cyan-600/20', bar: 'bg-cyan-500', soft: 'bg-cyan-50 text-cyan-600', ring: 'border-cyan-500 ring-cyan-500' },
+  { chip: 'bg-lime-50 text-lime-700 ring-lime-600/20', bar: 'bg-lime-500', soft: 'bg-lime-50 text-lime-600', ring: 'border-lime-500 ring-lime-500' },
+  { chip: 'bg-slate-100 text-slate-700 ring-slate-600/20', bar: 'bg-slate-500', soft: 'bg-slate-100 text-slate-600', ring: 'border-slate-500 ring-slate-500' },
+];
+
+/** Style for a leave type the client doesn't know (added in the Leave Policy Manager). */
+function neutralType(code: string, index: number): LeaveTypeConfig {
+  const words = code.split('-').filter(Boolean);
+  return {
+    key: code,
+    label: words.map((w) => w[0].toUpperCase() + w.slice(1)).join(' ') || 'Leave',
+    short: words.map((w) => w[0]).join('').slice(0, 3).toUpperCase() || 'LV',
+    description: '',
+    entitlement: null,
+    backdateDays: 0,
+    maxConsecutive: null,
+    styles: NEUTRAL_STYLES[index % NEUTRAL_STYLES.length],
+  };
 }
 
 function sum(requests: LeaveRequest[]): number {

@@ -1,421 +1,521 @@
-<div class="w-full min-h-full bg-white">
-  
-  <div class="flex items-start justify-between border-b border-gray-200 pb-5">
-    <div class="flex items-start gap-3">
-      <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-black text-white">
-      </div>
-      <div>
-        <h1 class="text-xl font-semibold text-gray-900">
-          Leave Policy Manager
-        </h1>
-        <p class="mt-0.5 text-sm text-gray-500">
-          Organization-wide leave configuration
-        </p>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="mt-5 flex flex-wrap items-center justify-between gap-4">
-    <div class="flex flex-wrap items-center gap-3">
-      <!-- Year -->
+<section class="space-y-6">
+  <!-- Header -->
+  <header class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div>
       <div class="flex items-center gap-2">
-
-      <ui-dropdown
-  id="policyYear"
-  label="Year"
-  placeholder="Select Year"
-  [options]="yearDropdownOptions"
-  [selectedValue]="selectedYear"
-  (selectedChange)="onYearChange($event)"
-></ui-dropdown>
+        <h1 class="text-2xl font-semibold text-gray-900">Leave Policy Manager</h1>
+        @if (!isOnline() && !loading()) {
+          <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600" title="The API is not reachable. Changes are kept in this browser.">Offline demo data</span>
+        }
       </div>
-
-      <!-- Active -->
-<ui-chip
-  text="Active"
-  color="#059669"
-  bgColor="#ecfdf5"
-  borderColor="#a7f3d0"
-  borderRadius="8px"
-  size="medium"
-  [usePointerCursor]="false"
-></ui-chip>
-
-      <!-- New Year Policy -->
-     <ui-icon-text-button
-  text="New Year Policy"
-  iconName="material-symbols:note-add-outline"
-  iconPosition="left"
-  variant="secondary"
-  size="medium"
-  type="button"
-  [disabled]="false"
-  [isExpanded]="false"
-  (buttonClick)="createNewYearPolicy()"
->
-</ui-icon-text-button>
-
+      <p class="mt-1 text-sm text-gray-500">Define leave types and rules per year and employment type. Employees get the published version.</p>
     </div>
-    <!-- Right actions -->
-    <div class="flex items-center gap-2">
-      <ui-icon-text-button
-  text="Save Draft"
-  iconName="material-symbols:save-outline"
-  iconPosition="left"
-  variant="secondary"
-  size="medium"
-  type="button"
-  (buttonClick)="saveDraft()"
->
-</ui-icon-text-button>
-      <ui-icon-text-button
-  text="Publish"
-  iconName="material-symbols:publish"
-  iconPosition="left"
-  variant="primary"
-  size="medium"
-  type="button"
-  (buttonClick)="publishPolicy()"
->
-</ui-icon-text-button>
-    </div>
-  </div>
-
-  <!-- ================= MAIN CONTENT ================= -->
-  <div class="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_400px]">
-    <!-- ================= LEFT CONTENT ================= -->
-    <div class="min-w-0">
-      <!-- Employment Type -->
-      <div class="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white px-4 py-3 shadow-sm">
-        <div class="flex items-center gap-3">
-          <span class="text-sm font-semibold text-gray-700">
-            Employment Type
-          </span>
-<ui-dropdown
-  id="employmentType"
-  label="Employment Type"
-  placeholder="Select Employment Type"
-  [options]="employmentTypeDropdownOptions"
-  [selectedValue]="selectedEmploymentType"
-  (selectedChange)="onEmploymentTypeChange($event)"
-></ui-dropdown>
-        </div>
-       <ui-icon-text-button
-  text="Add Leave"
-  iconName="material-symbols:add"
-  iconPosition="left"
-  variant="secondary"
-  size="medium"
-  type="button"
-  (buttonClick)="addLeave()"
-></ui-icon-text-button>
-      </div>
-
-      <!-- ================= CATEGORIES ================= -->
-     <div class="mt-5 flex flex-col gap-3">
-  <ui-accordion-group [allowMultiple]="true">
-
-    @for (category of categories; track category.id) {
-
-      <ui-accordion
-        [sectionId]="category.id"
-        [title]="category.name"
-        [isOpen]="category.expanded"
-        variant="primary"
-        [showEditButton]="false"
-      >
-
-        <!-- Category Content -->
-        <div class="rounded-xl border border-gray-200 bg-white p-4">
-
-          @if (getCategoryLeaves(category.id).length > 0) {
-
-            <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-
-              @for (
-                leave of getCategoryLeaves(category.id);
-                track leave.id
-              ) {
-
-                <!-- Leave Card -->
-                <div
-                  class="rounded-xl border border-gray-200 bg-white p-4 transition hover:shadow-sm"
-                >
-
-                  <!-- Card Title -->
-                  <div class="border-b border-gray-200 pb-3">
-                    <h3 class="text-sm font-semibold text-gray-900">
-                      {{ leave.name }}
-                    </h3>
-
-                    <p class="mt-1 text-xs text-gray-500">
-                      {{ leave.description }}
-                    </p>
-                  </div>
-
-                  <!-- Stats -->
-                  <div class="grid grid-cols-2 gap-x-5 gap-y-4 pt-4">
-
-                    <!-- Annual -->
-                    <div class="flex items-start gap-2">
-
-                      <div>
-                        <p
-                          class="text-[10px] font-semibold uppercase tracking-wide text-gray-400"
-                        >
-                          Annual
-                        </p>
-
-                        <p class="mt-0.5 text-xs font-medium text-gray-700">
-                          {{ leave.annualAllowance }} days
-                        </p>
-                      </div>
-                    </div>
-
-                    <!-- Carry Forward -->
-                    <div class="flex items-start gap-2">
-
-                      <div>
-                        <p
-                          class="text-[10px] font-semibold uppercase tracking-wide text-gray-400"
-                        >
-                          Carry Fwd
-                        </p>
-
-                        <p class="mt-0.5 text-xs font-medium text-gray-700">
-                          {{ leave.carryForwardDays }} days
-                        </p>
-                      </div>
-                    </div>
-
-                    <!-- Paid -->
-                    <div class="flex items-start gap-2">
-
-                      <div>
-                        <p
-                          class="text-[10px] font-semibold uppercase tracking-wide text-gray-400"
-                        >
-                          Paid
-                        </p>
-
-                        <p class="mt-0.5 text-xs font-medium text-gray-700">
-                          {{ leave.paidLeave ? 'Yes' : 'No' }}
-                        </p>
-                      </div>
-                    </div>
-
-                    <!-- Encash -->
-                    <div class="flex items-start gap-2">
-
-                      <div>
-                        <p
-                          class="text-[10px] font-semibold uppercase tracking-wide text-gray-400"
-                        >
-                          Encash
-                        </p>
-
-                        <p class="mt-0.5 text-xs font-medium text-gray-700">
-                          {{ leave.enhancementAllowed ? 'Yes' : 'No' }}
-                        </p>
-                      </div>
-                    </div>
-
-                  </div>
-
-                  <!-- Certificate -->
-                  @if (leave.anyCertificates) {
-
-                    <div
-                      class="mt-4 flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-xs font-medium text-blue-600"
-                    >
-
-
-                      <span>
-                        Certificate after
-                        {{ leave.certificateRequiredAfterDays }}
-                        day{{
-                          leave.certificateRequiredAfterDays === 1
-                            ? ''
-                            : 's'
-                        }}
-                      </span>
-                    </div>
-
-                  }
-
-                </div>
-
-              }
-
-            </div>
-
-          } @else {
-
-            <!-- Empty Category -->
-            <div
-              class="flex min-h-[120px] flex-col items-center justify-center text-center"
-            >
-
-
-              <p class="mt-2 text-sm text-gray-500">
-                No leaves in this category yet
-              </p>
-            </div>
-
+    <div class="flex flex-wrap items-center gap-3">
+      <label class="flex items-center gap-2 text-sm text-gray-600">
+        Year
+        <select class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                [ngModel]="year()" (ngModelChange)="selectYear($event)" aria-label="Policy year">
+          @for (y of years; track y) {
+            <option [ngValue]="y">{{ y }}</option>
           }
+        </select>
+      </label>
+      <button type="button" class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              (click)="dialog.set('copy')">
+        <ui-icon name="copy"></ui-icon> New year policy
+      </button>
+    </div>
+  </header>
 
-        </div>
-
-      </ui-accordion>
-
+  <!-- Employment type tabs -->
+  <nav class="flex gap-2 overflow-x-auto border-b border-gray-200" aria-label="Employment type">
+    @for (type of employmentTypes(); track type) {
+      <button type="button"
+              class="-mb-px flex shrink-0 items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors"
+              [class.border-blue-600]="type === employmentType()" [class.text-blue-700]="type === employmentType()"
+              [class.border-transparent]="type !== employmentType()" [class.text-gray-500]="type !== employmentType()"
+              (click)="selectType(type)">
+        {{ type }}
+        <span class="flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-normal text-gray-600">
+          <span class="h-1.5 w-1.5 rounded-full" [ngClass]="tabState(type).tone"></span>{{ tabState(type).label }}
+        </span>
+      </button>
     }
+  </nav>
 
-  </ui-accordion-group>
-</div>
-
+  @if (error()) {
+    <div class="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+      <ui-icon class="mt-0.5 shrink-0" name="info"></ui-icon>
+      <p class="flex-1">{{ error() }}</p>
+      <button type="button" class="text-red-500 hover:text-red-700" (click)="error.set(null)" aria-label="Dismiss"><ui-icon name="close"></ui-icon></button>
     </div>
+  }
 
-
-    <!-- ================= RIGHT SUMMARY ================= -->
-    <aside
-      class="h-fit overflow-hidden rounded-xl border border-gray-200 bg-white"
-    >
-
-      <!-- Summary Header -->
-      <div class="flex items-center justify-between border-b border-gray-200 px-5 py-4">
-
-        <h2 class="text-base font-semibold text-gray-900">
-          Policy Summary
-        </h2>
-
-<ui-chip
-  [text]="selectedYear.toString()"
-  color="#6b7280"
-  bgColor="#f9fafb"
-  borderColor="#e5e7eb"
-  borderRadius="8px"
-  size="status"
-  [usePointerCursor]="false"                
-></ui-chip>
-
+  <!-- Status bar -->
+  <div class="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
+    <div class="flex flex-wrap items-center gap-3">
+      @switch (status()) {
+        @case ('Published') { <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-600/20">Published v{{ policy()?.version }}</span> }
+        @case ('Draft') { <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 ring-1 ring-amber-600/20">Draft v{{ policy()?.version }}</span> }
+        @default { <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">Not set up</span> }
+      }
+      <div class="text-sm text-gray-600">
+        <span class="font-medium text-gray-900">{{ employmentType() }} · {{ year() }}</span>
+        @if (status() === 'None') {
+          <span> · starting from the company defaults</span>
+        } @else if (status() === 'Draft' && policy()?.hasPublished) {
+          <span> · v{{ policy()?.publishedVersion }} stays live until you publish</span>
+        } @else if (status() === 'Draft') {
+          <span> · not live yet, employees get the company defaults</span>
+        } @else if (policy()?.publishedAt) {
+          <span> · live since {{ policy()?.publishedAt | date: 'd MMM y' }}</span>
+        }
       </div>
+      @if (dirty() && status() !== 'None') {
+        <span class="flex items-center gap-1 text-xs font-medium text-amber-600"><span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>Unsaved changes</span>
+      }
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      @if (status() === 'Draft' || (dirty() && status() !== 'None')) {
+        <button type="button" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 disabled:opacity-50" [disabled]="busy()" (click)="resetLocalChanges()">
+          {{ status() === 'Draft' ? 'Discard draft' : 'Undo changes' }}
+        </button>
+      }
+      <button type="button" class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+              [disabled]="busy() || !dirty() || items().length === 0" (click)="saveDraft()">
+        Save draft
+      </button>
+      <button type="button" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              [disabled]="busy() || !canPublish()" (click)="dialog.set('publish')">
+        Publish
+      </button>
+    </div>
+  </div>
 
-
-      <!-- Summary Stats -->
-      <div class="border-b border-gray-200 px-5 py-4">
-        <div class="flex flex-col gap-4">
-          <div class="summary-row flex justify-between">
-            <span class="summary-label">Total Leave Types</span>
-            <strong>{{ summary.totalLeaveTypes }}</strong>
-          </div>
-
-          <div class="summary-row flex justify-between">
-            <span class="summary-label">Total Annual Allowance</span>
-            <strong>{{ summary.totalAnnualAllowance }} days</strong>
-          </div>
-
-          <div class="summary-row flex justify-between">
-            <span class="summary-label">Paid Leaves</span>
-            <strong>{{ summary.paidLeaves }}</strong>
-          </div>
-
-          <div class="summary-row flex justify-between">
-            <span class="summary-label">Unpaid Leaves</span>
-            <strong>{{ summary.unpaidLeaves }}</strong>
-          </div>
-
-          <div class="summary-row flex justify-between">
-            <span class="summary-label">Total Carry Forward</span>
-            <strong>{{ summary.totalCarryForward }} days</strong>
-          </div>
-
-          <div class="summary-row flex justify-between">
-            <span class="summary-label">Encashable Leaves</span>
-            <strong>{{ summary.encashableLeaves }}</strong>
-          </div>
-        </div>
+  @if (loading()) {
+    <div class="grid gap-6 lg:grid-cols-3">
+      <div class="space-y-4 lg:col-span-2">
+        @for (i of [1, 2, 3]; track i) { <div class="h-32 animate-pulse rounded-2xl bg-gray-100"></div> }
       </div>
-
-
-      <!-- Approval Types -->
-      <div class="border-b border-gray-200 px-5 py-4">
-
-        <div class="flex items-center gap-2">
-          <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-600">
-            Approval Types
-          </h3>
-        </div>
-        <div class="mt-4 flex items-center justify-between">
-          <span class="text-sm text-gray-700">
-            Manager
-          </span>
-          <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-600">
-            {{ summary.managerApprovalCount }}
-          </span>
-        </div>
-      </div>
-
-      <!-- Category Breakdown -->
-      <div class="px-5 py-4">
-        <div class="flex items-center gap-2">
-
-          <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-600">
-            Category Breakdown
-          </h3>
+      <div class="h-80 animate-pulse rounded-2xl bg-gray-100"></div>
+    </div>
+  } @else {
+    <div class="grid gap-6 lg:grid-cols-3">
+      <!-- Leave types -->
+      <div class="space-y-4 lg:col-span-2">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div class="relative w-full sm:max-w-xs">
+            <ui-icon class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" name="search"></ui-icon>
+            <input type="search" class="w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                   placeholder="Search leave types" [ngModel]="search()" (ngModelChange)="search.set($event)" aria-label="Search leave types" />
+          </div>
+          <ui-text-button text="Add leave type" (buttonClick)="openAdd()"></ui-text-button>
         </div>
 
-        <div class="mt-4 flex flex-col gap-3">
-          @for (category of categories; track category.id) {
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <span
-                  class="h-1.5 w-1.5 rounded-full"
-                  [class.bg-slate-500]="category.id === 'standard'"
-                  [class.bg-amber-500]="category.id === 'parental'"
-                  [class.bg-blue-500]="category.id === 'additional'"
-                ></span>
-                <span class="text-sm text-gray-700">
-                  {{ category.name }}
-                </span>
+        @for (group of groups(); track group.category.id) {
+          <section class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <button type="button" class="flex w-full items-center justify-between gap-3 px-5 py-4 text-left hover:bg-gray-50" (click)="toggleCategory(group.category.id)"
+                    [attr.aria-expanded]="!collapsed()[group.category.id]">
+              <div class="flex items-center gap-3">
+                <span class="h-8 w-1 rounded-full" [ngClass]="group.category.styles.bar"></span>
+                <div>
+                  <h2 class="text-base font-semibold text-gray-900">{{ group.category.label }}</h2>
+                  <p class="text-xs text-gray-500">{{ group.category.hint }}</p>
+                </div>
               </div>
-              <div class="flex items-center gap-5">
-                <span class="text-xs font-semibold text-gray-500">
-                  {{ getCategoryLeaves(category.id).length }}
-                </span>
-                <span class="text-xs font-semibold text-gray-700">
-                  {{ getCategoryAllowance(category.id) }} days
-                </span>
+              <div class="flex items-center gap-3 text-xs text-gray-500">
+                <span>{{ group.total }} {{ group.total === 1 ? 'type' : 'types' }}</span>
+                <span class="rounded-full px-2 py-0.5 font-medium" [ngClass]="group.category.styles.soft">{{ group.days }} days</span>
+                <span class="text-gray-400 transition-transform" [class.rotate-180]="!collapsed()[group.category.id]">▾</span>
               </div>
+            </button>
+
+            @if (!collapsed()[group.category.id]) {
+              <div class="space-y-3 border-t border-gray-100 p-4">
+                @for (row of group.rows; track row.item.code || row.index) {
+                  @let item = row.item;
+                  @let change = changeOf(item);
+                  <article class="group relative rounded-xl border border-gray-200 p-4 transition hover:border-gray-300 hover:shadow-sm">
+                    <div class="flex items-start justify-between gap-3">
+                      <div class="min-w-0">
+                        <div class="flex flex-wrap items-center gap-2">
+                          <h3 class="font-semibold text-gray-900">{{ item.label }}</h3>
+                          @if (item.code) { <code class="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500">{{ item.code }}</code> }
+                          @if (change?.kind === 'added') { <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">New</span> }
+                          @if (change?.kind === 'changed') {
+                            <span class="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700" [title]="'Changed: ' + change?.fields?.join(', ')">Edited</span>
+                          }
+                        </div>
+                        @if (item.description) { <p class="mt-1 text-sm text-gray-500">{{ item.description }}</p> }
+                      </div>
+                      <div class="flex shrink-0 items-center gap-1 opacity-100 sm:opacity-0 sm:transition sm:group-hover:opacity-100 sm:focus-within:opacity-100">
+                        <button type="button" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900" (click)="openEdit(row.index)" [attr.aria-label]="'Edit ' + item.label" title="Edit"><ui-icon name="edit"></ui-icon></button>
+                        <button type="button" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900" (click)="duplicate(row.index)" [attr.aria-label]="'Duplicate ' + item.label" title="Duplicate"><ui-icon name="copy"></ui-icon></button>
+                        <button type="button" class="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600" (click)="askRemove(row.index)" [attr.aria-label]="'Remove ' + item.label" title="Remove"><ui-icon name="delete"></ui-icon></button>
+                      </div>
+                    </div>
+
+                    <dl class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                      <div class="rounded-lg bg-gray-50 px-3 py-2">
+                        <dt class="text-xs text-gray-500">Annual</dt>
+                        <dd class="text-sm font-semibold text-gray-900">{{ daysLabel(item.annualAllowance) }}</dd>
+                      </div>
+                      <div class="rounded-lg bg-gray-50 px-3 py-2">
+                        <dt class="text-xs text-gray-500">Carry forward</dt>
+                        <dd class="text-sm font-semibold text-gray-900">{{ item.carryForwardDays ? daysLabel(item.carryForwardDays) : 'None' }}</dd>
+                      </div>
+                      <div class="rounded-lg bg-gray-50 px-3 py-2">
+                        <dt class="text-xs text-gray-500">Max per request</dt>
+                        <dd class="text-sm font-semibold text-gray-900">{{ item.maxConsecutive === null ? 'No limit' : daysLabel(item.maxConsecutive) }}</dd>
+                      </div>
+                      <div class="rounded-lg bg-gray-50 px-3 py-2">
+                        <dt class="text-xs text-gray-500">Basis</dt>
+                        <dd class="text-sm font-semibold text-gray-900">{{ item.allowanceBasis }}</dd>
+                      </div>
+                    </dl>
+
+                    <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                      <span class="rounded-full px-2 py-0.5 font-medium" [ngClass]="item.isPaid ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-600'">{{ item.isPaid ? 'Paid' : 'Unpaid' }}</span>
+                      <span class="rounded-full px-2 py-0.5 font-medium" [ngClass]="approvalStyles[item.approvalType]">{{ item.approvalType === 'Auto' ? 'Auto-approved' : item.approvalType + ' approval' }}</span>
+                      @if (item.isEncashable) { <span class="rounded-full bg-teal-50 px-2 py-0.5 font-medium text-teal-700">Encashable</span> }
+                      @if (item.certificateRequired) { <span class="rounded-full bg-rose-50 px-2 py-0.5 font-medium text-rose-700">Certificate after {{ daysLabel(item.certificateAfterDays) }}</span> }
+                      @if (item.backdateDays > 0) { <span class="rounded-full bg-sky-50 px-2 py-0.5 font-medium text-sky-700">Backdate {{ daysLabel(item.backdateDays) }}</span> }
+                      @if (item.mustBeTakenWithinMonths) { <span class="rounded-full bg-orange-50 px-2 py-0.5 font-medium text-orange-700">Use within {{ item.mustBeTakenWithinMonths }} mo</span> }
+                    </div>
+                  </article>
+                } @empty {
+                  <div class="flex flex-col items-center gap-2 rounded-xl border border-dashed border-gray-300 px-4 py-8 text-center">
+                    <p class="text-sm text-gray-500">{{ search() ? 'No leave types match your search.' : 'No ' + group.category.label.toLowerCase() + ' leave in this policy.' }}</p>
+                    @if (!search()) {
+                      <button type="button" class="text-sm font-medium text-blue-600 hover:text-blue-700" (click)="openAdd(group.category.id)">+ Add {{ group.category.label.toLowerCase() }} leave</button>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </section>
+        }
+      </div>
+
+      <!-- Summary -->
+      <aside class="space-y-4 lg:sticky lg:top-6 lg:self-start">
+        <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h2 class="text-sm font-semibold text-gray-900">Policy summary</h2>
+          <div class="mt-4 grid grid-cols-2 gap-3">
+            <div class="rounded-xl bg-blue-50 p-3">
+              <p class="text-xs text-blue-700">Paid days / year</p>
+              <p class="text-2xl font-semibold text-blue-900">{{ summary().totalDays }}</p>
+            </div>
+            <div class="rounded-xl bg-gray-50 p-3">
+              <p class="text-xs text-gray-600">Leave types</p>
+              <p class="text-2xl font-semibold text-gray-900">{{ summary().types }}</p>
+            </div>
+            <div class="rounded-xl bg-gray-50 p-3">
+              <p class="text-xs text-gray-600">Max carry forward</p>
+              <p class="text-lg font-semibold text-gray-900">{{ summary().carryForward }} days</p>
+            </div>
+            <div class="rounded-xl bg-gray-50 p-3">
+              <p class="text-xs text-gray-600">Unpaid types</p>
+              <p class="text-lg font-semibold text-gray-900">{{ summary().unpaid }}</p>
+            </div>
+          </div>
+
+          <h3 class="mt-5 text-xs font-semibold uppercase tracking-wide text-gray-500">Paid days by category</h3>
+          <div class="mt-2 flex h-2 overflow-hidden rounded-full bg-gray-100">
+            @for (c of summary().byCategory; track c.category.id) {
+              <div [ngClass]="c.category.styles.bar" [style.width.%]="c.share"></div>
+            }
+          </div>
+          <ul class="mt-3 space-y-2 text-sm">
+            @for (c of summary().byCategory; track c.category.id) {
+              <li class="flex items-center justify-between">
+                <span class="flex items-center gap-2 text-gray-600"><span class="h-2 w-2 rounded-full" [ngClass]="c.category.styles.dot"></span>{{ c.category.label }}</span>
+                <span class="font-medium text-gray-900">{{ c.days }} days · {{ c.count }}</span>
+              </li>
+            }
+          </ul>
+
+          @if (summary().byApproval.length) {
+            <h3 class="mt-5 text-xs font-semibold uppercase tracking-wide text-gray-500">Approval</h3>
+            <div class="mt-2 flex flex-wrap gap-2">
+              @for (a of summary().byApproval; track a.id) {
+                <span class="rounded-full px-2 py-0.5 text-xs font-medium" [ngClass]="approvalStyles[a.id]">{{ a.id }} · {{ a.count }}</span>
+              }
             </div>
           }
+          <p class="mt-4 text-xs text-gray-500">{{ summary().encashable }} encashable · {{ summary().certificate }} need a certificate</p>
+        </div>
+
+        <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h2 class="flex items-center gap-2 text-sm font-semibold text-gray-900"><ui-icon name="history"></ui-icon> Changes since published</h2>
+          @if (!policy()?.hasPublished) {
+            <p class="mt-3 text-sm text-gray-500">Nothing published yet for {{ employmentType() }} {{ year() }}. Publishing makes this policy live for employees.</p>
+          } @else if (changes().length === 0) {
+            <p class="mt-3 text-sm text-gray-500">Same as live version v{{ policy()?.publishedVersion }}.</p>
+          } @else {
+            <ul class="mt-3 space-y-2 text-sm">
+              @for (c of changes(); track c.code + c.kind) {
+                <li class="flex items-start gap-2">
+                  <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full"
+                        [ngClass]="c.kind === 'added' ? 'bg-emerald-500' : c.kind === 'removed' ? 'bg-red-500' : 'bg-amber-500'"></span>
+                  <span class="text-gray-700">
+                    <span class="font-medium text-gray-900">{{ c.label }}</span>
+                    {{ c.kind === 'added' ? 'added' : c.kind === 'removed' ? 'removed' : ': ' + c.fields.join(', ') }}
+                  </span>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      </aside>
+    </div>
+  }
+</section>
+
+<!-- Add / edit leave type drawer -->
+@if (drawerOpen()) {
+  <div leaveBodyPortal class="ph-overlay fixed inset-0 flex justify-end bg-gray-900/40" (click)="closeDrawer()">
+    <div class="flex h-full w-full max-w-xl flex-col bg-white shadow-xl" role="dialog" aria-modal="true" aria-labelledby="lm-drawer-title" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+        <div>
+          <h2 id="lm-drawer-title" class="text-lg font-semibold text-gray-900">{{ editingIndex() === null ? 'Add leave type' : 'Edit ' + (form().label || 'leave type') }}</h2>
+          <p class="text-sm text-gray-500">{{ employmentType() }} · {{ year() }}</p>
+        </div>
+        <button type="button" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100" (click)="closeDrawer()" aria-label="Close"><ui-icon name="close"></ui-icon></button>
+      </div>
+
+      <div class="flex-1 space-y-6 overflow-y-auto px-6 py-5">
+        <!-- Basics -->
+        <div class="space-y-4">
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700" for="lm-label">Name</label>
+            <input id="lm-label" class="lm-input" [class.lm-input--error]="fieldError('label')" maxlength="50" placeholder="e.g. Bereavement Leave"
+                   [ngModel]="form().label" (ngModelChange)="patch('label', $event)" />
+            <div class="mt-1 flex justify-between text-xs">
+              <span class="text-red-600">{{ fieldError('label') }}</span>
+              <span class="text-gray-400">Code: <code>{{ codePreview() }}</code></span>
+            </div>
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700" for="lm-desc">Description <span class="font-normal text-gray-400">(shown to employees)</span></label>
+            <textarea id="lm-desc" rows="2" class="lm-input min-h-16" [maxlength]="limits.descriptionMax"
+                      [ngModel]="form().description" (ngModelChange)="patch('description', $event)"></textarea>
+            <p class="mt-1 text-right text-xs text-gray-400">{{ form().description.length }}/{{ limits.descriptionMax }}</p>
+          </div>
+          <div>
+            <span class="mb-1 block text-sm font-medium text-gray-700">Category</span>
+            <div class="grid grid-cols-3 gap-2">
+              @for (c of categories; track c.id) {
+                <button type="button" class="rounded-lg border px-3 py-2 text-sm font-medium transition"
+                        [ngClass]="form().category === c.id ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-300 text-gray-600 hover:bg-gray-50'"
+                        (click)="patch('category', c.id)">{{ c.label }}</button>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Allowance -->
+        <fieldset class="space-y-4 rounded-xl border border-gray-200 p-4">
+          <legend class="px-1 text-sm font-semibold text-gray-900">Allowance</legend>
+          <div class="flex flex-wrap gap-4">
+            <label class="lm-switch">
+              <input type="checkbox" [ngModel]="form().isPaid" (ngModelChange)="patch('isPaid', $event)" />
+              <span>Paid leave</span>
+            </label>
+            @if (!form().isPaid) {
+              <label class="lm-switch">
+                <input type="checkbox" [ngModel]="form().annualAllowance === null" (ngModelChange)="setUnlimited($event)" />
+                <span>Unlimited</span>
+              </label>
+            }
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="mb-1 block text-sm text-gray-700" for="lm-allow">Days per year</label>
+              <input id="lm-allow" type="number" min="0" max="365" step="0.5" class="lm-input" [class.lm-input--error]="fieldError('annualAllowance')"
+                     [disabled]="form().annualAllowance === null && !form().isPaid" [placeholder]="form().annualAllowance === null ? 'Unlimited' : ''"
+                     [ngModel]="form().annualAllowance" (ngModelChange)="patchNumber('annualAllowance', $event)" />
+              <p class="mt-1 text-xs text-red-600">{{ fieldError('annualAllowance') }}</p>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm text-gray-700" for="lm-basis">Credited</label>
+              <select id="lm-basis" class="lm-input" [ngModel]="form().allowanceBasis" (ngModelChange)="patch('allowanceBasis', $event)">
+                @for (b of bases; track b.id) { <option [ngValue]="b.id">{{ b.id }}</option> }
+              </select>
+              <p class="mt-1 text-xs text-gray-400">{{ basisHint() }}</p>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm text-gray-700" for="lm-carry">Carry forward (days)</label>
+              <input id="lm-carry" type="number" min="0" step="0.5" class="lm-input" [class.lm-input--error]="fieldError('carryForwardDays')"
+                     [disabled]="form().annualAllowance === null" [ngModel]="form().carryForwardDays" (ngModelChange)="patchNumber('carryForwardDays', $event)" />
+              <p class="mt-1 text-xs text-red-600">{{ fieldError('carryForwardDays') }}</p>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm text-gray-700" for="lm-within">Use within (months)</label>
+              <input id="lm-within" type="number" min="1" max="24" class="lm-input" placeholder="Any time" [class.lm-input--error]="fieldError('mustBeTakenWithinMonths')"
+                     [ngModel]="form().mustBeTakenWithinMonths" (ngModelChange)="patchNumber('mustBeTakenWithinMonths', $event)" />
+              <p class="mt-1 text-xs text-red-600">{{ fieldError('mustBeTakenWithinMonths') }}</p>
+            </div>
+          </div>
+          <label class="lm-switch" [class.opacity-50]="!form().isPaid">
+            <input type="checkbox" [disabled]="!form().isPaid" [ngModel]="form().isEncashable" (ngModelChange)="patch('isEncashable', $event)" />
+            <span>Unused days can be encashed</span>
+          </label>
+        </fieldset>
+
+        <!-- Request rules -->
+        <fieldset class="space-y-4 rounded-xl border border-gray-200 p-4">
+          <legend class="px-1 text-sm font-semibold text-gray-900">Request rules</legend>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="mb-1 block text-sm text-gray-700" for="lm-max">Max days per request</label>
+              <input id="lm-max" type="number" min="0.5" max="365" step="0.5" class="lm-input" placeholder="No limit" [class.lm-input--error]="fieldError('maxConsecutive')"
+                     [ngModel]="form().maxConsecutive" (ngModelChange)="patchNumber('maxConsecutive', $event)" />
+              <p class="mt-1 text-xs text-red-600">{{ fieldError('maxConsecutive') }}</p>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm text-gray-700" for="lm-back">Can backdate (days)</label>
+              <input id="lm-back" type="number" min="0" max="30" class="lm-input" [class.lm-input--error]="fieldError('backdateDays')"
+                     [ngModel]="form().backdateDays" (ngModelChange)="patchNumber('backdateDays', $event)" />
+              <p class="mt-1 text-xs text-red-600">{{ fieldError('backdateDays') }}</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <label class="lm-switch">
+              <input type="checkbox" [ngModel]="form().certificateRequired" (ngModelChange)="patch('certificateRequired', $event)" />
+              <span>Certificate required</span>
+            </label>
+            @if (form().certificateRequired) {
+              <span class="flex items-center gap-2 text-sm text-gray-600">
+                after
+                <input type="number" min="0.5" step="0.5" class="lm-input w-20" aria-label="Certificate after days" [class.lm-input--error]="fieldError('certificateAfterDays')"
+                       [ngModel]="form().certificateAfterDays" (ngModelChange)="patchNumber('certificateAfterDays', $event)" />
+                days
+              </span>
+            }
+          </div>
+          @if (fieldError('certificateAfterDays')) { <p class="text-xs text-red-600">{{ fieldError('certificateAfterDays') }}</p> }
+        </fieldset>
+
+        <!-- Approval -->
+        <div>
+          <span class="mb-2 block text-sm font-semibold text-gray-900">Approval</span>
+          <div class="grid grid-cols-2 gap-2">
+            @for (a of approvals; track a.id) {
+              <button type="button" class="rounded-xl border p-3 text-left transition"
+                      [ngClass]="form().approvalType === a.id ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600' : 'border-gray-200 hover:bg-gray-50'"
+                      (click)="patch('approvalType', a.id)">
+                <span class="block text-sm font-medium text-gray-900">{{ a.id }}</span>
+                <span class="block text-xs text-gray-500">{{ a.hint }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="rounded-xl bg-gray-50 p-4 text-sm text-gray-600">
+          <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-500">Employees will see</p>
+          <p>
+            <span class="font-medium text-gray-900">{{ form().label || 'This leave' }}</span>:
+            {{ form().annualAllowance === null ? 'no yearly limit' : daysLabel(form().annualAllowance) + ' a year' }}{{ form().isPaid ? '' : ' (unpaid)' }}{{ form().carryForwardDays ? ', up to ' + daysLabel(form().carryForwardDays) + ' carried into next year' : '' }}.
+            {{ form().maxConsecutive === null ? '' : 'At most ' + daysLabel(form().maxConsecutive) + ' per request. ' }}{{ form().approvalType === 'Auto' ? 'Approved automatically.' : 'Needs ' + form().approvalType + ' approval.' }}
+          </p>
         </div>
       </div>
-    </aside>
+
+      <div class="flex items-center justify-end gap-3 border-t border-gray-200 px-6 py-4">
+        @if (submitted() && !formValid()) { <p class="mr-auto text-xs text-red-600">Fix the highlighted fields.</p> }
+        <ui-text-button text="Cancel" variant="secondary" (buttonClick)="closeDrawer()"></ui-text-button>
+        <ui-text-button [text]="editingIndex() === null ? 'Add to policy' : 'Update'" (buttonClick)="saveItem()"></ui-text-button>
+      </div>
+    </div>
   </div>
-
-@if (showAddLeave) {
-
-  <!-- Backdrop -->
-  <div
-    class="fixed inset-0 z-[999] bg-black/50"
-    (click)="closeAddLeave()"
-  ></div>
-
-  <!-- Right Side Drawer -->
-  <div
-    class="fixed right-0 top-0 z-[1000] h-screen w-full max-w-[420px] bg-white shadow-2xl"
-    (click)="$event.stopPropagation()"
-  >
-
-    <leave-management-add-leave-type
-      (close)="closeAddLeave()"
-      (save)="onSaveLeave($event)"
-    ></leave-management-add-leave-type>
-
-  </div>
-
 }
 
-</div>
-                                                                                                                                                                                        
+<!-- Remove confirmation -->
+@if (pendingRemove() !== null) {
+  <div leaveBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center bg-gray-900/50 p-4" (click)="pendingRemove.set(null)">
+    <div class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl" role="alertdialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <h2 class="text-lg font-semibold text-gray-900">Remove {{ items()[pendingRemove()!]?.label }}?</h2>
+      <p class="mt-2 text-sm text-gray-500">Employees on this policy won't be able to apply for it once you publish. Existing requests stay.</p>
+      <div class="mt-6 flex justify-end gap-3">
+        <ui-text-button text="Keep it" variant="secondary" (buttonClick)="pendingRemove.set(null)"></ui-text-button>
+        <button type="button" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700" (click)="confirmRemove()">Remove</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Dialogs -->
+@if (dialog()) {
+  <div leaveBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center bg-gray-900/50 p-4" (click)="dialog.set(null)">
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      @switch (dialog()) {
+        @case ('publish') {
+          <h2 class="text-lg font-semibold text-gray-900">Publish {{ employmentType() }} {{ year() }}?</h2>
+          <p class="mt-2 text-sm text-gray-500">
+            New leave requests from {{ employmentType() }} employees will follow this policy right away.
+            @if (policy()?.hasPublished) { Version {{ policy()?.publishedVersion }} will be archived. }
+          </p>
+          @if (changes().length) {
+            <ul class="mt-4 max-h-40 space-y-1 overflow-y-auto rounded-lg bg-gray-50 p-3 text-sm text-gray-700">
+              @for (c of changes(); track c.code + c.kind) {
+                <li><span class="font-medium">{{ c.label }}</span> {{ c.kind === 'changed' ? ': ' + c.fields.join(', ') : c.kind }}</li>
+              }
+            </ul>
+          }
+          @if (dirty()) { <p class="mt-3 text-xs text-gray-500">Your unsaved changes are saved first.</p> }
+          <div class="mt-6 flex justify-end gap-3">
+            <ui-text-button text="Cancel" variant="secondary" (buttonClick)="dialog.set(null)"></ui-text-button>
+            <ui-text-button text="Publish" (buttonClick)="publish()"></ui-text-button>
+          </div>
+        }
+        @case ('discard') {
+          <h2 class="text-lg font-semibold text-gray-900">{{ status() === 'Draft' ? 'Discard this draft?' : 'Undo your changes?' }}</h2>
+          <p class="mt-2 text-sm text-gray-500">
+            {{ status() === 'Draft' ? (policy()?.hasPublished ? 'You go back to live version v' + policy()?.publishedVersion + '.' : 'You go back to the company defaults.') : 'The policy goes back to the last saved version.' }}
+          </p>
+          <div class="mt-6 flex justify-end gap-3">
+            <ui-text-button text="Keep editing" variant="secondary" (buttonClick)="dialog.set(null)"></ui-text-button>
+            <button type="button" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700" (click)="discard()">Discard</button>
+          </div>
+        }
+        @case ('copy') {
+          <h2 class="text-lg font-semibold text-gray-900">Start {{ year() }} from another year</h2>
+          <p class="mt-2 text-sm text-gray-500">Creates {{ year() }} drafts from that year's published policy. Policies that already exist for {{ year() }} are left alone.</p>
+          <div class="mt-4 space-y-4">
+            <label class="block text-sm text-gray-700">
+              Copy from
+              <select class="lm-input mt-1" [ngModel]="copySource()" (ngModelChange)="copySource.set($event)">
+                @for (y of years; track y) { @if (y !== year()) { <option [ngValue]="y">{{ y }}</option> } }
+              </select>
+            </label>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" class="rounded-lg border px-3 py-2 text-sm" [ngClass]="!copyAll() ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-300 text-gray-600'" (click)="copyAll.set(false)">{{ employmentType() }} only</button>
+              <button type="button" class="rounded-lg border px-3 py-2 text-sm" [ngClass]="copyAll() ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-300 text-gray-600'" (click)="copyAll.set(true)">All employment types</button>
+            </div>
+          </div>
+          <div class="mt-6 flex justify-end gap-3">
+            <ui-text-button text="Cancel" variant="secondary" (buttonClick)="dialog.set(null)"></ui-text-button>
+            <ui-text-button text="Create drafts" (buttonClick)="copy()"></ui-text-button>
+          </div>
+        }
+        @case ('leave') {
+          <h2 class="text-lg font-semibold text-gray-900">Leave without saving?</h2>
+          <p class="mt-2 text-sm text-gray-500">You have unsaved changes to {{ employmentType() }} {{ year() }}.</p>
+          <div class="mt-6 flex justify-end gap-3">
+            <ui-text-button text="Stay" variant="secondary" (buttonClick)="dialog.set(null)"></ui-text-button>
+            <button type="button" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700" (click)="confirmLeave()">Discard and switch</button>
+          </div>
+        }
+      }
+    </div>
+  </div>
+}
+
+@if (toast()) {
+  <div leaveBodyPortal class="ph-overlay ph-overlay--top fixed bottom-6 right-6 flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-3 text-sm font-medium text-white shadow-lg" role="status">
+    <ui-icon class="text-emerald-400" name="check_circle_outline"></ui-icon>
+    {{ toast() }}
+  </div>
+}
