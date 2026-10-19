@@ -1,50 +1,395 @@
-    <div class="w-full p-5 rounded-lg bg-white border border-gray-200">
-      <div class="flex justify-between items-center mb-5">
-        <div>
-          <h2 class="text-xl font-semibold">Apply Leave</h2>
-          <p class="text-sm text-gray-500">Submit and track your leave requests</p>
-        </div>
-        <ui-text-button text="New Request" (buttonClick)="openForm.set(!openForm())"></ui-text-button>
-      </div>
+<section class="flex flex-col gap-6 p-6">
+  <!-- Header -->
+  <header class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-semibold text-gray-900">Apply Leave</h1>
+      <p class="mt-1 text-sm text-gray-500">Check your balance, request time off and track approvals.</p>
+    </div>
+    <ui-text-button text="Apply leave" (buttonClick)="openForm()"></ui-text-button>
+  </header>
 
-      <div class="grid grid-cols-4 gap-3 mb-6">
-        @for (card of leaveCards; track card.label) {
-          <div class="rounded-lg border p-4" [style.background]="card.bg">
-            <div class="text-xs text-gray-500">{{ card.label }}</div>
-            <div class="text-2xl font-semibold" [style.color]="card.color">{{ card.value }}</div>
+  <!-- Summary + upcoming -->
+  <div class="grid gap-4 lg:grid-cols-3">
+    <div class="grid grid-cols-3 gap-4 lg:col-span-2">
+      <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div class="text-sm text-gray-500">Available</div>
+        <div class="mt-1 text-3xl font-semibold text-emerald-600">{{ totals().available }}</div>
+        <div class="text-xs text-gray-400">of {{ totals().entitlement }} days this year</div>
+      </div>
+      <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div class="text-sm text-gray-500">Taken</div>
+        <div class="mt-1 text-3xl font-semibold text-gray-900">{{ totals().used }}</div>
+        <div class="text-xs text-gray-400">approved days</div>
+      </div>
+      <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+        <div class="text-sm text-gray-500">Awaiting approval</div>
+        <div class="mt-1 text-3xl font-semibold text-amber-500">{{ totals().pending }}</div>
+        <div class="text-xs text-gray-400">days pending</div>
+      </div>
+    </div>
+
+    @if (upcoming(); as next) {
+      <div class="flex items-center gap-4 rounded-2xl border border-blue-200 bg-blue-50 p-4">
+        <span class="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-white text-blue-700 shadow-sm">
+          <span class="text-xs font-medium uppercase">{{ weekdayName(next.fromDate) }}</span>
+          <span class="text-lg font-semibold leading-none">{{ next.fromDate.slice(8, 10) }}</span>
+        </span>
+        <div class="min-w-0">
+          <div class="text-xs font-semibold uppercase tracking-wide text-blue-700">
+            {{ upcomingIn()! <= 0 ? 'On leave now' : upcomingIn() === 1 ? 'Next leave: tomorrow' : 'Next leave in ' + upcomingIn() + ' days' }}
           </div>
+          <div class="truncate font-medium text-gray-900">{{ typeMap[next.type].label }} · {{ formatRange(next.fromDate, next.toDate) }}</div>
+          <div class="text-xs text-gray-500">{{ formatDays(next.days) }} · {{ next.status }}</div>
+        </div>
+      </div>
+    } @else {
+      <div class="flex items-center gap-4 rounded-2xl border border-dashed border-gray-300 bg-white p-4">
+        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-xl text-gray-400">
+          <ui-icon name="calendar"></ui-icon>
+        </span>
+        <div>
+          <div class="font-medium text-gray-900">No upcoming leave</div>
+          <div class="text-sm text-gray-500">Time for a break? Your balance is waiting.</div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Balance per type -->
+  <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+    @for (b of balances(); track b.type.key) {
+      <button
+        type="button"
+        class="group flex flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-4 text-left shadow-sm transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        [title]="'Apply ' + b.type.label"
+        (click)="openForm(b.type.key)"
+      >
+        <div class="flex items-center justify-between gap-2">
+          <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset" [ngClass]="b.type.styles.chip">{{ b.type.short }}</span>
+          <span class="text-xs font-medium text-blue-600 opacity-0 transition group-hover:opacity-100">Apply →</span>
+        </div>
+        <div>
+          <div class="text-sm font-medium text-gray-900">{{ b.type.label }}</div>
+          @if (b.available !== null) {
+            <div class="mt-1 flex items-baseline gap-1">
+              <span class="text-2xl font-semibold text-gray-900">{{ b.available }}</span>
+              <span class="text-sm text-gray-400">/ {{ b.entitlement }} left</span>
+            </div>
+          } @else {
+            <div class="mt-1 text-2xl font-semibold text-gray-900">{{ b.used + b.pending }} <span class="text-sm font-normal text-gray-400">taken</span></div>
+          }
+        </div>
+        @if (b.entitlement) {
+          <div class="flex h-2 overflow-hidden rounded-full bg-gray-100" role="presentation">
+            <span class="h-full" [ngClass]="b.type.styles.bar" [style.width.%]="usedPercent(b.used, b.pending, b.entitlement).used"></span>
+            <span class="h-full opacity-40" [ngClass]="b.type.styles.bar" [style.width.%]="usedPercent(b.used, b.pending, b.entitlement).pending"></span>
+          </div>
+          <div class="text-xs text-gray-500">{{ b.used }} used · {{ b.pending }} pending</div>
+        } @else {
+          <div class="text-xs text-gray-500">Unpaid, no limit</div>
+        }
+      </button>
+    }
+  </div>
+
+  <!-- Requests -->
+  <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 p-4">
+      <h2 class="text-base font-semibold text-gray-900">My requests</h2>
+      <div class="flex flex-wrap rounded-lg bg-gray-100 p-1" role="tablist" aria-label="Status">
+        @for (t of tabs; track t) {
+          <button
+            type="button"
+            role="tab"
+            class="rounded-md px-3 py-1.5 text-sm font-medium transition"
+            [ngClass]="tab() === t ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'"
+            [attr.aria-selected]="tab() === t"
+            (click)="tab.set(t)"
+          >
+            {{ t }} <span class="ml-1 text-xs text-gray-400">{{ counts()[t] }}</span>
+          </button>
         }
       </div>
-
-      @if (openForm()) {
-        <div class="p-4 rounded-lg border border-gray-200 mb-6 bg-gray-50">
-          <div class="grid grid-cols-2 gap-3">
-            <label class="text-sm">From Date <input type="date" class="w-full border rounded px-3 py-2 mt-1" [(ngModel)]="fromDate"></label>
-            <label class="text-sm">To Date <input type="date" class="w-full border rounded px-3 py-2 mt-1" [(ngModel)]="toDate"></label>
-            <label class="text-sm">Leave Type
-              <select class="w-full border rounded px-3 py-2 mt-1" [(ngModel)]="leaveType">
-                <option>Annual Leave</option>
-                <option>Sick Leave</option>
-                <option>Casual Leave</option>
-              </select>
-            </label>
-            <label class="text-sm">Reason <input type="text" class="w-full border rounded px-3 py-2 mt-1" [(ngModel)]="reason"></label>
-          </div>
-          <div class="flex justify-end gap-2 mt-4">
-            <ui-text-button text="Cancel" variant="secondary" (buttonClick)="openForm.set(false)"></ui-text-button>
-            <ui-text-button text="Submit" (buttonClick)="submitLeave()"></ui-text-button>
-          </div>
-        </div>
-      }
-
-      <h3 class="text-base font-semibold mb-3">Recent Requests</h3>
-      @for (req of requests(); track req.id) {
-        <div class="flex justify-between items-center border rounded-lg px-4 py-3 mb-2">
-          <div>
-            <div class="font-medium">{{ req.leaveType }}: {{ req.fromDate }} to {{ req.toDate }}</div>
-            <div class="text-sm text-gray-500">{{ req.reason }}</div>
-          </div>
-          <ui-chip [text]="req.status" [bgColor]="req.status === 'Approved' ? '#dcfce7' : req.status === 'Rejected' ? '#fee2e2' : '#fef3c7'" [color]="req.status === 'Approved' ? '#166534' : req.status === 'Rejected' ? '#991b1b' : '#92400e'"></ui-chip>
-        </div>
-      }
     </div>
+
+    @if (visible().length > 0) {
+      <ul class="divide-y divide-gray-100">
+        @for (r of visible(); track r.id) {
+          <li class="flex flex-wrap items-center gap-4 px-4 py-4 transition hover:bg-gray-50">
+            <span class="h-10 w-1 shrink-0 rounded-full" [ngClass]="typeMap[r.type].styles.bar"></span>
+            <button type="button" class="min-w-0 flex-1 text-left" (click)="viewing.set(r)">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="font-medium text-gray-900">{{ typeMap[r.type].label }}</span>
+                <span class="text-sm text-gray-500">{{ formatRange(r.fromDate, r.toDate) }}</span>
+                <span class="rounded-md bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-gray-600">
+                  {{ formatDays(r.days) }}{{ r.dayPart !== 'full' ? ' · ' + dayPartLabel(r.dayPart) : '' }}
+                </span>
+              </div>
+              <div class="mt-0.5 truncate text-sm text-gray-500">{{ r.reason }}</div>
+            </button>
+            <div class="flex items-center gap-3">
+              <span class="hidden text-xs text-gray-400 md:inline">Applied {{ formatDay(r.appliedOn.slice(0, 10)) }}</span>
+              <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset" [ngClass]="statusStyles[r.status]">{{ r.status }}</span>
+              @if (canCancel(r)) {
+                <button type="button" class="rounded-lg px-2 py-1 text-xs font-medium text-gray-500 transition hover:bg-red-50 hover:text-red-600" (click)="askCancel(r)">Withdraw</button>
+              }
+            </div>
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="flex flex-col items-center gap-3 px-6 py-14 text-center">
+        <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 text-2xl text-gray-400">
+          <ui-icon name="history"></ui-icon>
+        </span>
+        <p class="font-medium text-gray-900">{{ tab() === 'All' ? 'No leave requests yet' : 'No ' + tab().toLowerCase() + ' requests' }}</p>
+        @if (tab() === 'All') {
+          <ui-text-button text="Apply leave" (buttonClick)="openForm()"></ui-text-button>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ========== Apply drawer ========== -->
+@if (formOpen()) {
+  <div leaveBodyPortal class="ph-overlay fixed inset-0 flex justify-end bg-gray-900/40" (click)="closeForm()">
+    <div
+      class="flex h-full w-full max-w-2xl flex-col bg-gray-50 shadow-2xl"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="apply-leave-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
+        <div>
+          <h2 id="apply-leave-title" class="text-lg font-semibold text-gray-900">Apply leave</h2>
+          <p class="text-sm text-gray-500">Weekends and company holidays aren't counted.</p>
+        </div>
+        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition hover:bg-gray-100 hover:text-gray-900" aria-label="Close" (click)="closeForm()">
+          <ui-icon name="close"></ui-icon>
+        </button>
+      </div>
+
+      <div class="flex flex-1 flex-col gap-5 overflow-y-auto p-6">
+        <!-- Type -->
+        <div class="rounded-2xl border border-gray-200 bg-white p-5">
+          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Leave type</h3>
+          <div class="grid gap-2 sm:grid-cols-2">
+            @for (t of types; track t.key) {
+              <button
+                type="button"
+                class="flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5 text-left transition"
+                [ngClass]="type() === t.key ? t.styles.ring + ' ring-1 bg-white' : 'border-gray-200 hover:bg-gray-50'"
+                [attr.aria-pressed]="type() === t.key"
+                (click)="setType(t.key)"
+              >
+                <span class="flex items-center gap-2">
+                  <span class="h-2.5 w-2.5 rounded-full" [ngClass]="t.styles.bar"></span>
+                  <span class="text-sm font-medium text-gray-900">{{ t.label }}</span>
+                </span>
+                <span class="text-xs text-gray-500">
+                  @if (t.entitlement !== null) {
+                    {{ balances()[$index].available }} left
+                  } @else {
+                    Unpaid
+                  }
+                </span>
+              </button>
+            }
+          </div>
+          <p class="mt-3 flex items-start gap-2 text-xs text-gray-500">
+            <ui-icon class="mt-0.5 shrink-0" name="info"></ui-icon>{{ selectedType().description }}
+          </p>
+        </div>
+
+        <!-- Dates -->
+        <div class="rounded-2xl border border-gray-200 bg-white p-5">
+          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Dates</h3>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="flex flex-col gap-1">
+              <span class="text-sm font-medium text-gray-700">From <span class="text-red-500">*</span></span>
+              <input
+                type="date"
+                class="h-11 rounded-lg border bg-white px-3 text-sm text-gray-900 focus:outline-none focus:ring-2"
+                [ngClass]="shownErrors().fromDate ? 'border-red-400 focus:ring-red-100' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-100'"
+                [min]="minFrom()"
+                [value]="fromDate()"
+                (change)="setFrom($any($event.target).value)"
+              />
+              @if (shownErrors().fromDate) {
+                <span class="text-xs text-red-600">{{ shownErrors().fromDate }}</span>
+              }
+            </label>
+            <label class="flex flex-col gap-1">
+              <span class="text-sm font-medium text-gray-700">To <span class="text-red-500">*</span></span>
+              <input
+                type="date"
+                class="h-11 rounded-lg border bg-white px-3 text-sm text-gray-900 focus:outline-none focus:ring-2"
+                [ngClass]="shownErrors().toDate ? 'border-red-400 focus:ring-red-100' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-100'"
+                [min]="fromDate() || minFrom()"
+                [value]="toDate()"
+                (change)="setTo($any($event.target).value)"
+              />
+              @if (shownErrors().toDate) {
+                <span class="text-xs text-red-600">{{ shownErrors().toDate }}</span>
+              }
+            </label>
+          </div>
+
+          @if (isSingleDay()) {
+            <div class="mt-4 grid grid-cols-3 gap-2" role="radiogroup" aria-label="Duration">
+              @for (p of dayParts; track p.key) {
+                <button
+                  type="button"
+                  role="radio"
+                  class="rounded-lg border px-3 py-2 text-sm font-medium transition"
+                  [ngClass]="dayPart() === p.key ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'"
+                  [attr.aria-checked]="dayPart() === p.key"
+                  (click)="setDayPart(p.key)"
+                >
+                  {{ p.label }}
+                </button>
+              }
+            </div>
+          }
+
+          <!-- Live summary -->
+          @if (days() > 0) {
+            <div class="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-gray-50 px-4 py-3">
+              <div>
+                <div class="text-sm font-semibold text-gray-900">{{ formatDays(days()) }} of {{ selectedType().label }}</div>
+                <div class="text-xs text-gray-500">
+                  {{ formatRange(fromDate(), toDate()) }}
+                  @if (skipped().weekends > 0) { · {{ skipped().weekends }} weekend day(s) skipped }
+                  @if (skipped().holidays.length > 0) { · holiday: {{ skipped().holidays.join(', ') }} }
+                </div>
+              </div>
+              @if (balanceAfter() !== null) {
+                <div class="text-right">
+                  <div class="text-xs text-gray-500">Balance after</div>
+                  <div class="text-lg font-semibold" [ngClass]="balanceAfter()! < 0 ? 'text-red-600' : 'text-emerald-600'">{{ balanceAfter() }}</div>
+                </div>
+              }
+            </div>
+          }
+
+          @if (shownErrors().balance) {
+            <p class="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">{{ shownErrors().balance }}</p>
+          }
+          @if (shownErrors().overlap) {
+            <p class="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800" role="alert">{{ shownErrors().overlap }}</p>
+          }
+          @if (needsDocument()) {
+            <p class="mt-3 rounded-lg bg-blue-50 px-3 py-2 text-sm text-blue-700">
+              Sick leave over {{ selectedType().documentAfterDays }} days needs a medical certificate. Share it with HR once you're back.
+            </p>
+          }
+        </div>
+
+        <!-- Reason -->
+        <div class="rounded-2xl border border-gray-200 bg-white p-5">
+          <label class="flex flex-col gap-1">
+            <span class="flex items-center justify-between text-sm font-medium text-gray-700">
+              <span>Reason <span class="text-red-500">*</span></span>
+              <span class="text-xs font-normal text-gray-400">{{ reason().length }}/{{ reasonMax }}</span>
+            </span>
+            <textarea
+              rows="4"
+              class="w-full resize-y rounded-lg border bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2"
+              [ngClass]="shownErrors().reason ? 'border-red-400 focus:ring-red-100' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-100'"
+              placeholder="e.g. Family function in my hometown"
+              [attr.maxlength]="reasonMax"
+              [value]="reason()"
+              (input)="setReason($any($event.target).value)"
+            ></textarea>
+            @if (shownErrors().reason) {
+              <span class="text-xs text-red-600">{{ shownErrors().reason }}</span>
+            }
+          </label>
+          <p class="mt-3 text-xs text-gray-500">Your reporting manager will be notified and can approve or reject this request.</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-3 border-t border-gray-200 bg-white px-6 py-4">
+        <span class="text-sm text-gray-500">
+          @if (days() > 0) { Requesting <strong class="text-gray-900">{{ formatDays(days()) }}</strong> }
+        </span>
+        <div class="flex items-center gap-3">
+          <ui-text-button text="Cancel" variant="secondary" (buttonClick)="closeForm()"></ui-text-button>
+          <ui-text-button text="Submit request" (buttonClick)="submit()"></ui-text-button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ========== Request details ========== -->
+@if (viewing(); as r) {
+  <div leaveBodyPortal class="ph-overlay fixed inset-0 flex items-center justify-center bg-gray-900/40 p-4" (click)="viewing.set(null)">
+    <div class="relative w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="leave-view-title" (click)="$event.stopPropagation()">
+      <span class="absolute inset-x-0 top-0 h-1" [ngClass]="typeMap[r.type].styles.bar"></span>
+      <div class="flex items-start justify-between gap-4 px-6 pb-2 pt-6">
+        <div>
+          <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset" [ngClass]="statusStyles[r.status]">{{ r.status }}</span>
+          <h2 id="leave-view-title" class="mt-2 text-xl font-semibold text-gray-900">{{ typeMap[r.type].label }}</h2>
+          <p class="text-sm text-gray-500">{{ formatRange(r.fromDate, r.toDate) }} · {{ formatDays(r.days) }}{{ r.dayPart !== 'full' ? ' (' + dayPartLabel(r.dayPart) + ')' : '' }}</p>
+        </div>
+        <button type="button" class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-500 transition hover:bg-gray-100 hover:text-gray-900" aria-label="Close" (click)="viewing.set(null)">
+          <ui-icon name="close"></ui-icon>
+        </button>
+      </div>
+      <dl class="grid gap-4 px-6 py-4 text-sm">
+        <div>
+          <dt class="text-xs font-medium uppercase tracking-wide text-gray-400">Reason</dt>
+          <dd class="mt-1 whitespace-pre-line text-gray-800">{{ r.reason }}</dd>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wide text-gray-400">Applied on</dt>
+            <dd class="mt-1 text-gray-800">{{ formatDay(r.appliedOn.slice(0, 10), true) }}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-wide text-gray-400">Approver</dt>
+            <dd class="mt-1 text-gray-800">{{ r.approver || 'Reporting Manager' }}</dd>
+          </div>
+        </div>
+        @if (r.decisionNote) {
+          <div class="rounded-xl bg-gray-50 p-3">
+            <dt class="text-xs font-medium uppercase tracking-wide text-gray-400">Note</dt>
+            <dd class="mt-1 text-gray-800">{{ r.decisionNote }}</dd>
+          </div>
+        }
+      </dl>
+      <div class="flex justify-end gap-3 border-t border-gray-100 px-6 py-4">
+        @if (canCancel(r)) {
+          <button type="button" class="rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50" (click)="askCancel(r)">Withdraw request</button>
+        }
+        <ui-text-button text="Close" variant="secondary" (buttonClick)="viewing.set(null)"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ========== Withdraw confirmation ========== -->
+@if (pendingCancel(); as r) {
+  <div leaveBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center bg-gray-900/50 p-4" (click)="pendingCancel.set(null)">
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl" role="alertdialog" aria-modal="true" aria-labelledby="withdraw-title" (click)="$event.stopPropagation()">
+      <h2 id="withdraw-title" class="text-base font-semibold text-gray-900">Withdraw this request?</h2>
+      <p class="mt-1 text-sm text-gray-500">
+        {{ typeMap[r.type].label }}, {{ formatRange(r.fromDate, r.toDate) }}. {{ formatDays(r.days) }} will go back to your balance.
+      </p>
+      <div class="mt-6 flex justify-end gap-3">
+        <ui-text-button text="Keep it" variant="secondary" (buttonClick)="pendingCancel.set(null)"></ui-text-button>
+        <button type="button" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700" (click)="confirmCancel()">Withdraw</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (toast()) {
+  <div leaveBodyPortal class="ph-overlay ph-overlay--top fixed bottom-6 right-6 flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-3 text-sm font-medium text-white shadow-lg" role="status">
+    <ui-icon class="text-emerald-400" name="check_circle_outline"></ui-icon>
+    {{ toast() }}
+  </div>
+}

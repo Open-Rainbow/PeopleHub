@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+// Overlays are moved to <body> by leaveBodyPortal so the app header/sidebar never cover them.
+.ph-overlay {
+  z-index: 1000;
+}
+
+.ph-overlay--top {
+  z-index: 1010;
+}
