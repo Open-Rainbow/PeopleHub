@@ -11,38 +11,6 @@
   z-index: 2110;
 }
 
-.org-input {
-  display: block;
-  width: 100%;
-  border-radius: 0.5rem;
-  border: 1px solid #d1d5db;
-  background: #fff;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: #111827;
-  transition: border-color 0.15s, box-shadow 0.15s;
-
-  &:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.2);
-  }
-}
-
-.org-tool {
-  height: 2rem;
-  border-radius: 0.5rem;
-  padding: 0 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #374151;
-
-  &:hover {
-    background: #f3f4f6;
-  }
-}
-
 .org-canvas {
   max-height: calc(100vh - 16rem);
   min-height: 24rem;
@@ -165,17 +133,17 @@ $gap: 1.5rem;
 }
 
 .org-card__toggle {
-  display: block;
-  width: 100%;
+  display: flex;
+  justify-content: center;
   border-top: 1px solid #f3f4f6;
-  padding: 0.25rem 0;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #374151;
   background: #f9fafb;
+}
+
+.org-row {
+  cursor: pointer;
 
   &:hover {
-    background: #f3f4f6;
+    background: #f9fafb;
   }
 }
 

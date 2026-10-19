@@ -1,3 +1,4 @@
+import type { ChipVariant } from 'ui';
 import { OrgForest, OrgNode, OrgPerson } from '../../models/org-chart.model';
 
 /**
@@ -47,6 +48,7 @@ export function buildForest(people: OrgPerson[]): OrgForest {
     node.total = node.children.reduce((sum, c) => sum + 1 + walk(c, depth + 1), 0);
     return node.total;
   };
+  roots.sort((a, b) => b.total - a.total || a.person.name.localeCompare(b.person.name));
   roots.forEach((r) => walk(r, 0));
   roots.sort((a, b) => b.total - a.total || a.person.name.localeCompare(b.person.name));
   return { roots, byId, levels };
@@ -91,24 +93,24 @@ export function initials(name: string): string {
   return (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
 }
 
-const PALETTE = [
-  { avatar: 'bg-blue-100 text-blue-700', bar: 'bg-blue-500', chip: 'bg-blue-50 text-blue-700' },
-  { avatar: 'bg-emerald-100 text-emerald-700', bar: 'bg-emerald-500', chip: 'bg-emerald-50 text-emerald-700' },
-  { avatar: 'bg-violet-100 text-violet-700', bar: 'bg-violet-500', chip: 'bg-violet-50 text-violet-700' },
-  { avatar: 'bg-amber-100 text-amber-700', bar: 'bg-amber-500', chip: 'bg-amber-50 text-amber-700' },
-  { avatar: 'bg-rose-100 text-rose-700', bar: 'bg-rose-500', chip: 'bg-rose-50 text-rose-700' },
-  { avatar: 'bg-cyan-100 text-cyan-700', bar: 'bg-cyan-500', chip: 'bg-cyan-50 text-cyan-700' },
-  { avatar: 'bg-lime-100 text-lime-700', bar: 'bg-lime-500', chip: 'bg-lime-50 text-lime-700' },
-  { avatar: 'bg-fuchsia-100 text-fuchsia-700', bar: 'bg-fuchsia-500', chip: 'bg-fuchsia-50 text-fuchsia-700' },
+const PALETTE: { avatar: string; bar: string; chip: ChipVariant }[] = [
+  { avatar: 'bg-blue-100 text-blue-700', bar: 'bg-blue-500', chip: 'lightBlue' },
+  { avatar: 'bg-emerald-100 text-emerald-700', bar: 'bg-emerald-500', chip: 'green' },
+  { avatar: 'bg-violet-100 text-violet-700', bar: 'bg-violet-500', chip: 'purple' },
+  { avatar: 'bg-amber-100 text-amber-700', bar: 'bg-amber-500', chip: 'brown' },
+  { avatar: 'bg-rose-100 text-rose-700', bar: 'bg-rose-500', chip: 'pink' },
+  { avatar: 'bg-cyan-100 text-cyan-700', bar: 'bg-cyan-500', chip: 'darkGreen' },
+  { avatar: 'bg-lime-100 text-lime-700', bar: 'bg-lime-500', chip: 'yellow' },
+  { avatar: 'bg-fuchsia-100 text-fuchsia-700', bar: 'bg-fuchsia-500', chip: 'darkPink' },
 ];
 
 export type DeptTone = (typeof PALETTE)[number];
 
-/** Stable colour per department name. */
+/** Stable colour per department name (avatar / top bar classes + a ui-chip variant). */
 export function deptTone(department: string): DeptTone {
   let h = 0;
   for (const ch of department.toLowerCase()) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  return department ? PALETTE[h % PALETTE.length] : { avatar: 'bg-gray-100 text-gray-600', bar: 'bg-gray-400', chip: 'bg-gray-100 text-gray-600' };
+  return department ? PALETTE[h % PALETTE.length] : { avatar: 'bg-gray-100 text-gray-600', bar: 'bg-gray-400', chip: 'lightGrey' };
 }
 
 export function matches(p: OrgPerson, query: string): boolean {

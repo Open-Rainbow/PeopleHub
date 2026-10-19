@@ -1,8 +1,23 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, HostListener, inject, input, OnInit, signal } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IconComponent, TextButtonComponent } from 'ui';
+import {
+  ChipComponent,
+  DropdownComponent,
+  DropdownOption,
+  IconButtonComponent,
+  LabelValueComponent,
+  LoaderComponent,
+  NoticeBannerComponent,
+  SearchComponent,
+  staticChip,
+  TabButtonComponent,
+  TabButtonItem,
+  TextButtonComponent,
+  ToastMessage,
+  ToastStackComponent,
+} from 'ui';
 import { OrgBodyPortalDirective } from '../../directives/org-body-portal.directive';
 import { OrgNode, OrgPerson } from '../../models/org-chart.model';
 import { OrgChartService } from '../../services/org-chart/org-chart.service';
@@ -23,7 +38,21 @@ type View = 'tree' | 'list';
 @Component({
   selector: 'org-chart-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, IconComponent, TextButtonComponent, OrgBodyPortalDirective],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ChipComponent,
+    DropdownComponent,
+    IconButtonComponent,
+    LabelValueComponent,
+    LoaderComponent,
+    NoticeBannerComponent,
+    SearchComponent,
+    TabButtonComponent,
+    TextButtonComponent,
+    ToastStackComponent,
+    OrgBodyPortalDirective,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './org-chart.component.html',
   styleUrl: './org-chart.component.scss',
@@ -39,6 +68,16 @@ export class OrgChartComponent implements OnInit {
   readonly me = ME;
   readonly initials = initials;
   readonly tone = deptTone;
+  readonly chip = staticChip;
+
+  readonly tabs: TabButtonItem[] = [
+    { id: 'tree', label: 'Chart' },
+    { id: 'list', label: 'Directory' },
+  ];
+
+  /** Shared-control forms. Department 0 = all. Manager 0 = top of the chart. */
+  readonly filterForm = new FormGroup({ department: new FormControl<number>(0, { nonNullable: true }) });
+  readonly moveForm = new FormGroup({ manager: new FormControl<number>(0, { nonNullable: true }) });
 
   readonly canManage = computed(() => this.manage() ?? /^\/(hr|admin)(\/|$)/.test(this.router?.url ?? ''));
   readonly isOnline = this.service.isOnline;
@@ -47,7 +86,7 @@ export class OrgChartComponent implements OnInit {
   readonly loading = signal(true);
   readonly busy = signal(false);
   readonly error = signal<string | null>(null);
-  readonly toast = signal<string | null>(null);
+  readonly toasts = signal<ToastMessage[]>([]);
 
   readonly view = signal<View>('tree');
   readonly query = signal('');
@@ -56,11 +95,19 @@ export class OrgChartComponent implements OnInit {
   readonly expanded = signal<Set<string>>(new Set());
   readonly focusId = signal<string | null>(null);
   readonly selectedId = signal<string | null>(null);
-  readonly searchOpen = signal(false);
 
   readonly forest = computed(() => buildForest(this.people()));
   readonly zoom = computed(() => ZOOMS[this.zoomIndex()]);
   readonly departments = computed(() => [...new Set(this.people().map((p) => p.department).filter(Boolean))].sort());
+  readonly departmentOptions = computed<DropdownOption[]>(() => [
+    { value: 0, name: 'All departments' },
+    ...this.departments().map((name, i) => ({ value: i + 1, name })),
+  ]);
+
+  /** Stable number per person for ui-dropdown (it works with numeric values). */
+  private readonly personNo = computed(() => new Map(this.people().map((p, i) => [p.employeeId, i + 1])));
+  /** "Name · EMP00001" lines for ui-search suggestions. */
+  readonly searchData = computed(() => this.people().map((p) => `${p.name} · ${p.employeeId}`));
 
   readonly stats = computed(() => {
     const f = this.forest();
@@ -122,6 +169,8 @@ export class OrgChartComponent implements OnInit {
 
   // ---- Change manager --------------------------------------------------------------------------
   readonly moveTo = signal('');
+  /** Bumped on reset so the shared dropdown is re-created with the current value. */
+  readonly moveSeq = signal(0);
   readonly moveOptions = computed(() => {
     const node = this.selected();
     if (!node) return [];
@@ -132,17 +181,30 @@ export class OrgChartComponent implements OnInit {
       .map((n) => n.person)
       .sort((a, b) => a.name.localeCompare(b.name));
   });
+  readonly moveDropdown = computed<DropdownOption[]>(() => {
+    const no = this.personNo();
+    return [
+      { value: 0, name: 'Top of the chart' },
+      ...this.moveOptions().map((p) => ({ value: no.get(p.employeeId) ?? 0, name: `${p.name} · ${p.designation || p.employeeId}` })),
+    ];
+  });
   readonly moveChanged = computed(() => {
     const node = this.selected();
     return !!node && this.moveTo() !== (this.selectedManager()?.person.employeeId ?? '');
   });
 
-  private toastTimer: ReturnType<typeof setTimeout> | null = null;
+  private toastSeq = 0;
 
   constructor() {
-    inject(DestroyRef).onDestroy(() => {
-      if (this.toastTimer) clearTimeout(this.toastTimer);
-    });
+    const subs = [
+      this.filterForm.controls.department.valueChanges.subscribe((v) => {
+        this.department.set(v ? (this.departmentOptions().find((o) => o.value === v)?.name ?? 'All') : 'All');
+      }),
+      this.moveForm.controls.manager.valueChanges.subscribe((v) => {
+        this.moveTo.set(v ? (this.people()[v - 1]?.employeeId ?? '') : '');
+      }),
+    ];
+    inject(DestroyRef).onDestroy(() => subs.forEach((s) => s.unsubscribe()));
   }
 
   async ngOnInit(): Promise<void> {
@@ -208,7 +270,6 @@ export class OrgChartComponent implements OnInit {
     this.expanded.set(next);
     this.view.set('tree');
     this.focusId.set(id);
-    this.searchOpen.set(false);
     if (open) this.select(id);
     setTimeout(() => {
       this.document.getElementById(`org-node-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
@@ -222,9 +283,23 @@ export class OrgChartComponent implements OnInit {
     this.reveal(ME, false);
   }
 
+  onTab(id: string): void {
+    this.view.set(id === 'list' ? 'list' : 'tree');
+  }
+
   onQuery(value: string): void {
     this.query.set(value);
-    this.searchOpen.set(!!value.trim());
+  }
+
+  /** ui-search suggestion picked ("Name · EMP00001"). Empty = cleared. */
+  onSearchSelect(label: string): void {
+    if (!label) {
+      this.query.set('');
+      return;
+    }
+    const id = label.split(' · ').pop() ?? '';
+    const person = this.people().find((p) => p.employeeId === id);
+    if (person) this.pickResult(person);
   }
 
   pickResult(p: OrgPerson): void {
@@ -232,10 +307,24 @@ export class OrgChartComponent implements OnInit {
     this.reveal(p.employeeId, true);
   }
 
+  toggleText(node: OrgNode): string {
+    const extra = node.total > node.children.length ? ` / ${node.total}` : '';
+    return `${this.isOpen(node) ? '−' : '+'} ${node.children.length}${extra}`;
+  }
+
   // ---- Drawer ------------------------------------------------------------------------------
   select(id: string): void {
     this.selectedId.set(id);
-    this.moveTo.set(findParent(this.forest(), id)?.person.employeeId ?? '');
+    this.resetMove();
+  }
+
+  /** Puts the "Reports to" dropdown back on the current manager. */
+  resetMove(): void {
+    const id = this.selectedId();
+    const current = id ? (findParent(this.forest(), id)?.person.employeeId ?? '') : '';
+    this.moveTo.set(current);
+    this.moveForm.controls.manager.setValue(current ? (this.personNo().get(current) ?? 0) : 0, { emitEvent: false });
+    this.moveSeq.update((n) => n + 1);
   }
 
   closeDrawer(): void {
@@ -287,8 +376,11 @@ export class OrgChartComponent implements OnInit {
 
   @HostListener('document:keydown.escape')
   onEscape(): void {
-    if (this.searchOpen()) this.searchOpen.set(false);
-    else this.closeDrawer();
+    this.closeDrawer();
+  }
+
+  dismissToast(id: number): void {
+    this.toasts.update((list) => list.filter((t) => t.id !== id));
   }
 
   // ---- Helpers -----------------------------------------------------------------------------
@@ -303,8 +395,7 @@ export class OrgChartComponent implements OnInit {
   }
 
   private showToast(message: string): void {
-    this.toast.set(message);
-    if (this.toastTimer) clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => this.toast.set(null), 3500);
+    const toast: ToastMessage = { id: ++this.toastSeq, title: message, type: 'success', duration: 3500, icon: 'check_circle_outline' };
+    this.toasts.update((list) => [...list, toast]);
   }
 }
