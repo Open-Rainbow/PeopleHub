@@ -1,7 +1,9 @@
-
-
 export * from './lib/config/announcements/add-announcement.model';
 export * from './lib/config/announcements/add-announcement.config';
+export * from './lib/config/announcements/announcement.options';
+export * from './lib/config/announcements/announcement.seed';
+export * from './lib/models/announcement.model';
+export * from './lib/utils/announcement.utils';
 export * from './lib/components/announcements/announcements.component';
 export * from './lib/components/view-announcement/view-announcement.component';
 export * from './lib/components/expire/expire.component';
