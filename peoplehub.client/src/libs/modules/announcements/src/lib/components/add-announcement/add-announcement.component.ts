@@ -20,6 +20,7 @@ import {
   TextButtonComponent,
 } from 'ui';
 import { AnnouncementsService } from '../../services/announcements.service';
+import { BodyPortalDirective } from '../../directives/body-portal.directive';
 import {
   AnnouncementDraft,
   AnnouncementItem,
@@ -71,6 +72,7 @@ const DESCRIPTION_MAX = 1000;
     CalendarComponent,
     TextButtonComponent,
     IconComponent,
+    BodyPortalDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './add-announcement.component.html',

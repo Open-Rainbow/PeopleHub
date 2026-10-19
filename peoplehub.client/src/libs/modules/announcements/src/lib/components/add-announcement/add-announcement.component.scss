@@ -1,3 +1,13 @@
 :host {
   display: block;
 }
+
+// Overlays are moved to <body> by annBodyPortal and stack above the app header/sidebar.
+// Delete confirmation and toast sit above the drawer/modal.
+.ph-overlay {
+  z-index: 1000;
+}
+
+.ph-overlay--top {
+  z-index: 1010;
+}

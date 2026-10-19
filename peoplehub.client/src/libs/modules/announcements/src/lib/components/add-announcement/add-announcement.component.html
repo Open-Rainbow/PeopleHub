@@ -199,7 +199,7 @@
 
 <!-- ========== Create / edit drawer ========== -->
 @if (formOpen()) {
-  <div class="fixed inset-0 z-50 flex justify-end bg-gray-900/40" (click)="closeForm()">
+  <div annBodyPortal class="ph-overlay fixed inset-0 flex justify-end bg-gray-900/40" (click)="closeForm()">
     <div
       class="flex h-full w-full max-w-5xl flex-col bg-gray-50 shadow-2xl"
       role="dialog"
@@ -369,7 +369,7 @@
 
 <!-- ========== View modal ========== -->
 @if (viewing(); as item) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 p-4" (click)="closeView()">
+  <div annBodyPortal class="ph-overlay fixed inset-0 flex items-center justify-center bg-gray-900/40 p-4" (click)="closeView()">
     <div
       class="relative flex max-h-full w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
       role="dialog"
@@ -438,7 +438,7 @@
 
 <!-- ========== Delete confirmation ========== -->
 @if (pendingDelete(); as item) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 p-4" (click)="cancelDelete()">
+  <div annBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center bg-gray-900/50 p-4" (click)="cancelDelete()">
     <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl" role="alertdialog" aria-modal="true" aria-labelledby="delete-title" (click)="$event.stopPropagation()">
       <div class="flex items-start gap-4">
         <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-50 text-lg text-red-600">
@@ -463,7 +463,7 @@
 
 <!-- ========== Toast ========== -->
 @if (toast()) {
-  <div class="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-3 text-sm font-medium text-white shadow-lg" role="status">
+  <div annBodyPortal class="ph-overlay ph-overlay--top fixed bottom-6 right-6 flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-3 text-sm font-medium text-white shadow-lg" role="status">
     <ui-icon class="text-emerald-400" name="check_circle_outline"></ui-icon>
     {{ toast() }}
   </div>
