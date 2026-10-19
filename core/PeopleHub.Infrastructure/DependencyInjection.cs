@@ -7,6 +7,7 @@ using PeopleHub.Application.Modules.Holidays.Interfaces;
 using PeopleHub.Application.Modules.Leave.Interfaces;
 using PeopleHub.Application.Modules.OrgChart.Interfaces;
 using PeopleHub.Application.Modules.Payroll.Interfaces;
+using PeopleHub.Application.Modules.Policies.Interfaces;
 using PeopleHub.Infrastructure.Database;
 using PeopleHub.Infrastructure.Modules.Announcements;
 using PeopleHub.Infrastructure.Modules.Attendance;
@@ -15,6 +16,7 @@ using PeopleHub.Infrastructure.Modules.Holidays;
 using PeopleHub.Infrastructure.Modules.Leave;
 using PeopleHub.Infrastructure.Modules.OrgChart;
 using PeopleHub.Infrastructure.Modules.Payroll;
+using PeopleHub.Infrastructure.Modules.Policies;
 
 namespace PeopleHub.Infrastructure;
 
@@ -35,6 +37,7 @@ public static class DependencyInjection
         services.AddScoped<IAttendanceRepository, AttendanceRepository>();
         services.AddScoped<IOrgChartRepository, OrgChartRepository>();
         services.AddScoped<IPayrollRepository, PayrollRepository>();
+        services.AddScoped<IPolicyRepository, PolicyRepository>();
 
         return services;
     }
