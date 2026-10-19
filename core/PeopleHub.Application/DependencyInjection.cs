@@ -4,6 +4,8 @@ using PeopleHub.Application.Modules.Announcements.Interfaces;
 using PeopleHub.Application.Modules.Announcements.Services;
 using PeopleHub.Application.Modules.Employees.AddEmployee.Interfaces;
 using PeopleHub.Application.Modules.Employees.AddEmployee.Services;
+using PeopleHub.Application.Modules.Holidays.Interfaces;
+using PeopleHub.Application.Modules.Holidays.Services;
 using PeopleHub.Application.Modules.Leave.Interfaces;
 using PeopleHub.Application.Modules.Leave.Services;
 
@@ -21,6 +23,7 @@ public static class DependencyInjection
         services.AddScoped<IAnnouncementService, AnnouncementService>();
         services.AddScoped<ILeaveService, LeaveService>();
         services.AddScoped<ILeavePolicyService, LeavePolicyService>();
+        services.AddScoped<IHolidayService, HolidayService>();
 
         return services;
     }
