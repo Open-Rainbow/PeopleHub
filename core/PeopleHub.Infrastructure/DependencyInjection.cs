@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PeopleHub.Application.Modules.Announcements.Interfaces;
 using PeopleHub.Application.Modules.Employees.AddEmployee.Interfaces;
 using PeopleHub.Infrastructure.Database;
+using PeopleHub.Infrastructure.Modules.Announcements;
 using PeopleHub.Infrastructure.Modules.Employees;
 
 namespace PeopleHub.Infrastructure;
@@ -16,6 +18,7 @@ public static class DependencyInjection
 
         // Repositories: one line per module.
         services.AddScoped<IAddEmployeeRepository, AddEmployeeRepository>();
+        services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
 
         return services;
     }

@@ -1,5 +1,7 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using PeopleHub.Application.Modules.Announcements.Interfaces;
+using PeopleHub.Application.Modules.Announcements.Services;
 using PeopleHub.Application.Modules.Employees.AddEmployee.Interfaces;
 using PeopleHub.Application.Modules.Employees.AddEmployee.Services;
 
@@ -14,6 +16,7 @@ public static class DependencyInjection
 
         // Services: one line per module.
         services.AddScoped<IAddEmployeeService, AddEmployeeService>();
+        services.AddScoped<IAnnouncementService, AnnouncementService>();
 
         return services;
     }
