@@ -1,4 +1,297 @@
-    <div class="w-full bg-white p-5 rounded-xl border border-gray-200">
-      <h2 class="text-xl font-semibold mb-5">Organization Chart</h2>
-      <ui-employee-org-chart></ui-employee-org-chart>
+<div class="space-y-5 p-4 sm:p-6">
+  <!-- Header -->
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-2xl font-semibold text-gray-900">Organization chart</h1>
+        @if (!loading() && !isOnline()) {
+          <span class="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20" title="The API is not reachable. Changes are saved in this browser only.">Offline demo data</span>
+        }
+      </div>
+      <p class="mt-1 text-sm text-gray-500">
+        {{ stats().people }} people · {{ stats().departments }} departments · {{ stats().managers }} managers · {{ stats().levels }} levels · avg team {{ stats().span }}
+      </p>
     </div>
+    <div class="inline-flex rounded-xl bg-gray-100 p-1" role="tablist">
+      <button type="button" role="tab" class="rounded-lg px-4 py-2 text-sm font-medium transition" [attr.aria-selected]="view() === 'tree'"
+              [ngClass]="view() === 'tree' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'" (click)="view.set('tree')">Chart</button>
+      <button type="button" role="tab" class="rounded-lg px-4 py-2 text-sm font-medium transition" [attr.aria-selected]="view() === 'list'"
+              [ngClass]="view() === 'list' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'" (click)="view.set('list')">Directory</button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700" role="alert">
+      <ui-icon class="mt-0.5 shrink-0" name="info"></ui-icon>
+      <p class="flex-1">{{ error() }}</p>
+      <button type="button" class="text-red-500 hover:text-red-700" (click)="error.set(null)" aria-label="Dismiss"><ui-icon name="close"></ui-icon></button>
+    </div>
+  }
+
+  <!-- Toolbar -->
+  <div class="flex flex-wrap items-center gap-3">
+    <div class="relative min-w-[16rem] flex-1">
+      <ui-icon class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" name="search"></ui-icon>
+      <input class="org-input pl-9" placeholder="Search name, role, department or ID" maxlength="100" role="combobox" aria-autocomplete="list"
+             [attr.aria-expanded]="searchOpen() && results().length > 0" [ngModel]="query()" (ngModelChange)="onQuery($event)"
+             (focus)="searchOpen.set(!!query().trim())" (keydown.enter)="results().length && pickResult(results()[0])" />
+      @if (searchOpen() && query().trim() && view() === 'tree') {
+        <div class="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg" role="listbox">
+          @for (p of results(); track p.employeeId) {
+            <button type="button" role="option" class="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-gray-50" (mousedown)="$event.preventDefault()" (click)="pickResult(p)">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold" [ngClass]="tone(p.department).avatar">{{ initials(p.name) }}</span>
+              <span class="min-w-0">
+                <span class="block truncate text-sm font-medium text-gray-900">{{ p.name }}</span>
+                <span class="block truncate text-xs text-gray-500">{{ p.designation }}{{ p.department ? ' · ' + p.department : '' }}</span>
+              </span>
+            </button>
+          } @empty {
+            <p class="px-3 py-3 text-sm text-gray-500">No one matches “{{ query() }}”.</p>
+          }
+        </div>
+      }
+    </div>
+
+    <select class="org-input w-auto" aria-label="Department" [ngModel]="department()" (ngModelChange)="department.set($event)">
+      <option value="All">All departments</option>
+      @for (d of departments(); track d) { <option [value]="d">{{ d }}</option> }
+    </select>
+
+    <ui-text-button text="Find me" variant="secondary" (buttonClick)="findMe()"></ui-text-button>
+    <ui-text-button text="Export CSV" variant="secondary" (buttonClick)="exportCsv()"></ui-text-button>
+  </div>
+
+  @if (loading()) {
+    <div class="h-96 animate-pulse rounded-2xl bg-gray-100"></div>
+  } @else if (view() === 'tree') {
+    <!-- Chart -->
+    <div class="relative rounded-2xl border border-gray-200 bg-gray-50">
+      <div class="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
+        <button type="button" class="org-tool" (click)="expandAll()" title="Expand all">Expand</button>
+        <button type="button" class="org-tool" (click)="collapseAll()" title="Collapse all">Collapse</button>
+        <span class="mx-1 h-5 w-px bg-gray-200"></span>
+        <button type="button" class="org-tool w-8" (click)="zoomOut()" aria-label="Zoom out">−</button>
+        <button type="button" class="org-tool w-12 tabular-nums" (click)="resetZoom()" title="Reset zoom">{{ (zoom() * 100).toFixed(0) }}%</button>
+        <button type="button" class="org-tool w-8" (click)="zoomIn()" aria-label="Zoom in">+</button>
+      </div>
+
+      <div class="org-canvas overflow-auto px-6 pb-10 pt-16">
+        <div class="org-zoom" [style.zoom]="zoom()">
+          @if (forest().roots.length) {
+            <ul class="org-tree">
+              @for (root of forest().roots; track root.person.employeeId) {
+                <ng-container *ngTemplateOutlet="branch; context: { $implicit: root }"></ng-container>
+              }
+            </ul>
+          } @else {
+            <p class="py-16 text-center text-sm text-gray-500">No employees yet. Add someone from Employees.</p>
+          }
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Directory -->
+    <div class="space-y-4">
+      @for (g of listGroups(); track g.name) {
+        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white">
+          <div class="flex items-center gap-2 border-b border-gray-100 px-5 py-3">
+            <span class="h-2.5 w-2.5 rounded-full" [ngClass]="tone(g.name).bar"></span>
+            <h2 class="text-sm font-semibold text-gray-900">{{ g.name }}</h2>
+            <span class="text-xs text-gray-500">{{ g.nodes.length }}</span>
+          </div>
+          <ul class="divide-y divide-gray-100">
+            @for (n of g.nodes; track n.person.employeeId) {
+              <li>
+                <button type="button" class="flex w-full items-center gap-3 px-5 py-3 text-left hover:bg-gray-50" (click)="select(n.person.employeeId)">
+                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold" [ngClass]="tone(n.person.department).avatar">{{ initials(n.person.name) }}</span>
+                  <span class="min-w-0 flex-1">
+                    <span class="block truncate text-sm font-medium text-gray-900">{{ n.person.name }} @if (n.person.employeeId === me) { <span class="text-xs font-normal text-blue-600">(you)</span> }</span>
+                    <span class="block truncate text-xs text-gray-500">{{ n.person.designation }}</span>
+                  </span>
+                  <span class="hidden text-xs text-gray-500 sm:block">{{ n.children.length ? n.children.length + ' direct · ' + n.total + ' total' : '' }}</span>
+                  <span class="hidden w-28 truncate text-right text-xs text-gray-400 md:block">{{ n.person.location }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+        </div>
+      } @empty {
+        <p class="rounded-2xl border border-gray-200 bg-white py-12 text-center text-sm text-gray-500">No one matches these filters.</p>
+      }
+    </div>
+  }
+</div>
+
+<!-- One node + its children (recursive) -->
+<ng-template #branch let-node>
+  <li>
+    <div class="org-card group" [id]="'org-node-' + node.person.employeeId"
+         [ngClass]="{
+           'org-card--dim': isDimmed(node.person),
+           'org-card--focus': focusId() === node.person.employeeId,
+           'org-card--me': node.person.employeeId === me,
+           'org-card--selected': selectedId() === node.person.employeeId
+         }">
+      <span class="org-card__bar" [ngClass]="tone(node.person.department).bar"></span>
+      <button type="button" class="flex w-full items-start gap-3 p-3 text-left" (click)="select(node.person.employeeId)"
+              [attr.aria-label]="node.person.name + ', ' + node.person.designation">
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold" [ngClass]="tone(node.person.department).avatar">{{ initials(node.person.name) }}</span>
+        <span class="min-w-0 flex-1">
+          <span class="block truncate text-sm font-semibold text-gray-900">{{ node.person.name }}</span>
+          <span class="block truncate text-xs text-gray-600">{{ node.person.designation || '—' }}</span>
+          <span class="mt-1 flex flex-wrap items-center gap-1">
+            @if (node.person.department) { <span class="rounded px-1.5 py-0.5 text-[10px] font-medium" [ngClass]="tone(node.person.department).chip">{{ node.person.department }}</span> }
+            @if (node.person.employeeId === me) { <span class="rounded bg-blue-600 px-1.5 py-0.5 text-[10px] font-medium text-white">You</span> }
+            @if (node.person.employeeStatus === 'Notice Period' || node.person.employmentStatus === 'Notice Period') { <span class="rounded bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">Notice</span> }
+            @if (node.person.inLoop) { <span class="rounded bg-rose-50 px-1.5 py-0.5 text-[10px] font-medium text-rose-700" title="The saved reporting line formed a loop. Fix the manager.">Check manager</span> }
+          </span>
+        </span>
+      </button>
+      @if (node.children.length) {
+        <button type="button" class="org-card__toggle" (click)="toggle(node, $event)" [attr.aria-expanded]="isOpen(node)"
+                [attr.aria-label]="(isOpen(node) ? 'Hide ' : 'Show ') + node.children.length + ' direct reports of ' + node.person.name">
+          {{ isOpen(node) ? '−' : '+' }} {{ node.children.length }}<span class="font-normal text-gray-400">{{ node.total > node.children.length ? ' / ' + node.total : '' }}</span>
+        </button>
+      }
+    </div>
+    @if (node.children.length && isOpen(node)) {
+      <ul>
+        @for (child of node.children; track child.person.employeeId) {
+          <ng-container *ngTemplateOutlet="branch; context: { $implicit: child }"></ng-container>
+        }
+      </ul>
+    }
+  </li>
+</ng-template>
+
+<!-- Profile drawer -->
+@if (selected(); as n) {
+  <div orgBodyPortal class="ph-overlay fixed inset-0 flex justify-end bg-gray-900/40" (click)="closeDrawer()">
+    <div class="flex h-full w-full max-w-md flex-col bg-white shadow-xl" role="dialog" aria-modal="true" aria-labelledby="org-drawer-title" (click)="$event.stopPropagation()">
+      <div class="flex items-start justify-between gap-3 border-b border-gray-200 px-6 py-5">
+        <div class="flex items-center gap-3">
+          <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-lg font-semibold" [ngClass]="tone(n.person.department).avatar">{{ initials(n.person.name) }}</span>
+          <div class="min-w-0">
+            <h2 id="org-drawer-title" class="truncate text-lg font-semibold text-gray-900">{{ n.person.name }}</h2>
+            <p class="truncate text-sm text-gray-600">{{ n.person.designation }}</p>
+            <p class="text-xs text-gray-400">{{ n.person.employeeId }}</p>
+          </div>
+        </div>
+        <button type="button" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100" (click)="closeDrawer()" aria-label="Close"><ui-icon name="close"></ui-icon></button>
+      </div>
+
+      <div class="flex-1 space-y-6 overflow-y-auto px-6 py-5">
+        @if (selectedChain().length) {
+          <nav aria-label="Reporting chain">
+            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500">Reporting chain</p>
+            <ol class="flex flex-wrap items-center gap-1 text-sm">
+              @for (c of selectedChain(); track c.person.employeeId) {
+                <li class="flex items-center gap-1">
+                  <button type="button" class="rounded px-1 text-blue-700 hover:bg-blue-50" (click)="select(c.person.employeeId)">{{ c.person.name }}</button>
+                  <span class="text-gray-300">›</span>
+                </li>
+              }
+              <li class="px-1 font-medium text-gray-900">{{ n.person.name }}</li>
+            </ol>
+          </nav>
+        }
+
+        <dl class="grid grid-cols-2 gap-4 text-sm">
+          <div><dt class="text-xs text-gray-500">Department</dt><dd class="font-medium text-gray-900">{{ n.person.department || '—' }}</dd></div>
+          <div><dt class="text-xs text-gray-500">Location</dt><dd class="font-medium text-gray-900">{{ n.person.location || '—' }}</dd></div>
+          <div><dt class="text-xs text-gray-500">Type</dt><dd class="font-medium text-gray-900">{{ n.person.employeeType || '—' }}</dd></div>
+          <div><dt class="text-xs text-gray-500">Status</dt><dd class="font-medium text-gray-900">{{ n.person.employmentStatus || n.person.employeeStatus || '—' }}</dd></div>
+          <div class="col-span-2"><dt class="text-xs text-gray-500">Joined</dt><dd class="font-medium text-gray-900">{{ joined(n.person.dateOfJoining) }}</dd></div>
+          @if (n.person.email) {
+            <div class="col-span-2"><dt class="text-xs text-gray-500">Email</dt><dd><a class="font-medium text-blue-700 hover:underline" [href]="'mailto:' + n.person.email">{{ n.person.email }}</a></dd></div>
+          }
+          @if (n.person.mobile) {
+            <div class="col-span-2"><dt class="text-xs text-gray-500">Mobile</dt><dd><a class="font-medium text-blue-700 hover:underline" [href]="'tel:' + n.person.mobile">{{ n.person.mobile }}</a></dd></div>
+          }
+        </dl>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="rounded-xl border border-gray-200 p-3">
+            <p class="text-xs text-gray-500">Manager</p>
+            @if (selectedManager(); as m) {
+              <button type="button" class="mt-1 block truncate text-sm font-medium text-blue-700 hover:underline" (click)="select(m.person.employeeId)">{{ m.person.name }}</button>
+            } @else {
+              <p class="mt-1 text-sm font-medium text-gray-900">Top of the chart</p>
+            }
+          </div>
+          <div class="rounded-xl border border-gray-200 p-3">
+            <p class="text-xs text-gray-500">Dotted line</p>
+            @if (selectedDotted(); as d) {
+              <button type="button" class="mt-1 block truncate text-sm font-medium text-blue-700 hover:underline" (click)="select(d.person.employeeId)">{{ d.person.name }}</button>
+            } @else {
+              <p class="mt-1 text-sm text-gray-400">—</p>
+            }
+          </div>
+        </div>
+
+        <div>
+          <p class="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500">Direct reports · {{ n.children.length }}{{ n.total > n.children.length ? ' (' + n.total + ' in total)' : '' }}</p>
+          @if (n.children.length) {
+            <ul class="divide-y divide-gray-100 rounded-xl border border-gray-200">
+              @for (c of n.children; track c.person.employeeId) {
+                <li>
+                  <button type="button" class="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-gray-50" (click)="select(c.person.employeeId)">
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold" [ngClass]="tone(c.person.department).avatar">{{ initials(c.person.name) }}</span>
+                    <span class="min-w-0 flex-1">
+                      <span class="block truncate text-sm font-medium text-gray-900">{{ c.person.name }}</span>
+                      <span class="block truncate text-xs text-gray-500">{{ c.person.designation }}</span>
+                    </span>
+                    @if (c.total) { <span class="text-xs text-gray-400">{{ c.total }}</span> }
+                  </button>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="text-sm text-gray-400">No direct reports.</p>
+          }
+        </div>
+
+        @if (selectedPeers().length) {
+          <div>
+            <p class="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500">Works with</p>
+            <div class="flex flex-wrap gap-2">
+              @for (c of selectedPeers(); track c.person.employeeId) {
+                <button type="button" class="flex items-center gap-2 rounded-full border border-gray-200 py-1 pl-1 pr-3 text-xs text-gray-700 hover:bg-gray-50" (click)="select(c.person.employeeId)">
+                  <span class="flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-semibold" [ngClass]="tone(c.person.department).avatar">{{ initials(c.person.name) }}</span>
+                  {{ c.person.name }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        @if (canManage()) {
+          <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
+            <label class="mb-1 block text-sm font-medium text-gray-700" for="org-move">Reports to</label>
+            <select id="org-move" class="org-input" [ngModel]="moveTo()" (ngModelChange)="moveTo.set($event)">
+              <option value="">— Top of the chart —</option>
+              @for (o of moveOptions(); track o.employeeId) { <option [value]="o.employeeId">{{ o.name }} · {{ o.designation }}</option> }
+            </select>
+            <p class="mt-1 text-xs text-gray-500">{{ n.total ? 'Their ' + n.total + ' report' + (n.total > 1 ? 's move' : ' moves') + ' with them. ' : '' }}People in their own team can't be picked.</p>
+            <div class="mt-3 flex justify-end gap-2">
+              @if (moveChanged()) { <ui-text-button text="Reset" variant="secondary" (buttonClick)="moveTo.set(selectedManager()?.person?.employeeId ?? '')"></ui-text-button> }
+              <ui-text-button [text]="busy() ? 'Saving…' : 'Change manager'" (buttonClick)="saveManager()"></ui-text-button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="flex items-center justify-between gap-3 border-t border-gray-200 px-6 py-4">
+        <button type="button" class="text-sm font-medium text-blue-700 hover:underline" (click)="reveal(n.person.employeeId); closeDrawer()">Show on chart</button>
+        <ui-text-button text="Close" variant="secondary" (buttonClick)="closeDrawer()"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (toast()) {
+  <div orgBodyPortal class="ph-overlay ph-overlay--top fixed bottom-6 right-6 flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-3 text-sm font-medium text-white shadow-lg" role="status">
+    <ui-icon class="text-emerald-400" name="check_circle_outline"></ui-icon>
+    {{ toast() }}
+  </div>
+}
