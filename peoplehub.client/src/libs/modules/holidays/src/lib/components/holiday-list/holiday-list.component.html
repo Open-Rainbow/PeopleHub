@@ -1,21 +1,303 @@
-    <div class="w-full bg-white p-6 rounded-lg shadow-sm">
-      <h2 class="text-xl font-semibold mb-4">Holiday Calendar</h2>
-      @for (item of holidays; track item.holidayName) {
-        <div class="my-3">
-          <div class="flex items-start gap-4 border border-gray-200 rounded-xl p-4 shadow-sm">
-            <div class="w-[60px] h-[60px] rounded-lg bg-blue-600 text-white flex flex-col items-center justify-center">
-              <span class="text-[10px]">{{ item.holidayMonth }}</span>
-              <span class="text-[18px] font-semibold">{{ item.holidayDate }}</span>
-            </div>
-            <div class="flex-1">
-              <div class="flex flex-wrap items-center gap-2">
-                <h3 class="text-base font-semibold text-gray-900">{{ item.holidayName }}</h3>
-                <ui-chip [text]="item.holidayType" [bgColor]="'#dbeafe'" [color]="'#1d4ed8'"></ui-chip>
-                <ui-chip [text]="item.holidayClassification" [bgColor]="'#dcfce7'" [color]="'#16a34a'"></ui-chip>
-              </div>
-              <p class="text-sm text-gray-500 mt-1">{{ item.holidayCalendar }}</p>
-            </div>
-          </div>
-        </div>
+<section class="space-y-6">
+  <!-- Header -->
+  <header class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-2xl font-semibold text-gray-900">{{ manage() ? 'Holiday Calendar' : 'Holidays' }}</h1>
+        @if (!isOnline() && !loading()) {
+          <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600" title="The API is not reachable. Changes are kept in this browser.">Offline demo data</span>
+        }
+      </div>
+      <p class="mt-1 text-sm text-gray-500">
+        {{ manage() ? 'Company holidays for everyone. Leave requests skip these days automatically.' : 'Company holidays for the year. Leave requests skip these days automatically.' }}
+      </p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      <div class="inline-flex rounded-lg border border-gray-300 bg-white p-0.5" role="group" aria-label="Year">
+        @for (y of years; track y) {
+          <button type="button" class="rounded-md px-3 py-1.5 text-sm font-medium transition"
+                  [ngClass]="y === year() ? 'bg-blue-600 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'"
+                  (click)="selectYear(y)">{{ y }}</button>
+        }
+      </div>
+      <button type="button" class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+              [disabled]="!holidays().length" (click)="exportCalendar()" title="Download for Google, Outlook or Apple Calendar">
+        <ui-icon name="calendar"></ui-icon> Add to my calendar
+      </button>
+      @if (manage()) {
+        <ui-text-button text="Add holiday" (buttonClick)="openAdd()"></ui-text-button>
       }
     </div>
+  </header>
+
+  @if (error()) {
+    <div class="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+      <ui-icon class="mt-0.5 shrink-0" name="info"></ui-icon>
+      <p class="flex-1">{{ error() }}</p>
+      <button type="button" class="text-red-500 hover:text-red-700" (click)="error.set(null)" aria-label="Dismiss"><ui-icon name="close"></ui-icon></button>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="grid gap-4 md:grid-cols-4">
+      @for (i of [1, 2, 3, 4]; track i) { <div class="h-24 animate-pulse rounded-2xl bg-gray-100"></div> }
+    </div>
+    <div class="h-72 animate-pulse rounded-2xl bg-gray-100"></div>
+  } @else {
+    <!-- Next holiday + stats -->
+    <div class="grid gap-4 lg:grid-cols-3">
+      <div class="relative overflow-hidden rounded-2xl bg-blue-600 p-5 text-white shadow-sm lg:col-span-1">
+        @if (next(); as n) {
+          <p class="text-xs font-medium uppercase tracking-wide text-blue-100">Next holiday</p>
+          <div class="mt-3 flex items-center gap-4">
+            <div class="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-xl bg-white/15">
+              <span class="text-xs font-semibold uppercase">{{ months[n.month] }}</span>
+              <span class="text-2xl font-bold leading-none">{{ n.day }}</span>
+            </div>
+            <div class="min-w-0">
+              <p class="truncate text-lg font-semibold">{{ n.name }}</p>
+              <p class="text-sm text-blue-100">{{ n.weekday }} · {{ countdown(n) }}</p>
+            </div>
+          </div>
+          @if (n.bridge) {
+            <p class="mt-4 inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-medium">{{ n.bridge }}</p>
+          } @else if (n.weekend && !n.isOptional) {
+            <p class="mt-4 inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-medium">Falls on a weekend</p>
+          }
+        } @else {
+          <p class="text-xs font-medium uppercase tracking-wide text-blue-100">Next holiday</p>
+          <p class="mt-3 text-lg font-semibold">{{ year() < currentYear || holidays().length ? 'No more holidays in ' + year() : 'No holidays added for ' + year() }}</p>
+          @if (manage() && !holidays().length) {
+            <button type="button" class="mt-4 rounded-lg bg-white px-3 py-1.5 text-sm font-semibold text-blue-700 hover:bg-blue-50" (click)="openAdd()">Add the first one</button>
+          }
+        }
+      </div>
+      <div class="grid grid-cols-2 gap-4 lg:col-span-2 lg:grid-cols-4">
+        <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+          <p class="text-xs text-gray-500">Holidays in {{ year() }}</p>
+          <p class="mt-1 text-2xl font-semibold text-gray-900">{{ stats().total }}</p>
+          <p class="mt-1 text-xs text-gray-500">{{ stats().upcoming }} still ahead</p>
+        </div>
+        <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+          <p class="text-xs text-gray-500">On working days</p>
+          <p class="mt-1 text-2xl font-semibold text-gray-900">{{ stats().weekdays }}</p>
+          <p class="mt-1 text-xs text-gray-500">{{ stats().onWeekend }} fall on a weekend</p>
+        </div>
+        <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+          <p class="text-xs text-gray-500">Long weekends</p>
+          <p class="mt-1 text-2xl font-semibold text-gray-900">{{ stats().longWeekends }}</p>
+          <p class="mt-1 text-xs text-gray-500">Friday or Monday holidays</p>
+        </div>
+        <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+          <p class="text-xs text-gray-500">Optional</p>
+          <p class="mt-1 text-2xl font-semibold text-gray-900">{{ stats().optional }}</p>
+          <p class="mt-1 text-xs text-gray-500">Take as leave if you want</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-3">
+      <!-- List -->
+      <div class="space-y-4 lg:col-span-2">
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" class="rounded-full px-3 py-1 text-sm font-medium ring-1 ring-inset transition"
+                  [ngClass]="typeFilter() === 'All' ? 'bg-gray-900 text-white ring-gray-900' : 'bg-white text-gray-600 ring-gray-300 hover:bg-gray-50'"
+                  (click)="typeFilter.set('All')">All · {{ stats().total }}</button>
+          @for (t of typeCounts(); track t.id) {
+            @if (t.count > 0 || manage()) {
+              <button type="button" class="flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium ring-1 ring-inset transition"
+                      [ngClass]="typeFilter() === t.id ? 'bg-gray-900 text-white ring-gray-900' : 'bg-white text-gray-600 ring-gray-300 hover:bg-gray-50'"
+                      (click)="typeFilter.set(t.id)">
+                <span class="h-2 w-2 rounded-full" [ngClass]="t.dot"></span>{{ t.id }} · {{ t.count }}
+              </button>
+            }
+          }
+          <label class="ml-auto flex cursor-pointer items-center gap-2 text-sm text-gray-600">
+            <input type="checkbox" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" [ngModel]="hidePast()" (ngModelChange)="hidePast.set($event)" />
+            Hide past
+          </label>
+        </div>
+
+        @if (monthFilter() !== null) {
+          <div class="flex items-center gap-2 text-sm text-gray-600">
+            Showing {{ months[monthFilter()!] }} only
+            <button type="button" class="font-medium text-blue-600 hover:text-blue-700" (click)="monthFilter.set(null)">Show all months</button>
+          </div>
+        }
+
+        @for (group of groups(); track group.month) {
+          <section class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <h2 class="border-b border-gray-100 bg-gray-50 px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-gray-500">{{ group.label }}</h2>
+            <ul class="divide-y divide-gray-100">
+              @for (h of group.items; track h.id) {
+                <li class="group flex items-center gap-4 px-5 py-4 transition hover:bg-gray-50" [class.opacity-60]="h.past && !h.today">
+                  <div class="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl text-white"
+                       [ngClass]="h.isOptional ? 'border-2 border-dashed border-gray-300 bg-white !text-gray-700' : typeMap[h.type]?.tile ?? 'bg-gray-500'">
+                    <span class="text-[10px] font-semibold uppercase">{{ months[h.month] }}</span>
+                    <span class="text-xl font-bold leading-none">{{ h.day }}</span>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <h3 class="font-semibold text-gray-900">{{ h.name }}</h3>
+                      <span class="rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset" [ngClass]="typeMap[h.type]?.chip">{{ h.type }}</span>
+                      @if (h.isOptional) { <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">Optional</span> }
+                      @if (h.today) { <span class="rounded-full bg-emerald-500 px-2 py-0.5 text-xs font-semibold text-white">Today</span> }
+                    </div>
+                    <p class="mt-0.5 text-sm text-gray-500">
+                      {{ h.weekday }}
+                      @if (!h.past) { · {{ countdown(h) }} }
+                      @if (h.description) { · {{ h.description }} }
+                    </p>
+                  </div>
+                  <div class="hidden shrink-0 text-right sm:block">
+                    @if (h.bridge && !h.past) {
+                      <span class="rounded-full bg-sky-50 px-2 py-1 text-xs font-medium text-sky-700">{{ h.bridge }}</span>
+                    } @else if (h.weekend && !h.isOptional) {
+                      <span class="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-500">Weekend</span>
+                    }
+                  </div>
+                  @if (manage()) {
+                    <div class="flex shrink-0 items-center gap-1 opacity-100 sm:opacity-0 sm:transition sm:group-hover:opacity-100 sm:focus-within:opacity-100">
+                      <button type="button" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900" (click)="openEdit(h)" [attr.aria-label]="'Edit ' + h.name" title="Edit"><ui-icon name="edit"></ui-icon></button>
+                      <button type="button" class="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600" (click)="pendingDelete.set(h)" [attr.aria-label]="'Delete ' + h.name" title="Delete"><ui-icon name="delete"></ui-icon></button>
+                    </div>
+                  }
+                </li>
+              }
+            </ul>
+          </section>
+        } @empty {
+          <div class="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-gray-300 bg-white px-4 py-12 text-center">
+            <ui-icon class="text-gray-400" name="calendar"></ui-icon>
+            <p class="text-sm text-gray-500">{{ holidays().length ? 'No holidays match these filters.' : 'No holidays for ' + year() + ' yet.' }}</p>
+            @if (manage() && !holidays().length) {
+              <button type="button" class="text-sm font-medium text-blue-600 hover:text-blue-700" (click)="openAdd()">+ Add holiday</button>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Year overview -->
+      <aside class="space-y-4 lg:sticky lg:top-0 lg:self-start">
+        <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h2 class="text-sm font-semibold text-gray-900">{{ year() }} at a glance</h2>
+          <p class="text-xs text-gray-500">Pick a month to filter.</p>
+          <div class="mt-4 grid grid-cols-4 gap-2">
+            @for (m of perMonth(); track m.month) {
+              <button type="button" class="flex h-16 flex-col items-center justify-center gap-1 rounded-xl border text-sm transition disabled:cursor-default"
+                      [ngClass]="monthFilter() === m.month ? 'border-blue-600 bg-blue-50 text-blue-700' : m.count ? 'border-gray-200 text-gray-800 hover:bg-gray-50' : 'border-gray-100 text-gray-300'"
+                      [disabled]="!m.count" (click)="toggleMonth(m.month)">
+                <span class="font-medium">{{ m.label }}</span>
+                <span class="flex h-2 items-center gap-0.5">
+                  @for (dot of m.dots; track $index) { <span class="h-1.5 w-1.5 rounded-full" [ngClass]="dot"></span> }
+                </span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h2 class="text-sm font-semibold text-gray-900">Types</h2>
+          <ul class="mt-3 space-y-2 text-sm">
+            @for (t of typeCounts(); track t.id) {
+              <li class="flex items-center justify-between">
+                <span class="flex items-center gap-2 text-gray-600"><span class="h-2 w-2 rounded-full" [ngClass]="t.dot"></span>{{ t.id }} <span class="text-xs text-gray-400">{{ t.hint }}</span></span>
+                <span class="font-medium text-gray-900">{{ t.count }}</span>
+              </li>
+            }
+          </ul>
+          <p class="mt-4 rounded-lg bg-gray-50 p-3 text-xs text-gray-500">
+            Optional holidays are not skipped when you apply for leave. Take them as earned or casual leave.
+          </p>
+        </div>
+      </aside>
+    </div>
+  }
+</section>
+
+<!-- Add / edit drawer -->
+@if (drawerOpen()) {
+  <div holidayBodyPortal class="ph-overlay fixed inset-0 flex justify-end bg-gray-900/40" (click)="closeDrawer()">
+    <div class="flex h-full w-full max-w-md flex-col bg-white shadow-xl" role="dialog" aria-modal="true" aria-labelledby="hol-drawer-title" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+        <h2 id="hol-drawer-title" class="text-lg font-semibold text-gray-900">{{ editingId() === null ? 'Add holiday' : 'Edit holiday' }}</h2>
+        <button type="button" class="rounded-lg p-2 text-gray-500 hover:bg-gray-100" (click)="closeDrawer()" aria-label="Close"><ui-icon name="close"></ui-icon></button>
+      </div>
+
+      <div class="flex-1 space-y-5 overflow-y-auto px-6 py-5">
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700" for="hol-date">Date</label>
+          <input id="hol-date" type="date" class="hol-input" [class.hol-input--error]="fieldError('date')"
+                 [ngModel]="form().date" (ngModelChange)="patch('date', $event)" />
+          <p class="mt-1 text-xs" [ngClass]="fieldError('date') ? 'text-red-600' : formOnWeekend() ? 'text-amber-600' : 'text-gray-500'">
+            {{ fieldError('date') || (formOnWeekend() ? formWeekday() + ': falls on a weekend, so it gives no extra day off.' : formWeekday()) }}
+          </p>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700" for="hol-name">Name</label>
+          <input id="hol-name" class="hol-input" [class.hol-input--error]="fieldError('name')" [maxlength]="limits.nameMax" placeholder="e.g. Diwali"
+                 [ngModel]="form().name" (ngModelChange)="patch('name', $event)" />
+          <p class="mt-1 text-xs text-red-600">{{ fieldError('name') }}</p>
+        </div>
+
+        <div>
+          <span class="mb-2 block text-sm font-medium text-gray-700">Type</span>
+          <div class="grid grid-cols-2 gap-2">
+            @for (t of types; track t.id) {
+              <button type="button" class="rounded-xl border p-3 text-left transition"
+                      [ngClass]="form().type === t.id ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-600' : 'border-gray-200 hover:bg-gray-50'"
+                      (click)="patch('type', t.id)">
+                <span class="flex items-center gap-2 text-sm font-medium text-gray-900"><span class="h-2 w-2 rounded-full" [ngClass]="t.dot"></span>{{ t.id }}</span>
+                <span class="block text-xs text-gray-500">{{ t.hint }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <label class="flex cursor-pointer items-start gap-3 rounded-xl border border-gray-200 p-3">
+          <input type="checkbox" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                 [ngModel]="form().isOptional" (ngModelChange)="patch('isOptional', $event)" />
+          <span>
+            <span class="block text-sm font-medium text-gray-900">Optional holiday</span>
+            <span class="block text-xs text-gray-500">Office stays open. Employees can take it as leave; it isn't skipped in leave counts.</span>
+          </span>
+        </label>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700" for="hol-desc">Note <span class="font-normal text-gray-400">(optional)</span></label>
+          <textarea id="hol-desc" rows="2" class="hol-input" [maxlength]="limits.descriptionMax"
+                    [ngModel]="form().description" (ngModelChange)="patch('description', $event)"></textarea>
+          <p class="mt-1 text-right text-xs text-gray-400">{{ form().description.length }}/{{ limits.descriptionMax }}</p>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 border-t border-gray-200 px-6 py-4">
+        @if (submitted() && !formValid()) { <p class="mr-auto text-xs text-red-600">Fix the highlighted fields.</p> }
+        <ui-text-button text="Cancel" variant="secondary" (buttonClick)="closeDrawer()"></ui-text-button>
+        <ui-text-button [text]="busy() ? 'Saving…' : editingId() === null ? 'Add holiday' : 'Save changes'" (buttonClick)="save()"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Delete confirmation -->
+@if (pendingDelete(); as h) {
+  <div holidayBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center bg-gray-900/50 p-4" (click)="pendingDelete.set(null)">
+    <div class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl" role="alertdialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <h2 class="text-lg font-semibold text-gray-900">Delete {{ h.name }}?</h2>
+      <p class="mt-2 text-sm text-gray-500">{{ h.weekday }}, {{ h.day }} {{ months[h.month] }} becomes a working day. New leave requests will count it.</p>
+      <div class="mt-6 flex justify-end gap-3">
+        <ui-text-button text="Keep it" variant="secondary" (buttonClick)="pendingDelete.set(null)"></ui-text-button>
+        <button type="button" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700" (click)="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (toast()) {
+  <div holidayBodyPortal class="ph-overlay ph-overlay--top fixed bottom-6 right-6 flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-3 text-sm font-medium text-white shadow-lg" role="status">
+    <ui-icon class="text-emerald-400" name="check_circle_outline"></ui-icon>
+    {{ toast() }}
+  </div>
+}

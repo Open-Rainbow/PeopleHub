@@ -2,11 +2,11 @@
   display: block;
 }
 
-// Overlays are moved to <body> by leaveBodyPortal so the app header/sidebar never cover them.
+// Overlays are moved to <body> by leaveBodyPortal. The app header is z-[2000], so stay above it.
 .ph-overlay {
-  z-index: 1000;
+  z-index: 2100;
 }
 
 .ph-overlay--top {
-  z-index: 1010;
+  z-index: 2110;
 }

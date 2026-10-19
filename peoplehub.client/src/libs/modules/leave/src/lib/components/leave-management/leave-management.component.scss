@@ -2,13 +2,13 @@
   display: block;
 }
 
-// Overlays are moved to <body> (leaveBodyPortal) and must sit above the app header/sidebar.
+// Overlays are moved to <body> (leaveBodyPortal). The app header is z-[2000], so stay above it.
 .ph-overlay {
-  z-index: 1000;
+  z-index: 2100;
 }
 
 .ph-overlay--top {
-  z-index: 1010;
+  z-index: 2110;
 }
 
 .lm-input {

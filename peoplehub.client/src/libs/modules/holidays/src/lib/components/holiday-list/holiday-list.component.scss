@@ -1,0 +1,35 @@
+:host {
+  display: block;
+}
+
+// Overlays are moved to <body> (holidayBodyPortal). The app header is z-[2000], so stay above it.
+.ph-overlay {
+  z-index: 2100;
+}
+
+.ph-overlay--top {
+  z-index: 2110;
+}
+
+.hol-input {
+  display: block;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #111827;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.2);
+  }
+}
+
+.hol-input--error {
+  border-color: #f87171;
+}
