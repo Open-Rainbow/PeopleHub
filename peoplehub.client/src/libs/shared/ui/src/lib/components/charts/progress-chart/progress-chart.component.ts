@@ -9,6 +9,14 @@ import { Chart, ChartConfiguration, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
+/** Canvas can't read CSS variables: resolve `var(--token)` to its current theme value. */
+const resolveColour = (colour: string): string => {
+  const match = /^var\((--[\w-]+)(?:,\s*(.+))?\)$/.exec(colour.trim());
+  if (!match || typeof document === 'undefined') return colour;
+  const value = getComputedStyle(document.documentElement).getPropertyValue(match[1]).trim();
+  return value || match[2] || colour;
+};
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-progress-chart',
@@ -21,8 +29,9 @@ export class ProgressChartComponent implements AfterViewInit, OnChanges {
 
   @Input() goalText: string = '720 to Goal';
   @Input() progress: number = 70;
-  @Input() barColor: string = '#d18238';
-  @Input() bgColor: string = '#fbe7d2';
+  /** Theme tokens by default (theme-tokens.css). */
+  @Input() barColor: string = 'var(--color-warning)';
+  @Input() bgColor: string = 'color-mix(in srgb, var(--color-warning) 18%, var(--color-surface))';
 
   private chart!: Chart;
 
@@ -47,7 +56,7 @@ export class ProgressChartComponent implements AfterViewInit, OnChanges {
           {
             label: 'Progress',
             data: [this.progress],
-            backgroundColor: this.barColor,
+            backgroundColor: resolveColour(this.barColor),
             borderRadius: 10,
             barPercentage: 1,
             categoryPercentage: 1,
@@ -89,7 +98,7 @@ export class ProgressChartComponent implements AfterViewInit, OnChanges {
 
   private updateChart(): void {
     this.chart.data.datasets[0].data = [this.progress];
-    this.chart.data.datasets[0].backgroundColor = this.barColor;
+    this.chart.data.datasets[0].backgroundColor = resolveColour(this.barColor);
     this.goalChart.nativeElement.style.background = this.bgColor;
     this.chart.update();
   }

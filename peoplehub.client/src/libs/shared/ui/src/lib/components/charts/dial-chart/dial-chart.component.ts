@@ -16,6 +16,12 @@ import {
 
 Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
 
+/** Canvas can't read CSS variables, so read the theme tokens (theme-tokens.css) when drawing. */
+const token = (name: string, fallback: string): string => {
+  if (typeof document === 'undefined') return fallback;
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+};
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-dial-chart',
@@ -29,9 +35,9 @@ export class DialChartComponent implements AfterViewInit, OnChanges {
   @Input() lastMonthChange = 5;
   @Input() isRounded = false;
 
-  dialColor = '#ff7a00';
-  hoverColor = '#1d4ed8';
-  bgColor = '#f5f5f5';
+  dialColor = '';
+  hoverColor = '';
+  bgColor = '';
   private chart!: Chart;
 
   ngAfterViewInit() {
@@ -49,10 +55,17 @@ export class DialChartComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  private readColours(): void {
+    this.dialColor = token('--color-warning', '#f59e0b');
+    this.hoverColor = token('--color-primary', '#2563eb');
+    this.bgColor = token('--color-surface-muted', '#f1f5f9');
+  }
+
   private drawChart() {
     const ctx = this.dialCanvas.nativeElement.getContext('2d');
     if (!ctx) return;
     if (this.chart) this.chart.destroy();
+    this.readColours();
 
     this.chart = new Chart(ctx, {
       type: 'doughnut',

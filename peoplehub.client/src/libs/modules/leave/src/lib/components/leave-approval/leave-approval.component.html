@@ -1,12 +1,12 @@
-    <div class="w-full bg-white border border-gray-200 rounded-xl p-5">
+    <div class="w-full bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] rounded-xl p-5">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold">Leave Approval</h2>
+        <h2 class="text-xl font-semibold text-[var(--color-text-primary)]">Leave Approval</h2>
         <ui-text-button text="Download" variant="secondary"></ui-text-button>
       </div>
       <div class="overflow-auto">
         <table class="min-w-full text-sm">
           <thead>
-            <tr class="text-left border-b">
+            <tr class="text-left border-b border-[var(--color-border)] text-[var(--color-text-secondary)]">
               <th class="py-2">Employee</th>
               <th class="py-2">Leave Type</th>
               <th class="py-2">Duration</th>
@@ -17,13 +17,17 @@
           </thead>
           <tbody>
             @for (item of rows; track item.id) {
-              <tr class="border-b last:border-0">
+              <tr class="border-b border-[var(--color-border)] last:border-0">
                 <td class="py-3">{{ item.employee }}</td>
                 <td>{{ item.type }}</td>
                 <td>{{ item.from }} - {{ item.to }}</td>
                 <td>{{ item.reason }}</td>
                 <td>
-                  <ui-chip [text]="item.status" [bgColor]="item.status === 'Approved' ? '#dcfce7' : '#fef3c7'" [color]="item.status === 'Approved' ? '#166534' : '#92400e'"></ui-chip>
+                  <ui-chip
+                    [text]="item.status"
+                    [bgColor]="item.status === 'Approved' ? 'color-mix(in srgb, var(--color-success) 14%, var(--color-surface))' : 'color-mix(in srgb, var(--color-warning) 14%, var(--color-surface))'"
+                    [color]="item.status === 'Approved' ? 'var(--color-success)' : 'var(--color-warning)'"
+                  ></ui-chip>
                 </td>
                 <td class="flex gap-2 py-2">
                   <ui-text-button text="Approve" size="small"></ui-text-button>

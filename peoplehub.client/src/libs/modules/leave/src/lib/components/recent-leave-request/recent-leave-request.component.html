@@ -1,6 +1,6 @@
-<div class="bg-white rounded-[14px] shadow-sm w-full mb-[30px] p-0 overflow-hidden">
-  <div class="text-sm font-semibold pt-[10px] px-5">Leave History</div>
-  <div class="mb-4 px-5 text-[12px] text-[#979292]">Recent leave requests and status</div>
+<div class="bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] rounded-[14px] shadow-sm w-full mb-[30px] p-0 overflow-hidden">
+  <div class="text-sm font-semibold pt-[10px] px-5 text-[var(--color-text-primary)]">Leave History</div>
+  <div class="mb-4 px-5 text-[12px] text-[var(--color-text-muted)]">Recent leave requests and status</div>
 
   <app-table
     [tableData]="leaveTableData"
@@ -8,25 +8,25 @@
     [showCheckbox]="false"
     [showserialNo]="false"
     [alternateRowColor]="true"
-    [customRowColor]="'#F9FAFB'"
+    [customRowColor]="'var(--color-surface-elevated)'"
     [bottomPagination]="false"
   ></app-table>
 
   <ng-template #actionMenu let-row="row">
     <div
-      class="flex items-center gap-2 p-2 cursor-pointer"
+      class="flex items-center gap-2 p-2 cursor-pointer text-[var(--color-text-primary)]"
       [directivesTooltip]="getReason(row)"
       tooltipPosition="left"
-      tooltipBgColor="#333"
-      tooltipTextColor="#fff"
+      tooltipBgColor="var(--color-text-primary)"
+      tooltipTextColor="var(--color-surface)"
     >
       <ui-icon name="mdi:eye-outline" class="text-[16px]"></ui-icon> Reason
     </div>
-    <div class="flex items-center gap-2 p-2 cursor-pointer" (click)="onEdit(row)">
+    <div class="flex items-center gap-2 p-2 cursor-pointer text-[var(--color-text-primary)]" (click)="onEdit(row)">
       <ui-icon name="edit" class="text-[16px]"></ui-icon> Edit
     </div>
-    <hr class="mx-2.5" />
-    <div class="flex items-center gap-2 p-2 cursor-pointer text-red-600" (click)="confirmDelete(row)">
+    <hr class="mx-2.5 border-[var(--color-border)]" />
+    <div class="flex items-center gap-2 p-2 cursor-pointer text-[var(--color-danger)]" (click)="confirmDelete(row)">
       <ui-icon name="delete" class="text-[16px]"></ui-icon> Delete
     </div>
   </ng-template>
@@ -40,9 +40,9 @@
     aria-labelledby="delete-leave-title"
     (click)="closeModal()"
   >
-    <div class="w-full max-w-[400px] rounded-xl bg-white p-6 shadow-xl" (click)="$event.stopPropagation()">
-      <h3 id="delete-leave-title" class="text-[16px] font-semibold text-gray-900">Delete leave request?</h3>
-      <p class="mt-2 text-[14px] text-gray-500">This can't be undone.</p>
+    <div class="w-full max-w-[400px] rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] p-6 shadow-xl" (click)="$event.stopPropagation()">
+      <h3 id="delete-leave-title" class="text-[16px] font-semibold text-[var(--color-text-primary)]">Delete leave request?</h3>
+      <p class="mt-2 text-[14px] text-[var(--color-text-muted)]">This can't be undone.</p>
       <div class="mt-6 flex justify-end gap-3">
         <ui-text-button text="Cancel" variant="secondary" (buttonClick)="closeModal()"></ui-text-button>
         <ui-text-button text="Delete" variant="danger" (buttonClick)="deleteLeave()"></ui-text-button>
