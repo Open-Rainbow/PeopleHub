@@ -1,6 +1,6 @@
-<div class="flex justify-between items-center py-[10px]">
+<div class="flex justify-between items-center py-[10px] text-[var(--color-text-primary)]">
   <div class="flex items-center gap-4">
-    <h2 class="m-0 text-[18px] font-semibold">Announcement's List</h2>
+    <h2 class="m-0 text-[18px] font-semibold text-[var(--color-text-primary)]">Announcement's List</h2>
   </div>
   <div class="flex items-center">
     <ui-text-button text="Download Report" variant="secondary"></ui-text-button>
@@ -15,7 +15,7 @@
       [parentFormGroup]="searchForm"
       [placeholderText]="'Announcements by Title Search'"
       [showBorder]="true"
-      [borderColor]="'#2563eb'"
+      [borderColor]="'var(--color-primary)'"
       [showIcon]="true"
       (onSelect)="onSearch($event)"
     >
@@ -32,12 +32,12 @@
   </div>
 
   <div class="ml-auto flex">
-    <div class="flex bg-[#f9fafb] rounded-[10px] p-1 gap-[6px]">
+    <div class="flex bg-[var(--color-surface-muted)] rounded-[10px] p-1 gap-[6px]">
       <ui-chip
         [text]="'All (' + originalTableData.length + ')'"
         (click)="applyStatusFilter('All')"
-        [bgColor]="selectedStatus === 'All' ? '#7c3aed' : 'white'"
-        [color]="selectedStatus === 'All' ? 'white' : 'grey'"
+        [bgColor]="selectedStatus === 'All' ? 'var(--color-primary)' : 'var(--color-surface)'"
+        [color]="selectedStatus === 'All' ? 'var(--color-surface)' : 'var(--color-text-secondary)'"
         [borderRadius]="'9999px'"
         [size]="'medium'"
       >
@@ -45,8 +45,8 @@
       <ui-chip
         [text]="'Active (' + activeCount + ')'"
         (click)="applyStatusFilter('Active')"
-        [bgColor]="selectedStatus === 'Active' ? '#7c3aed' : 'white'"
-        [color]="selectedStatus === 'Active' ? 'white' : 'grey'"
+        [bgColor]="selectedStatus === 'Active' ? 'var(--color-primary)' : 'var(--color-surface)'"
+        [color]="selectedStatus === 'Active' ? 'var(--color-surface)' : 'var(--color-text-secondary)'"
         [borderRadius]="'9999px'"
         [size]="'medium'"
       >
@@ -54,8 +54,8 @@
       <ui-chip
         [text]="'Expired (' + expiredCount + ')'"
         (click)="applyStatusFilter('Expired')"
-        [bgColor]="selectedStatus === 'Expired' ? '#7c3aed' : 'white'"
-        [color]="selectedStatus === 'Expired' ? 'white' : 'grey'"
+        [bgColor]="selectedStatus === 'Expired' ? 'var(--color-primary)' : 'var(--color-surface)'"
+        [color]="selectedStatus === 'Expired' ? 'var(--color-surface)' : 'var(--color-text-secondary)'"
         [borderRadius]="'9999px'"
         [size]="'medium'"
       >

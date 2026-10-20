@@ -1,16 +1,16 @@
-<div class="relative p-5 bg-white rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.06),0_4px_10px_rgba(0,0,0,0.04)]">
+<div class="relative p-5 bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] rounded-2xl shadow-[0_10px_25px_color-mix(in_srgb,var(--color-text-primary)_6%,transparent)]">
   <ui-icon
-    class="absolute top-[10px] right-[10px] cursor-pointer"
+    class="absolute top-[10px] right-[10px] cursor-pointer text-[var(--color-text-muted)]"
     [name]="'cross_2'"
   >
   </ui-icon>
-  <h2 class="mt-[10px] mb-[15px] text-[18px] font-semibold">
+  <h2 class="mt-[10px] mb-[15px] text-[18px] font-semibold text-[var(--color-text-primary)]">
     {{ title }}
   </h2>
   @for (item of data; track item) {
     <div>
       <div
-        class="flex items-center px-3 py-2.5 mb-3 bg-[#faf8ff] rounded-xl shadow-[2px_4px_8px_rgb(233,244,248)] transition-all duration-300 ease hover:bg-[#e6e7e9]"
+        class="flex items-center px-3 py-2.5 mb-3 bg-[var(--color-surface-elevated)] border border-[var(--color-border)] rounded-xl transition-all duration-300 ease hover:bg-[var(--color-surface-muted)]"
       >
         <img
           class="w-[50px] h-[50px] mx-[15px] rounded-full"
@@ -18,14 +18,14 @@
           [alt]="item.name"
         />
         <div class="flex flex-col">
-          <span class="m-0 text-[14px] font-[650] text-[#560cb4]">{{ item.name }}</span>
-          <p class="mt-[2px] mb-0 text-[12px] text-[#888]">
+          <span class="m-0 text-[14px] font-[650] text-[var(--color-primary)]">{{ item.name }}</span>
+          <p class="mt-[2px] mb-0 text-[12px] text-[var(--color-text-muted)]">
             {{ item.designation }} {{ item.empID }}
           </p>
         </div>
         <div class="ml-auto mt-[15px] font-semibold">
-          <span class="mr-1 text-black">Priority:</span>
-          <span class="font-medium text-[#888]">{{ item.priority }}</span>
+          <span class="mr-1 text-[var(--color-text-primary)]">Priority:</span>
+          <span class="font-medium text-[var(--color-text-muted)]">{{ item.priority }}</span>
         </div>
       </div>
     </div>
@@ -43,13 +43,13 @@
   <div class="flex flex-wrap gap-4 mt-3">
     @for (info of announcementInfo; track info) {
       <div
-        class="inline-flex flex-col gap-1 px-3.5 py-2.5 w-fit min-w-[140px] bg-gray-100 rounded-[10px]"
+        class="inline-flex flex-col gap-1 px-3.5 py-2.5 w-fit min-w-[140px] bg-[var(--color-surface-muted)] rounded-[10px]"
       >
-        <div class="flex items-center gap-[6px]">
+        <div class="flex items-center gap-[6px] text-[var(--color-text-secondary)]">
           <ui-icon [name]="info.icon"></ui-icon>
-          <span class="text-[11px] font-semibold tracking-[0.5px] text-gray-400">{{ info.label }}</span>
+          <span class="text-[11px] font-semibold tracking-[0.5px] text-[var(--color-text-muted)]">{{ info.label }}</span>
         </div>
-        <span class="text-[13px] font-medium text-gray-700">{{ info.value }}</span>
+        <span class="text-[13px] font-medium text-[var(--color-text-secondary)]">{{ info.value }}</span>
       </div>
     }
   </div>

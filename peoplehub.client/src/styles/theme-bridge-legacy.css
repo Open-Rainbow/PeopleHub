@@ -87,3 +87,41 @@
 :root[data-theme='dark'] [class*='border-[#dbeafe]' i] {
   border-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
 }
+
+/* ---- Variant forms of the legacy light classes (opacity, important, responsive, hover) ---- */
+:root[data-theme='dark'] :is([class*='!bg-white '], [class*='md:bg-white'], [class*='sm:bg-white'], [class*='lg:bg-white']) {
+  background-color: var(--color-surface);
+}
+
+:root[data-theme='dark'] :is([class*='bg-gray-50/'], [class*='bg-slate-50/'], [class*='bg-gray-100/'], [class*='bg-slate-100/']) {
+  background-color: var(--color-surface-elevated);
+}
+
+:root[data-theme='dark'] :is([class*='bg-blue-50/'], [class*='bg-indigo-50/'], [class*='bg-sky-50/']) {
+  background-color: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+}
+
+:root[data-theme='dark'] :is([class*='bg-green-50/'], [class*='bg-emerald-50/']) {
+  background-color: color-mix(in srgb, var(--color-success) 10%, var(--color-surface));
+}
+
+:root[data-theme='dark'] :is([class*='bg-red-50/'], [class*='bg-rose-50/']) {
+  background-color: color-mix(in srgb, var(--color-danger) 10%, var(--color-surface));
+}
+
+:root[data-theme='dark'] :is([class*='bg-amber-50/'], [class*='bg-yellow-50/'], [class*='bg-orange-50/']) {
+  background-color: color-mix(in srgb, var(--color-warning) 10%, var(--color-surface));
+}
+
+:root[data-theme='dark'] :is([class*='from-white'], [class*='from-gray-50'], [class*='from-slate-50']) {
+  --tw-gradient-from: var(--color-surface);
+}
+
+:root[data-theme='dark'] :is([class*='to-white'], [class*='to-gray-50'], [class*='to-slate-50']) {
+  --tw-gradient-to: var(--color-surface-elevated);
+}
+
+/* light named/rgb arbitrary backgrounds */
+:root[data-theme='dark'] :is([class*='bg-[white]'], [class*='bg-[rgba(255,255,255'], [class*='bg-[rgba(255, 255, 255']) {
+  background-color: var(--color-surface);
+}
