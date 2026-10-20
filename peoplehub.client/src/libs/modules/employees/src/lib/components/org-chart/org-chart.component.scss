@@ -22,7 +22,8 @@
 }
 
 // ---- Tree with connector lines (top-down) ----------------------------------------------------
-$line: #cbd5e1;
+// Colours: theme tokens only (theme-tokens.css), so light and dark both work.
+$line: var(--color-border-strong);
 $gap: 1.5rem;
 
 .org-tree,
@@ -115,13 +116,14 @@ $gap: 1.5rem;
   width: 15rem;
   overflow: hidden;
   border-radius: 0.875rem;
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--color-text-primary) 4%, transparent);
   transition: box-shadow 0.15s, opacity 0.15s, transform 0.15s;
 
   &:hover {
-    box-shadow: 0 6px 16px rgb(15 23 42 / 0.08);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--color-text-primary) 10%, transparent);
     transform: translateY(-1px);
   }
 }
@@ -135,15 +137,15 @@ $gap: 1.5rem;
 .org-card__toggle {
   display: flex;
   justify-content: center;
-  border-top: 1px solid #f3f4f6;
-  background: #f9fafb;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface-muted);
 }
 
 .org-row {
   cursor: pointer;
 
   &:hover {
-    background: #f9fafb;
+    background: var(--color-surface-muted);
   }
 }
 
@@ -152,23 +154,23 @@ $gap: 1.5rem;
 }
 
 .org-card--me {
-  border-color: #93c5fd;
+  border-color: color-mix(in srgb, var(--color-primary) 55%, transparent);
 }
 
 .org-card--selected {
-  box-shadow: 0 0 0 2px #2563eb;
+  box-shadow: 0 0 0 2px var(--color-primary);
 }
 
 .org-card--focus {
   animation: org-pulse 1.2s ease-out 2;
-  box-shadow: 0 0 0 3px #2563eb;
+  box-shadow: 0 0 0 3px var(--color-primary);
 }
 
 @keyframes org-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgb(37 99 235 / 0.6);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 60%, transparent);
   }
   100% {
-    box-shadow: 0 0 0 14px rgb(37 99 235 / 0);
+    box-shadow: 0 0 0 14px color-mix(in srgb, var(--color-primary) 0%, transparent);
   }
 }

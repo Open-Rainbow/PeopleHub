@@ -1,1 +1,56 @@
-// Stepper styles handled via Tailwind utilities in template
+// Stepper: theme tokens only (theme-tokens.css), so it follows light and dark.
+.stp {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+
+  &__head { border-bottom: 1px solid var(--color-border); }
+  &__title { color: var(--color-text-primary); }
+  &__meta { color: var(--color-text-muted); }
+  &__track { background: var(--color-surface-muted); }
+  &__bar { background: var(--color-primary); }
+
+  &__step {
+    --tone: var(--color-text-secondary);
+    border-left-color: transparent;
+    color: var(--tone);
+
+    &:hover { background: var(--color-surface-muted); }
+
+    .stp__dot {
+      background: var(--color-surface-muted);
+      color: var(--color-text-muted);
+    }
+
+    &.is-active {
+      --tone: var(--color-primary);
+      border-left-color: var(--tone);
+      background: color-mix(in srgb, var(--tone) 14%, var(--color-surface));
+
+      .stp__dot {
+        background: var(--tone);
+        color: var(--color-surface);
+      }
+    }
+
+    &.is-done {
+      --tone: var(--color-success);
+
+      .stp__dot {
+        background: color-mix(in srgb, var(--tone) 16%, var(--color-surface));
+        color: var(--tone);
+      }
+    }
+
+    &.is-error {
+      --tone: var(--color-danger);
+      border-left-color: var(--tone);
+      background: color-mix(in srgb, var(--tone) 12%, var(--color-surface));
+
+      .stp__dot {
+        background: color-mix(in srgb, var(--tone) 22%, var(--color-surface));
+        color: var(--tone);
+      }
+    }
+  }
+}

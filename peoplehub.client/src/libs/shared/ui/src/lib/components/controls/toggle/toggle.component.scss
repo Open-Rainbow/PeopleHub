@@ -1,6 +1,7 @@
+// Colours: theme tokens only (theme-tokens.css), so light and dark both work.
 :host {
   display: inline-block;
-  --toggle-active-color: #4caf50;
+  --toggle-active-color: var(--color-success);
   --toggle-label-color: var(--color-text-primary);
 }
 
@@ -69,7 +70,7 @@
   width: var(--toggle-width);
   height: var(--toggle-height);
   border-radius: 9999px;
-  background: var(--color-border);
+  background: var(--color-border-strong);
   transition:
     background-color 0.2s,
     box-shadow 0.2s;
@@ -82,7 +83,8 @@
   width: var(--toggle-knob-size);
   height: var(--toggle-knob-size);
   border-radius: 9999px;
-  background: var(--color-text-primary);
+  background: var(--color-surface);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--color-text-primary) 25%, transparent);
   transform: translateY(-50%);
   transition:
     transform 0.2s,
@@ -95,9 +97,9 @@
 
 .toggle-input:checked + .toggle-track + .toggle-knob {
   transform: translate(var(--toggle-knob-translate), -50%);
-  background: white;
+  background: var(--color-surface);
 }
 
 .toggle-input:focus-visible + .toggle-track {
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 30%, transparent);
 }

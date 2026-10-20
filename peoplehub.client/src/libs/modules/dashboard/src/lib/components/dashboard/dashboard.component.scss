@@ -1,0 +1,65 @@
+// Dashboard: theme tokens only (theme-tokens.css), works in light and dark.
+:host {
+  display: block;
+  color: var(--color-text-primary);
+}
+
+.dash-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+}
+
+.dash-title {
+  margin-bottom: 1rem;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.dash-primary { color: var(--color-text-primary); }
+.dash-secondary { color: var(--color-text-secondary); }
+.dash-muted { color: var(--color-text-muted); }
+
+.dash-row {
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child { border-bottom: 0; }
+}
+
+.dash-item {
+  background: var(--color-surface-muted);
+  transition: background-color 0.15s ease;
+
+  &:hover { background: var(--color-surface-elevated); }
+}
+
+// Tinted tile: --tone is set per item from the TS config (always a theme token).
+.dash-tile {
+  --tone: var(--color-primary);
+  background: color-mix(in srgb, var(--tone) 12%, var(--color-surface));
+  border: 1px solid color-mix(in srgb, var(--tone) 22%, transparent);
+}
+
+.dash-tone { color: var(--tone); }
+
+.dash-avatar {
+  background: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.dash-hero {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-primary) 70%, var(--color-bg)) 0%,
+    var(--color-primary) 100%
+  );
+  color: #fff;
+
+  &__soft { color: color-mix(in srgb, #fff 80%, transparent); }
+
+  &__stat {
+    background: color-mix(in srgb, #fff 10%, transparent);
+    border: 1px solid color-mix(in srgb, #fff 15%, transparent);
+  }
+}

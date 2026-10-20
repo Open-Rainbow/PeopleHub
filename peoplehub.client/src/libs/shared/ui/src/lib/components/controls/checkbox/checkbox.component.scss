@@ -1,5 +1,5 @@
 // Checkbox Component Scoped Styles
-// Following Angular and Material Design Guidelines
+// Colours: theme tokens only (theme-tokens.css), so light and dark both work.
 
 .checkbox-wrapper {
   display: inline-flex;
@@ -20,7 +20,7 @@
   transition: background-color 0.15s ease;
 
   &.label-clickable:hover:not(.disabled) {
-    background-color: rgba(37, 99, 235, 0.05);
+    background-color: color-mix(in srgb, var(--color-primary) 6%, transparent);
   }
 
   &:not(.label-clickable) {
@@ -73,14 +73,14 @@
   flex-shrink: 0;
   width: 1.25rem;
   height: 1.25rem;
-  border: 2px solid var(--color-border);
+  border: 2px solid var(--color-border-strong);
   border-radius: 0.375rem;
-  background-color: white;
+  background-color: var(--color-surface);
   transition: all 0.2s ease;
 
   .checkbox-input:not(:checked) ~ & {
-    background-color: white;
-    border-color: var(--color-border);
+    background-color: var(--color-surface);
+    border-color: var(--color-border-strong);
   }
 
   .checkbox-input:not(:checked):hover ~ & {
@@ -95,7 +95,7 @@
   .checkbox-input:checked:hover ~ & {
     background-color: var(--checkbox-color, var(--color-primary));
     border-color: var(--checkbox-color, var(--color-primary));
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent);
   }
 
   &::after {

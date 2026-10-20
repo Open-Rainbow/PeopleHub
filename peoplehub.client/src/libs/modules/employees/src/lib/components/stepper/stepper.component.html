@@ -1,38 +1,29 @@
-<div class="flex flex-col w-[260px] max-h-[calc(100dvh-124px)] bg-white border border-[#e6e9ef] rounded-2xl overflow-hidden">
-  <div class="shrink-0 px-5 pt-5 pb-4 border-b border-[#f0f2f6]">
-    <h3 class="font-semibold text-[15px] text-[#1f2937] mb-3">Add New Employee</h3>
-    <div class="h-[6px] bg-[#f0f2f6] rounded-full mb-1.5">
+<div class="stp flex flex-col w-[260px] max-h-[calc(100dvh-124px)] rounded-2xl overflow-hidden">
+  <div class="stp__head shrink-0 px-5 pt-5 pb-4">
+    <h3 class="stp__title font-semibold text-[15px] mb-3">Add New Employee</h3>
+    <div class="stp__track h-[6px] rounded-full mb-1.5">
       <div
-        class="h-[6px] bg-[#2563eb] rounded-full transition-[width] duration-300 ease-in-out"
+        class="stp__bar h-[6px] rounded-full transition-[width] duration-300 ease-in-out"
         [style.width.%]="progressPercent()"
       ></div>
     </div>
-    <p class="text-[12px] text-[#6b7280] m-0">{{ completedCount() }} of {{ totalCount() }} steps completed</p>
+    <p class="stp__meta text-[12px] m-0">{{ completedCount() }} of {{ totalCount() }} steps completed</p>
   </div>
 
   <ul class="list-none m-0 p-3 flex flex-col gap-0.5 overflow-y-auto">
     @for (step of steps(); let i = $index; track step.route) {
       <li
-        class="flex items-center px-3 py-2 rounded-lg cursor-pointer border-l-[3px] transition-colors duration-150"
+        class="stp__step flex items-center px-3 py-2 rounded-lg cursor-pointer border-l-[3px] transition-colors duration-150"
         [ngClass]="{
-          'bg-[#e8f0ff] border-[#2563eb] text-[#2563eb]': step.status === 'active',
-          'border-transparent text-[#2e7d32] hover:bg-[#f5f7fa]': step.status === 'completed',
-          'bg-[#fdecec] border-[#f52525] text-[#8e3434]': step.status === 'notComplete',
-          'border-transparent text-[#374151] hover:bg-[#f5f7fa]': step.status !== 'active' && step.status !== 'completed' && step.status !== 'notComplete'
+          'is-active': step.status === 'active',
+          'is-done': step.status === 'completed',
+          'is-error': step.status === 'notComplete'
         }"
         [attr.aria-current]="step.status === 'active' ? 'step' : null"
         (click)="onStepClick(step, i)"
       >
         <div class="flex items-center gap-3 w-full min-w-0">
-          <span
-            class="flex items-center justify-center w-[26px] h-[26px] rounded-full flex-shrink-0 text-[15px]"
-            [ngClass]="{
-              'bg-[#2563eb] text-white': step.status === 'active',
-              'bg-[#e8f5e9] text-[#2e7d32]': step.status === 'completed',
-              'bg-[#fbd5d5] text-[#b42318]': step.status === 'notComplete',
-              'bg-[#f3f4f6] text-[#6b7280]': step.status !== 'active' && step.status !== 'completed' && step.status !== 'notComplete'
-            }"
-          >
+          <span class="stp__dot flex items-center justify-center w-[26px] h-[26px] rounded-full flex-shrink-0 text-[15px]">
             @if (step.status === 'completed') {
               <ui-icon name="charm:tick"></ui-icon>
             } @else if (step.status === 'notComplete') {

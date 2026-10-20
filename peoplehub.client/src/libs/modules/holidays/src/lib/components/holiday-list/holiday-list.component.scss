@@ -11,25 +11,30 @@
   z-index: 2110;
 }
 
+// Colours: theme tokens only (theme-tokens.css), so light and dark both work.
 .hol-input {
   display: block;
   width: 100%;
   border-radius: 0.5rem;
-  border: 1px solid #d1d5db;
-  background: #fff;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: #111827;
+  color: var(--color-text-primary);
   transition: border-color 0.15s, box-shadow 0.15s;
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
 
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.2);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
   }
 }
 
 .hol-input--error {
-  border-color: #f87171;
+  border-color: var(--color-danger);
 }

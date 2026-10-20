@@ -11,37 +11,42 @@
   z-index: 2110;
 }
 
+// Colours: theme tokens only (theme-tokens.css), so light and dark both work.
 .lm-input {
   display: block;
   width: 100%;
   border-radius: 0.5rem;
-  border: 1px solid #d1d5db;
-  background: #fff;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: #111827;
+  color: var(--color-text-primary);
   transition: border-color 0.15s, box-shadow 0.15s;
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
 
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.2);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
   }
 
   &:disabled {
-    background: #f9fafb;
-    color: #9ca3af;
+    background: var(--color-surface-muted);
+    color: var(--color-text-muted);
     cursor: not-allowed;
   }
 }
 
 .lm-input--error {
-  border-color: #f87171;
+  border-color: var(--color-danger);
 
   &:focus {
-    border-color: #ef4444;
-    box-shadow: 0 0 0 3px rgb(239 68 68 / 0.2);
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger) 20%, transparent);
   }
 }
 
@@ -52,7 +57,7 @@
   gap: 0.5rem;
   cursor: pointer;
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--color-text-secondary);
   user-select: none;
 
   input {
@@ -62,7 +67,7 @@
     height: 1.25rem;
     flex-shrink: 0;
     border-radius: 9999px;
-    background: #d1d5db;
+    background: var(--color-border-strong);
     cursor: pointer;
     transition: background 0.15s;
 
@@ -74,13 +79,13 @@
       width: 1rem;
       height: 1rem;
       border-radius: 9999px;
-      background: #fff;
-      box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+      background: var(--color-surface);
+      box-shadow: 0 1px 2px color-mix(in srgb, var(--color-text-primary) 20%, transparent);
       transition: transform 0.15s;
     }
 
     &:checked {
-      background: #2563eb;
+      background: var(--color-primary);
 
       &::after {
         transform: translateX(1rem);
@@ -88,7 +93,7 @@
     }
 
     &:focus-visible {
-      outline: 2px solid #3b82f6;
+      outline: 2px solid var(--color-primary);
       outline-offset: 2px;
     }
 

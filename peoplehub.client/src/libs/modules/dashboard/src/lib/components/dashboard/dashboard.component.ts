@@ -1,10 +1,19 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChipComponent, HorizontalBarChartComponent, IconComponent } from 'ui';
+import { ChipComponent, HorizontalBarChartComponent, IconButtonComponent, IconComponent } from 'ui';
 import { Activity, QuickAnnouncements, RecentPayslip } from 'common';
 import { DurationPipe } from 'pipes';
 
 const HOUR = 60 * 60 * 1000;
+
+/** Theme tokens (theme-tokens.css). Tiles tint themselves from these, so light/dark both work. */
+const TONE = {
+  primary: 'var(--color-primary)',
+  success: 'var(--color-success)',
+  warning: 'var(--color-warning)',
+  danger: 'var(--color-danger)',
+  muted: 'var(--color-text-secondary)',
+} as const;
 
 /** ISO timestamp `hoursAgo` hours before now, so demo items never look a year old. */
 const hoursAgo = (hours: number): string => new Date(Date.now() - hours * HOUR).toISOString();
@@ -23,6 +32,13 @@ const nextOccurrence = (month: number, day: number): Date => {
   return candidate;
 };
 
+/** Canvas charts can't read CSS variables, so resolve the tokens once at render time. */
+const tokenColour = (name: string, fallback: string): string => {
+  if (typeof document === 'undefined') return fallback;
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return value || fallback;
+};
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'dashboard-root',
@@ -31,6 +47,7 @@ const nextOccurrence = (month: number, day: number): Date => {
     CommonModule,
     HorizontalBarChartComponent,
     ChipComponent,
+    IconButtonComponent,
     IconComponent,
     DurationPipe,
   ],
@@ -50,11 +67,17 @@ export class DashboardComponent {
     [150, 200, 190, 120, 100, 400, 90, 120, 200],
   ];
 
+  readonly chartColors = [
+    tokenColour('--color-primary', '#2563eb'),
+    tokenColour('--color-warning', '#f59e0b'),
+    tokenColour('--color-success', '#16a34a'),
+  ];
+
   leaveBalance = [
-    { label: 'Total Days', value: 24, color: '#2563eb', bg: '#eff6ff' },
-    { label: 'Used Days', value: 8, color: '#dc2626', bg: '#fef2f2' },
-    { label: 'Remaining', value: 14, color: '#16a34a', bg: '#f0fdf4' },
-    { label: 'Pending', value: 2, color: '#f59e0b', bg: '#fffbeb' },
+    { label: 'Total Days', value: 24, tone: TONE.primary },
+    { label: 'Used Days', value: 8, tone: TONE.danger },
+    { label: 'Remaining', value: 14, tone: TONE.success },
+    { label: 'Pending', value: 2, tone: TONE.warning },
   ];
 
   quickStats = [
@@ -85,10 +108,10 @@ export class DashboardComponent {
   ];
 
   holidayStats = [
-    { name: 'Total Holidays', number: 12, color: '#2563eb', bg: '#eff6ff' },
-    { name: 'Federal Holidays', number: 8, color: '#16a34a', bg: '#f0fdf4' },
-    { name: 'Company Holidays', number: 4, color: '#ea580c', bg: '#fff7ed' },
-    { name: 'Upcoming', number: 3, color: '#c026d3', bg: '#fdf4ff' },
+    { name: 'Total Holidays', number: 12, tone: TONE.primary },
+    { name: 'Federal Holidays', number: 8, tone: TONE.success },
+    { name: 'Company Holidays', number: 4, tone: TONE.warning },
+    { name: 'Upcoming', number: 3, tone: TONE.muted },
   ];
 
   upcomingHolidays = [

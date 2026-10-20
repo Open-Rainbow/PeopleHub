@@ -1,5 +1,6 @@
 :host {
   display: block;
+  color: var(--color-text-primary);
 }
 
 .ae-step-header {
@@ -10,15 +11,23 @@
  * Shared look for every step rendered in the router-outlet.
  * Step templates still use their own Tailwind markup; these rules normalise
  * spacing, grid behaviour and card styling so all 15 steps look the same.
+ * Colours come from theme-tokens.css only, so every step follows light/dark.
  */
 :host ::ng-deep .ae-content {
+  color: var(--color-text-primary);
+
   /* root card of each step component */
   > :not(header):not(router-outlet):not(employees-button-navigation) > div:first-child {
     padding: 1.5rem !important;
-    border: 1px solid #e6e9ef !important;
+    border: 1px solid var(--color-border) !important;
     border-radius: 1rem !important;
-    background-color: var(--color-surface, #fff) !important;
-    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04) !important;
+    background-color: var(--color-surface) !important;
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--color-text-primary) 5%, transparent) !important;
+  }
+
+  /* step headings and helper text */
+  h1, h2, h3, h4 {
+    color: var(--color-text-primary);
   }
 
   /* form grids: as many columns as fit, never narrower than 15rem, so labels stay readable */
@@ -68,16 +77,25 @@
 
   hr {
     margin-bottom: 1rem !important;
-    border-color: #eef0f4;
+    border-color: var(--color-border);
   }
 
-  /* repeatable record cards (Address 1, Skill 1 ...) */
+  /* repeatable record cards (Address 1, Emergency Contact 1, Skill 1 ...) */
   section.rounded-2xl {
     padding: 1.25rem !important;
-    border: 1px solid #e6e9ef !important;
+    border: 1px solid var(--color-border) !important;
     border-radius: 0.75rem !important;
-    background-color: #fbfcfe !important;
+    background-color: var(--color-surface-elevated) !important;
+    color: var(--color-text-primary);
     box-shadow: none !important;
+
+    /* "Emergency Contact 1" / "Address 1" record titles */
+    > p:first-child,
+    > div:first-child > p,
+    > h3,
+    > h4 {
+      color: var(--color-text-secondary) !important;
+    }
   }
 
   section.rounded-2xl + section.rounded-2xl {
@@ -87,6 +105,7 @@
   /* "1 / 3 addresses  [Add Address]" footer */
   .flex.justify-between.pt-1 {
     margin-top: 1rem;
+    color: var(--color-text-secondary);
   }
 
   /* checkbox row helper used by some steps */

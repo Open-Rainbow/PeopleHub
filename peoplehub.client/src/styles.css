@@ -2,3 +2,4 @@
 @import "./styles/theme-tokens.css";
 @import "tailwindcss";
 @import "./styles/theme-bridge.css";
+@import "./styles/theme-bridge-legacy.css";

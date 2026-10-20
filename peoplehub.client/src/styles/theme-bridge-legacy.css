@@ -1,0 +1,89 @@
+/*
+ * Theme bridge, part 2 (dark only): arbitrary hex classes such as bg-[#f0f2f6], text-[#374151],
+ * border-[#e6e9ef] left in older templates. Matched on the class attribute (case-insensitive),
+ * so [ngClass] classes are covered too. Light backgrounds -> surfaces, dark text -> theme text,
+ * light borders -> theme borders, known accents -> tokens. Generic rules first, accents after.
+ * New code should use the tokens directly; this only keeps legacy markup readable in dark mode.
+ */
+:root[data-theme='dark'] :is([class*='bg-[#d' i], [class*='bg-[#e' i], [class*='bg-[#f' i]) {
+  background-color: var(--color-surface-elevated);
+}
+
+:root[data-theme='dark'] :is([class*='text-[#0' i], [class*='text-[#1' i], [class*='text-[#2' i], [class*='text-[#3' i]) {
+  color: var(--color-text-primary);
+}
+
+:root[data-theme='dark'] :is([class*='text-[#4' i], [class*='text-[#5' i], [class*='text-[#6' i], [class*='text-[#7' i], [class*='text-[#8' i]) {
+  color: var(--color-text-secondary);
+}
+
+:root[data-theme='dark'] :is([class*='text-[#9' i], [class*='text-[#a' i], [class*='text-[#b' i], [class*='text-[#c' i], [class*='text-[#d' i], [class*='text-[#e' i]) {
+  color: var(--color-text-muted);
+}
+
+:root[data-theme='dark'] :is([class*='border-[#d' i], [class*='border-[#e' i], [class*='border-[#f' i]) {
+  border-color: var(--color-border);
+}
+
+:root[data-theme='dark'] [class*='border-[#c' i] {
+  border-color: var(--color-border-strong);
+}
+
+/* ---- known accents ---- */
+:root[data-theme='dark'] :is([class*='bg-[#e8f0ff]' i], [class*='bg-[#eef4ff]' i], [class*='bg-[#dbeafe]' i], [class*='bg-[#ecf2fd]' i], [class*='bg-[#eff6ff]' i]) {
+  background-color: color-mix(in srgb, var(--color-primary) 16%, var(--color-surface));
+}
+
+:root[data-theme='dark'] :is([class*='bg-[#e8f5e9]' i], [class*='bg-[#dcfce7]' i], [class*='bg-[#f0fdf4]' i]) {
+  background-color: color-mix(in srgb, var(--color-success) 16%, var(--color-surface));
+}
+
+:root[data-theme='dark'] :is([class*='bg-[#fdecec]' i], [class*='bg-[#fbd5d5]' i], [class*='bg-[#ffe2e2]' i], [class*='bg-[#fee2e2]' i], [class*='bg-[#fef2f2]' i]) {
+  background-color: color-mix(in srgb, var(--color-danger) 16%, var(--color-surface));
+}
+
+:root[data-theme='dark'] :is([class*='bg-[#fef9c2]' i], [class*='bg-[#fef3c7]' i], [class*='bg-[#fefce8]' i], [class*='bg-[#fffbeb]' i], [class*='bg-[#fff7ed]' i]) {
+  background-color: color-mix(in srgb, var(--color-warning) 16%, var(--color-surface));
+}
+
+/* saturated fills that start with d/e/f must stay saturated */
+:root[data-theme='dark'] :is([class*='bg-[#e11d48]' i], [class*='bg-[#dc2626]' i], [class*='bg-[#ef4444]' i], [class*='bg-[#f52525]' i]) {
+  background-color: var(--color-danger);
+}
+
+:root[data-theme='dark'] :is([class*='bg-[#f59e0b]' i], [class*='bg-[#f97316]' i], [class*='bg-[#ff8800]' i], [class*='bg-[#facc15]' i]) {
+  background-color: var(--color-warning);
+}
+
+:root[data-theme='dark'] :is([class*='text-[#2563eb]' i], [class*='text-[#1e40af]' i], [class*='text-[#0c24c3]' i], [class*='text-[#1d4ed8]' i], [class*='text-[#4076ff]' i]) {
+  color: var(--color-primary);
+}
+
+:root[data-theme='dark'] :is([class*='text-[#560cb4]' i], [class*='text-[#7171ed]' i]) {
+  color: color-mix(in srgb, var(--color-primary) 70%, var(--color-text-primary));
+}
+
+:root[data-theme='dark'] :is([class*='text-[#2e7d32]' i], [class*='text-[#166534]' i], [class*='text-[#16a34a]' i], [class*='text-[#23816c]' i]) {
+  color: var(--color-success);
+}
+
+:root[data-theme='dark'] :is([class*='text-[#8e3434]' i], [class*='text-[#b42318]' i], [class*='text-[#c0171a]' i], [class*='text-[#dc2626]' i], [class*='text-[#991b1b]' i]) {
+  color: var(--color-danger);
+}
+
+/* white text on filled buttons/badges stays white */
+:root[data-theme='dark'] :is([class*='text-[#fff]' i], [class*='text-[#ffffff]' i]) {
+  color: #fff;
+}
+
+:root[data-theme='dark'] [class*='border-[#2563eb]' i] {
+  border-color: var(--color-primary);
+}
+
+:root[data-theme='dark'] [class*='border-[#f52525]' i] {
+  border-color: var(--color-danger);
+}
+
+:root[data-theme='dark'] [class*='border-[#dbeafe]' i] {
+  border-color: color-mix(in srgb, var(--color-primary) 35%, transparent);
+}
