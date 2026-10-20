@@ -39,7 +39,8 @@ export class PaginationComponent {
   @Input() isPagination: boolean = true;
   @Input() isGoto: boolean = true;
   @Input() isShowingEntries: boolean = true;
-  @Input() backgroundColor: string = '#fff4f4';
+  /** Theme token by default (theme-tokens.css), so it follows light/dark. */
+  @Input() backgroundColor: string = 'var(--color-surface-elevated)';
   @Output() pageChange = new EventEmitter<{ page: number; pageSize: number }>();
 
   totalPages: number = 0;
