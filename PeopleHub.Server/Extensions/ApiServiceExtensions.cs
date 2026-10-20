@@ -7,6 +7,7 @@ using PeopleHub.Server.Configuration;
 using PeopleHub.Server.Context;
 using PeopleHub.Server.Errors;
 using PeopleHub.Server.Middleware;
+using PeopleHub.Server.Security;
 
 namespace PeopleHub.Server.Extensions;
 
@@ -16,7 +17,8 @@ public static class ApiServiceExtensions
 
     public static IServiceCollection AddPeopleHubApi(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddControllers();
+        // Page permissions from the Setup page are checked on every API call (Security/ApiPermissionMap).
+        services.AddControllers(options => options.Filters.Add<PagePermissionFilter>());
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddOpenApi();

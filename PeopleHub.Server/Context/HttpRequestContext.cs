@@ -10,6 +10,9 @@ internal sealed class HttpRequestContext(
     IHttpContextAccessor accessor,
     IOptions<OrganizationOptions> options) : IRequestContext
 {
+    /// <summary>Sent by the Angular app until the login API issues tokens with a role claim.</summary>
+    public const string RoleHeader = "X-PeopleHub-Role";
+
     private HttpContext? Http => accessor.HttpContext;
 
     public bool IsAuthenticated => Http?.User.Identity?.IsAuthenticated ?? false;
@@ -22,6 +25,25 @@ internal sealed class HttpRequestContext(
         Http?.Items[CorrelationIdMiddleware.ItemKey] as string
         ?? Http?.TraceIdentifier
         ?? string.Empty;
+
+    public string? Role
+    {
+        get
+        {
+            if (Http is null) return null;
+
+            // Authenticated: trust the token only.
+            if (IsAuthenticated)
+            {
+                var claim = Http.User.FindFirst(ClaimTypes.Role)?.Value ?? Http.User.FindFirst("role")?.Value;
+                return string.IsNullOrWhiteSpace(claim) ? null : claim.Trim().ToLowerInvariant();
+            }
+
+            return Http.Request.Headers.TryGetValue(RoleHeader, out var header) && !string.IsNullOrWhiteSpace(header.ToString())
+                ? header.ToString().Trim().ToLowerInvariant()
+                : null;
+        }
+    }
 
     public int? OrganizationId
     {

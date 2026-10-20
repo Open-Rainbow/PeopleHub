@@ -16,6 +16,8 @@ using PeopleHub.Application.Modules.Payroll.Interfaces;
 using PeopleHub.Application.Modules.Payroll.Services;
 using PeopleHub.Application.Modules.Policies.Interfaces;
 using PeopleHub.Application.Modules.Policies.Services;
+using PeopleHub.Application.Modules.Setup.Interfaces;
+using PeopleHub.Application.Modules.Setup.Services;
 
 namespace PeopleHub.Application;
 
@@ -36,6 +38,8 @@ public static class DependencyInjection
         services.AddScoped<IOrgChartService, OrgChartService>();
         services.AddScoped<IPayrollService, PayrollService>();
         services.AddScoped<IPolicyService, PolicyService>();
+        services.AddScoped<IAccessService, AccessService>();
+        services.AddScoped<ISetupService, SetupService>();
 
         return services;
     }

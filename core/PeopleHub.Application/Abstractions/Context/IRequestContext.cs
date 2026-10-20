@@ -12,6 +12,9 @@ public interface IRequestContext
     string CorrelationId { get; }
 
     bool IsAuthenticated { get; }
+
+    /// <summary>Role code of the caller (superadmin, admin, hr, manager, employee or a custom role). Null for jobs.</summary>
+    string? Role => null;
 }
 
 public static class RequestContextExtensions
