@@ -1,16 +1,16 @@
 @if (totalItems > 5 && bottomPagination) {
 <div class="sticky left-0">
-  <ui-pagination [backgroundColor]="'rgb(183 183 183)'" [totalItems]="totalItems" [pageSize]="itemsPerPage"
+  <ui-pagination [backgroundColor]="'var(--color-surface-elevated)'" [totalItems]="totalItems" [pageSize]="itemsPerPage"
     [currentPage]="currentPage" [isDropCount]="true" [isPagination]="true" [isGoto]="true" [isShowingEntries]="true"
     (pageChange)="pageChange($event)">
   </ui-pagination>
 </div>
 }
 
-<div class="justify-between items-center overflow-x-auto text-xs [scrollbar-width:thin]">
+<div class="justify-between items-center overflow-x-auto text-xs [scrollbar-width:thin] text-[var(--color-text-primary)]">
   <table class="min-w-full border-collapse table-fixed [&_td]:!overflow-visible [&_th]:font-semibold">
    <thead class="!rounded-[50px]">
-      <tr [style.border-radius]="thradius" class="bg-[#dbeafe]">
+      <tr [style.border-radius]="thradius" class="bg-[color-mix(in_srgb,var(--color-primary)_14%,var(--color-surface))] text-[var(--color-text-primary)]">
         @if (showUndoRedo) {
         <th [style.border-top-left-radius]="thradius" [style.border-bottom-left-radius]="thradius"
           class="p-2 whitespace-nowrap font-semibold text-left">
@@ -28,8 +28,8 @@
         <th [style.border-top-left-radius]="(!showUndoRedo) ? thradius : '0px'"
           [style.border-bottom-left-radius]="(!showUndoRedo) ? thradius : '0px'"
           class="p-2 whitespace-nowrap font-semibold text-left">
-          <ui-toggle [checked]="isCurrentPageSelected" [color]="'#4CAF50'" [label]="''" [labelPosition]="'right'"
-            [labelColor]="'#333'" [size]="'medium'" (toggleChange)="thcheck()"></ui-toggle>
+          <ui-toggle [checked]="isCurrentPageSelected" [color]="'var(--color-success)'" [label]="''" [labelPosition]="'right'"
+            [labelColor]="'var(--color-text-primary)'" [size]="'medium'" (toggleChange)="thcheck()"></ui-toggle>
         </th> }
 
         @if (showserialNo) {
@@ -61,15 +61,15 @@
             <span (click)="sortColumn(i)" class="cursor-pointer flex items-center">
 
               @if (currentSortColIndex === i && colSortState === 1 && head.colClickIconName) {
-              <ui-icon [name]="head.colClickIconName" class="inline-block shrink-0 text-[#7171ed]"></ui-icon>
+              <ui-icon [name]="head.colClickIconName" class="inline-block shrink-0 text-[var(--color-primary)]"></ui-icon>
               }
 
               @else if (currentSortColIndex === i && colSortState === 2 && head.colClickIconName2) {
-              <ui-icon [name]="head.colClickIconName2" class="inline-block shrink-0 text-[#7171ed]"></ui-icon>
+              <ui-icon [name]="head.colClickIconName2" class="inline-block shrink-0 text-[var(--color-primary)]"></ui-icon>
               }
 
               @else {
-              <ui-icon [name]="head.colIconName || 'arrow_up_outline'" class="inline-block shrink-0 text-[#c3c3c5]"></ui-icon>
+              <ui-icon [name]="head.colIconName || 'arrow_up_outline'" class="inline-block shrink-0 text-[var(--color-text-muted)]"></ui-icon>
               @if (head.colIconName2) {
               <ui-icon [name]="head.colIconName2" class="inline-block shrink-0"></ui-icon>
               }
@@ -99,18 +99,18 @@
 
       @for (row of tableRows; let i = $index; let isOdd = $odd; track trackByFn(row, i)) {
 
-      <tr class="active:!opacity-100"
+      <tr class="active:!opacity-100 text-[var(--color-text-primary)]"
       [ngClass]="{
-        'opacity-100 !bg-[rgb(175,174,174)] !border-3 !border-dotted !border-[#202020] z-[999] [&_td>*]:invisible': isDragging && draggedRowIndex === i,
-        '!bg-[#47f684]': !isDragging && lastDroppedIndex === i
+        'opacity-100 !bg-[var(--color-surface-muted)] !border-3 !border-dotted !border-[var(--color-border-strong)] z-[999] [&_td>*]:invisible': isDragging && draggedRowIndex === i,
+        '!bg-[color-mix(in_srgb,var(--color-success)_25%,var(--color-surface))]': !isDragging && lastDroppedIndex === i
       }"
-      [style.background-color]="(alternateRowColor && isOdd && draggedRowIndex !== i) ? customRowColor : 'white'"
+      [style.background-color]="(alternateRowColor && isOdd && draggedRowIndex !== i) ? customRowColor : 'var(--color-surface)'"
       [draggable]="showUndoRedo" (dragstart)="showUndoRedo && onDragStart($event, i)"
       (dragover)="showUndoRedo && onDragOver($event, i)" (dragend)="onDragEnd()">
 
         @if (showUndoRedo) {
         <td [style.border-top-left-radius]="trradius" [style.border-bottom-left-radius]="trradius"
-          class="p-2 border-b whitespace-nowrap text-center cursor-grab active:cursor-grabbing"
+          class="p-2 border-b border-[var(--color-border)] whitespace-nowrap text-center cursor-grab active:cursor-grabbing"
           (mousedown)="canDrag = true" (mouseup)="canDrag = false">
           <ui-icon name="dots_fill"></ui-icon>
         </td>
@@ -120,8 +120,8 @@
         <td [style.border-top-left-radius]="(!showUndoRedo) ? trradius : '0px'"
           [style.border-bottom-left-radius]="(!showUndoRedo) ? trradius : '0px'"
           class="p-2 whitespace-nowrap font-semibold text-left">
-          <ui-toggle [checked]="selectedRows.has(row)" [color]="'#4CAF50'" [label]="''"
-            [labelPosition]="'right'" [labelColor]="'#333'" [size]="'small'" (toggleChange)="check(row)">
+          <ui-toggle [checked]="selectedRows.has(row)" [color]="'var(--color-success)'" [label]="''"
+            [labelPosition]="'right'" [labelColor]="'var(--color-text-primary)'" [size]="'small'" (toggleChange)="check(row)">
           </ui-toggle>
         </td>
         }
@@ -129,7 +129,7 @@
         @if (showserialNo) {
         <td [style.border-top-left-radius]="(!showUndoRedo && !showCheckbox) ? trradius : '0px'"
           [style.border-bottom-left-radius]="(!showUndoRedo && !showCheckbox) ? trradius : '0px'"
-          class="p-2 border-b whitespace-nowrap">
+          class="p-2 border-b border-[var(--color-border)] whitespace-nowrap">
           {{ (currentPage - 1) * itemsPerPage + i + 1 }}
         </td>
         }
@@ -142,7 +142,7 @@
           [style.border-bottom-left-radius]="(!showUndoRedo && !showCheckbox && !showserialNo && ci === 0) ? thradius : '0px'"
           [style.border-top-right-radius]="isLastCell ? trradius : '0px'"
           [style.border-bottom-right-radius]="isLastCell ? trradius : '0px'" [attr.colspan]="cell.tdColspan"
-          [attr.rowspan]="cell.tdRowspan" class="p-2 border-b whitespace-nowrap text-ellipsis"
+          [attr.rowspan]="cell.tdRowspan" class="p-2 border-b border-[var(--color-border)] whitespace-nowrap text-ellipsis"
           [style.background-color]="cell.tdProperties?.BGColor"
           [ngClass]="cell.type === CellType.ICON_PANEL || cell.type === CellType.VALUE_DROPDOWN ? 'overflow-visible' : 'overflow-hidden'">
 
@@ -161,7 +161,7 @@
                 </span>
 
                 @if (asImage(cell).value?.subTabName) {
-                <span class="text-xs text-gray-500">
+                <span class="text-xs text-[var(--color-text-muted)]">
                   {{ asImage(cell).value?.subTabName }}
                 </span>
                 }
@@ -181,7 +181,7 @@
 
               @if (cell.showValue !== false) {
               <span [ngStyle]="getFontStyles(cell.tdProperties?.fontProperties)" [ngClass]="{
-                          'text-blue-600 hover:underline cursor-pointer': asText(cell).isLink
+                          'text-[var(--color-primary)] hover:underline cursor-pointer': asText(cell).isLink
                         }">
                 {{ cell.value }}
               </span>
@@ -225,7 +225,7 @@
                 </div>
 
                 @if (activePanelCell === cell) {
-                <div class="absolute right-0 top-full mt-1 min-w-[120px] bg-white border border-gray-200 rounded-md shadow-lg z-[999] flex flex-col py-1" (click)="$event.stopPropagation()">
+                <div class="absolute right-0 top-full mt-1 min-w-[120px] bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] rounded-md shadow-lg z-[999] flex flex-col py-1" (click)="$event.stopPropagation()">
                   <ng-container
                     *ngTemplateOutlet="asIconPanel(cell).value?.panelContent || null; context: { $implicit: row, cell: cell }">
                   </ng-container>
@@ -242,8 +242,8 @@
               @let iconData = asIconPopover(cell).value;
               <ui-icon-button-popup [iconName]="iconData?.iconName || 'home'"
                 [description]="iconData?.description || ''" [popupPosition]="iconData?.popupPosition || 'bottom'"
-                [popupBgColor]="iconData?.popupBgColor || '#1f2937'"
-                [popupTxtColor]="iconData?.popupTxtColor || '#ffffff'">
+                [popupBgColor]="iconData?.popupBgColor || 'var(--color-text-primary)'"
+                [popupTxtColor]="iconData?.popupTxtColor || 'var(--color-surface)'">
               </ui-icon-button-popup>
             </div>
             }
@@ -256,14 +256,14 @@
 
               <!-- TITLE -->
               <span class="font-medium" [ngClass]="{
-          'text-blue-600 hover:text-blue-800 hover:underline':
+          'text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] hover:underline':
           cell.isLink
         }" [ngStyle]="getFontStyles(cell.tdProperties?.fontProperties)">
                 {{ asUser(cell).value?.title }}
               </span>
 
               <!-- SUB TITLE -->
-              <span class="text-xs text-gray-500">
+              <span class="text-xs text-[var(--color-text-muted)]">
                 {{
                 (asUser(cell).value?.subtitle ?? '').length > 20
                 ? (asUser(cell).value?.subtitle ?? '').slice(0, 20) + '...'
@@ -308,7 +308,7 @@
 
       @else {
       <tr>
-        <td class="p-4 text-center text-gray-500" [attr.colspan]="(tableHeaders?.length || 0) + 3">No matching result</td>
+        <td class="p-4 text-center text-[var(--color-text-muted)]" [attr.colspan]="(tableHeaders?.length || 0) + 3">No matching result</td>
       </tr>
       }
     </tbody>
@@ -317,7 +317,7 @@
 
 @if (totalItems > 5 && topPagination) {
 <div class="sticky left-0">
-  <ui-pagination [backgroundColor]="'rgb(183 183 183)'" [totalItems]="totalItems" [pageSize]="itemsPerPage"
+  <ui-pagination [backgroundColor]="'var(--color-surface-elevated)'" [totalItems]="totalItems" [pageSize]="itemsPerPage"
     [currentPage]="currentPage" [isDropCount]="true" [isPagination]="true" [isGoto]="true" [isShowingEntries]="true"
     (pageChange)="pageChange($event)">
   </ui-pagination>
