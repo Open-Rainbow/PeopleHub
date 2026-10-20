@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { IconComponent } from '../../primitives/icon/icon.component';
+import { useFieldPolicy } from '../../../services/field-policy';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,10 +33,14 @@ export class NumberBoxComponent implements OnInit {
 
   localForm: FormGroup = new FormGroup({});
   isFocused: boolean = false;
+  /** Field rules from the Setup page (hidden / read-only / required). */
+  private readonly fieldPolicy = useFieldPolicy();
 
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    this.fieldPolicy(this);
+
     if (!this.parentFormGroup) {
       this.localForm = new FormGroup({
         [this.id]: new FormControl(''),

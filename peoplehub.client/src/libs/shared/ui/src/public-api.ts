@@ -1,5 +1,6 @@
 export * from './lib/services/ui.service';
 export * from './lib/services/confirm-popup.service';
+export * from './lib/services/field-policy';
 export type { ToastMessage } from './lib/models/common.model';
 export type { Step, StepperType } from './lib/models/common.model';
 export * from './lib/ui.component';

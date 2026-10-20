@@ -5,3 +5,4 @@ export * from './lib/models/form-field-config.model';
 export * from './lib/models/value-configs/dropdown-option.model';
 export * from './lib/services/common.service';
 export * from './lib/services/dropdown.service';
+export * from './lib/access';

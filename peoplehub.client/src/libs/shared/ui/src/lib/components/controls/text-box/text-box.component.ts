@@ -15,6 +15,7 @@ import {
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { useFieldPolicy } from '../../../services/field-policy';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,6 +45,8 @@ export class TextBoxComponent implements OnInit, OnChanges, OnDestroy {
 
   currentCharCount: number = 0;
   private destroy$ = new Subject<void>();
+  /** Field rules from the Setup page (hidden / read-only / required). */
+  private readonly fieldPolicy = useFieldPolicy();
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -64,6 +67,8 @@ export class TextBoxComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.fieldPolicy(this);
+
     const validators = [
       ...(this.isRequired ? [Validators.required] : []),
       ...(this.minLength && this.minLength > 0 ? [Validators.minLength(this.minLength)] : []),

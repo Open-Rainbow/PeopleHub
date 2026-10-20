@@ -19,6 +19,7 @@ import {
 } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { useFieldPolicy } from '../../../services/field-policy';
 
 @Component({
   selector: 'ui-text-area',
@@ -47,6 +48,8 @@ export class TextAreaComponent implements OnInit, OnDestroy, OnChanges {
   currentCharCount = 0;
 
   private destroy$ = new Subject<void>();
+  /** Field rules from the Setup page (hidden / read-only / required). */
+  private readonly fieldPolicy = useFieldPolicy();
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -68,6 +71,8 @@ export class TextAreaComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit(): void {
+    this.fieldPolicy(this);
+
     const validators = [
       ...(this.isRequired ? [Validators.required] : []),
       ...(this.minLength && this.minLength > 0
