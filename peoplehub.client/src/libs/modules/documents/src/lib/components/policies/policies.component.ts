@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, HostListener, inject, inp
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   ButtonGroupComponent,
   ButtonGroupItem,
@@ -102,6 +102,7 @@ interface UploadSelection {
 export class PoliciesComponent implements OnInit {
   private readonly service = inject(PoliciesService);
   private readonly router = inject(Router, { optional: true });
+  private readonly route = inject(ActivatedRoute, { optional: true });
   private readonly document = inject(DOCUMENT);
   private readonly sanitizer = inject(DomSanitizer);
 
@@ -146,7 +147,9 @@ export class PoliciesComponent implements OnInit {
   /** Bumped when the editor is (re)filled: dropdown / calendar / toggle read their value on init. */
   readonly editorKey = signal(0);
 
-  readonly canManage = computed(() => this.manage() ?? /^\/(hr|admin|superadmin)(\/|$)/.test(this.router?.url ?? ''));
+  /** Read from the route config: router.url is still the previous URL while a lazy route is being created. */
+  private readonly managerArea = isManagerArea(this.route, this.router, this.document);
+  readonly canManage = computed(() => this.manage() ?? this.managerArea);
   readonly isOnline = this.service.isOnline;
   readonly tabs = computed<TabButtonItem[]>(() => [
     { id: 'library', label: 'Policy library' },
@@ -535,6 +538,16 @@ export class PoliciesComponent implements OnInit {
     const id = ++this.toastId;
     this.toasts.update((list) => [...list, { id, title, type, duration: 4000 }]);
   }
+}
+
+const MANAGER_AREAS = ['hr', 'admin', 'superadmin'];
+
+/** True inside the /hr, /admin or /superadmin layouts. */
+function isManagerArea(route: ActivatedRoute | null, router: Router | null, doc: Document): boolean {
+  const paths = route?.snapshot?.pathFromRoot.map((r) => r.routeConfig?.path ?? '') ?? [];
+  if (paths.some((p) => MANAGER_AREAS.includes(p))) return true;
+  const urls = [router?.url ?? '', doc.location?.pathname ?? ''];
+  return urls.some((u) => /^\/(hr|admin|superadmin)(\/|$)/i.test(u));
 }
 
 /** Decoded size of a data URI when the upload did not report one. */

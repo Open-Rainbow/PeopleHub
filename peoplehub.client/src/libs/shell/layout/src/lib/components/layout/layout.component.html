@@ -17,7 +17,8 @@
           (sidebarToggle)="onSidebarToggleByUser()">
         </header-root>
 
-        <main class="content-area flex-1 min-h-0 min-w-0 p-6 overflow-y-auto bg-[#f9fbfd]">
+        <!-- Page background + default text follow the theme tokens (light / dark). -->
+        <main class="content-area flex-1 min-h-0 min-w-0 p-6 overflow-y-auto bg-[var(--color-bg)] text-[var(--color-text-primary)]">
           <router-outlet></router-outlet>
         </main>
       </div>
