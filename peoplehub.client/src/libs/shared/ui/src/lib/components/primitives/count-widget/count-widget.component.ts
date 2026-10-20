@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import type { CountWidgetLabelPosition } from '../../../models/component-models/count-widget.types';
 
+/** Defaults are theme tokens (theme-tokens.css) so the widget follows light/dark. */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-count-widget',
@@ -12,11 +13,11 @@ import type { CountWidgetLabelPosition } from '../../../models/component-models/
 })
 export class CountWidgetComponent {
   @Input() label = 'Total';
-  @Input() labelColor = '#6b7280';
+  @Input() labelColor = 'var(--color-text-secondary)';
   @Input() value = 20;
-  @Input() valueColor = '#0284c7';
-  @Input() borderColor = '#d1d5db';
-  @Input() backgroundColor = '#ffffff';
+  @Input() valueColor = 'var(--color-primary)';
+  @Input() borderColor = 'var(--color-border)';
+  @Input() backgroundColor = 'var(--color-surface)';
   @Input() showBorder = true;
   @Input() labelPosition: CountWidgetLabelPosition = 'top';
   @Input() labelSize = '14px';

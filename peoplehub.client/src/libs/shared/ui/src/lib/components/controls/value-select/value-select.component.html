@@ -1,7 +1,7 @@
 <div
   class="relative inline-block w-full"
   [formGroup]="parentFormGroup"
-  [class.border-red-500]="isInvalid"
+  [class.border-[var(--color-danger)]]="isInvalid"
 >
   <button
     type="button"
@@ -30,19 +30,19 @@
     <span
       #ripple
       class="absolute rounded-full scale-0 pointer-events-none
-             w-5 h-5 bg-[rgba(64,118,255,0.35)]">
+             w-5 h-5 bg-[color-mix(in_srgb,var(--color-primary)_35%,transparent)]">
     </span>
   </button>
 
   @if (isOpen) {
     <div class="absolute right-0 top-full mt-1.5 z-[1000]
-                bg-white border border-gray-200 shadow-lg rounded-lg
+                bg-[var(--color-surface)] border border-[var(--color-border)] shadow-lg rounded-lg
                 p-1 text-[0.875rem] min-w-full w-max">
       <div class="flex flex-col gap-0.5">
         @for (value of dropdownValues; track value) {
           <button
             type="button"
-            class="w-full text-left px-3 py-2 rounded-md whitespace-nowrap transition-colors duration-150 hover:bg-gray-100"
+            class="w-full text-left px-3 py-2 rounded-md whitespace-nowrap transition-colors duration-150 text-[var(--color-text-primary)] hover:bg-[var(--color-surface-muted)]"
             [class.opacity-30]="value.isDisabled"
             [class.cursor-not-allowed]="value.isDisabled"
             [style.color]="value.value === selectedYear ? activeTextColor : value.textColor"

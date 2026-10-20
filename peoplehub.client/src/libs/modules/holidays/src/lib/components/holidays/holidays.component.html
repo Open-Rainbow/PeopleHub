@@ -1,8 +1,8 @@
-    <div class="w-full h-full p-5">
+    <div class="w-full h-full p-5 text-[var(--color-text-primary)]">
 
       <!-- Header -->
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-[22px] font-bold text-gray-800">Holidays</h2>
+        <h2 class="text-[22px] font-bold text-[var(--color-text-primary)]">Holidays</h2>
         <ui-text-button
           [text]="showForm ? 'Cancel' : '+ Add Holiday'"
           [variant]="'primary'"
@@ -10,20 +10,22 @@
         </ui-text-button>
       </div>
 
-      <!-- Holiday Statistics -->
+      <!-- Holiday Statistics (tinted from theme tokens) -->
       <div class="grid grid-cols-4 gap-4 mb-6">
         @for (item of holidayStatistics; track item.name) {
-          <div class="p-4 rounded-[12px] flex items-center justify-between" [ngStyle]="{'background-color': item.bg}">
-            <p class="text-[13px] font-medium text-gray-700">{{ item.name }}</p>
-            <span class="text-[22px] font-bold" [ngStyle]="{'color': item.color}">{{ item.number }}</span>
+          <div
+            class="p-4 rounded-[12px] flex items-center justify-between border bg-[color-mix(in_srgb,var(--tone)_12%,var(--color-surface))] border-[color-mix(in_srgb,var(--tone)_22%,transparent)]"
+            [style.--tone]="item.tone">
+            <p class="text-[13px] font-medium text-[var(--color-text-secondary)]">{{ item.name }}</p>
+            <span class="text-[22px] font-bold text-[var(--tone)]">{{ item.number }}</span>
           </div>
         }
       </div>
 
       <!-- Add Holiday Form -->
       @if (showForm) {
-        <div class="bg-white border border-gray-200 rounded-[14px] p-6 mb-6 shadow-sm">
-          <h3 class="text-[16px] font-semibold mb-4">Add New Holiday</h3>
+        <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[14px] p-6 mb-6 shadow-sm">
+          <h3 class="text-[16px] font-semibold mb-4 text-[var(--color-text-primary)]">Add New Holiday</h3>
           <form [formGroup]="holidayForm" novalidate class="grid grid-cols-2 gap-4">
             <div>
               <ui-text-box
@@ -64,7 +66,7 @@
                 [maxLength]="500">
               </ui-text-area>
             </div>
-            <div class="col-span-2 flex justify-end gap-3 pt-4 border-t border-gray-100">
+            <div class="col-span-2 flex justify-end gap-3 pt-4 border-t border-[var(--color-border)]">
               <ui-text-button [text]="'Clear'" [variant]="'secondary'" (buttonClick)="clearForm()"></ui-text-button>
               <ui-text-button [text]="'Save'" [variant]="'primary'" (buttonClick)="saveHoliday()"></ui-text-button>
             </div>
@@ -73,26 +75,26 @@
       }
 
       <!-- Holiday List -->
-      <div class="bg-white border border-gray-200 rounded-[14px] p-5">
+      <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[14px] p-5">
         @if (processedHolidays.length === 0) {
-          <div class="flex flex-col items-center justify-center py-12 text-gray-400">
+          <div class="flex flex-col items-center justify-center py-12 text-[var(--color-text-muted)]">
             <ui-icon name="calendar_remove" class="text-[48px] mb-3"></ui-icon>
             <p class="text-[14px]">No holidays found</p>
           </div>
         }
         @for (holiday of processedHolidays; track holiday.holidayCalendar) {
-          <div class="flex items-start gap-4 border border-gray-200 rounded-xl p-4 shadow-sm mb-3">
-            <div class="w-[60px] h-[60px] rounded-[10px] bg-blue-600 flex flex-col items-center justify-center">
-              <span class="text-[10px] font-semibold text-white uppercase">{{ holiday.holidayMonth }}</span>
-              <span class="text-[18px] font-bold text-white leading-tight">{{ holiday.holidayDay }}</span>
+          <div class="flex items-start gap-4 border border-[var(--color-border)] bg-[var(--color-surface-elevated)] rounded-xl p-4 shadow-sm mb-3">
+            <div class="w-[60px] h-[60px] rounded-[10px] bg-[var(--color-primary)] flex flex-col items-center justify-center">
+              <span class="text-[10px] font-semibold text-[var(--color-surface)] uppercase">{{ holiday.holidayMonth }}</span>
+              <span class="text-[18px] font-bold text-[var(--color-surface)] leading-tight">{{ holiday.holidayDay }}</span>
             </div>
             <div class="flex-1">
               <div class="flex flex-wrap items-center gap-2">
-                <h3 class="text-[14px] font-semibold text-gray-900 m-0">{{ holiday.holidayName }}</h3>
-                <ui-chip [text]="holiday.holidayType" [bgColor]="'#dbeafe'" [color]="'#1d4ed8'"></ui-chip>
-                <ui-chip [text]="holiday.holidayClassification" [bgColor]="'#dcfce7'" [color]="'#16a34a'"></ui-chip>
+                <h3 class="text-[14px] font-semibold text-[var(--color-text-primary)] m-0">{{ holiday.holidayName }}</h3>
+                <ui-chip [text]="holiday.holidayType" [bgColor]="'color-mix(in srgb, var(--color-primary) 14%, var(--color-surface))'" [color]="'var(--color-primary)'"></ui-chip>
+                <ui-chip [text]="holiday.holidayClassification" [bgColor]="'color-mix(in srgb, var(--color-success) 14%, var(--color-surface))'" [color]="'var(--color-success)'"></ui-chip>
               </div>
-              <p class="text-[12px] text-gray-500 mt-1">{{ holiday.holidayCalendar }}</p>
+              <p class="text-[12px] text-[var(--color-text-muted)] mt-1">{{ holiday.holidayCalendar }}</p>
             </div>
           </div>
         }

@@ -1,6 +1,6 @@
-<section class="space-y-4">
+<section class="space-y-4 text-[var(--color-text-primary)]">
   <div class="flex flex-wrap items-center justify-between gap-3">
-    <h2 class="text-[14px] font-semibold text-gray-900">Leave Categories</h2>
+    <h2 class="text-[14px] font-semibold text-[var(--color-text-primary)]">Leave Categories</h2>
 
     <ui-button-group
       [items]="categoryButtons"
@@ -14,18 +14,18 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
     @for (leave of filteredLeaveCards; track leave.leaveTypeName) {
       <div
-        class="box group relative rounded-xl border-[1.5px] border-gray-200 bg-white overflow-hidden transition-all duration-300 hover:border-[var(--hover-border)]"
+        class="box group relative rounded-xl border-[1.5px] border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden transition-all duration-300 hover:border-[var(--hover-border)]"
         [style.--hover-border]="leave.color"
       >
         <div class="p-4">
           <div class="flex items-center justify-between">
-            <span class="text-[13px] font-semibold text-gray-900 leading-tight truncate">
+            <span class="text-[13px] font-semibold text-[var(--color-text-primary)] leading-tight truncate">
               {{ leave.leaveTypeName }}
             </span>
 
             <div
               class="flex items-center gap-1 px-2 py-0.5 rounded-md flex-shrink-0"
-              [ngStyle]="{ backgroundColor: leave.accentColor + '12', color: leave.accentColor }"
+              [ngStyle]="{ backgroundColor: 'color-mix(in srgb, ' + leave.accentColor + ' 14%, transparent)', color: leave.accentColor }"
             >
               <span class="text-[12px] font-bold font-mono leading-none">{{ remaining(leave.total, leave.used) }}</span>
               <span class="text-[10px] font-medium opacity-80">left</span>
@@ -37,19 +37,19 @@
             [total]="leave.total"
             [used]="leave.used"
             [barColor]="leave.color"
-            [remainingTextColor]="'#353d43'"
+            [remainingTextColor]="'var(--color-text-secondary)'"
             [hideDetails]="true"
           ></ui-progress-bar>
 
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2 text-xs text-gray-500">
+            <div class="flex items-center gap-2 text-xs text-[var(--color-text-muted)]">
               <span>
                 <span class="font-semibold font-mono" [style.color]="leave.color">{{ leave.used }}</span>
                 used
               </span>
-              <span class="text-gray-300">/</span>
+              <span class="text-[var(--color-border-strong)]">/</span>
               <span>
-                <span class="font-semibold text-gray-900 font-mono">{{ leave.total }}</span>
+                <span class="font-semibold text-[var(--color-text-primary)] font-mono">{{ leave.total }}</span>
                 total
               </span>
             </div>
@@ -57,7 +57,7 @@
             <button
               type="button"
               (click)="toggleExpanded(leave)"
-              class="flex items-center justify-center w-6 h-6 rounded-full hover:bg-gray-200 transition-colors text-gray-500 hover:text-gray-900"
+              class="flex items-center justify-center w-6 h-6 rounded-full hover:bg-[var(--color-surface-muted)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
               [attr.aria-label]="leave.expanded ? 'Collapse details' : 'Expand details'"
             >
               <ui-icon
@@ -73,15 +73,15 @@
             [ngClass]="leave.expanded ? 'grid-rows-[1fr] opacity-100 mt-3' : 'grid-rows-[0fr] opacity-0'"
           >
             <div class="overflow-hidden">
-              <div class="pt-3 border-t border-gray-200 space-y-2.5">
+              <div class="pt-3 border-t border-[var(--color-border)] space-y-2.5">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs text-gray-500">Carry Forward</span>
-                  <span class="text-xs font-semibold text-gray-900 font-mono">{{ leave.carryForward }} days</span>
+                  <span class="text-xs text-[var(--color-text-muted)]">Carry Forward</span>
+                  <span class="text-xs font-semibold text-[var(--color-text-primary)] font-mono">{{ leave.carryForward }} days</span>
                 </div>
 
                 <div class="flex items-center justify-between">
-                  <span class="text-xs text-gray-500">Encashable</span>
-                  <span class="text-xs font-semibold text-gray-900 font-mono">
+                  <span class="text-xs text-[var(--color-text-muted)]">Encashable</span>
+                  <span class="text-xs font-semibold text-[var(--color-text-primary)] font-mono">
                     {{ leave.encashable == 0 ? 'N/A' : leave.encashable }}
                   </span>
                 </div>

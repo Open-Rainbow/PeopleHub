@@ -3,6 +3,13 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DoughnutChartComponent, IconTextButtonComponent, ValueSelectComponent } from 'ui';
 
+/** Canvas charts can't read CSS variables, so resolve the theme tokens when the chart is built. */
+const tokenColour = (name: string, fallback: string): string => {
+  if (typeof document === 'undefined') return fallback;
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return value || fallback;
+};
+
 @Component({
   selector: 'leave-balance-overview',
   standalone: true,
@@ -20,14 +27,14 @@ export class LeaveBalanceOverviewComponent {
     value: String(new Date().getFullYear() - offset),
     isDefault: offset === 0,
     isDisabled: false,
-    textColor: '#111827',
-    backgroundColor: '#ecf2fd',
+    textColor: 'var(--color-text-primary)',
+    backgroundColor: 'color-mix(in srgb, var(--color-primary) 12%, var(--color-surface))',
   }));
 
   readonly legendData = [
-    { color: '#ffb6c1', value: 40, label: 'Used' },
-    { color: '#fff09c', value: 30, label: 'Pending' },
-    { color: '#acefac', value: 30, label: 'Remaining' },
+    { color: tokenColour('--color-danger', '#dc2626'), value: 40, label: 'Used' },
+    { color: tokenColour('--color-warning', '#f59e0b'), value: 30, label: 'Pending' },
+    { color: tokenColour('--color-success', '#16a34a'), value: 30, label: 'Remaining' },
   ];
 
   constructor(private router: Router) {}

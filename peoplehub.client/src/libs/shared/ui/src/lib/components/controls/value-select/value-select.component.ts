@@ -15,6 +15,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DropdownValues } from '../../../models/common.model';
 import { IconComponent } from '../../primitives/icon/icon.component';
 
+/** Colour defaults are theme tokens (theme-tokens.css) so the control follows light/dark. */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'ui-value-select',
@@ -25,11 +26,11 @@ import { IconComponent } from '../../primitives/icon/icon.component';
 export class ValueSelectComponent implements OnInit {
   @Input() dropdownValues?: DropdownValues[] = [];
   @Input() defaultSelected?: string | number | null = null;
-  @Input() textColor?: string = '#111';
-  @Input() backgroundColor?: string = 'white';
-  @Input() activeBackgroundColor?: string = '#eaf0ff';
-  @Input() borderColor?: string = 'lightgray';
-  @Input() activeTextColor?: string = '#316aff';
+  @Input() textColor?: string = 'var(--color-text-primary)';
+  @Input() backgroundColor?: string = 'var(--color-surface)';
+  @Input() activeBackgroundColor?: string = 'color-mix(in srgb, var(--color-primary) 12%, var(--color-surface))';
+  @Input() borderColor?: string = 'var(--color-border)';
+  @Input() activeTextColor?: string = 'var(--color-primary)';
   @Input() parentFormGroup!: FormGroup;
   @Input() id!: string;
   @Input() showIcon?: boolean = true;

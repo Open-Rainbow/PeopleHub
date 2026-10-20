@@ -22,11 +22,12 @@ export class HolidaysComponent implements OnInit {
   showForm = false;
   holidayForm!: FormGroup;
 
+  /** `tone` is a theme token; the tile tints itself from it, so light/dark both work. */
   holidayStatistics = [
-    { name: 'Total Holidays', number: 12, color: 'blue', bg: 'rgb(244 244 255)' },
-    { name: 'Federal Holidays', number: 8, color: 'green', bg: '#ddffdd' },
-    { name: 'Company Holidays', number: 4, color: 'rgb(250,139,4)', bg: '#fff4e7' },
-    { name: 'Upcoming', number: 3, color: 'rgb(245,4,245)', bg: 'rgb(255,205,255)' },
+    { name: 'Total Holidays', number: 12, tone: 'var(--color-primary)' },
+    { name: 'Federal Holidays', number: 8, tone: 'var(--color-success)' },
+    { name: 'Company Holidays', number: 4, tone: 'var(--color-warning)' },
+    { name: 'Upcoming', number: 3, tone: 'var(--color-danger)' },
   ];
 
   holidayTypeOptions = [

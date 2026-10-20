@@ -1,16 +1,11 @@
-<div class="w-full rounded-[20px] py-5 px-[25px]">
+<div class="w-full rounded-[20px] py-5 px-[25px] text-[var(--color-text-primary)]">
   <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
-    <h2 class="m-0 text-sm font-semibold text-[var(--text-color)]">Leave Balance Overview</h2>
+    <h2 class="m-0 text-sm font-semibold text-[var(--color-text-primary)]">Leave Balance Overview</h2>
     <div class="w-[110px]">
       <ui-value-select
         id="year"
         [parentFormGroup]="LeaveBalanceOverview"
         [dropdownValues]="yearOptions"
-        textColor="#111"
-        backgroundColor="white"
-        activeBackgroundColor="#ecf2fd"
-        borderColor="lightgray"
-        activeTextColor="#4076ff"
         (onSelect)="onYearSelect($event)"
       ></ui-value-select>
     </div>
@@ -27,8 +22,8 @@
     ></ui-doughnut-chart>
   </div>
 
-  <div class="flex flex-wrap items-center justify-between gap-2.5 pt-5 px-5 pb-0 -mx-[25px] border-t border-gray-200">
-    <h3 class="m-0 text-base font-medium text-[var(--text-color)]">Here you can request for a leave</h3>
+  <div class="flex flex-wrap items-center justify-between gap-2.5 pt-5 px-5 pb-0 -mx-[25px] border-t border-[var(--color-border)]">
+    <h3 class="m-0 text-base font-medium text-[var(--color-text-primary)]">Here you can request for a leave</h3>
     <ui-icon-text-button
       text="Request Leave"
       variant="dark"

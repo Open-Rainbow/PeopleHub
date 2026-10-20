@@ -1,10 +1,13 @@
 // Accordion Component Styles
 // Supports multiple variants: default, primary, secondary, flush, with-icon
+// Colours: theme tokens only (theme-tokens.css), so light and dark both work.
 
 .ui-accordion {
+  --acc-accent: var(--color-primary);
   width: 100%;
   border-radius: 6px;
   overflow: hidden;
+  color: var(--color-text-primary);
 
   &__header {
     display: flex;
@@ -17,7 +20,7 @@
     position: relative;
 
     &:focus-visible {
-      outline: 2px solid #3f4af8;
+      outline: 2px solid var(--acc-accent);
       outline-offset: -2px;
     }
 
@@ -97,6 +100,7 @@
 
   &__body {
     padding: 20px;
+    color: var(--color-text-primary);
   }
 
   // Default Variant
@@ -108,7 +112,7 @@
       color: var(--color-text-primary);
 
       &:hover {
-        background-color: var(--color-surface-muted);
+        background-color: var(--color-surface-elevated);
       }
 
       &--active {
@@ -122,40 +126,38 @@
     }
   }
 
-  // Primary Variant (Accent color - typically blue)
-  &--primary {
-    border: 1px solid #3f4af8;
+  // Accent variants (primary = brand colour, secondary = success colour)
+  &--primary,
+  &--secondary {
+    border: 1px solid var(--acc-accent);
     border-radius: 6px;
 
     .ui-accordion__header {
-      background: linear-gradient(135deg, #eef3fe 0%, #f0f5ff 100%);
+      background: color-mix(in srgb, var(--acc-accent) 10%, var(--color-surface));
       color: var(--color-text-primary);
-      border-bottom: 1px solid #e0e7ff;
+      border-bottom: 1px solid color-mix(in srgb, var(--acc-accent) 22%, transparent);
 
       &:hover {
-        background: linear-gradient(135deg, #e0ecff 0%, #e8f1ff 100%);
+        background: color-mix(in srgb, var(--acc-accent) 16%, var(--color-surface));
 
         .ui-accordion__title,
         .ui-accordion__toggle-icon,
         .ui-accordion__edit-btn {
-          color: #3f4af8;
+          color: var(--acc-accent);
         }
       }
 
       &--active {
-        background-color: #3f4af8;
-        color: white;
-        border-bottom-color: #3f4af8;
+        background: var(--acc-accent);
+        color: var(--color-surface);
+        border-bottom-color: var(--acc-accent);
 
         .ui-accordion__title,
         .ui-accordion__subtitle,
         .ui-accordion__toggle-icon,
-        .ui-accordion__edit-btn {
-          color: white;
-        }
-
+        .ui-accordion__edit-btn,
         .ui-accordion__icon {
-          color: white;
+          color: var(--color-surface);
         }
       }
     }
@@ -166,48 +168,8 @@
     }
   }
 
-  // Secondary Variant (Different accent color - typically teal/green)
   &--secondary {
-    border: 1px solid #00a870;
-    border-radius: 6px;
-
-    .ui-accordion__header {
-      background: linear-gradient(135deg, #e8faf4 0%, #f0fcf8 100%);
-      color: var(--color-text-primary);
-      border-bottom: 1px solid #d4f5e8;
-
-      &:hover {
-        background: linear-gradient(135deg, #d4f5e8 0%, #e0f9f2 100%);
-
-        .ui-accordion__title,
-        .ui-accordion__toggle-icon,
-        .ui-accordion__edit-btn {
-          color: #00a870;
-        }
-      }
-
-      &--active {
-        background-color: #00a870;
-        color: white;
-        border-bottom-color: #00a870;
-
-        .ui-accordion__title,
-        .ui-accordion__subtitle,
-        .ui-accordion__toggle-icon,
-        .ui-accordion__edit-btn {
-          color: white;
-        }
-
-        .ui-accordion__icon {
-          color: white;
-        }
-      }
-    }
-
-    .ui-accordion__body {
-      background-color: var(--color-surface);
-      border-top: none;
-    }
+    --acc-accent: var(--color-success);
   }
 
   // Flush Variant (No borders, clean look)
@@ -218,7 +180,7 @@
     .ui-accordion__header {
       background-color: transparent;
       color: var(--color-text-primary);
-      border-bottom: 2px solid var(--color-surface-muted);
+      border-bottom: 2px solid var(--color-border);
       padding: 16px 0;
       border-radius: 0;
 
@@ -226,16 +188,16 @@
         background-color: transparent;
 
         .ui-accordion__title {
-          color: #3f4af8;
+          color: var(--acc-accent);
         }
       }
 
       &--active {
         background-color: transparent;
-        border-bottom-color: #3f4af8;
+        border-bottom-color: var(--acc-accent);
 
         .ui-accordion__title {
-          color: #3f4af8;
+          color: var(--acc-accent);
         }
       }
     }
@@ -270,19 +232,19 @@
         background-color: var(--color-surface-muted);
 
         .ui-accordion__icon {
-          color: #3f4af8;
+          color: var(--acc-accent);
         }
       }
 
       &--active {
-        background-color: #3f4af8;
-        color: white;
+        background-color: var(--acc-accent);
+        color: var(--color-surface);
 
         .ui-accordion__title,
         .ui-accordion__subtitle,
         .ui-accordion__toggle-icon,
         .ui-accordion__icon {
-          color: white;
+          color: var(--color-surface);
         }
       }
     }
@@ -297,58 +259,6 @@
       background-color: var(--color-surface);
       border-top: 1px solid var(--color-border);
     }
-  }
-
-  // Dark Theme Support (optional)
-  @media (prefers-color-scheme: dark) {
-    &--default {
-      border-color: #404040;
-
-      .ui-accordion__header {
-        background-color: #2a2a2a;
-        color: var(--color-border);
-
-        &:hover {
-          background-color: var(--color-text-primary);
-        }
-
-        &--active {
-          background-color: #383838;
-        }
-      }
-
-      .ui-accordion__body {
-        background-color: #1a1a1a;
-        border-top-color: #404040;
-      }
-    }
-
-    &--flush {
-      .ui-accordion__header {
-        color: var(--color-border);
-        border-bottom-color: #404040;
-
-        &--active {
-          border-bottom-color: #5a67d8;
-
-          .ui-accordion__title {
-            color: #5a67d8;
-          }
-        }
-      }
-
-      .ui-accordion__body {
-        color: #b0b0b0;
-      }
-    }
-  }
-}
-
-// Accessibility
-.ui-accordion__header {
-  &:focus-visible {
-    outline: 2px solid #3f4af8;
-    outline-offset: -2px;
   }
 }
 
