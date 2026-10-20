@@ -4,7 +4,7 @@
   [style.width.rem]="hoverEnabled ? 4.5 : 15"
 >
   <aside
-    class="absolute inset-y-0 left-0 z-[3000] flex flex-col bg-[var(--bg-color)] border-r border-gray-200 overflow-x-hidden overflow-y-auto transition-[width,box-shadow] duration-300 ease-in-out"
+    class="absolute inset-y-0 left-0 z-[3000] flex flex-col bg-[var(--bg-color)] border-r border-[var(--color-border)] overflow-x-hidden overflow-y-auto transition-[width,box-shadow] duration-300 ease-in-out"
     [style.width.rem]="isSidebarExpanded ? 15 : 4.5"
     [class.shadow-xl]="hoverEnabled && isSidebarExpanded"
     (mouseenter)="onMouseEnter()"
@@ -29,10 +29,10 @@
       @for (item of menuItems; track item.label; let i = $index) {
         <div class="relative">
           <div
-            class="flex items-center h-11 rounded-[0.625rem] cursor-pointer transition-colors duration-200 hover:bg-blue-600 hover:text-white"
+            class="flex items-center h-11 rounded-[0.625rem] cursor-pointer transition-colors duration-200 hover:bg-[var(--color-primary)] hover:text-[var(--color-on-primary,#fff)]"
             [ngClass]="[
               isSidebarExpanded ? 'justify-between gap-3 px-3.5' : 'justify-center',
-              activeIndex === i ? 'bg-blue-600 text-white' : 'text-[var(--text-color)]'
+              activeIndex === i ? 'bg-[var(--color-primary)] text-[var(--color-on-primary,#fff)]' : 'text-[var(--text-color)]'
             ]"
             [attr.title]="isSidebarExpanded ? null : item.label"
             [attr.aria-label]="item.label"
@@ -58,8 +58,8 @@
             <div class="flex flex-col mt-1">
               @for (route of item.routes; track route.route) {
                 <div
-                  class="py-2 pl-[2.875rem] pr-3 rounded-lg cursor-pointer whitespace-nowrap text-sm transition-colors hover:text-blue-600"
-                  [ngClass]="activeSubRoute === route.route ? 'text-blue-600 font-medium' : 'text-[var(--text-color)]'"
+                  class="py-2 pl-[2.875rem] pr-3 rounded-lg cursor-pointer whitespace-nowrap text-sm transition-colors hover:text-[var(--color-primary)]"
+                  [ngClass]="activeSubRoute === route.route ? 'text-[var(--color-primary)] font-medium' : 'text-[var(--text-color)]'"
                   (click)="onSubMenuClick(i, route.route)"
                   [routerLink]="route.route"
                 >

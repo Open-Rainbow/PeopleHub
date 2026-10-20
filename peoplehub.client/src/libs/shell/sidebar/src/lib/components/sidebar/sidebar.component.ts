@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { AccessService, pageKeyOf } from 'common';
 import { IconComponent } from 'ui';
 import { SidebarService, MenuItem } from '../../services/sidebar.service';
 
@@ -20,23 +21,47 @@ export class SidebarComponent implements OnInit {
   @Output() hoverEnter = new EventEmitter<void>();
   @Output() hoverLeave = new EventEmitter<void>();
 
+  private readonly router = inject(Router);
+  private readonly sidebarService = inject(SidebarService);
+  private readonly access = inject(AccessService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   menuItems: MenuItem[] = [];
   activeIndex: number | null = null;
   viewSubMenu = false;
   activeSubRoute: string | null = null;
 
-  constructor(private router: Router, private sidebarService: SidebarService) {
-    const role = localStorage.getItem('userRole') as string || 'employee';
-    this.menuItems = this.sidebarService.getMenuByRole(role);
+  constructor() {
+    const role = this.access.role() || 'employee';
+    // Rebuild the menu whenever the role's access changes (login, Setup saves).
+    effect(() => {
+      this.access.version();
+      this.menuItems = this.visibleMenu(this.sidebarService.getMenuByRole(role));
+      this.setActiveMenuByRoute(this.router.url);
+      this.cdr.markForCheck();
+    });
   }
 
   ngOnInit(): void {
+    void this.access.load();
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
           this.setActiveMenuByRoute(event.urlAfterRedirects);
+          this.cdr.markForCheck();
         });
     this.setActiveMenuByRoute(this.router.url);
+  }
+
+  /** Drops pages the role cannot view; a group disappears when none of its pages are left. */
+  private visibleMenu(items: MenuItem[]): MenuItem[] {
+    const canSee = (route?: string) => {
+      const key = pageKeyOf(route);
+      return !key || this.access.can(key, 'view');
+    };
+    return items
+      .map((item) => (item.routes?.length ? { ...item, routes: item.routes.filter((r) => canSee(r.route)) } : item))
+      .filter((item) => (item.routes ? item.routes.length > 0 : canSee(item.route)));
   }
 
   onMouseEnter(): void {

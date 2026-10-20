@@ -2,10 +2,13 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CommonService } from 'common';
+import { AccessService, CommonService } from 'common';
 import { IconComponent } from 'ui';
 
 const REMEMBERED_USER_KEY = 'rememberedUsername';
+
+/** Demo users until the login API exists (password 123). */
+const DEMO_USERS = ['employee', 'manager', 'hr', 'admin', 'superadmin'];
 
 @Component({
   selector: 'login-root',
@@ -18,6 +21,7 @@ const REMEMBERED_USER_KEY = 'rememberedUsername';
 export class LoginComponent {
   private readonly fb = inject(FormBuilder);
   private readonly commonService = inject(CommonService);
+  private readonly access = inject(AccessService);
   private readonly router = inject(Router);
 
   readonly year = new Date().getFullYear();
@@ -56,9 +60,8 @@ export class LoginComponent {
     }
 
     const payload = this.form.getRawValue();
-    const username = String(payload.username).trim();
-    const isKnownCredential =
-      ['employee', 'hr', 'admin'].includes(username) && payload.password === '123';
+    const username = String(payload.username).trim().toLowerCase();
+    const isKnownCredential = DEMO_USERS.includes(username) && payload.password === '123';
 
     if (!isKnownCredential) {
       this.errorMessage.set('Invalid username or password.');
@@ -75,8 +78,12 @@ export class LoginComponent {
         }
         localStorage.setItem('userRole', role);
         localStorage.setItem('userName', username);
-        this.loading.set(false);
-        this.router.navigate([`/${role}/dashboard`]);
+        // Load what this role may open (Setup page) before showing the menu.
+        this.access.clear();
+        this.access.load(true).finally(() => {
+          this.loading.set(false);
+          this.router.navigate([`/${role}/dashboard`]);
+        });
       },
       error: () => {
         this.loading.set(false);

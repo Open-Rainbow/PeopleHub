@@ -1,0 +1,330 @@
+<div class="space-y-6 p-4 sm:p-6">
+  <!-- Header -->
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-2xl font-semibold set-text">Setup</h1>
+        @if (!isOnline() && !loading()) {
+          <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Offline demo data', v: 'warning' }"></ng-container>
+        }
+      </div>
+      <p class="mt-1 text-sm set-text-2">Roles, what each role can open and do, and how form fields behave for each role.</p>
+    </div>
+    <ui-tab-button [tabs]="tabs" [activeTab]="tab()" (tabChange)="onTab($event)"></ui-tab-button>
+  </div>
+
+  @if (error()) {
+    <div class="flex items-start gap-2" role="alert">
+      <ui-notice-banner class="flex-1" heading="Something went wrong: " [content]="error()!"
+                        [bannerColor]="errorBanner.bannerColor" [headingColor]="errorBanner.headingColor" [contentColor]="errorBanner.contentColor"
+                        [highlighterColor]="errorBanner.highlighterColor" [iconColor]="errorBanner.iconColor"></ui-notice-banner>
+      <ui-text-button text="Retry" variant="secondary" size="small" (buttonClick)="reload()"></ui-text-button>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="flex h-72 items-center justify-center rounded-2xl border set-border set-surface"><ui-loader></ui-loader></div>
+  } @else {
+    @switch (tab()) {
+      @case ('roles') {
+        <!-- ================= ROLES ================= -->
+        <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          @for (s of roleStats(); track s.label) {
+            <div class="rounded-2xl border set-border set-surface p-4">
+              <p class="text-xs font-medium uppercase tracking-wide set-text-2">{{ s.label }}</p>
+              <p class="mt-1 text-2xl font-semibold set-text">{{ s.value }}</p>
+            </div>
+          }
+        </div>
+
+        <div class="rounded-2xl border set-border set-surface">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b set-border px-5 py-4">
+            <div>
+              <h2 class="text-base font-semibold set-text">Roles</h2>
+              <p class="text-xs set-text-2">Built-in roles can be renamed and re-configured. Add your own, e.g. Team Lead or Finance.</p>
+            </div>
+            @if (canCreate()) {
+              <ui-text-button text="New role" variant="primary" (buttonClick)="openRoleEditor()"></ui-text-button>
+            }
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-sm">
+              <thead class="set-surface-muted text-left text-xs font-medium uppercase tracking-wide set-text-2">
+                <tr>
+                  <th class="px-5 py-3">Role</th>
+                  <th class="px-4 py-3">Type</th>
+                  <th class="px-4 py-3">Status</th>
+                  <th class="px-4 py-3">Pages</th>
+                  <th class="px-4 py-3">Field rules</th>
+                  <th class="px-4 py-3">Updated</th>
+                  <th class="px-4 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="set-divide divide-y">
+                @for (r of roles(); track r.id) {
+                  <tr class="set-row">
+                    <td class="px-5 py-3">
+                      <p class="font-medium set-text">{{ r.name }} <span class="text-xs font-normal set-muted">· {{ r.code }}</span></p>
+                      @if (r.description) { <p class="mt-0.5 max-w-md text-xs set-text-2">{{ r.description }}</p> }
+                    </td>
+                    <td class="px-4 py-3">
+                      <ng-container *ngTemplateOutlet="pill; context: { $implicit: r.isSystem ? 'Built-in' : 'Custom', v: r.isSystem ? 'neutral' : 'primary' }"></ng-container>
+                    </td>
+                    <td class="px-4 py-3">
+                      @if (r.isLocked) {
+                        <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Full access', v: 'success' }"></ng-container>
+                      } @else {
+                        <ng-container *ngTemplateOutlet="pill; context: { $implicit: r.isActive ? 'Active' : 'Inactive', v: r.isActive ? 'success' : 'neutral' }"></ng-container>
+                      }
+                    </td>
+                    <td class="px-4 py-3 set-text-2">{{ r.isLocked ? 'All' : r.pageCount }}</td>
+                    <td class="px-4 py-3 set-text-2">{{ r.isLocked ? '–' : r.fieldRuleCount }}</td>
+                    <td class="px-4 py-3 text-xs set-text-2">{{ r.updatedAt | date: 'dd MMM yyyy' }}@if (r.updatedBy) { <br />{{ r.updatedBy }} }</td>
+                    <td class="px-4 py-3">
+                      <div class="flex items-center justify-end gap-1">
+                        <ui-text-button text="Page access" variant="secondary" size="small" (buttonClick)="openAccessFor(r)"></ui-text-button>
+                        @if (!r.isLocked) {
+                          <ui-text-button text="Fields" variant="secondary" size="small" (buttonClick)="openFieldsFor(r)"></ui-text-button>
+                        }
+                        @if (canChange(r)) {
+                          <ui-icon-button iconName="edit" ariaLabel="Edit role" variant="light" size="small" (buttonClick)="openRoleEditor(r)"></ui-icon-button>
+                          @if (!r.isSystem) {
+                            <ui-text-button [text]="r.isActive ? 'Deactivate' : 'Activate'" variant="secondary" size="small" [disabled]="busy()" (buttonClick)="toggleRoleStatus(r)"></ui-text-button>
+                            @if (canDelete()) {
+                              <ui-icon-button iconName="delete" ariaLabel="Delete role" variant="light" size="small" (buttonClick)="deletingRole.set(r)"></ui-icon-button>
+                            }
+                          }
+                        }
+                      </div>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr><td colspan="7" class="px-5 py-12 text-center text-sm set-text-2">No roles yet.</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+
+      @case ('access') {
+        <!-- ================= PAGE ACCESS ================= -->
+        <div class="rounded-2xl border set-border set-surface p-5">
+          <p class="mb-3 text-xs font-medium uppercase tracking-wide set-text-2">Role</p>
+          <div class="overflow-x-auto pb-1">
+            <ui-button-group ariaLabel="Role" size="sm" [items]="roleItems()" [selectedValues]="[accessRoleId() + '']" (selectionChange)="pickAccessRole($event)"></ui-button-group>
+          </div>
+        </div>
+
+        @if (accessLockReason(); as reason) {
+          <ui-notice-banner heading="Read only: " [content]="reason"
+                            [bannerColor]="infoBanner.bannerColor" [headingColor]="infoBanner.headingColor" [contentColor]="infoBanner.contentColor"
+                            [highlighterColor]="infoBanner.highlighterColor" [iconColor]="infoBanner.iconColor"></ui-notice-banner>
+        }
+
+        @if (permLoading()) {
+          <div class="flex h-60 items-center justify-center rounded-2xl border set-border set-surface"><ui-loader></ui-loader></div>
+        } @else {
+          @for (key of [permKey()]; track key) {
+            <div class="space-y-4">
+              @for (g of permGroups(); track g.name) {
+                <section class="rounded-2xl border set-border set-surface">
+                  <h3 class="border-b set-border px-5 py-3 text-sm font-semibold set-text">{{ g.name }}</h3>
+                  <ul class="set-divide divide-y">
+                    @for (p of g.items; track p.pageKey) {
+                      <li class="set-row flex flex-wrap items-center gap-x-6 gap-y-3 px-5 py-3">
+                        <div class="w-56 min-w-[12rem]">
+                          <p class="text-sm font-medium set-text">{{ p.name }}</p>
+                          <p class="text-xs set-muted">{{ p.pageKey }}</p>
+                        </div>
+                        <div class="flex flex-1 flex-wrap items-center gap-x-6 gap-y-2">
+                          @for (a of p.actions; track a) {
+                            @if (accessLockReason()) {
+                              <ng-container *ngTemplateOutlet="pill; context: { $implicit: actionLabels[a], v: allowed(p, a) ? 'success' : 'neutral' }"></ng-container>
+                            } @else {
+                              <ui-toggle [id]="ctrlKey(p.pageKey, a)" [label]="actionLabels[a]" [isRequired]="false" [parentFormGroup]="permForm"></ui-toggle>
+                            }
+                          }
+                        </div>
+                      </li>
+                    }
+                  </ul>
+                </section>
+              }
+            </div>
+          }
+
+          @if (!accessLockReason()) {
+            <div class="set-sticky sticky bottom-0 flex flex-wrap items-center justify-between gap-3 rounded-2xl border set-border set-surface px-5 py-4">
+              <p class="text-xs set-text-2">
+                {{ accessRole()?.name }} can open {{ grantedCount() }} page(s). Any action also gives View. Pages without View disappear from the menu and are blocked on the server.
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <ui-text-button [text]="accessRole()?.isSystem ? 'Reset to defaults' : 'Remove all access'" variant="link" size="small" [disabled]="busy()" (buttonClick)="resetPermissions()"></ui-text-button>
+                <ui-text-button text="Discard" variant="secondary" [disabled]="busy() || !permDirty()" (buttonClick)="discardPermissions()"></ui-text-button>
+                <ui-text-button [text]="busy() ? 'Saving…' : 'Save access'" variant="primary" [disabled]="busy() || !permDirty()" (buttonClick)="savePermissions()"></ui-text-button>
+              </div>
+            </div>
+          }
+        }
+      }
+
+      @case ('fields') {
+        <!-- ================= FIELD SETTINGS ================= -->
+        <div class="grid gap-4 rounded-2xl border set-border set-surface p-5 lg:grid-cols-[1fr_22rem]">
+          <div>
+            <p class="mb-3 text-xs font-medium uppercase tracking-wide set-text-2">Role</p>
+            <div class="overflow-x-auto pb-1">
+              <ui-button-group ariaLabel="Role" size="sm" [items]="fieldRoleItems()" [selectedValues]="[fieldRoleId() + '']" (selectionChange)="pickFieldRole($event)"></ui-button-group>
+            </div>
+          </div>
+          @if (forms().length) {
+            @for (key of [formPickKey()]; track key) {
+              <ui-dropdown id="form" label="Form" placeholder="Pick a form" [isRequired]="false" [parentFormGroup]="formPickForm" [options]="formOptions()"></ui-dropdown>
+            }
+          }
+        </div>
+
+        @if (!forms().length && !fieldsLoading()) {
+          <div class="rounded-2xl border border-dashed set-border set-surface px-6 py-14 text-center">
+            <p class="text-sm font-medium set-text">No forms yet</p>
+            <p class="mx-auto mt-1 max-w-lg text-sm set-text-2">A form shows up here after it is opened once, e.g. Add Employee › Personal info. Open the forms you want to set up, then come back.</p>
+          </div>
+        } @else {
+          @if (fieldsLockReason(); as reason) {
+            <ui-notice-banner heading="Read only: " [content]="reason"
+                              [bannerColor]="infoBanner.bannerColor" [headingColor]="infoBanner.headingColor" [contentColor]="infoBanner.contentColor"
+                              [highlighterColor]="infoBanner.highlighterColor" [iconColor]="infoBanner.iconColor"></ui-notice-banner>
+          }
+
+          <div class="rounded-2xl border set-border set-surface">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b set-border px-5 py-4">
+              <div>
+                <h2 class="text-base font-semibold set-text">{{ formKey() ? formLabel(formKey()!) : 'Fields' }}</h2>
+                <p class="text-xs set-text-2">
+                  {{ fieldRows().length }} field(s) · {{ ruleCount() }} changed for {{ fieldRole()?.name }}. Hidden fields are never required.
+                </p>
+              </div>
+            </div>
+
+            @if (fieldsLoading()) {
+              <div class="flex h-48 items-center justify-center"><ui-loader></ui-loader></div>
+            } @else {
+              <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                  <thead class="set-surface-muted text-left text-xs font-medium uppercase tracking-wide set-text-2">
+                    <tr>
+                      <th class="px-5 py-3">Field</th>
+                      <th class="px-4 py-3">Visibility</th>
+                      <th class="px-4 py-3">Editing</th>
+                      <th class="px-4 py-3">Required</th>
+                    </tr>
+                  </thead>
+                  <tbody class="set-divide divide-y">
+                    @for (f of fieldRows(); track f.fieldKey) {
+                      <tr class="set-row" [class.set-changed]="f.isHidden || f.isReadOnly || f.requirement !== 'Default'">
+                        <td class="px-5 py-3">
+                          <p class="font-medium set-text">{{ f.label }}</p>
+                          <p class="text-xs set-muted">{{ f.fieldKey }}</p>
+                        </td>
+                        @if (fieldsLockReason()) {
+                          <td class="px-4 py-3"><ng-container *ngTemplateOutlet="pill; context: { $implicit: f.isHidden ? 'Hidden' : 'Visible', v: f.isHidden ? 'warning' : 'neutral' }"></ng-container></td>
+                          <td class="px-4 py-3"><ng-container *ngTemplateOutlet="pill; context: { $implicit: f.isReadOnly ? 'Read-only' : 'Editable', v: f.isReadOnly ? 'warning' : 'neutral' }"></ng-container></td>
+                          <td class="px-4 py-3"><ng-container *ngTemplateOutlet="pill; context: { $implicit: f.requirement === 'Default' ? 'As designed' : f.requirement, v: f.requirement === 'Default' ? 'neutral' : 'primary' }"></ng-container></td>
+                        } @else {
+                          <td class="px-4 py-3">
+                            <ui-button-group ariaLabel="Visibility" size="sm" [items]="visibilityItems" [selectedValues]="[f.isHidden ? 'hidden' : 'visible']" (selectionChange)="setVisibility(f, $event)"></ui-button-group>
+                          </td>
+                          <td class="px-4 py-3">
+                            <ui-button-group ariaLabel="Editing" size="sm" [items]="editingItems" [selectedValues]="[f.isReadOnly ? 'readonly' : 'editable']" (selectionChange)="setEditing(f, $event)"></ui-button-group>
+                          </td>
+                          <td class="px-4 py-3">
+                            <ui-button-group ariaLabel="Required" size="sm" [items]="requirementItems" [selectedValues]="[f.requirement]" (selectionChange)="setRequirement(f, $event)"></ui-button-group>
+                          </td>
+                        }
+                      </tr>
+                    } @empty {
+                      <tr><td colspan="4" class="px-5 py-12 text-center text-sm set-text-2">Pick a role and a form.</td></tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+
+            @if (!fieldsLockReason() && fieldRows().length) {
+              <div class="flex flex-wrap items-center justify-between gap-3 border-t set-border px-5 py-4">
+                <p class="text-xs set-text-2">Changes apply the next time someone with this role opens the form.</p>
+                <div class="flex flex-wrap gap-2">
+                  <ui-text-button text="Reset all" variant="link" size="small" [disabled]="busy()" (buttonClick)="resetFields()"></ui-text-button>
+                  <ui-text-button text="Discard" variant="secondary" [disabled]="busy() || !fieldsDirty()" (buttonClick)="discardFields()"></ui-text-button>
+                  <ui-text-button [text]="busy() ? 'Saving…' : 'Save fields'" variant="primary" [disabled]="busy() || !fieldsDirty()" (buttonClick)="saveFields()"></ui-text-button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+    }
+  }
+</div>
+
+<!-- ================= ROLE EDITOR ================= -->
+@if (editingRole()) {
+  <div setBodyPortal class="set-overlay fixed inset-0 flex justify-end set-scrim" (click)="closeRoleEditor()">
+    <div class="flex h-full w-full max-w-lg flex-col set-surface shadow-xl" role="dialog" aria-modal="true" aria-labelledby="set-role-title" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between border-b set-border px-6 py-4">
+        <div>
+          <h2 id="set-role-title" class="text-lg font-semibold set-text">{{ editingExisting() ? 'Edit role' : 'New role' }}</h2>
+          <p class="text-xs set-text-2">{{ editingExisting() ? 'Change the name or description. Access is set on the Page access tab.' : 'Start empty or copy the access of an existing role.' }}</p>
+        </div>
+        <ui-icon-button iconName="close" ariaLabel="Close" variant="light" (buttonClick)="closeRoleEditor()"></ui-icon-button>
+      </div>
+
+      @for (key of [roleFormKey()]; track key) {
+        <div class="flex-1 space-y-5 overflow-y-auto px-6 py-5">
+          <ui-text-box id="name" label="Name" placeholder="e.g. Team Lead" [maxLength]="limits.nameMax" [parentFormGroup]="roleForm" (valueChange)="onRoleNameChange($event)"></ui-text-box>
+          @if (editingExisting(); as r) {
+            <p class="text-xs set-text-2">Code: <span class="font-medium set-text">{{ r.code }}</span> (cannot be changed)</p>
+          } @else {
+            <div>
+              <ui-text-box id="code" label="Code" placeholder="team-lead" [maxLength]="limits.codeMax" [parentFormGroup]="roleForm"></ui-text-box>
+              <p class="mt-1 text-xs set-text-2">Lower-case letters, digits and dashes. Used by sign-in and the API.</p>
+            </div>
+          }
+          <ui-text-area id="description" label="Description" [rows]="3" [isRequired]="false" [maxLength]="limits.descriptionMax" [parentFormGroup]="roleForm"></ui-text-area>
+          @if (!editingExisting()) {
+            <ui-dropdown id="copyFrom" label="Copy access from" placeholder="Start with no access" [isRequired]="false" [parentFormGroup]="roleForm" [options]="copyOptions()"></ui-dropdown>
+          }
+          @if (roleError()) { <p class="text-sm set-error" role="alert">{{ roleError() }}</p> }
+        </div>
+      }
+
+      <div class="flex justify-end gap-3 border-t set-border px-6 py-4">
+        <ui-text-button text="Cancel" variant="secondary" [disabled]="busy()" (buttonClick)="closeRoleEditor()"></ui-text-button>
+        <ui-text-button [text]="busy() ? 'Saving…' : editingExisting() ? 'Save' : 'Create role'" variant="primary" [disabled]="busy()" (buttonClick)="saveRole()"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ================= DELETE CONFIRM ================= -->
+@if (deletingRole(); as r) {
+  <div setBodyPortal class="set-overlay set-overlay--top fixed inset-0 flex items-center justify-center set-scrim p-4" (click)="deletingRole.set(null)">
+    <div class="w-full max-w-sm rounded-2xl set-surface p-6 shadow-xl" role="alertdialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <h3 class="text-base font-semibold set-text">Delete "{{ r.name }}"?</h3>
+      <p class="mt-2 text-sm set-text-2">Its page access and field rules are removed too. To keep them, deactivate the role instead.</p>
+      <div class="mt-6 flex justify-end gap-3">
+        <ui-text-button text="Keep it" variant="secondary" (buttonClick)="deletingRole.set(null)"></ui-text-button>
+        <ui-text-button [text]="busy() ? 'Deleting…' : 'Delete'" variant="danger" [disabled]="busy()" (buttonClick)="confirmDeleteRole()"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+<ui-toast-stack setBodyPortal class="set-overlay set-overlay--top" position="bottom-right" [toasts]="toasts()" (toastClosed)="dismissToast($event)"></ui-toast-stack>
+
+<!-- Non-interactive pills: shared ui-chip coloured from the theme tokens. -->
+<ng-template #pill let-text let-v="v">
+  <ui-chip size="status" [text]="text" [usePointerCursor]="false" [color]="tone(v).color" [bgColor]="tone(v).bg"
+           [activeColor]="tone(v).color" [activeBGColor]="tone(v).bg"></ui-chip>
+</ng-template>

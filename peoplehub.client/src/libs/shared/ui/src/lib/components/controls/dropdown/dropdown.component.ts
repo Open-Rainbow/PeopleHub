@@ -20,6 +20,7 @@ import {
 import type { DropdownItem } from '../../../models/component-models/dropdown-item.model';
 import { DropdownOption } from '../../../models/value-configs/dropdown-option.model';
 import { IconComponent } from '../../primitives/icon/icon.component';
+import { useFieldPolicy } from '../../../services/field-policy';
 
 @Component({
   selector: 'ui-dropdown',
@@ -56,6 +57,8 @@ export class DropdownComponent
   isOpenUp: boolean = false;
   isOpen: boolean = false;
   isActive: boolean = false;
+  /** Field rules from the Setup page (hidden / read-only / required). */
+  private readonly fieldPolicy = useFieldPolicy();
 
   get optionLength(): number {
     return this.options?.length ?? 0;
@@ -72,6 +75,7 @@ export class DropdownComponent
   constructor(private eRef: ElementRef<HTMLElement>) {}
 
   ngOnInit() {
+    this.fieldPolicy(this);
     const randomStr = Math.random().toString(36).substring(2, 9);
     const baseId = this.id || this.dropdownModel || 'field';
     this.uniqueId = `dropdown_${baseId}_${randomStr}`;

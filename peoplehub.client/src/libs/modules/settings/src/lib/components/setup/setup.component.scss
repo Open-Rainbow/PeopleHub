@@ -1,0 +1,29 @@
+/* Setup page: colours only from theme-tokens.css (light + dark). */
+:host {
+  display: block;
+  color: var(--color-text-primary);
+}
+
+.set-text { color: var(--color-text-primary); }
+.set-text-2 { color: var(--color-text-secondary); }
+.set-muted { color: var(--color-text-muted); }
+.set-error { color: var(--color-danger); }
+
+.set-surface { background-color: var(--color-surface); }
+.set-surface-muted { background-color: var(--color-surface-muted); }
+.set-border { border-color: var(--color-border); }
+.set-divide > :not(:last-child) { border-color: var(--color-border); }
+
+.set-row { transition: background-color 0.15s ease; }
+.set-row:hover { background-color: var(--color-surface-muted); }
+.set-changed { box-shadow: inset 3px 0 0 var(--color-primary); }
+
+.set-sticky { box-shadow: 0 -0.5rem 1.5rem color-mix(in srgb, var(--color-bg) 60%, transparent); }
+
+.set-scrim { background-color: color-mix(in srgb, var(--color-bg) 70%, transparent); }
+
+/* Above the header and the sidebar (z-[3000]). */
+.set-overlay { z-index: 5000; }
+.set-overlay--top { z-index: 5100; }
+
+table th { color: var(--color-text-secondary); }

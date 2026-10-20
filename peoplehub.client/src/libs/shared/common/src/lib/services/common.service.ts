@@ -6,7 +6,7 @@ import { ApiNames } from '../constants/api-names';
 import { AddAnnouncementModel, HolidayList } from '../models/common.model';
 import { RequesterService } from './requester.service';
 
-const DEMO_ROLES = ['employee', 'hr', 'admin'];
+const DEMO_ROLES = ['employee', 'manager', 'hr', 'admin', 'superadmin'];
 
 @Injectable({
   providedIn: 'root',
@@ -125,7 +125,7 @@ export class CommonService {
 
   /**
    * Demo login until the auth API is wired up: the role is the username
-   * (employee / hr / admin). Previously every user fell through to "admin".
+   * (employee / manager / hr / admin / superadmin).
    */
   getLogin(parameters: any): Observable<string> {
     const username = String(parameters?.username ?? '').trim().toLowerCase();

@@ -1,4 +1,5 @@
-import { Routes } from '@angular/router';
+import { Route, Routes } from '@angular/router';
+import { pageAccessGuard } from 'common';
 
 const addEmployeeSectionRoutes = [
   'personal-info',
@@ -136,14 +137,189 @@ const addEmployeeChildRoutes: Routes = [
   { path: '**', redirectTo: 'personal-info' },
 ];
 
+// ---- Pages (shared by the role shells; the Setup page decides who may open them) -------------
+
+const dashboardRoute: Route = {
+  path: 'dashboard',
+  loadComponent: () =>
+    import('../../libs/modules/dashboard/src/lib/components/dashboard/dashboard.component').then(
+      (m) => m.DashboardComponent,
+    ),
+};
+
+const announcementsRoute: Route = {
+  path: 'announcements',
+  loadComponent: () =>
+    import('../../libs/modules/announcements/src/lib/components/announcements/announcements.component').then(
+      (m) => m.AnnouncementsComponent,
+    ),
+};
+
+const addAnnouncementRoute: Route = {
+  path: 'AddEditAnnouncement',
+  loadComponent: () =>
+    import('../../libs/modules/announcements/src/lib/components/add-announcement/add-announcement.component').then(
+      (m) => m.AddAnnouncementComponent,
+    ),
+};
+
+const applyLeaveRoute: Route = {
+  path: 'apply-leave',
+  loadComponent: () =>
+    import('../../libs/modules/leave/src/lib/components/apply-leave/apply-leave.component').then(
+      (m) => m.ApplyLeaveComponent,
+    ),
+};
+
+const leaveApprovalRoute: Route = {
+  path: 'leave-approval',
+  loadComponent: () =>
+    import('../../libs/modules/leave/src/lib/components/leave-approval/leave-approval.component').then(
+      (m) => m.LeaveApprovalComponent,
+    ),
+};
+
+const leaveManagementRoute: Route = {
+  path: 'leave-management',
+  loadComponent: () =>
+    import('../../libs/modules/leave/src/lib/components/leave-management/leave-management.component').then(
+      (m) => m.LeaveManagementComponent,
+    ),
+};
+
+const payslipsRoute: Route = {
+  path: 'payslips',
+  loadComponent: () =>
+    import('../../libs/modules/payroll/src/lib/components/recent-payslips/recent-payslips.component').then(
+      (m) => m.RecentPayslipsComponent,
+    ),
+};
+
+const attendanceRoute: Route = {
+  path: 'attendance',
+  loadComponent: () =>
+    import('../../libs/modules/attendance/src/lib/components/attendance/attendance.component').then(
+      (m) => m.AttendanceComponent,
+    ),
+};
+
+const holidayCalendarRoute: Route = {
+  path: 'holiday-calender',
+  loadComponent: () =>
+    import('../../libs/modules/holidays/src/lib/components/holiday-list/holiday-list.component').then(
+      (m) => m.HolidayListComponent,
+    ),
+};
+
+const holidayManageRoute: Route = {
+  path: 'holidayList',
+  loadComponent: () =>
+    import('../../libs/modules/holidays/src/lib/components/add-holiday-list/add-holiday-list.component').then(
+      (m) => m.AddHolidayListComponent,
+    ),
+};
+
+const orgChartRoute: Route = {
+  path: 'org-chart',
+  loadComponent: () =>
+    import('../../libs/modules/employees/src/lib/components/org-chart/org-chart.component').then(
+      (m) => m.OrgChartComponent,
+    ),
+};
+
 /** Company policies: everyone reads; admin / HR / super-admin also manage (decided from the URL). */
-const policiesRoute = {
+const policiesRoute: Route = {
   path: 'policies',
   loadComponent: () =>
     import('../../libs/modules/documents/src/lib/components/policies/policies.component').then(
       (m) => m.PoliciesComponent,
     ),
 };
+
+const othersRoute: Route = {
+  path: 'others',
+  loadComponent: () =>
+    import('../../libs/modules/employees/src/lib/components/others/others.component').then(
+      (m) => m.OthersComponent,
+    ),
+};
+
+const profileRoute: Route = {
+  path: 'showProfile',
+  loadComponent: () =>
+    import('../../libs/modules/employees/src/lib/components/employee-overview/employee-overview.component').then(
+      (m) => m.EmployeeOverviewComponent,
+    ),
+};
+
+const viewEmployeeRoute: Route = {
+  path: 'view-employee',
+  loadComponent: () =>
+    import('../../libs/modules/employees/src/lib/components/employee-list/employee-list.component').then(
+      (m) => m.EmployeeListComponent,
+    ),
+};
+
+const addEmployeeRoute: Route = {
+  path: 'add-employee',
+  loadComponent: () =>
+    import('../../libs/modules/employees/src/lib/components/add-employee/add-employee.component').then(
+      (m) => m.AddEmployeeComponent,
+    ),
+  children: addEmployeeChildRoutes,
+};
+
+const offerLetterRoute: Route = {
+  path: 'offer-letter',
+  loadComponent: () =>
+    import('../../libs/modules/documents/src/lib/components/offer-letter/offer-letter.component').then(
+      (m) => m.OfferLetterComponent,
+    ),
+};
+
+/** Roles, page access and field settings (Admin / Super Admin). */
+const setupRoute: Route = {
+  path: 'setup',
+  loadComponent: () =>
+    import('../../libs/modules/settings/src/lib/components/setup/setup.component').then(
+      (m) => m.SetupComponent,
+    ),
+};
+
+/** A role area: layout + its pages, protected by the Setup page access. */
+function roleShell(path: string, pages: Routes): Route {
+  return {
+    path,
+    loadComponent: () =>
+      import('../../libs/shell/layout/src/lib/components/layout/layout.component').then(
+        (m) => m.LayoutComponent,
+      ),
+    canActivateChild: [pageAccessGuard],
+    children: [{ path: '', redirectTo: 'dashboard', pathMatch: 'full' }, ...pages],
+  };
+}
+
+const managementPages: Routes = [
+  dashboardRoute,
+  addAnnouncementRoute,
+  announcementsRoute,
+  applyLeaveRoute,
+  leaveApprovalRoute,
+  leaveManagementRoute,
+  payslipsRoute,
+  attendanceRoute,
+  holidayManageRoute,
+  holidayCalendarRoute,
+  orgChartRoute,
+  policiesRoute,
+  othersRoute,
+  profileRoute,
+  viewEmployeeRoute,
+  addEmployeeRoute,
+  ...legacyAddEmployeeRedirectRoutes,
+  offerLetterRoute,
+  setupRoute,
+];
 
 export const appRoutes: Routes = [
   {
@@ -158,89 +334,34 @@ export const appRoutes: Routes = [
         (m) => m.LoginComponent,
       ),
   },
-  {
-    path: 'employee',
-    loadComponent: () =>
-      import('../../libs/shell/layout/src/lib/components/layout/layout.component').then(
-        (m) => m.LayoutComponent,
-      ),
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      {
-        path: 'dashboard',
-        loadComponent: () =>
-          import('../../libs/modules/dashboard/src/lib/components/dashboard/dashboard.component').then(
-            (m) => m.DashboardComponent,
-          ),
-      },
-      {
-        path: 'announcements',
-        loadComponent: () =>
-          import('../../libs/modules/announcements/src/lib/components/announcements/announcements.component').then(
-            (m) => m.AnnouncementsComponent,
-          ),
-      },
-      {
-        path: 'apply-leave',
-        loadComponent: () =>
-          import('../../libs/modules/leave/src/lib/components/apply-leave/apply-leave.component').then(
-            (m) => m.ApplyLeaveComponent,
-          ),
-      },
-      {
-        path: 'payslips',
-        loadComponent: () =>
-          import('../../libs/modules/payroll/src/lib/components/recent-payslips/recent-payslips.component').then(
-            (m) => m.RecentPayslipsComponent,
-          ),
-      },
-      {
-        path: 'attendance',
-        loadComponent: () =>
-          import('../../libs/modules/attendance/src/lib/components/attendance/attendance.component').then(
-            (m) => m.AttendanceComponent,
-          ),
-      },
-      {
-        path: 'holiday-calender',
-        loadComponent: () =>
-          import('../../libs/modules/holidays/src/lib/components/holiday-list/holiday-list.component').then(
-            (m) => m.HolidayListComponent,
-          ),
-      },
-      {
-        path: 'org-chart',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/org-chart/org-chart.component').then(
-            (m) => m.OrgChartComponent,
-          ),
-      },
-      policiesRoute,
-      {
-        path: 'others',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/others/others.component').then(
-            (m) => m.OthersComponent,
-          ),
-      },
-      {
-        path: 'showProfile',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/employee-overview/employee-overview.component').then(
-            (m) => m.EmployeeOverviewComponent,
-          ),
-      },
-      {
-        path: 'add-employee',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/add-employee/add-employee.component').then(
-            (m) => m.AddEmployeeComponent,
-          ),
-        children: addEmployeeChildRoutes,
-      },
-      ...legacyAddEmployeeRedirectRoutes,
-    ],
-  },
+  roleShell('employee', [
+    dashboardRoute,
+    announcementsRoute,
+    applyLeaveRoute,
+    payslipsRoute,
+    attendanceRoute,
+    holidayCalendarRoute,
+    orgChartRoute,
+    policiesRoute,
+    othersRoute,
+    profileRoute,
+    addEmployeeRoute,
+    ...legacyAddEmployeeRedirectRoutes,
+  ]),
+  roleShell('manager', [
+    dashboardRoute,
+    announcementsRoute,
+    applyLeaveRoute,
+    leaveApprovalRoute,
+    payslipsRoute,
+    attendanceRoute,
+    holidayCalendarRoute,
+    orgChartRoute,
+    policiesRoute,
+    othersRoute,
+    profileRoute,
+    viewEmployeeRoute,
+  ]),
   {
     path: 'add-employee',
     loadComponent: () =>
@@ -249,252 +370,8 @@ export const appRoutes: Routes = [
       ),
     children: addEmployeeChildRoutes,
   },
-  {
-    path: 'admin',
-    loadComponent: () =>
-      import('../../libs/shell/layout/src/lib/components/layout/layout.component').then(
-        (m) => m.LayoutComponent,
-      ),
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      {
-        path: 'dashboard',
-        loadComponent: () =>
-          import('../../libs/modules/dashboard/src/lib/components/dashboard/dashboard.component').then(
-            (m) => m.DashboardComponent,
-          ),
-      },
-      {
-        path: 'AddEditAnnouncement',
-        loadComponent: () =>
-          import(
-            '../../libs/modules/announcements/src/lib/components/add-announcement/add-announcement.component'
-          ).then((m) => m.AddAnnouncementComponent),
-      },
-      {
-        path: 'announcements',
-        loadComponent: () =>
-          import(
-            '../../libs/modules/announcements/src/lib/components/announcements/announcements.component'
-          ).then((m) => m.AnnouncementsComponent),
-      },
-      {
-        path: 'apply-leave',
-        loadComponent: () =>
-          import('../../libs/modules/leave/src/lib/components/apply-leave/apply-leave.component').then(
-            (m) => m.ApplyLeaveComponent,
-          ),
-      },
-      {
-        path: 'leave-approval',
-        loadComponent: () =>
-          import('../../libs/modules/leave/src/lib/components/leave-approval/leave-approval.component').then(
-            (m) => m.LeaveApprovalComponent,
-          ),
-      },
-      {
-        path: 'leave-management',
-        loadComponent: () =>
-          import('../../libs/modules/leave/src/lib/components/leave-management/leave-management.component').then(
-            (m) => m.LeaveManagementComponent,
-          ),
-      },
-      {
-        path: 'payslips',
-        loadComponent: () =>
-          import('../../libs/modules/payroll/src/lib/components/recent-payslips/recent-payslips.component').then(
-            (m) => m.RecentPayslipsComponent,
-          ),
-      },
-      {
-        path: 'attendance',
-        loadComponent: () =>
-          import('../../libs/modules/attendance/src/lib/components/attendance/attendance.component').then(
-            (m) => m.AttendanceComponent,
-          ),
-      },
-      {
-        path: 'holidayList',
-        loadComponent: () =>
-          import('../../libs/modules/holidays/src/lib/components/add-holiday-list/add-holiday-list.component').then(
-            (m) => m.AddHolidayListComponent,
-          ),
-      },
-      {
-        path: 'org-chart',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/org-chart/org-chart.component').then(
-            (m) => m.OrgChartComponent,
-          ),
-      },
-      policiesRoute,
-      {
-        path: 'others',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/others/others.component').then(
-            (m) => m.OthersComponent,
-          ),
-      },
-      {
-        path: 'showProfile',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/employee-overview/employee-overview.component').then(
-            (m) => m.EmployeeOverviewComponent,
-          ),
-      },
-      {
-        path: 'view-employee',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/employee-list/employee-list.component').then(
-            (m) => m.EmployeeListComponent,
-          ),
-      },
-      {
-        path: 'add-employee',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/add-employee/add-employee.component').then(
-            (m) => m.AddEmployeeComponent,
-          ),
-        children: addEmployeeChildRoutes,
-      },
-      ...legacyAddEmployeeRedirectRoutes,
-      {
-        path: 'offer-letter',
-        loadComponent: () =>
-          import('../../libs/modules/documents/src/lib/components/offer-letter/offer-letter.component').then(
-            (m) => m.OfferLetterComponent,
-          ),
-      },
-    ],
-  },
-  {
-    path: 'hr',
-    loadComponent: () =>
-      import('../../libs/shell/layout/src/lib/components/layout/layout.component').then(
-        (m) => m.LayoutComponent,
-      ),
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      {
-        path: 'dashboard',
-        loadComponent: () =>
-          import('../../libs/modules/dashboard/src/lib/components/dashboard/dashboard.component').then(
-            (m) => m.DashboardComponent,
-          ),
-      },
-      {
-        path: 'AddEditAnnouncement',
-        loadComponent: () =>
-          import(
-            '../../libs/modules/announcements/src/lib/components/add-announcement/add-announcement.component'
-          ).then((m) => m.AddAnnouncementComponent),
-      },
-      {
-        path: 'announcements',
-        loadComponent: () =>
-          import(
-            '../../libs/modules/announcements/src/lib/components/announcements/announcements.component'
-          ).then((m) => m.AnnouncementsComponent),
-      },
-      {
-        path: 'apply-leave',
-        loadComponent: () =>
-          import('../../libs/modules/leave/src/lib/components/apply-leave/apply-leave.component').then(
-            (m) => m.ApplyLeaveComponent,
-          ),
-      },
-      {
-        path: 'leave-management',
-        loadComponent: () =>
-          import('../../libs/modules/leave/src/lib/components/leave-management/leave-management.component').then(
-            (m) => m.LeaveManagementComponent,
-          ),
-      },
-      {
-        path: 'payslips',
-        loadComponent: () =>
-          import('../../libs/modules/payroll/src/lib/components/recent-payslips/recent-payslips.component').then(
-            (m) => m.RecentPayslipsComponent,
-          ),
-      },
-      {
-        path: 'attendance',
-        loadComponent: () =>
-          import('../../libs/modules/attendance/src/lib/components/attendance/attendance.component').then(
-            (m) => m.AttendanceComponent,
-          ),
-      },
-      {
-        path: 'holidayList',
-        loadComponent: () =>
-          import('../../libs/modules/holidays/src/lib/components/add-holiday-list/add-holiday-list.component').then(
-            (m) => m.AddHolidayListComponent,
-          ),
-      },
-      {
-        path: 'org-chart',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/org-chart/org-chart.component').then(
-            (m) => m.OrgChartComponent,
-          ),
-      },
-      policiesRoute,
-      {
-        path: 'others',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/others/others.component').then(
-            (m) => m.OthersComponent,
-          ),
-      },
-      {
-        path: 'showProfile',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/employee-overview/employee-overview.component').then(
-            (m) => m.EmployeeOverviewComponent,
-          ),
-      },
-      {
-        path: 'view-employee',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/employee-list/employee-list.component').then(
-            (m) => m.EmployeeListComponent,
-          ),
-      },
-      {
-        path: 'add-employee',
-        loadComponent: () =>
-          import('../../libs/modules/employees/src/lib/components/add-employee/add-employee.component').then(
-            (m) => m.AddEmployeeComponent,
-          ),
-        children: addEmployeeChildRoutes,
-      },
-      ...legacyAddEmployeeRedirectRoutes,
-      {
-        path: 'offer-letter',
-        loadComponent: () =>
-          import('../../libs/modules/documents/src/lib/components/offer-letter/offer-letter.component').then(
-            (m) => m.OfferLetterComponent,
-          ),
-      },
-    ],
-  },
-  {
-    path: 'superadmin',
-    loadComponent: () =>
-      import('../../libs/shell/layout/src/lib/components/layout/layout.component').then(
-        (m) => m.LayoutComponent,
-      ),
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      {
-        path: 'dashboard',
-        loadComponent: () =>
-          import('../../libs/modules/dashboard/src/lib/components/dashboard/dashboard.component').then(
-            (m) => m.DashboardComponent,
-          ),
-      },
-      policiesRoute,
-    ],
-  },
+  roleShell('admin', managementPages),
+  roleShell('hr', managementPages),
+  roleShell('superadmin', managementPages),
   { path: '**', redirectTo: 'login' },
 ];
