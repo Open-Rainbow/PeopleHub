@@ -1,3 +1,4 @@
+// Global form styles. Colours: theme tokens only (theme-tokens.css), so light and dark both work.
 .inputBoxHeight {
   height: 36px;
   border: 1px solid var(--color-border);
@@ -7,36 +8,30 @@
 }
 
 label {
-  color: black !important;
+  color: var(--color-text-primary) !important;
   display: block;
   font-weight: 500;
   margin-bottom: 6px;
 }
 
 .required {
-  color: red;
+  color: var(--color-danger);
 }
 
-
-
 .error-text-box {
-  color: red !important;
+  color: var(--color-danger) !important;
 }
 
 input.save-state {
-  border-color: green !important;
+  border-color: var(--color-success) !important;
   border-width: 1px !important;
 }
-
-
 
 input:focus {
   border-color: var(--color-primary) !important;
   border-width: 1px !important;
   box-shadow: none;
 }
-
-
 
 input:focus~label {
   color: var(--color-primary) !important;
@@ -54,18 +49,13 @@ input.error:focus {
   border-color: var(--color-danger) !important;
 }
 
-
 input.error:focus~label {
   color: var(--color-danger) !important;
 }
 
-
 input.save-state:focus~label {
-  color: green !important;
+  color: var(--color-success) !important;
 }
-
-
-
 
 .form-group {
   display: flex;
@@ -77,24 +67,18 @@ input.save-state:focus~label {
 
 label {
   margin-bottom: 6px;
-  
   font-weight: 500;
-  
-  
 }
-
-
 
 .required-star {
   color: var(--color-danger);
   font-weight: 600;
 }
 
-
 textarea.error {
   border: 1px solid var(--color-danger) !important;
   box-shadow: none !important;
-  background-color: rgba(220, 38, 38, 0.02) !important;
+  background-color: color-mix(in srgb, var(--color-danger) 3%, var(--color-surface)) !important;
 }
 
 textarea.error~label {
@@ -112,7 +96,6 @@ textarea.error:focus~label {
 textarea:focus {
   outline: none;
   border-color: var(--color-primary) !important;
-  
   box-shadow: none;
   background-color: var(--color-surface) !important;
 }
@@ -121,20 +104,14 @@ textarea:focus~label {
   color: var(--color-primary) !important;
 }
 
-
 textarea.save-state {
-  border-color: green !important;
-  
+  border-color: var(--color-success) !important;
   box-shadow: none !important;
 }
 
 textarea.save-state:focus~label {
-  color: green !important;
+  color: var(--color-success) !important;
 }
-
-
-
-
 
 .error-label {
   color: var(--color-danger) !important;
@@ -144,7 +121,6 @@ textarea.save-state:focus~label {
   top: 50% !important;
   transform: translateY(-50%) !important;
 }
-
 
 .custom-dropdown.active-border {
   border-color: var(--color-primary) !important;
@@ -159,22 +135,16 @@ textarea.save-state:focus~label {
   border-radius: 6px;
   font-weight: 500;
   min-height: 36px;
-
   border: 1px solid var(--color-border);
-
-
 }
-
 
 .placeholder {
   color: var(--color-text-muted);
 }
 
-
 .custom-dropdown.active-border .custom-dropdown-selected {
   border-color: var(--color-primary) !important;
 }
-
 
 .custom-dropdown-list {
   display: none;
@@ -183,10 +153,11 @@ textarea.save-state:focus~label {
   left: 0;
   right: 0;
   background: var(--color-surface);
+  color: var(--color-text-primary);
   border: 1px solid var(--color-border);
   border-radius: 8px;
   list-style: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px color-mix(in srgb, var(--color-text-primary) 10%, transparent);
   padding: 0;
   margin-top: 4px;
   z-index: 1000;
@@ -195,9 +166,7 @@ textarea.save-state:focus~label {
   box-sizing: border-box !important;
 }
 
-
 .calendar-icon {
-
   position: absolute;
   right: 10px;
   top: 50% !important;
@@ -206,7 +175,6 @@ textarea.save-state:focus~label {
   color: var(--color-text-secondary);
   pointer-events: none;
   transition: transform 0.3s ease, color 0.2s ease;
-  pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -223,7 +191,7 @@ textarea.save-state:focus~label {
 .dropdown-toggle:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 25%, transparent);
   background-color: var(--color-surface-muted);
   transition: all 0.3s ease;
 }
@@ -234,33 +202,23 @@ textarea.save-state:focus~label {
   left: 50%;
   transform: translateX(-50%);
   width: 40px;
-  
   height: 4px;
   background-color: var(--color-text-muted);
   border: none;
   border-radius: 4px;
-  
   cursor: ns-resize;
   transition: all 0.2s ease;
 }
-
 
 .resize-hr:hover {
   width: 30px;
   background-color: var(--color-text-secondary);
 }
 
-
-.dropdown-toggle:focus+.calendar-icon {
-  color: var(--color-primary);
-}
-
 .resize-hr.dragging {
   width: 30px;
   background-color: var(--color-text-secondary);
 }
-
-
 
 .dropdown-wrapper {
   text-align: left;
@@ -279,16 +237,7 @@ label {
   display: block;
 }
 
-.required {
-  color: red;
-}
-
-
-
-
-
 .custom-dropdown-selected {
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -296,6 +245,7 @@ label {
   border: 1px solid var(--color-border);
   border-radius: 6px;
   background: var(--color-surface);
+  color: var(--color-text-primary);
   cursor: pointer;
   width: 100%;
   box-sizing: border-box;
@@ -313,15 +263,13 @@ span.absolute {
 }
 
 span.required {
-  color: red;
+  color: var(--color-danger);
 }
 
 .custom-dropdown-list li {
   margin: 4px 3px;
   border-radius: 6px;
   transition: background-color 0.2s ease, transform 0.1s ease;
-
-
 }
 
 .custom-dropdown-list li label {
@@ -331,21 +279,16 @@ span.required {
   margin: 3px 5px;
   font-size: 14px;
   color: var(--color-text-primary);
-  
 }
 
 .custom-dropdown-list li:hover {
   background-color: var(--color-surface-muted);
   font-weight: bold;
-  
 }
 
 .dropdown-toggle:checked~.custom-dropdown-list {
   display: block;
-
 }
-
-
 
 .custom-dropdown-list li.selected {
   background-color: var(--color-surface-muted);
@@ -360,20 +303,11 @@ span.required {
 
 .dropdown-toggle:checked+.custom-dropdown-selected {
   border: 1px solid var(--color-primary) !important;
-
 }
 
 .dropdown-toggle:checked+.custom-dropdown-selected .calendar-icon {
   color: var(--color-primary);
 }
-
-
-
-
-
-
-
-
 
 .dob-input {
   border: 1px solid var(--color-border);
@@ -381,20 +315,21 @@ span.required {
   padding: 12px;
   font-size: 14px;
   width: 100%;
-  background: white;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
   cursor: pointer;
 }
 
 .dob-input:focus {
   outline: none;
   border-color: var(--color-primary-soft);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .error {
   border: 1px solid var(--color-danger) !important;
   box-shadow: none !important;
-  background-color: rgba(220, 38, 38, 0.02) !important;
+  background-color: color-mix(in srgb, var(--color-danger) 3%, var(--color-surface)) !important;
   color: var(--color-danger) !important;
 }
 
@@ -403,12 +338,10 @@ span.required {
 .error .dob-input,
 .error .custom-dropdown-selected {
   border-color: var(--color-danger) !important;
-  background-color: rgba(220, 38, 38, 0.02) !important;
+  background-color: color-mix(in srgb, var(--color-danger) 3%, var(--color-surface)) !important;
   box-shadow: none !important;
-  color: black !important;
+  color: var(--color-text-primary) !important;
 }
-
-
 
 .dob-input.error {
   border-color: var(--color-danger) !important;
@@ -416,26 +349,19 @@ span.required {
   color: var(--color-danger) !important;
 }
 
-
-
 .container.active-border .dob-label {
   color: var(--color-primary) !important;
-  
 }
 
 .container .dob-label.invalid-label {
   color: var(--color-danger);
 }
 
-
 .error.custom-dropdown {
   border: none !important;
   padding: 0 !important;
   background: none !important;
 }
-
-
-
 
 .container.floating .dob-label,
 .dob-input:focus + .dob-label,
@@ -531,14 +457,14 @@ textarea:not(:placeholder-shown) ~ label::before {
   right: -6px;
   top: 50%;
   height: 2px;
-  background: var(--color-surface);     
+  background: var(--color-surface);
   transform: translateY(-50%);
   z-index: -1;
   opacity: 0;
 }
 .custom-dropdown > span {
-  position: absolute;   
-  z-index: 2;           
+  position: absolute;
+  z-index: 2;
 }
 .custom-dropdown.has-value > span::before {
   opacity: 1;
@@ -549,7 +475,6 @@ textarea:not(:placeholder-shown) ~ label::before {
 }
 .custom-dropdown.active-border > span {
   color: var(--color-primary);
-
 }
 body,
 input,
@@ -572,7 +497,6 @@ label,
   left: 13px;
 }
 
-
 .text-xs {
   font-size: 0.75rem;
 }
@@ -580,8 +504,6 @@ label,
 .peer:focus ~ .peer-focus\:text-xs {
   font-size: 0.75rem;
 }
-
-
 
 .-top-2\.5 { top: -11.5px !important; }
 .text-base {

@@ -14,6 +14,13 @@ import {
 import { Announcement, DropdownConfigService, DropdownOption } from 'common';
 import { TooltipDirective } from 'directives';
 
+/** Priority -> theme token (theme-tokens.css), so chips follow light/dark. */
+const PRIORITY_TONE: Record<string, string> = {
+  high: 'var(--color-danger)',
+  medium: 'var(--color-warning)',
+  low: 'var(--color-success)',
+};
+
 @Component({
   selector: 'announcements-expire',
   standalone: true,
@@ -59,6 +66,14 @@ export class ExpireComponent {
     return this.announcements;
   }
 
+  priorityTone(priority: string | null | undefined): string {
+    return PRIORITY_TONE[(priority ?? '').toLowerCase()] ?? 'var(--color-text-secondary)';
+  }
+
+  priorityTint(priority: string | null | undefined): string {
+    return `color-mix(in srgb, ${this.priorityTone(priority)} 14%, var(--color-surface))`;
+  }
+
   formatDate(value: string): string {
     const parts = value.split('/');
     if (parts.length === 3) {
@@ -89,4 +104,3 @@ export class ExpireComponent {
     return trimmed + '...';
   }
 }
-
