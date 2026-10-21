@@ -1,46 +1,58 @@
-<div class="header flex items-center justify-between bg-white px-4 py-2 shadow-sm h-[60px] w-full box-border font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
-  <div class="design_1 flex gap-[10px]">
+<div class="header flex h-[60px] w-full box-border items-center justify-between px-4 py-2 shadow-sm font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
+  <div class="design_1 flex items-center gap-[12px]">
     <button
       type="button"
-      class="hamburger-btn w-[36px] h-[36px] bg-[var(--bg-color)] rounded-[8px] flex items-center justify-center cursor-pointer hover:bg-[#f3f6fb]"
+      class="hamburger-btn hd-icon-btn flex h-[36px] w-[36px] cursor-pointer items-center justify-center rounded-[8px]"
       [attr.aria-label]="isUserCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
       (click)="toggleSidebar()">
       <ui-icon name="hamburger_menu" class="text-[20px]"></ui-icon>
     </button>
+
+    <!-- Organization: Super Admin can switch, everyone else sees their own -->
+    @if (isSuperAdmin() && orgOptions().length) {
+      @for (key of [orgKey()]; track key) {
+        <ui-dropdown class="hd-org block w-[16rem]" id="org" label="Organization" placeholder="Pick an organization"
+                     [parentFormGroup]="orgForm" [options]="orgOptions()" (selectedChange)="onOrgPicked($event)"></ui-dropdown>
+      }
+    } @else if (orgName()) {
+      <span class="hd-org-name hidden items-center gap-2 rounded-[8px] px-3 py-1.5 text-[13px] font-medium sm:inline-flex">
+        <ui-icon name="group"></ui-icon>{{ orgName() }}
+      </span>
+    }
   </div>
 
   <div class="design_3 flex items-center gap-[12px]">
-    <div class="header-actions flex items-center relative">
+    <div class="header-actions relative flex items-center">
       <button
         type="button"
-        class="brightness_icon theme-toggle-btn w-[36px] h-[36px] flex items-center justify-center rounded-[8px] cursor-pointer"
+        class="brightness_icon theme-toggle-btn flex h-[36px] w-[36px] cursor-pointer items-center justify-center rounded-[8px]"
         aria-label="Toggle theme"
         (click)="toggleTheme()">
         <ui-icon [name]="currentTheme() === 'dark' ? 'moon' : 'brightness'" class="text-[20px]"></ui-icon>
       </button>
 
-      <span class="vertical-divider w-[1px] h-[28px] bg-[#97a1c0] mx-[12px]"></span>
+      <span class="hd-divider mx-[12px] h-[28px] w-[1px]"></span>
 
       <div class="bell-container relative inline-flex items-center justify-center">
-        <button class="bell-button w-[36px] h-[36px] flex items-center justify-center rounded-[8px] p-[10px] cursor-pointer hover:bg-[#F3F3F3] hover:outline hover:outline-2 hover:outline-[#E1E1E1]">
+        <button type="button" class="bell-button hd-icon-btn flex h-[36px] w-[36px] cursor-pointer items-center justify-center rounded-[8px] p-[10px]" aria-label="Notifications">
           <ui-icon name="bell" class="text-[20px]"></ui-icon>
         </button>
-        <span class="notification-dot absolute top-[-4px] right-[-4px] w-[13px] h-[13px] bg-[#e11d48] rounded-full"></span>
+        <span class="notification-dot hd-dot absolute right-[-4px] top-[-4px] h-[13px] w-[13px] rounded-full"></span>
       </div>
     </div>
 
-    <span class="vertical-divider w-[1px] h-[28px] bg-[#97a1c0] mx-[12px]"></span>
+    <span class="hd-divider mx-[12px] h-[28px] w-[1px]"></span>
 
     <div
-      class="admin_details flex items-center leading-[1.2] cursor-pointer px-[8px] py-[4px] rounded-[6px] hover:bg-[#f3f4f6]"
+      class="admin_details hd-user flex cursor-pointer items-center rounded-[6px] px-[8px] py-[4px] leading-[1.2]"
       [class.active]="dropdownOpen()"
       (click)="toggleDropdown($event)">
-      <div class="admin_details_text flex flex-col text-right leading-[1.2] px-[8px] py-[4px]">
-        <div class="admin_name text-[13px] font-[500] text-gray-900">{{ userProfile().userName }}</div>
-        <div class="admin_role text-[10px] text-gray-500">{{ userProfile().userRole }}</div>
+      <div class="admin_details_text flex flex-col px-[8px] py-[4px] text-right leading-[1.2]">
+        <div class="admin_name hd-text text-[13px] font-[500]">{{ userProfile().userName }}</div>
+        <div class="admin_role hd-text-2 text-[10px]">{{ userProfile().userRole }}</div>
       </div>
 
-      <div class="design_2 flex items-center justify-center bg-[#2563eb] text-white h-[31px] w-[31px] rounded-full text-[13px] font-[500]">
+      <div class="design_2 hd-avatar flex h-[31px] w-[31px] items-center justify-center overflow-hidden rounded-full text-[13px] font-[500]">
         @if (!userProfile().profileUrl) {
           {{ userProfile().userName | initials }}
         } @else {
@@ -50,27 +62,26 @@
     </div>
 
     @if (dropdownOpen()) {
-      <div class="dropdown-menu absolute top-[66px] right-[16px] w-[180px] bg-white border border-gray-200 rounded-[10px] shadow-md p-[6px] z-[1000] text-left">
-        <div class="profile-info flex flex-col text-left pb-[8px]">
-          <div>
-            <span class="profile-name block text-[#0c24c3] font-bold">{{ userProfile().userName }}</span>
-            <span class="profile-email block text-[14px] text-[#97a1c0]">{{ userProfile().userId }}</span>
-          </div>
+      <div class="dropdown-menu hd-menu absolute right-[16px] top-[66px] z-[1000] w-[200px] rounded-[10px] border p-[6px] text-left shadow-md">
+        <div class="profile-info flex flex-col pb-[8px] text-left">
+          <span class="profile-name hd-menu-name block font-bold">{{ userProfile().userName }}</span>
+          <span class="profile-email hd-text-2 block text-[13px]">{{ userProfile().userId }}</span>
+          @if (orgName()) { <span class="hd-text-2 mt-1 block text-[12px]">{{ orgName() }}</span> }
         </div>
 
-        <hr class="horizontal-line w-full h-[0.5px] bg-[#97a1c0] border-none" />
+        <hr class="hd-rule h-[0.5px] w-full border-none" />
 
         <div
-          class="dropdown-item profile-action flex items-center justify-start text-[14px] rounded-[8px] px-[4px] py-[2px] my-[3px] cursor-pointer hover:bg-[#e8ebf1]"
+          class="dropdown-item profile-action hd-item my-[3px] flex cursor-pointer items-center justify-start rounded-[8px] px-[4px] py-[2px] text-[14px]"
           (click)="profileOpen()">
           <ui-icon name="person" class="mr-[5px]"></ui-icon>
           <span>View Profile</span>
         </div>
 
-        <hr class="horizontal-line w-full h-[0.5px] bg-[#97a1c0] border-none" />
+        <hr class="hd-rule h-[0.5px] w-full border-none" />
 
         <div
-          class="dropdown-item logout-action flex items-center justify-start text-[14px] rounded-[8px] px-[4px] py-[2px] my-[3px] cursor-pointer hover:bg-[#e8ebf1]"
+          class="dropdown-item logout-action hd-item my-[3px] flex cursor-pointer items-center justify-start rounded-[8px] px-[4px] py-[2px] text-[14px]"
           (click)="logOut()">
           <ui-icon name="logout" class="mr-[5px]"></ui-icon>
           <span>Logout</span>

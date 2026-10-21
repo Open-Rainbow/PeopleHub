@@ -1,6 +1,6 @@
 import { AccessAction, PageAccess, PageDef, RoleDef } from './access.models';
 
-/** Same catalogue as `sec.Page` in database/setup.sql (section 16). */
+/** Same catalogue as `sec.Page` in database/setup.sql (section 16) + organizations.sql (section 18). */
 export const PAGE_CATALOGUE: PageDef[] = [
   page('dashboard', 'Dashboard', 'General', 'view', 10),
   page('announcements', 'View announcements', 'Announcements', 'view', 20),
@@ -19,7 +19,7 @@ export const PAGE_CATALOGUE: PageDef[] = [
   page('profile', 'My profile', 'Employees', 'view,edit', 73),
   page('edocs', 'EDocs (offer letters)', 'Documents', 'view,create,edit,delete,export', 80),
   page('policies', 'Policies', 'Documents', 'view,create,edit,delete,export', 81),
-  page('others', 'Others', 'General', 'view', 90),
+  page('organizations', 'Organizations', 'Administration', 'view,create,edit', 98),
   page('setup', 'Setup (roles & access)', 'Administration', 'view,create,edit,delete', 99),
 ];
 
@@ -39,22 +39,22 @@ const DEFAULT_GRANTS: Record<string, Record<string, string>> = {
     'leave-approval': '100011', 'leave-management': '111111', payroll: '110001', 'payroll.manage': '111111',
     attendance: '110011', holidays: '100000', 'holidays.manage': '111100', 'org-chart': '101001',
     'employees.view': '100001', 'employees.add': '111100', profile: '101000', edocs: '111101', policies: '111101',
-    others: '100000', setup: '111100',
+    setup: '111100',
   },
   hr: {
     dashboard: '100000', announcements: '100000', 'announcements.manage': '111100', 'apply-leave': '111100',
     'leave-management': '111111', payroll: '110001', 'payroll.manage': '111111', attendance: '110011',
     holidays: '100000', 'holidays.manage': '111100', 'org-chart': '101001', 'employees.view': '100001',
-    'employees.add': '111100', profile: '101000', edocs: '111101', policies: '111101', others: '100000',
+    'employees.add': '111100', profile: '101000', edocs: '111101', policies: '111101',
   },
   manager: {
     dashboard: '100000', announcements: '100000', 'apply-leave': '111100', 'leave-approval': '100011',
     payroll: '110000', attendance: '110011', holidays: '100000', 'org-chart': '100000', 'employees.view': '100000',
-    profile: '101000', policies: '100000', others: '100000',
+    profile: '101000', policies: '100000',
   },
   employee: {
     dashboard: '100000', announcements: '100000', 'apply-leave': '111100', payroll: '110000', attendance: '110000',
-    holidays: '100000', 'org-chart': '100000', profile: '101000', policies: '100000', others: '100000',
+    holidays: '100000', 'org-chart': '100000', profile: '101000', policies: '100000',
   },
 };
 

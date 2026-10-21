@@ -16,7 +16,7 @@ export const ROUTE_PAGE_MAP: Record<string, string> = {
   showProfile: 'profile',
   'offer-letter': 'edocs',
   policies: 'policies',
-  others: 'others',
+  organizations: 'organizations',
   setup: 'setup',
 };
 

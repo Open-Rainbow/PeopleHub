@@ -29,7 +29,6 @@ const EMPLOYEE_MENU: MenuItem[] = [
   { label: 'Holidays', icon: 'suitcase_line', route: 'holiday-calender' },
   { label: 'Org-Chart', icon: 'chart_growth', route: 'org-chart' },
   { label: 'Policies', icon: 'copy', route: 'policies' },
-  { label: 'Others', icon: 'dots_horizontal', route: 'others' },
 ];
 
 const MANAGER_MENU: MenuItem[] = [
@@ -53,12 +52,12 @@ const MANAGER_MENU: MenuItem[] = [
   { label: 'Holidays', icon: 'suitcase_line', route: 'holiday-calender' },
   { label: 'Org Chart', icon: 'chart_growth', route: 'org-chart' },
   { label: 'Policies', icon: 'copy', route: 'policies' },
-  { label: 'Others', icon: 'dots_horizontal', route: 'others' },
 ];
 
-function managementMenu(dashboardLabel: string, dashboardIcon: string): MenuItem[] {
+function managementMenu(dashboardLabel: string, dashboardIcon: string, withOrganizations = false): MenuItem[] {
   return [
     { label: dashboardLabel, icon: dashboardIcon, route: 'dashboard' },
+    ...(withOrganizations ? [{ label: 'Organizations', icon: 'group', route: 'organizations' }] : []),
     {
       label: 'Employee',
       icon: 'person',
@@ -90,7 +89,6 @@ function managementMenu(dashboardLabel: string, dashboardIcon: string): MenuItem
     { label: 'Holidays', icon: 'suitcase_line', route: 'holidayList' },
     { label: 'Org Chart', icon: 'chart_growth', route: 'org-chart' },
     { label: 'Policies', icon: 'copy', route: 'policies' },
-    { label: 'Others', icon: 'dots_horizontal', route: 'others' },
     { label: 'Setup', icon: 'settings', route: 'setup' },
   ];
 }
@@ -100,7 +98,7 @@ export const MENU_CONFIG: Record<string, MenuItem[]> = {
   manager: MANAGER_MENU,
   admin: managementMenu('Admin Dashboard', 'administrator_line'),
   hr: managementMenu('HR Dashboard', 'home'),
-  superadmin: managementMenu('Dashboard', 'view_dashboard_outline'),
+  superadmin: managementMenu('Dashboard', 'view_dashboard_outline', true),
 };
 
 @Injectable({

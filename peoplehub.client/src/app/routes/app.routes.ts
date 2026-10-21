@@ -236,14 +236,6 @@ const policiesRoute: Route = {
     ),
 };
 
-const othersRoute: Route = {
-  path: 'others',
-  loadComponent: () =>
-    import('../../libs/modules/employees/src/lib/components/others/others.component').then(
-      (m) => m.OthersComponent,
-    ),
-};
-
 const profileRoute: Route = {
   path: 'showProfile',
   loadComponent: () =>
@@ -286,6 +278,15 @@ const setupRoute: Route = {
     ),
 };
 
+/** Organizations: create / edit / switch (Super Admin only). */
+const organizationsRoute: Route = {
+  path: 'organizations',
+  loadComponent: () =>
+    import('../../libs/modules/super-admin/src/lib/components/organizations/organizations.component').then(
+      (m) => m.OrganizationsComponent,
+    ),
+};
+
 /** A role area: layout + its pages, protected by the Setup page access. */
 function roleShell(path: string, pages: Routes): Route {
   return {
@@ -312,7 +313,6 @@ const managementPages: Routes = [
   holidayCalendarRoute,
   orgChartRoute,
   policiesRoute,
-  othersRoute,
   profileRoute,
   viewEmployeeRoute,
   addEmployeeRoute,
@@ -343,7 +343,6 @@ export const appRoutes: Routes = [
     holidayCalendarRoute,
     orgChartRoute,
     policiesRoute,
-    othersRoute,
     profileRoute,
     addEmployeeRoute,
     ...legacyAddEmployeeRedirectRoutes,
@@ -358,7 +357,6 @@ export const appRoutes: Routes = [
     holidayCalendarRoute,
     orgChartRoute,
     policiesRoute,
-    othersRoute,
     profileRoute,
     viewEmployeeRoute,
   ]),
@@ -372,6 +370,6 @@ export const appRoutes: Routes = [
   },
   roleShell('admin', managementPages),
   roleShell('hr', managementPages),
-  roleShell('superadmin', managementPages),
+  roleShell('superadmin', [...managementPages, organizationsRoute]),
   { path: '**', redirectTo: 'login' },
 ];
