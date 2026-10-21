@@ -1,0 +1,11 @@
+@use '../../styles/leave-theme' as *;
+
+.lv-chip {
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.lv-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
