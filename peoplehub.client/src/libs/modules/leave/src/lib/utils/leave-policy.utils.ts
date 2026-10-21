@@ -36,10 +36,31 @@ export function emptyItem(category: PolicyCategory = 'standard'): LeavePolicyIte
     certificateAfterDays: null,
     backdateDays: 0,
     maxConsecutive: null,
+    isEnabled: true,
+    advanceNoticeRequired: false,
+    advanceNoticeHours: null,
+    paidDays: null,
+    extensionWeeks: null,
+    notes: '',
+    expiryDays: null,
+    maxAccrual: null,
+    maxPerMonth: null,
+    maxPerWeek: null,
+    eligibleAfterMonths: null,
   };
 }
 
+/** Old saved data may miss the newer fields: fill them with defaults. */
+export function completeItem(item: Partial<LeavePolicyItem>): LeavePolicyItem {
+  const base = emptyItem((item.category as PolicyCategory) ?? 'standard');
+  const out = { ...base } as Record<string, unknown>;
+  for (const [k, v] of Object.entries(item)) if (v !== undefined) out[k] = v;
+  return out as unknown as LeavePolicyItem;
+}
+
 const isNum = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
+
+const between = (v: number | null, min: number, max: number) => v === null || (isNum(v) && v >= min && v <= max);
 
 /** Field errors for one item (same rules as LeavePolicyItemValidator). `others` = the rest of the policy. */
 export function validateItem(item: LeavePolicyItem, others: LeavePolicyItem[]): PolicyItemErrors {
@@ -52,7 +73,7 @@ export function validateItem(item: LeavePolicyItem, others: LeavePolicyItem[]): 
   if (item.code && !/^[a-z0-9-]{2,20}$/.test(item.code)) e.code = 'Use 2-20 lowercase letters, digits or hyphens.';
   else if (item.code && others.some((o) => o.code === item.code)) e.code = 'Another leave type already uses this code.';
 
-  if (item.description.length > POLICY_LIMITS.descriptionMax) e.description = `Keep it under ${POLICY_LIMITS.descriptionMax} characters.`;
+  if ((item.description ?? '').length > POLICY_LIMITS.descriptionMax) e.description = `Keep it under ${POLICY_LIMITS.descriptionMax} characters.`;
 
   if (item.annualAllowance === null) {
     if (item.isPaid) e.annualAllowance = 'Paid leave needs an allowance. Only unpaid leave can be unlimited.';
@@ -63,7 +84,7 @@ export function validateItem(item: LeavePolicyItem, others: LeavePolicyItem[]): 
   if (!isNum(item.carryForwardDays) || item.carryForwardDays < 0) e.carryForwardDays = 'Enter 0 or more days.';
   else if (item.annualAllowance !== null && item.carryForwardDays > item.annualAllowance) e.carryForwardDays = "Can't carry forward more than the allowance.";
 
-  if (item.mustBeTakenWithinMonths !== null && (!isNum(item.mustBeTakenWithinMonths) || item.mustBeTakenWithinMonths < 1 || item.mustBeTakenWithinMonths > POLICY_LIMITS.monthsMax)) {
+  if (!between(item.mustBeTakenWithinMonths, 1, POLICY_LIMITS.monthsMax)) {
     e.mustBeTakenWithinMonths = `Enter 1 to ${POLICY_LIMITS.monthsMax} months, or leave empty.`;
   }
 
@@ -76,11 +97,27 @@ export function validateItem(item: LeavePolicyItem, others: LeavePolicyItem[]): 
     e.backdateDays = `Enter 0 to ${POLICY_LIMITS.backdateMax} days.`;
   }
 
-  if (item.maxConsecutive !== null && (!isNum(item.maxConsecutive) || item.maxConsecutive < 0.5 || item.maxConsecutive > 365)) {
-    e.maxConsecutive = 'Enter 0.5 to 365 days, or leave empty.';
+  if (!between(item.maxConsecutive, 0.5, 365)) e.maxConsecutive = 'Enter 0.5 to 365 days, or leave empty.';
+  if (item.isEncashable && !item.isPaid) e.isEncashable = "Unpaid leave can't be encashed.";
+
+  if (item.advanceNoticeRequired) {
+    if (!isNum(item.advanceNoticeHours)) e.advanceNoticeHours = 'How many hours before?';
+    else if (item.advanceNoticeHours < 1 || item.advanceNoticeHours > POLICY_LIMITS.noticeHoursMax) e.advanceNoticeHours = `Enter 1 to ${POLICY_LIMITS.noticeHoursMax} hours.`;
   }
 
-  if (item.isEncashable && !item.isPaid) e.isEncashable = "Unpaid leave can't be encashed.";
+  if (item.paidDays !== null) {
+    if (!isNum(item.paidDays) || item.paidDays < 0) e.paidDays = 'Enter 0 or more days.';
+    else if (item.annualAllowance !== null && item.paidDays > item.annualAllowance) e.paidDays = "Can't be more than the total duration.";
+  }
+
+  if (!between(item.extensionWeeks, 0, POLICY_LIMITS.extensionWeeksMax)) e.extensionWeeks = `Enter 0 to ${POLICY_LIMITS.extensionWeeksMax} weeks.`;
+  if ((item.notes ?? '').length > POLICY_LIMITS.notesMax) e.notes = `Keep it under ${POLICY_LIMITS.notesMax} characters.`;
+  if (!between(item.expiryDays, 1, POLICY_LIMITS.expiryDaysMax)) e.expiryDays = `Enter 1 to ${POLICY_LIMITS.expiryDaysMax} days.`;
+  if (!between(item.maxAccrual, 0.5, 365)) e.maxAccrual = 'Enter 0.5 to 365 days.';
+  if (!between(item.maxPerMonth, 0.5, 31)) e.maxPerMonth = 'Enter 0.5 to 31 days.';
+  if (!between(item.maxPerWeek, 0.5, 7)) e.maxPerWeek = 'Enter 0.5 to 7 days.';
+  else if (isNum(item.maxPerWeek) && isNum(item.maxPerMonth) && item.maxPerWeek > item.maxPerMonth) e.maxPerWeek = "Can't be more than days per month.";
+  if (!between(item.eligibleAfterMonths, 0, POLICY_LIMITS.eligibleMonthsMax)) e.eligibleAfterMonths = `Enter 0 to ${POLICY_LIMITS.eligibleMonthsMax} months.`;
   return e;
 }
 
