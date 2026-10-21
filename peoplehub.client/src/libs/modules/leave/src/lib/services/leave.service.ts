@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { forkJoin, of } from 'rxjs';
+import { firstValueFrom, forkJoin, of } from 'rxjs';
 import { catchError, finalize, timeout } from 'rxjs/operators';
 import {
   DayPart,
@@ -10,6 +10,7 @@ import {
   LeaveRequest,
   LeaveTypeConfig,
   LeaveTypeKey,
+  YearBalance,
 } from '../models/leave-request.model';
 import { LEAVE_HOLIDAYS, LEAVE_TYPE_MAP, LEAVE_TYPES, REASON_MAX, REASON_MIN } from '../config/leave-policy';
 import { addDaysIso, rangesOverlap, skippedDays, todayIso, workingDays } from '../utils/leave-date.utils';
@@ -126,6 +127,49 @@ export class LeaveService {
       });
   }
 
+  /**
+   * Balance per leave type for any year. Online: GET /balances (published policy + carry forward of that year).
+   * Offline: counted from the local requests with this year's allowances.
+   */
+  async yearBalances(year: number): Promise<YearBalance[]> {
+    const local = (): YearBalance[] => {
+      const inYear = this.requestsSignal().filter((r) => r.fromDate.startsWith(String(year)));
+      return this.typesSignal().map((t) => {
+        const used = sum(inYear.filter((r) => r.type === t.key && r.status === 'Approved'));
+        const pending = sum(inYear.filter((r) => r.type === t.key && r.status === 'Pending'));
+        return {
+          key: t.key,
+          label: t.label,
+          entitlement: t.entitlement,
+          carryIn: t.carryIn ?? 0,
+          used,
+          pending,
+          available: t.entitlement === null ? null : Math.max(t.entitlement - used - pending, 0),
+        };
+      });
+    };
+    if (!this.onlineSignal()) return local();
+    try {
+      const rows = await firstValueFrom(
+        this.http
+          .get<Row[]>(`${LEAVE_API}/balances?employeeId=${encodeURIComponent(this.employeeId)}&year=${year}`)
+          .pipe(timeout(API_TIMEOUT_MS)),
+      );
+      const num = (v: unknown) => (v === null || v === undefined || v === '' ? null : Number(v));
+      return rows.map((r) => ({
+        key: String(r['leaveType'] ?? ''),
+        label: String(r['label'] ?? ''),
+        entitlement: num(r['entitlement']),
+        carryIn: Number(r['carryIn'] ?? 0),
+        used: Number(r['used'] ?? 0),
+        pending: Number(r['pending'] ?? 0),
+        available: num(r['available']),
+      }));
+    } catch {
+      return local();
+    }
+  }
+
   typeOf(key: LeaveTypeKey): LeaveTypeConfig {
     return this.typeMap()[key] ?? LEAVE_TYPE_MAP[key] ?? neutralType(key, 0);
   }
@@ -182,7 +226,7 @@ export class LeaveService {
     }
 
     const balance = this.balanceOf(type.key);
-    if (balance.available !== null && days > balance.available) {
+    if (balance && balance.available !== null && days > balance.available) {
       errors.balance = `Only ${balance.available} ${type.label} day(s) left. Shorten the request or choose Loss of Pay.`;
     }
 
@@ -272,7 +316,7 @@ export class LeaveService {
 
   /**
    * The server decides which types this employee has (their published leave policy) and the rules;
-   * the client only adds colors. Types HR created in the policy manager get a neutral style.
+   * the client only adds legacy styles. Types HR created in the policy manager get a neutral style.
    */
   private mergeTypes(rows: Row[]): LeaveTypeConfig[] {
     const num = (v: unknown) => (v === null || v === undefined || v === '' ? null : Number(v));
@@ -291,6 +335,10 @@ export class LeaveService {
         documentAfterDays: num(row['documentAfterDays']) ?? undefined,
         approvalType: row['approvalType'] ? String(row['approvalType']) : undefined,
         carryIn: Number(row['carryIn'] ?? 0),
+        category: row['category'] ? String(row['category']) : local.category ?? 'standard',
+        isPaid: row['isPaid'] === undefined ? local.isPaid ?? true : row['isPaid'] !== false,
+        carryForwardDays: Number(row['carryForwardDays'] ?? local.carryForwardDays ?? 0),
+        isEncashable: row['isEncashable'] === undefined ? local.isEncashable ?? false : row['isEncashable'] === true,
       };
     });
   }
@@ -353,6 +401,8 @@ function neutralType(code: string, index: number): LeaveTypeConfig {
     entitlement: null,
     backdateDays: 0,
     maxConsecutive: null,
+    category: 'standard',
+    isPaid: true,
     styles: NEUTRAL_STYLES[index % NEUTRAL_STYLES.length],
   };
 }
@@ -381,5 +431,6 @@ export function seedRequests(now = new Date()): LeaveRequest[] {
     make(3, 'casual', -40, -40, 'Bank and passport appointment', 'Approved'),
     make(4, 'earned', -75, -71, 'Vacation with family', 'Approved', 'Enjoy!'),
     make(5, 'casual', -20, -20, 'Personal work', 'Rejected', 'Release week, please pick another date'),
+    make(6, 'wfh', -14, -14, 'Internet installation at home', 'Approved'),
   ].filter((r) => r.days > 0);
 }
