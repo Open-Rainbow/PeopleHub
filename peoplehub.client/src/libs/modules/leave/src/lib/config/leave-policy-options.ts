@@ -4,13 +4,14 @@ export interface CategoryOption {
   id: PolicyCategory;
   label: string;
   hint: string;
+  /** Legacy Tailwind classes (old screens only). */
   styles: { bar: string; soft: string; dot: string };
 }
 
 export const POLICY_CATEGORIES: CategoryOption[] = [
   { id: 'standard', label: 'Standard', hint: 'Everyday leave every employee gets.', styles: { bar: 'bg-blue-500', soft: 'bg-blue-50 text-blue-700', dot: 'bg-blue-500' } },
   { id: 'parental', label: 'Parental', hint: 'Maternity, paternity and adoption.', styles: { bar: 'bg-pink-500', soft: 'bg-pink-50 text-pink-700', dot: 'bg-pink-500' } },
-  { id: 'additional', label: 'Additional', hint: 'Comp off, unpaid and special leave.', styles: { bar: 'bg-amber-500', soft: 'bg-amber-50 text-amber-700', dot: 'bg-amber-500' } },
+  { id: 'additional', label: 'Additional', hint: 'Comp off, unpaid, work from home and special leave.', styles: { bar: 'bg-amber-500', soft: 'bg-amber-50 text-amber-700', dot: 'bg-amber-500' } },
 ];
 
 export const CATEGORY_MAP: Record<string, CategoryOption> = POLICY_CATEGORIES.reduce(
@@ -31,6 +32,7 @@ export const APPROVAL_TYPES: { id: ApprovalType; hint: string }[] = [
   { id: 'Manager + HR', hint: 'Manager, then HR.' },
 ];
 
+/** Legacy Tailwind classes (old screens only). */
 export const APPROVAL_STYLES: Record<string, string> = {
   Auto: 'bg-emerald-50 text-emerald-700',
   Manager: 'bg-sky-50 text-sky-700',
@@ -43,10 +45,15 @@ export const DEFAULT_EMPLOYMENT_TYPES = ['Full Time', 'Part Time', 'Contract', '
 export const POLICY_LIMITS = {
   labelMax: 50,
   descriptionMax: 200,
+  notesMax: 500,
   allowanceMax: 365,
   backdateMax: 30,
   monthsMax: 24,
   maxItems: 30,
+  noticeHoursMax: 720,
+  extensionWeeksMax: 52,
+  expiryDaysMax: 365,
+  eligibleMonthsMax: 60,
 };
 
 /** Human names used in the "changes since publish" list. */
@@ -65,4 +72,15 @@ export const POLICY_FIELD_LABELS: Partial<Record<keyof LeavePolicyItem, string>>
   certificateAfterDays: 'certificate days',
   backdateDays: 'backdating',
   maxConsecutive: 'max per request',
+  isEnabled: 'enabled',
+  advanceNoticeRequired: 'advance notice',
+  advanceNoticeHours: 'notice hours',
+  paidDays: 'paid duration',
+  extensionWeeks: 'extension',
+  notes: 'notes',
+  expiryDays: 'expiry',
+  maxAccrual: 'max accrual',
+  maxPerMonth: 'days per month',
+  maxPerWeek: 'days per week',
+  eligibleAfterMonths: 'eligible after',
 };
