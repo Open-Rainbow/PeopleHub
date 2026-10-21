@@ -1,104 +1,38 @@
-:host {
-  display: block;
-}
+@use '../../styles/leave-theme' as *;
 
-// Overlays are moved to <body> (leaveBodyPortal). The app header is z-[2000], so stay above it.
-.ph-overlay {
-  z-index: 2100;
-}
-
-.ph-overlay--top {
-  z-index: 2110;
-}
-
-// Colours: theme tokens only (theme-tokens.css), so light and dark both work.
-.lm-input {
-  display: block;
-  width: 100%;
-  border-radius: 0.5rem;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+.lv-year {
+  background-color: var(--color-surface);
   color: var(--color-text-primary);
-  transition: border-color 0.15s, box-shadow 0.15s;
 
-  &::placeholder {
-    color: var(--color-text-muted);
-  }
+  &:hover { border-color: var(--color-primary-soft); }
 
-  &:focus {
-    outline: none;
+  &--active {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
+    background-color: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+    color: var(--color-primary);
   }
 
-  &:disabled {
-    background: var(--color-surface-muted);
-    color: var(--color-text-muted);
-    cursor: not-allowed;
-  }
-}
-
-.lm-input--error {
-  border-color: var(--color-danger);
-
-  &:focus {
-    border-color: var(--color-danger);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger) 20%, transparent);
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 }
 
-// Checkbox styled as a small switch.
-.lm-switch {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  font-size: 0.875rem;
-  color: var(--color-text-secondary);
-  user-select: none;
+.lv-group {
+  --lv-cat: var(--color-primary);
+  background-color: color-mix(in srgb, var(--lv-cat) 5%, var(--color-surface));
 
-  input {
-    appearance: none;
-    position: relative;
-    width: 2.25rem;
-    height: 1.25rem;
-    flex-shrink: 0;
-    border-radius: 9999px;
-    background: var(--color-border-strong);
-    cursor: pointer;
-    transition: background 0.15s;
+  &[data-cat='parental'] { --lv-cat: var(--color-warning); }
+  &[data-cat='additional'] { --lv-cat: var(--color-success); }
 
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0.125rem;
-      left: 0.125rem;
-      width: 1rem;
-      height: 1rem;
-      border-radius: 9999px;
-      background: var(--color-surface);
-      box-shadow: 0 1px 2px color-mix(in srgb, var(--color-text-primary) 20%, transparent);
-      transition: transform 0.15s;
-    }
+  &__head:hover { background-color: color-mix(in srgb, var(--lv-cat) 8%, transparent); }
 
-    &:checked {
-      background: var(--color-primary);
-
-      &::after {
-        transform: translateX(1rem);
-      }
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--color-primary);
-      outline-offset: 2px;
-    }
-
-    &:disabled {
-      cursor: not-allowed;
-    }
+  &__head:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
+
+  &__dot { background-color: var(--lv-cat); }
 }
+
+.lv-invalid { border-color: var(--color-danger); }
