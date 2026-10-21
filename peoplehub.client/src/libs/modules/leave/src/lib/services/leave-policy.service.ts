@@ -10,7 +10,7 @@ import {
   LeavePolicyItem,
   LeavePolicySummary,
 } from '../models/leave-policy.model';
-import { uniqueCode } from '../utils/leave-policy.utils';
+import { completeItem, uniqueCode } from '../utils/leave-policy.utils';
 
 /** Backend: PeopleHub.Server LeavePolicyController (proxied by proxy.conf.js). */
 export const LEAVE_POLICY_API = '/api/v1/leave/policies';
@@ -220,8 +220,8 @@ export class LeavePolicyService {
       updatedAt: shown?.at ?? null,
       hasPublished: !!live,
       publishedVersion: live?.version ?? null,
-      items: structuredClone(shown?.items ?? DEFAULT_POLICY_ITEMS),
-      publishedItems: structuredClone(live?.items ?? []),
+      items: structuredClone(shown?.items ?? DEFAULT_POLICY_ITEMS).map(completeItem),
+      publishedItems: structuredClone(live?.items ?? []).map(completeItem),
     };
   }
 
@@ -307,6 +307,17 @@ export function toItem(row: Row): LeavePolicyItem {
     certificateAfterDays: num(row['certificateAfterDays']),
     backdateDays: Number(row['backdateDays'] ?? 0),
     maxConsecutive: num(row['maxConsecutive']),
+    isEnabled: row['isEnabled'] !== false,
+    advanceNoticeRequired: row['advanceNoticeRequired'] === true,
+    advanceNoticeHours: num(row['advanceNoticeHours']),
+    paidDays: num(row['paidDays']),
+    extensionWeeks: num(row['extensionWeeks']),
+    notes: text(row['notes']),
+    expiryDays: num(row['expiryDays']),
+    maxAccrual: num(row['maxAccrual']),
+    maxPerMonth: num(row['maxPerMonth']),
+    maxPerWeek: num(row['maxPerWeek']),
+    eligibleAfterMonths: num(row['eligibleAfterMonths']),
   };
 }
 
