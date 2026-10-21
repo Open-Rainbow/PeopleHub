@@ -1,30 +1,433 @@
-    <div class="w-full bg-white border border-gray-200 rounded-xl p-5">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold">Employees</h2>
-        <div class="flex gap-2 items-center">
-          <ui-search [placeholderText]="'Search employee'" [showBorder]="true"></ui-search>
-          <ui-text-button text="Add Employee" variant="secondary"></ui-text-button>
+<div class="space-y-6 p-4 sm:p-6">
+  <!-- Header -->
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-2xl font-semibold ed-text">Employees</h1>
+        @if (!isOnline() && !loading()) {
+          <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Offline demo data', t: tones.warning }"></ng-container>
+        }
+      </div>
+      <p class="mt-1 text-sm ed-text-2">Find people, see their details and keep their status up to date.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      @if (canExport()) {
+        <ui-text-button text="Export CSV" variant="secondary" [disabled]="busy() || !total()" (buttonClick)="exportCsv()"></ui-text-button>
+      }
+      @if (canAdd()) {
+        <ui-text-button text="Add employee" variant="primary" (buttonClick)="addEmployee()"></ui-text-button>
+      }
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="flex items-start gap-2" role="alert">
+      <ui-notice-banner class="flex-1" heading="Something went wrong: " [content]="error()!"
+                        [bannerColor]="errorBanner.bannerColor" [headingColor]="errorBanner.headingColor" [contentColor]="errorBanner.contentColor"
+                        [highlighterColor]="errorBanner.highlighterColor" [iconColor]="errorBanner.iconColor"></ui-notice-banner>
+      <ui-text-button text="Retry" variant="secondary" size="small" (buttonClick)="reload()"></ui-text-button>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="flex h-72 items-center justify-center rounded-2xl border ed-border ed-surface"><ui-loader></ui-loader></div>
+  } @else {
+    <!-- Stats -->
+    <div class="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
+      @for (s of stats(); track s.label) {
+        <button type="button" class="ed-stat flex items-start gap-3 rounded-2xl border ed-border ed-surface p-4 text-left"
+                [class.ed-stat--active]="!!s.status && query().status === s.status"
+                [attr.aria-pressed]="!!s.status && query().status === s.status"
+                [attr.aria-label]="s.status ? 'Show ' + s.label : 'Show everyone'" (click)="pickStat(s)">
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" [style.color]="tones[s.tone].color" [style.background]="tones[s.tone].bg">
+            <ui-icon [name]="s.icon"></ui-icon>
+          </span>
+          <span class="min-w-0">
+            <span class="block text-xs font-medium uppercase tracking-wide ed-text-2">{{ s.label }}</span>
+            <span class="mt-0.5 block text-2xl font-semibold ed-text">{{ s.value }}</span>
+            <span class="block truncate text-xs ed-muted">{{ s.hint }}</span>
+          </span>
+        </button>
+      }
+    </div>
+
+    <!-- Directory -->
+    <div class="rounded-2xl border ed-border ed-surface">
+      <!-- Filters -->
+      <div class="space-y-3 border-b ed-border px-5 py-4">
+        @for (key of [filterKey()]; track key) {
+          <div class="flex flex-wrap items-end gap-3">
+            <ui-search class="min-w-[16rem] flex-[2]" id="search" placeholderText="Search name, ID, email, phone or role" [displaySuggestions]="false"
+                       [parentFormGroup]="filterForm" (searchChange)="onSearch($event)"></ui-search>
+            <ui-dropdown class="min-w-[11rem] flex-1" id="status" label="Status" [placeholder]="'All statuses'" [isRequired]="false"
+                         [parentFormGroup]="filterForm" [options]="selects().status.options"></ui-dropdown>
+            <ui-dropdown class="min-w-[11rem] flex-1" id="department" label="Department" [placeholder]="'All departments'" [isRequired]="false"
+                         [parentFormGroup]="filterForm" [options]="selects().department.options"></ui-dropdown>
+            <ui-dropdown class="min-w-[11rem] flex-1" id="location" label="Location" [placeholder]="'All locations'" [isRequired]="false"
+                         [parentFormGroup]="filterForm" [options]="selects().location.options"></ui-dropdown>
+            <ui-text-button [text]="showMoreFilters() ? 'Fewer filters' : 'More filters'" variant="link" size="small"
+                            (buttonClick)="showMoreFilters.set(!showMoreFilters())"></ui-text-button>
+          </div>
+          @if (showMoreFilters()) {
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <ui-dropdown id="type" label="Employee type" [placeholder]="'All types'" [isRequired]="false"
+                           [parentFormGroup]="filterForm" [options]="selects().type.options"></ui-dropdown>
+              <ui-dropdown id="manager" label="Reporting manager" [placeholder]="'All managers'" [isRequired]="false"
+                           [parentFormGroup]="filterForm" [options]="selects().manager.options"></ui-dropdown>
+              <ui-calendar id="joinedFrom" label="Joined from" [isRequired]="false" [parentFormGroup]="filterForm"></ui-calendar>
+              <ui-calendar id="joinedTo" label="Joined to" [isRequired]="false" [parentFormGroup]="filterForm"></ui-calendar>
+            </div>
+            <ui-toggle id="includeExited" label="Include people who have left" [isRequired]="false" [parentFormGroup]="filterForm"></ui-toggle>
+          }
+        }
+
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex min-h-[2rem] flex-wrap items-center gap-2">
+            <span class="text-sm ed-text-2" aria-live="polite">{{ rangeLabel() }}</span>
+            @for (f of activeFilters(); track f.key) {
+              <span class="ed-filter inline-flex items-center gap-1 rounded-full py-0.5 pl-3 pr-1 text-xs">
+                {{ f.label }}
+                <ui-icon-button iconName="close" [ariaLabel]="'Remove filter ' + f.label" variant="light" size="small" (buttonClick)="clearFilter(f.key)"></ui-icon-button>
+              </span>
+            }
+            @if (activeFilters().length) {
+              <ui-text-button text="Clear all" variant="link" size="small" (buttonClick)="clearAll()"></ui-text-button>
+            }
+          </div>
+          <ui-button-group ariaLabel="Layout" size="sm" [items]="viewItems" [selectedValues]="[view()]" (selectionChange)="setView($event)"></ui-button-group>
         </div>
       </div>
 
-      <table class="min-w-full text-sm">
-        <thead>
-          <tr class="text-left border-b">
-            <th class="py-2">Employee</th>
-            <th>Designation</th>
-            <th>Department</th>
-            <th>Location</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (emp of employees; track emp.empId) {
-            <tr class="border-b last:border-0">
-              <td class="py-3 font-medium">{{ emp.name }}</td>
-              <td>{{ emp.designation }}</td>
-              <td>{{ emp.department }}</td>
-              <td>{{ emp.location }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
+      <!-- Results -->
+      <div class="relative">
+        @if (listLoading()) {
+          <div class="ed-veil absolute inset-0 z-10 flex items-center justify-center"><ui-loader></ui-loader></div>
+        }
+
+        @if (!rows().length && !listLoading()) {
+          <div class="px-6 py-16 text-center">
+            <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl ed-surface-muted ed-text-2"><ui-icon name="group"></ui-icon></span>
+            <p class="mt-3 text-sm font-medium ed-text">{{ activeFilters().length ? 'No one matches these filters' : 'No employees yet' }}</p>
+            <p class="mt-1 text-sm ed-text-2">{{ activeFilters().length ? 'Try a different search or clear the filters.' : 'Add your first employee to get started.' }}</p>
+            <div class="mt-4 flex justify-center gap-2">
+              @if (activeFilters().length) { <ui-text-button text="Clear filters" variant="secondary" size="small" (buttonClick)="clearAll()"></ui-text-button> }
+              @else if (canAdd()) { <ui-text-button text="Add employee" variant="primary" size="small" (buttonClick)="addEmployee()"></ui-text-button> }
+            </div>
+          </div>
+        } @else if (view() === 'table') {
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-sm">
+              <thead class="ed-surface-muted text-left text-xs font-medium uppercase tracking-wide ed-text-2">
+                <tr>
+                  @for (c of columns; track c.key) {
+                    <th scope="col" class="py-3" [ngClass]="c.css" [attr.aria-sort]="ariaSort(c.key)">
+                      <button type="button" class="ed-sort inline-flex items-center gap-1 uppercase" (click)="sortBy(c.key)">
+                        {{ c.label }}<span class="text-[10px]" aria-hidden="true">{{ sortMark(c.key) }}</span>
+                      </button>
+                    </th>
+                  }
+                  <th scope="col" class="px-4 py-3 hidden xl:table-cell">Manager</th>
+                  <th scope="col" class="px-4 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="ed-divide divide-y">
+                @for (e of rows(); track e.employeeCode) {
+                  <tr class="ed-row cursor-pointer" (click)="openProfile(e)">
+                    <td class="px-5 py-3">
+                      <div class="flex items-center gap-3">
+                        <ng-container *ngTemplateOutlet="avatar; context: { $implicit: e.fullName, size: 'h-9 w-9 text-xs' }"></ng-container>
+                        <div class="min-w-0">
+                          <button type="button" class="ed-link block truncate text-left font-medium ed-text" (click)="$event.stopPropagation(); openProfile(e)">{{ e.fullName }}</button>
+                          <p class="truncate text-xs ed-text-2">{{ e.employeeCode }}@if (e.officeEmail) { · {{ e.officeEmail }} }</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <p class="ed-text">{{ dash(e.designation) }}</p>
+                      <p class="text-xs ed-text-2">{{ dash(e.department) }}</p>
+                    </td>
+                    <td class="hidden px-4 py-3 ed-text-2 lg:table-cell">{{ dash(e.workLocation) }}</td>
+                    <td class="hidden px-4 py-3 md:table-cell">
+                      <p class="ed-text-2">{{ shortDate(e.dateOfJoining) || '—' }}</p>
+                      <p class="text-xs ed-muted">{{ tenure(e.dateOfJoining) }}</p>
+                    </td>
+                    <td class="px-4 py-3"><ng-container *ngTemplateOutlet="pill; context: { $implicit: e.status, t: statusTone(e.status) }"></ng-container></td>
+                    <td class="hidden px-4 py-3 xl:table-cell">
+                      @if (e.managerName) {
+                        <p class="ed-text-2">{{ e.managerName }}</p>
+                      } @else { <span class="ed-muted">—</span> }
+                      @if (e.directReports) { <p class="text-xs ed-muted">Leads {{ e.directReports }}</p> }
+                    </td>
+                    <td class="px-4 py-3" (click)="$event.stopPropagation()">
+                      <div class="flex items-center justify-end gap-1">
+                        <ui-icon-button iconName="person" [ariaLabel]="'View ' + e.fullName" variant="light" size="small" (buttonClick)="openProfile(e)"></ui-icon-button>
+                        @if (canEdit()) {
+                          <ui-icon-button iconName="edit" [ariaLabel]="'Change status of ' + e.fullName" variant="light" size="small" (buttonClick)="openStatus(e)"></ui-icon-button>
+                        }
+                        @if (canDelete()) {
+                          <ui-icon-button iconName="delete" [ariaLabel]="'Remove ' + e.fullName" variant="light" size="small" (buttonClick)="deleting.set(e)"></ui-icon-button>
+                        }
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <div class="grid gap-4 p-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            @for (e of rows(); track e.employeeCode) {
+              <article class="ed-card flex cursor-pointer flex-col rounded-2xl border ed-border ed-surface p-5" tabindex="0" role="button"
+                       [attr.aria-label]="'View ' + e.fullName" (click)="openProfile(e)" (keydown.enter)="openProfile(e)">
+                <div class="flex items-start justify-between gap-3">
+                  <ng-container *ngTemplateOutlet="avatar; context: { $implicit: e.fullName, size: 'h-12 w-12 text-sm' }"></ng-container>
+                  <ng-container *ngTemplateOutlet="pill; context: { $implicit: e.status, t: statusTone(e.status) }"></ng-container>
+                </div>
+                <h2 class="mt-3 truncate text-base font-semibold ed-text">{{ e.fullName }}</h2>
+                <p class="truncate text-sm ed-text-2">{{ dash(e.designation) }}</p>
+                <dl class="mt-4 space-y-1.5 text-xs">
+                  <div class="flex justify-between gap-2"><dt class="ed-muted">ID</dt><dd class="ed-text-2">{{ e.employeeCode }}</dd></div>
+                  <div class="flex justify-between gap-2"><dt class="ed-muted">Department</dt><dd class="truncate ed-text-2">{{ dash(e.department) }}</dd></div>
+                  <div class="flex justify-between gap-2"><dt class="ed-muted">Location</dt><dd class="truncate ed-text-2">{{ dash(e.workLocation) }}</dd></div>
+                  <div class="flex justify-between gap-2"><dt class="ed-muted">Manager</dt><dd class="truncate ed-text-2">{{ dash(e.managerName) }}</dd></div>
+                  <div class="flex justify-between gap-2"><dt class="ed-muted">Joined</dt><dd class="ed-text-2">{{ shortDate(e.dateOfJoining) || '—' }}</dd></div>
+                </dl>
+                @if (canEdit() || canDelete()) {
+                  <div class="mt-auto flex justify-end gap-1 border-t ed-border pt-3" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()">
+                    @if (canEdit()) { <ui-icon-button iconName="edit" [ariaLabel]="'Change status of ' + e.fullName" variant="light" size="small" (buttonClick)="openStatus(e)"></ui-icon-button> }
+                    @if (canDelete()) { <ui-icon-button iconName="delete" [ariaLabel]="'Remove ' + e.fullName" variant="light" size="small" (buttonClick)="deleting.set(e)"></ui-icon-button> }
+                  </div>
+                }
+              </article>
+            }
+          </div>
+        }
+      </div>
+
+      @if (total() > 0) {
+        <div class="border-t ed-border px-5 py-3">
+          <ui-pagination [totalItems]="total()" [pageSize]="query().pageSize" [currentPage]="query().page" [isGoto]="false"
+                         backgroundColor="var(--color-surface)" (pageChange)="onPage($event)"></ui-pagination>
+        </div>
+      }
     </div>
+  }
+</div>
+
+<!-- ================= PROFILE DRAWER ================= -->
+@if (profileBase(); as base) {
+  <div empBodyPortal class="ph-overlay fixed inset-0 flex justify-end ed-scrim" (click)="closeProfile()">
+    <div class="flex h-full w-full max-w-2xl flex-col ed-surface shadow-xl" role="dialog" aria-modal="true" aria-labelledby="ed-profile-title" (click)="$event.stopPropagation()">
+      <!-- Header -->
+      <div class="ed-hero border-b ed-border px-6 pb-5 pt-4">
+        <div class="flex justify-end">
+          <ui-icon-button iconName="close" ariaLabel="Close" variant="light" (buttonClick)="closeProfile()"></ui-icon-button>
+        </div>
+        <div class="flex items-center gap-4">
+          @if (photoUrl(profile()); as src) {
+            <img [src]="src" [alt]="base.fullName" class="h-16 w-16 rounded-2xl object-cover ed-ring" />
+          } @else {
+            <ng-container *ngTemplateOutlet="avatar; context: { $implicit: base.fullName, size: 'h-16 w-16 text-lg' }"></ng-container>
+          }
+          <div class="min-w-0 flex-1">
+            <h2 id="ed-profile-title" class="truncate text-xl font-semibold ed-text">{{ base.fullName }}</h2>
+            <p class="truncate text-sm ed-text-2">{{ dash(base.designation) }}@if (base.department) { · {{ base.department }} }</p>
+            <div class="mt-2 flex flex-wrap items-center gap-2">
+              <ng-container *ngTemplateOutlet="pill; context: { $implicit: base.status, t: statusTone(base.status) }"></ng-container>
+              <span class="text-xs ed-muted">{{ base.employeeCode }}</span>
+              @if (base.dateOfJoining) { <span class="text-xs ed-muted">· {{ tenure(base.dateOfJoining) }}</span> }
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 flex flex-wrap gap-2">
+          @if (base.officeEmail) { <ui-text-button text="Email" variant="secondary" size="small" (buttonClick)="mailTo(base.officeEmail)"></ui-text-button> }
+          @if (canOrgChart()) { <ui-text-button text="Org chart" variant="secondary" size="small" (buttonClick)="openOrgChart()"></ui-text-button> }
+          @if (base.directReports) { <ui-text-button [text]="'Team (' + base.directReports + ')'" variant="secondary" size="small" (buttonClick)="showTeam(base.employeeCode)"></ui-text-button> }
+          @if (canEdit()) { <ui-text-button text="Change status" variant="primary" size="small" (buttonClick)="openStatus(base)"></ui-text-button> }
+        </div>
+      </div>
+
+      <div class="px-6 pt-4">
+        <ui-tab-button [tabs]="profileTabs" [activeTab]="profileTab()" (tabChange)="onProfileTab($event)"></ui-tab-button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto px-6 py-5">
+        @if (profileLoading()) {
+          <div class="flex justify-center py-10"><ui-loader></ui-loader></div>
+        } @else if (profile(); as p) {
+          @switch (profileTab()) {
+            @case ('job') {
+              <div class="grid gap-3 sm:grid-cols-2">
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Designation', v: p.designation }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Department', v: p.department }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Business unit', v: p.businessUnit }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Work location', v: p.workLocation }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Employee type', v: p.employeeType }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Employment status', v: p.employmentStatus }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Date of joining', v: shortDate(p.dateOfJoining) }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Time with us', v: tenure(p.dateOfJoining) }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Pay level', v: p.payLevel }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Shift', v: p.shiftTimings }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Work schedule', v: p.workSchedule }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Probation ends', v: shortDate(p.probationEndDate) }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Confirmed on', v: shortDate(p.confirmationDate) }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'HR owner', v: p.hrOwnerName ?? p.hrOwnerCode }"></ng-container>
+              </div>
+
+              <h3 class="mb-2 mt-6 text-xs font-semibold uppercase tracking-wide ed-text-2">Reports to</h3>
+              @if (p.managerCode) {
+                <div class="flex items-center gap-3 rounded-xl border ed-border px-4 py-3">
+                  <ng-container *ngTemplateOutlet="avatar; context: { $implicit: p.managerName ?? p.managerCode, size: 'h-9 w-9 text-xs' }"></ng-container>
+                  <div class="min-w-0 flex-1">
+                    <p class="truncate text-sm font-medium ed-text">{{ p.managerName ?? p.managerCode }}</p>
+                    <p class="text-xs ed-text-2">{{ p.managerCode }}</p>
+                  </div>
+                  <ui-text-button text="Their team" variant="link" size="small" (buttonClick)="showTeam(p.managerCode)"></ui-text-button>
+                </div>
+              } @else {
+                <p class="text-sm ed-muted">No reporting manager (top of the organization).</p>
+              }
+
+              @if (team().length) {
+                <h3 class="mb-2 mt-6 text-xs font-semibold uppercase tracking-wide ed-text-2">Direct reports ({{ team().length }})</h3>
+                <ul class="ed-divide divide-y rounded-xl border ed-border">
+                  @for (m of team(); track m.employeeCode) {
+                    <li>
+                      <button type="button" class="ed-row flex w-full items-center gap-3 px-4 py-2.5 text-left" (click)="openProfile(m)">
+                        <ng-container *ngTemplateOutlet="avatar; context: { $implicit: m.fullName, size: 'h-8 w-8 text-xs' }"></ng-container>
+                        <span class="min-w-0 flex-1">
+                          <span class="block truncate text-sm font-medium ed-text">{{ m.fullName }}</span>
+                          <span class="block truncate text-xs ed-text-2">{{ dash(m.designation) }}</span>
+                        </span>
+                        <ng-container *ngTemplateOutlet="pill; context: { $implicit: m.status, t: statusTone(m.status) }"></ng-container>
+                      </button>
+                    </li>
+                  }
+                </ul>
+              }
+            }
+            @case ('contact') {
+              <div class="grid gap-3 sm:grid-cols-2">
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Office email', v: p.officeEmail ?? p.officialEmail }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Personal email', v: p.personalMail }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Mobile', v: p.mobileNumber }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Alternate mobile', v: p.alternateMobile }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Alternate email', v: p.alternateMail }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'LinkedIn', v: p.linkedinUrl }"></ng-container>
+              </div>
+            }
+            @case ('personal') {
+              <div class="grid gap-3 sm:grid-cols-2">
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Full name', v: [p.salutation, p.fullName].join(' ').trim() }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Preferred name', v: p.preferredName }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Gender', v: p.gender }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Date of birth', v: p.dateOfBirth ? shortDate(p.dateOfBirth) + ' (' + age(p.dateOfBirth) + ')' : null }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Marital status', v: p.maritalStatus }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Blood group', v: p.bloodGroup }"></ng-container>
+                <ng-container *ngTemplateOutlet="field; context: { $implicit: 'Nationality', v: p.nationality }"></ng-container>
+              </div>
+            }
+            @case ('history') {
+              @if (historyLoading()) {
+                <div class="flex justify-center py-10"><ui-loader></ui-loader></div>
+              } @else if (history().length) {
+                <ol class="ed-timeline space-y-4">
+                  @for (h of history(); track h.id) {
+                    <li class="relative pl-6">
+                      <span class="ed-dot absolute left-0 top-1.5 h-2.5 w-2.5 rounded-full" [style.background]="statusTone(h.newStatus).solid"></span>
+                      <div class="flex flex-wrap items-center gap-2 text-sm ed-text">
+                        @if (h.oldStatus) { <span class="ed-text-2">{{ h.oldStatus }}</span><span class="ed-muted">→</span> }
+                        <ng-container *ngTemplateOutlet="pill; context: { $implicit: h.newStatus, t: statusTone(h.newStatus) }"></ng-container>
+                      </div>
+                      @if (h.reason) { <p class="mt-1 text-sm ed-text-2">{{ h.reason }}</p> }
+                      <p class="mt-1 text-xs ed-muted">
+                        @if (h.effectiveDate) { From {{ shortDate(h.effectiveDate) }} · }
+                        Changed {{ shortDate(h.changedAt) }}@if (h.changedBy) { by {{ h.changedBy }} }
+                      </p>
+                    </li>
+                  }
+                </ol>
+              } @else {
+                <p class="py-6 text-center text-sm ed-text-2">No status changes yet. Changes made here are listed with their reason.</p>
+              }
+            }
+          }
+        }
+      </div>
+
+      @if (canDelete()) {
+        <div class="flex justify-end border-t ed-border px-6 py-3">
+          <ui-text-button text="Remove from directory" variant="danger" size="small" (buttonClick)="deleting.set(base)"></ui-text-button>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<!-- ================= STATUS DIALOG ================= -->
+@if (statusTarget(); as t) {
+  <div empBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center ed-scrim p-4" (click)="closeStatus()">
+    <div class="w-full max-w-md rounded-2xl ed-surface p-6 shadow-xl" role="dialog" aria-modal="true" aria-labelledby="ed-status-title" (click)="$event.stopPropagation()">
+      <h3 id="ed-status-title" class="text-base font-semibold ed-text">Change status</h3>
+      <p class="mt-1 text-sm ed-text-2">{{ t.fullName }} is <strong>{{ t.status }}</strong> now.</p>
+      @for (key of [statusKey()]; track key) {
+        <div class="mt-5 space-y-4">
+          <div>
+            <ui-dropdown id="status" label="New status" placeholder="Pick a status" [parentFormGroup]="statusForm" [options]="statusOptions()"></ui-dropdown>
+            @if (statusErrors().status) { <p class="mt-1 text-xs ed-error">{{ statusErrors().status }}</p> }
+          </div>
+          <div>
+            <ui-calendar id="effectiveDate" label="Effective from" [isRequired]="false" [parentFormGroup]="statusForm"></ui-calendar>
+            @if (statusErrors().effectiveDate) { <p class="mt-1 text-xs ed-error">{{ statusErrors().effectiveDate }}</p> }
+          </div>
+          <div>
+            <ui-text-area id="reason" [label]="needsReason() ? 'Reason (required)' : 'Reason (optional)'" [rows]="3" [isRequired]="false"
+                          [maxLength]="limits.reasonMax" [parentFormGroup]="statusForm"></ui-text-area>
+            <p class="mt-1 text-xs" [ngClass]="statusErrors().reason ? 'ed-error' : 'ed-muted'">
+              {{ statusErrors().reason || 'Saved in the history so everyone knows why it changed.' }}
+            </p>
+          </div>
+        </div>
+      }
+      <div class="mt-6 flex justify-end gap-3">
+        <ui-text-button text="Cancel" variant="secondary" [disabled]="busy()" (buttonClick)="closeStatus()"></ui-text-button>
+        <ui-text-button [text]="busy() ? 'Saving…' : 'Save'" variant="primary" [disabled]="busy()" (buttonClick)="saveStatus()"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ================= DELETE CONFIRM ================= -->
+@if (deleting(); as d) {
+  <div empBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center ed-scrim p-4" (click)="deleting.set(null)">
+    <div class="w-full max-w-sm rounded-2xl ed-surface p-6 shadow-xl" role="alertdialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <h3 class="text-base font-semibold ed-text">Remove {{ d.fullName }}?</h3>
+      <p class="mt-2 text-sm ed-text-2">They will no longer show in the directory or the org chart. Their records are kept. If they have left the company, change the status to Exited instead.</p>
+      <div class="mt-6 flex justify-end gap-3">
+        <ui-text-button text="Keep" variant="secondary" (buttonClick)="deleting.set(null)"></ui-text-button>
+        <ui-text-button [text]="busy() ? 'Removing…' : 'Remove'" variant="danger" [disabled]="busy()" (buttonClick)="confirmDelete()"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+<ui-toast-stack empBodyPortal class="ph-overlay ph-overlay--top" position="bottom-right" [toasts]="toasts()" (toastClosed)="dismissToast($event)"></ui-toast-stack>
+
+<!-- Non-interactive pill: shared ui-chip coloured from the theme tokens. -->
+<ng-template #pill let-text let-t="t">
+  <ui-chip size="status" [text]="text" [usePointerCursor]="false" [color]="t.color" [bgColor]="t.bg" [activeColor]="t.color" [activeBGColor]="t.bg"></ui-chip>
+</ng-template>
+
+<!-- Initials avatar, colour picked from the name. -->
+<ng-template #avatar let-name let-size="size">
+  <span class="flex shrink-0 items-center justify-center rounded-full font-semibold" [ngClass]="size"
+        [style.color]="avatarTone(name).color" [style.background]="avatarTone(name).bg" aria-hidden="true">{{ initials(name) }}</span>
+</ng-template>
+
+<!-- Label / value pair in the profile. -->
+<ng-template #field let-label let-v="v">
+  <div class="rounded-xl ed-surface-muted px-4 py-3">
+    <p class="text-xs ed-muted">{{ label }}</p>
+    <p class="mt-0.5 break-words text-sm font-medium ed-text">{{ dash(v) }}</p>
+  </div>
+</ng-template>

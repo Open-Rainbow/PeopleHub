@@ -1,0 +1,137 @@
+// Every colour on this screen comes from the theme tokens (src/styles/theme-tokens.css),
+// so the page follows light / dark themes. No hard-coded palette colours.
+:host {
+  display: block;
+  color: var(--color-text-primary);
+}
+
+// Overlays are moved to <body> (empBodyPortal). The app header is z-[2000], so stay above it.
+.ph-overlay {
+  z-index: 2100;
+}
+
+.ph-overlay--top {
+  z-index: 2110;
+}
+
+// ---- Surfaces --------------------------------------------------------------------------------
+.ed-surface {
+  background-color: var(--color-surface);
+}
+
+.ed-surface-muted {
+  background-color: var(--color-surface-muted);
+}
+
+.ed-scrim {
+  background-color: color-mix(in srgb, var(--color-bg) 35%, rgb(0 0 0 / 0.55));
+}
+
+.ed-veil {
+  background-color: color-mix(in srgb, var(--color-surface) 65%, transparent);
+}
+
+.ed-border {
+  border-color: var(--color-border);
+}
+
+.ed-divide > :not(:last-child) {
+  border-color: var(--color-border);
+}
+
+.ed-row:hover {
+  background-color: var(--color-surface-elevated);
+}
+
+.ed-hero {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 10%, var(--color-surface)) 0%, var(--color-surface) 100%);
+}
+
+.ed-ring {
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px color-mix(in srgb, var(--color-primary) 35%, transparent);
+}
+
+// ---- Text ------------------------------------------------------------------------------------
+.ed-text {
+  color: var(--color-text-primary);
+}
+
+.ed-text-2 {
+  color: var(--color-text-secondary);
+}
+
+.ed-muted {
+  color: var(--color-text-muted);
+}
+
+.ed-error {
+  color: var(--color-danger);
+}
+
+.ed-link:hover,
+.ed-sort:hover {
+  color: var(--color-primary);
+}
+
+.ed-sort:focus-visible,
+.ed-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+// ---- Bits ------------------------------------------------------------------------------------
+.ed-stat {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-primary-soft);
+    box-shadow: 0 8px 24px -14px color-mix(in srgb, var(--color-primary) 45%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+.ed-stat--active {
+  border-color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface));
+}
+
+.ed-filter {
+  color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.ed-card {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-primary-soft);
+    box-shadow: 0 8px 24px -12px color-mix(in srgb, var(--color-primary) 45%, transparent);
+
+    h2 {
+      color: var(--color-primary);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+.ed-timeline {
+  border-left: 2px solid var(--color-border);
+  margin-left: 4px;
+
+  > li {
+    margin-left: -7px;
+  }
+}
+
+.ed-dot {
+  box-shadow: 0 0 0 3px var(--color-surface);
+}
