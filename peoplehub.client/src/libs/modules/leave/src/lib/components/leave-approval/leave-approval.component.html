@@ -1,41 +1,513 @@
-    <div class="w-full bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] rounded-xl p-5">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-[var(--color-text-primary)]">Leave Approval</h2>
-        <ui-text-button text="Download" variant="secondary"></ui-text-button>
+<div class="space-y-5 p-4 sm:p-6">
+  <!-- Header -->
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-2xl font-semibold lv-text">Leaves &amp; WFH Requests</h1>
+        @if (!isOnline() && !loading()) {
+          <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Offline demo data', t: tones.warning }"></ng-container>
+        }
       </div>
-      <div class="overflow-auto">
-        <table class="min-w-full text-sm">
-          <thead>
-            <tr class="text-left border-b border-[var(--color-border)] text-[var(--color-text-secondary)]">
-              <th class="py-2">Employee</th>
-              <th class="py-2">Leave Type</th>
-              <th class="py-2">Duration</th>
-              <th class="py-2">Reason</th>
-              <th class="py-2">Status</th>
-              <th class="py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (item of rows; track item.id) {
-              <tr class="border-b border-[var(--color-border)] last:border-0">
-                <td class="py-3">{{ item.employee }}</td>
-                <td>{{ item.type }}</td>
-                <td>{{ item.from }} - {{ item.to }}</td>
-                <td>{{ item.reason }}</td>
-                <td>
-                  <ui-chip
-                    [text]="item.status"
-                    [bgColor]="item.status === 'Approved' ? 'color-mix(in srgb, var(--color-success) 14%, var(--color-surface))' : 'color-mix(in srgb, var(--color-warning) 14%, var(--color-surface))'"
-                    [color]="item.status === 'Approved' ? 'var(--color-success)' : 'var(--color-warning)'"
-                  ></ui-chip>
-                </td>
-                <td class="flex gap-2 py-2">
-                  <ui-text-button text="Approve" size="small"></ui-text-button>
-                  <ui-text-button text="Reject" size="small" variant="secondary"></ui-text-button>
-                </td>
-              </tr>
+      <p class="mt-1 text-sm lv-text-2">{{ periodLabel() }}</p>
+    </div>
+    <ui-text-button text="Download report" variant="primary" [disabled]="loading()" (buttonClick)="downloadReport()"></ui-text-button>
+  </div>
+
+  <!-- Period + filters -->
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <ui-button-group ariaLabel="Period" size="sm" [items]="periodItems" [selectedValues]="period() === 'custom' ? [] : [period()]" (selectionChange)="setPeriod($event)"></ui-button-group>
+    <div class="flex items-center gap-2">
+      <ui-text-button [text]="activeFilters().length ? 'Filters (' + activeFilters().length + ')' : 'Filters'" [variant]="activeFilters().length || period() === 'custom' ? 'primary' : 'secondary'" size="small" (buttonClick)="openFilters()"></ui-text-button>
+      <ui-text-button text="Refresh" variant="secondary" size="small" [disabled]="loading()" (buttonClick)="load()"></ui-text-button>
+    </div>
+  </div>
+  @if (activeFilters().length) {
+    <div class="flex flex-wrap items-center gap-2">
+      @for (f of activeFilters(); track f.key) {
+        <span class="lv-chip inline-flex items-center gap-1 rounded-full py-0.5 pl-3 pr-1 text-xs">
+          {{ f.label }}
+          <ui-icon-button iconName="close" [ariaLabel]="'Remove filter ' + f.label" variant="light" size="small" (buttonClick)="clearFilter(f.key)"></ui-icon-button>
+        </span>
+      }
+    </div>
+  }
+
+  <div class="rounded-xl lv-band px-3 pt-2">
+    <ui-tab-button [tabs]="tabs()" [activeTab]="tab()" (tabChange)="onTab($event)"></ui-tab-button>
+  </div>
+
+  @if (error()) {
+    <div class="flex items-start gap-2" role="alert">
+      <ui-notice-banner class="flex-1" heading="Something went wrong: " [content]="error()!"
+                        [bannerColor]="errorBanner.bannerColor" [headingColor]="errorBanner.headingColor" [contentColor]="errorBanner.contentColor"
+                        [highlighterColor]="errorBanner.highlighterColor" [iconColor]="errorBanner.iconColor"></ui-notice-banner>
+      <ui-text-button text="Retry" variant="secondary" size="small" (buttonClick)="load()"></ui-text-button>
+    </div>
+  }
+
+  @if (loading() && !result()) {
+    <div class="flex h-72 items-center justify-center rounded-2xl border lv-border lv-surface"><ui-loader></ui-loader></div>
+  } @else {
+    <div class="relative">
+      @if (loading()) { <div class="lv-veil absolute inset-0 z-10 flex items-start justify-center pt-24"><ui-loader></ui-loader></div> }
+
+      @switch (tab()) {
+        <!-- ================= OVERVIEW ================= -->
+        @case ('overview') {
+          <div class="space-y-5">
+            <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+              @for (k of kpis(); track k.key) {
+                <button type="button" class="lv-click flex items-center justify-between gap-3 rounded-2xl border lv-border lv-surface p-4 text-left"
+                        [attr.aria-label]="k.label + ' ' + k.value + ' of ' + k.of" (click)="openStatus(k.key)">
+                  <span>
+                    <span class="block text-2xl font-semibold lv-text">{{ k.value }}<span class="text-sm font-normal lv-text-2"> /{{ k.of }}</span></span>
+                    <span class="block text-xs font-medium" [style.color]="k.color">{{ k.label }}</span>
+                  </span>
+                  <ui-ring [size]="52" [value]="k.percent" [color]="k.color"></ui-ring>
+                </button>
+              }
+            </div>
+
+            <!-- Awaiting approval -->
+            <section class="rounded-2xl border lv-border lv-surface p-5" aria-labelledby="lv-await-title">
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <h2 id="lv-await-title" class="text-base font-semibold lv-text">Awaiting your approval</h2>
+                  <p class="text-xs lv-text-2">{{ pending().length }} request{{ pending().length === 1 ? '' : 's' }} need your action</p>
+                </div>
+                @if (pending().length) { <ui-text-button text="View all" variant="link" size="small" (buttonClick)="openStatus('Pending')"></ui-text-button> }
+              </div>
+              @if (!pending().length) {
+                <p class="py-8 text-center text-sm lv-text-2">Nothing waiting. All caught up.</p>
+              } @else {
+                <div class="lv-scroll mt-4 flex gap-3 overflow-x-auto pb-2">
+                  @for (r of pending(); track r.id) {
+                    <article class="flex w-72 shrink-0 flex-col rounded-xl border lv-border p-4">
+                      <div class="flex items-start gap-3">
+                        <ng-container *ngTemplateOutlet="avatar; context: { $implicit: r.employeeName, size: 'h-9 w-9 text-xs' }"></ng-container>
+                        <div class="min-w-0 flex-1">
+                          <p class="truncate text-sm font-semibold lv-text">{{ r.employeeName }}</p>
+                          <p class="truncate text-xs lv-text-2">{{ r.department }}</p>
+                        </div>
+                        <ng-container *ngTemplateOutlet="pill; context: { $implicit: r.leaveTypeLabel, t: typeTone(r.leaveType) }"></ng-container>
+                      </div>
+                      <p class="mt-2 text-xs lv-text-2">{{ formatRange(r.fromDate, r.toDate) }} <strong class="lv-text">({{ r.days }}d)</strong></p>
+                      <p class="mt-1 line-clamp-2 text-xs lv-text-2" [attr.title]="r.reason">{{ r.reason }}</p>
+                      @if (canApprove()) {
+                        <div class="mt-auto flex gap-2 pt-3">
+                          <ui-text-button class="flex-1" text="Approve" variant="primary" size="small" [disabled]="busy()" (buttonClick)="approve(r)"></ui-text-button>
+                          <ui-text-button class="flex-1" text="Reject" variant="danger" size="small" [disabled]="busy()" (buttonClick)="askReject(r)"></ui-text-button>
+                        </div>
+                      }
+                    </article>
+                  }
+                </div>
+              }
+            </section>
+
+            <div class="grid gap-5 xl:grid-cols-5">
+              <section class="rounded-2xl border lv-border lv-surface p-5 xl:col-span-3" aria-labelledby="lv-weekly-title">
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <h2 id="lv-weekly-title" class="text-base font-semibold lv-text">Weekly {{ weeklyWfh() ? 'WFH' : 'leave' }} pattern</h2>
+                    <p class="text-xs lv-text-2">Days off by weekday, last 4 weeks up to {{ formatDay(to(), true) }}</p>
+                  </div>
+                  <ui-toggle id="weeklyWfh" label="For WFH" [isRequired]="false" color="var(--color-primary)" labelColor="var(--color-text-secondary)" [parentFormGroup]="chartForm"></ui-toggle>
+                </div>
+                <ui-chart class="mt-3" type="bar" [height]="260" [labels]="weekly().labels" [series]="weekly().series" ariaLabel="Weekly pattern"></ui-chart>
+              </section>
+              <section class="rounded-2xl border lv-border lv-surface p-5 xl:col-span-2" aria-labelledby="lv-alloc-title">
+                <h2 id="lv-alloc-title" class="text-base font-semibold lv-text">Leaves allocated</h2>
+                <ng-container *ngTemplateOutlet="donut; context: { $implicit: allocated(), label: 'Total days' }"></ng-container>
+              </section>
+            </div>
+          </div>
+        }
+
+        <!-- ================= REQUESTS ================= -->
+        @case ('requests') {
+          <section class="rounded-2xl border lv-border lv-surface" aria-label="Leave and WFH requests">
+            <div class="flex flex-wrap items-center gap-3 border-b lv-border px-5 py-4">
+              <ui-search class="min-w-[16rem] flex-1" id="search" placeholderText="Search by name, ID, role or reason" [displaySuggestions]="false"
+                         [parentFormGroup]="searchForm" (searchChange)="onSearch($event)"></ui-search>
+              <span class="text-sm lv-text-2" aria-live="polite">{{ requestRows().length }} request{{ requestRows().length === 1 ? '' : 's' }}</span>
+            </div>
+            @if (!requestRows().length) {
+              <p class="px-6 py-14 text-center text-sm lv-text-2">No requests match. Try another period or clear the filters.</p>
+            } @else {
+              <div class="overflow-x-auto">
+                <table class="min-w-[960px] w-full text-sm">
+                  <thead class="lv-surface-muted text-left text-xs font-medium uppercase tracking-wide lv-text-2">
+                    <tr>
+                      <th scope="col" class="px-5 py-3"><button type="button" class="lv-sort uppercase" (click)="sortBy('name')">Name {{ sortMark('name') }}</button></th>
+                      <th scope="col" class="px-4 py-3"><button type="button" class="lv-sort uppercase" (click)="sortBy('type')">Leave type {{ sortMark('type') }}</button></th>
+                      <th scope="col" class="px-4 py-3"><button type="button" class="lv-sort uppercase" (click)="sortBy('department')">Department {{ sortMark('department') }}</button></th>
+                      <th scope="col" class="px-4 py-3"><button type="button" class="lv-sort uppercase" (click)="sortBy('days')">Days {{ sortMark('days') }}</button></th>
+                      <th scope="col" class="px-4 py-3"><button type="button" class="lv-sort uppercase" (click)="sortBy('start')">Start {{ sortMark('start') }}</button></th>
+                      <th scope="col" class="px-4 py-3"><button type="button" class="lv-sort uppercase" (click)="sortBy('end')">End {{ sortMark('end') }}</button></th>
+                      <th scope="col" class="px-4 py-3"><button type="button" class="lv-sort uppercase" (click)="sortBy('status')">Status {{ sortMark('status') }}</button></th>
+                      <th scope="col" class="px-4 py-3"><button type="button" class="lv-sort uppercase" (click)="sortBy('applied')">Applied on {{ sortMark('applied') }}</button></th>
+                      <th scope="col" class="px-4 py-3 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="lv-divide divide-y">
+                    @for (r of requestPage(); track r.id) {
+                      <tr class="lv-row">
+                        <td class="px-5 py-3">
+                          <div class="flex items-center gap-3">
+                            <ng-container *ngTemplateOutlet="avatar; context: { $implicit: r.employeeName, size: 'h-8 w-8 text-xs' }"></ng-container>
+                            <div class="min-w-0">
+                              <p class="truncate font-medium lv-text">{{ r.employeeName }}</p>
+                              <p class="truncate text-xs lv-text-2">{{ dash(r.designation) }}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 font-medium" [style.color]="typeTone(r.leaveType).color">{{ r.leaveTypeLabel }}</td>
+                        <td class="px-4 py-3 lv-text-2">{{ r.department }}</td>
+                        <td class="px-4 py-3 lv-text">{{ r.days }} {{ r.days === 1 ? 'day' : 'days' }}</td>
+                        <td class="px-4 py-3 lv-text-2">{{ formatDay(r.fromDate, true) }}</td>
+                        <td class="px-4 py-3 lv-text-2">{{ formatDay(r.toDate, true) }}</td>
+                        <td class="px-4 py-3"><ng-container *ngTemplateOutlet="pill; context: { $implicit: statusOf(r), t: statusTone(statusOf(r)) }"></ng-container></td>
+                        <td class="px-4 py-3 lv-text-2">{{ formatDay(r.appliedAt.slice(0, 10), true) }}</td>
+                        <td class="px-4 py-3">
+                          <div class="flex justify-end gap-1">
+                            <ui-icon-button iconName="eye" variant="light" size="small" [ariaLabel]="'Reason: ' + r.reason" [attr.title]="r.reason" (buttonClick)="viewing.set(r)"></ui-icon-button>
+                            @if (r.status === 'Pending' && canApprove()) {
+                              <ui-icon-button iconName="tick" variant="light" size="small" [ariaLabel]="'Approve ' + r.employeeName" (buttonClick)="approve(r)"></ui-icon-button>
+                              <ui-icon-button iconName="close" variant="light" size="small" [ariaLabel]="'Reject ' + r.employeeName" (buttonClick)="askReject(r)"></ui-icon-button>
+                            }
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              @if (requestRows().length > pageSize) {
+                <div class="border-t lv-border px-5 py-3">
+                  <ui-pagination [totalItems]="requestRows().length" [pageSize]="pageSize" [currentPage]="page()" [isGoto]="false"
+                                 backgroundColor="var(--color-surface)" (pageChange)="onPage($event)"></ui-pagination>
+                </div>
+              }
             }
-          </tbody>
-        </table>
+          </section>
+        }
+
+        <!-- ================= ANALYTICS ================= -->
+        @case ('analytics') {
+          <div class="grid gap-5 xl:grid-cols-5">
+            <section class="rounded-2xl border lv-border lv-surface p-5 xl:col-span-3" aria-labelledby="lv-trend-title">
+              <h2 id="lv-trend-title" class="text-base font-semibold lv-text">Leave trend over time</h2>
+              <ui-chart class="mt-3" type="line" [height]="280" [labels]="trend().labels" [series]="trend().series" ariaLabel="Leave trend"></ui-chart>
+            </section>
+            <section class="rounded-2xl border lv-border lv-surface p-5 xl:col-span-2" aria-labelledby="lv-dist-title">
+              <h2 id="lv-dist-title" class="text-base font-semibold lv-text">Leave distribution</h2>
+              <ng-container *ngTemplateOutlet="donut; context: { $implicit: distribution(), label: 'Total days' }"></ng-container>
+            </section>
+            <section class="rounded-2xl border lv-border lv-surface p-5 xl:col-span-2" aria-labelledby="lv-top-title">
+              <div class="flex items-center justify-between gap-3">
+                <h2 id="lv-top-title" class="text-base font-semibold lv-text">Top employees by {{ topWfh() ? 'WFH' : 'leaves' }}</h2>
+                <ui-toggle id="topWfh" label="For WFH" [isRequired]="false" color="var(--color-primary)" labelColor="var(--color-text-secondary)" [parentFormGroup]="chartForm"></ui-toggle>
+              </div>
+              <ui-chart class="mt-3" type="bar" [height]="280" [labels]="top().labels" [series]="top().series" [showLegend]="false" ariaLabel="Top employees"></ui-chart>
+            </section>
+            <section class="rounded-2xl border lv-border lv-surface p-5 xl:col-span-3" aria-labelledby="lv-vs-title">
+              <div class="flex items-center justify-between gap-3">
+                <h2 id="lv-vs-title" class="text-base font-semibold lv-text">{{ approvalRate() ? 'Approval rate' : 'Leaves vs WFH trend' }}</h2>
+                <ui-toggle id="approvalRate" label="Approval rate" [isRequired]="false" color="var(--color-primary)" labelColor="var(--color-text-secondary)" [parentFormGroup]="chartForm"></ui-toggle>
+              </div>
+              @if (approvalRate()) {
+                <ui-chart class="mt-3" type="line" [height]="280" [labels]="approvals().labels" [series]="approvals().series" ariaLabel="Approval rate"></ui-chart>
+              } @else {
+                <ui-chart class="mt-3" type="line" [height]="280" [labels]="vsWfh().labels" [series]="vsWfh().series" ariaLabel="Leaves vs WFH"></ui-chart>
+              }
+            </section>
+          </div>
+        }
+
+        <!-- ================= DEPARTMENTS ================= -->
+        @case ('departments') {
+          <div class="grid gap-5 xl:grid-cols-5">
+            <section class="rounded-2xl border lv-border lv-surface p-5 xl:col-span-3" aria-labelledby="lv-dvw-title">
+              <h2 id="lv-dvw-title" class="text-base font-semibold lv-text">Leaves vs WFH</h2>
+              <ui-chart class="mt-3" type="bar" [height]="280" [labels]="vsWfh().labels" [series]="vsWfh().bars" ariaLabel="Leaves vs WFH"></ui-chart>
+            </section>
+            <section class="rounded-2xl border lv-border lv-surface p-5 xl:col-span-2" aria-labelledby="lv-dept-title">
+              <h2 id="lv-dept-title" class="text-base font-semibold lv-text">Leaves by department</h2>
+              <div class="mx-auto mt-3 max-w-[220px]">
+                <ui-chart type="doughnut" [height]="200" [labels]="deptLeaves().labels" [series]="deptLeaves().series" [showLegend]="false"
+                          [centerValue]="deptLeaves().total" centerLabel="Leaves" ariaLabel="Leaves by department"></ui-chart>
+              </div>
+              <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+                @for (d of deptLeaves().labels; track d; let i = $index) {
+                  <li class="flex items-center gap-2 rounded-lg lv-surface-muted px-3 py-2 text-xs">
+                    <span class="h-2.5 w-2.5 rounded-full" [style.background]="chartColor(i)" aria-hidden="true"></span>
+                    <span class="flex-1 truncate lv-text-2">{{ d }}</span>
+                    <strong class="lv-text">{{ deptLeaves().values[i] }}</strong>
+                  </li>
+                }
+              </ul>
+            </section>
+            <section class="rounded-2xl border lv-border lv-surface p-5 xl:col-span-2" aria-labelledby="lv-dstat-title">
+              <h2 id="lv-dstat-title" class="text-base font-semibold lv-text">Department status comparison</h2>
+              <ui-chart class="mt-3" type="bar" [stacked]="true" [height]="280" [labels]="deptStatus().labels" [series]="deptStatus().series" ariaLabel="Department status"></ui-chart>
+            </section>
+            <section class="rounded-2xl border lv-border lv-surface p-5 xl:col-span-3" aria-labelledby="lv-dtype-title">
+              <h2 id="lv-dtype-title" class="text-base font-semibold lv-text">Type by department</h2>
+              <ui-chart class="mt-3" type="bar" [stacked]="true" [height]="280" [labels]="deptTypes().labels" [series]="deptTypes().series" ariaLabel="Leave type by department"></ui-chart>
+            </section>
+          </div>
+        }
+
+        <!-- ================= EMPLOYEES ================= -->
+        @case ('employees') {
+          <section class="rounded-2xl border lv-border lv-surface" aria-label="Employee leave balances">
+            <div class="flex flex-wrap items-center gap-3 border-b lv-border px-5 py-4">
+              <ui-search class="min-w-[16rem] flex-1" id="search" placeholderText="Search name, ID or role" [displaySuggestions]="false"
+                         [parentFormGroup]="empSearchForm" (searchChange)="onEmpSearch($event)"></ui-search>
+              <span class="text-xs lv-text-2">{{ ignorePeriod() ? 'Whole year' : 'Selected period' }} · {{ employees().length }} employees</span>
+            </div>
+            <div class="relative">
+              @if (employeesLoading()) { <div class="lv-veil absolute inset-0 z-10 flex items-center justify-center"><ui-loader></ui-loader></div> }
+              @if (!empRows().length && !employeesLoading()) {
+                <p class="px-6 py-14 text-center text-sm lv-text-2">No employees match.</p>
+              } @else {
+                <div class="overflow-x-auto">
+                  <table class="min-w-[720px] w-full text-sm">
+                    <thead class="lv-surface-muted text-left text-xs font-medium uppercase tracking-wide lv-text-2">
+                      <tr>
+                        <th scope="col" class="w-10 px-3 py-3"><span class="sr-only">Expand</span></th>
+                        <th scope="col" class="px-3 py-3"><button type="button" class="lv-sort uppercase" (click)="sortEmployees('name')">Employee {{ empSortMark('name') }}</button></th>
+                        <th scope="col" class="px-4 py-3"><button type="button" class="lv-sort uppercase" (click)="sortEmployees('department')">Department {{ empSortMark('department') }}</button></th>
+                        <th scope="col" class="px-4 py-3"><button type="button" class="lv-sort uppercase" (click)="sortEmployees('utilization')">Utilization {{ empSortMark('utilization') }}</button></th>
+                        <th scope="col" class="px-4 py-3 text-right"><button type="button" class="lv-sort uppercase" (click)="sortEmployees('available')">Available {{ empSortMark('available') }}</button></th>
+                      </tr>
+                    </thead>
+                    <tbody class="lv-divide divide-y">
+                      @for (e of empPageRows(); track e.employeeId) {
+                        <tr class="lv-row cursor-pointer" (click)="toggleEmployee(e)">
+                          <td class="px-3 py-3" (click)="$event.stopPropagation()">
+                            <ui-icon-button [iconName]="expandedEmp() === e.employeeId ? 'arrow_down' : 'arrow_right'" variant="light" size="small"
+                                            [ariaLabel]="(expandedEmp() === e.employeeId ? 'Hide' : 'Show') + ' details of ' + e.employeeName" (buttonClick)="toggleEmployee(e)"></ui-icon-button>
+                          </td>
+                          <td class="px-3 py-3">
+                            <div class="flex items-center gap-3">
+                              <ng-container *ngTemplateOutlet="avatar; context: { $implicit: e.employeeName, size: 'h-9 w-9 text-xs' }"></ng-container>
+                              <div class="min-w-0">
+                                <p class="truncate font-medium lv-text">{{ e.employeeName }} <span class="text-[10px] lv-muted">{{ e.employeeId }}</span></p>
+                                <p class="truncate text-xs lv-text-2">{{ dash(e.designation) }}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="px-4 py-3 lv-text-2">{{ e.department }}</td>
+                          <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                              <ui-ring [size]="38" [value]="e.utilizationPercent" [color]="usageColor(e.utilizationPercent)"></ui-ring>
+                              <span class="text-xs lv-text-2">{{ e.usedDays }}/{{ e.totalDays }}</span>
+                            </div>
+                          </td>
+                          <td class="px-4 py-3 text-right"><strong class="text-base lv-text">{{ e.availableDays }}</strong> <span class="text-xs lv-text-2">days</span></td>
+                        </tr>
+                        @if (expandedEmp() === e.employeeId) {
+                          <tr>
+                            <td colspan="5" class="lv-surface-muted px-5 py-4">
+                              <div class="grid gap-4 lg:grid-cols-5">
+                                <div class="lg:col-span-2">
+                                  <h3 class="mb-2 text-xs font-semibold uppercase tracking-wide lv-text-2">Balance by type</h3>
+                                  <table class="w-full overflow-hidden rounded-xl border lv-border lv-surface text-xs">
+                                    <thead class="text-left lv-text-2"><tr><th class="px-3 py-2">Type</th><th class="px-3 py-2 text-right">Total</th><th class="px-3 py-2 text-right">Used</th><th class="px-3 py-2 text-right">Left</th></tr></thead>
+                                    <tbody class="lv-divide divide-y">
+                                      @for (b of balanceRows(e); track b.leaveType) {
+                                        <tr>
+                                          <td class="px-3 py-2 font-medium" [style.color]="typeTone(b.leaveType).color">{{ b.label }}</td>
+                                          <td class="px-3 py-2 text-right lv-text-2">{{ b.total }}</td>
+                                          <td class="px-3 py-2 text-right lv-text">{{ b.used }}</td>
+                                          <td class="px-3 py-2 text-right font-semibold" [style.color]="tones.success.color">{{ b.left }}</td>
+                                        </tr>
+                                      }
+                                      <tr class="font-semibold">
+                                        <td class="px-3 py-2 lv-text-2">TOTAL</td>
+                                        <td class="px-3 py-2 text-right lv-text">{{ e.totalDays }}</td>
+                                        <td class="px-3 py-2 text-right lv-text">{{ e.usedDays }}</td>
+                                        <td class="px-3 py-2 text-right" [style.color]="tones.success.color">{{ e.availableDays }}</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <div class="lg:col-span-3">
+                                  <div class="mb-2 flex items-center justify-between">
+                                    <h3 class="text-xs font-semibold uppercase tracking-wide lv-text-2">Leave history</h3>
+                                    <ui-text-button text="Export CSV" variant="link" size="small" [disabled]="!history().length" (buttonClick)="exportHistory(e)"></ui-text-button>
+                                  </div>
+                                  @if (historyLoading()) {
+                                    <div class="flex justify-center py-6"><ui-loader></ui-loader></div>
+                                  } @else if (!history().length) {
+                                    <p class="rounded-xl border lv-border lv-surface py-6 text-center text-xs lv-text-2">No leaves yet.</p>
+                                  } @else {
+                                    <div class="max-h-64 overflow-y-auto rounded-xl border lv-border lv-surface">
+                                      <table class="w-full text-xs">
+                                        <thead class="text-left lv-text-2"><tr><th class="px-3 py-2">Period</th><th class="px-3 py-2">Type</th><th class="px-3 py-2 text-right">Days</th><th class="px-3 py-2">Reason</th><th class="px-3 py-2 text-right">Status</th></tr></thead>
+                                        <tbody class="lv-divide divide-y">
+                                          @for (h of history(); track h.id) {
+                                            <tr>
+                                              <td class="px-3 py-2 lv-text">{{ formatRange(h.fromDate, h.toDate) }}</td>
+                                              <td class="px-3 py-2" [style.color]="typeTone(h.leaveType).color">{{ h.label }}</td>
+                                              <td class="px-3 py-2 text-right lv-text">{{ h.days }}</td>
+                                              <td class="max-w-[12rem] truncate px-3 py-2 lv-text-2" [attr.title]="h.reason">{{ h.reason }}</td>
+                                              <td class="px-3 py-2 text-right"><ng-container *ngTemplateOutlet="pill; context: { $implicit: h.status, t: statusTone(h.status) }"></ng-container></td>
+                                            </tr>
+                                          }
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  }
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        }
+                      }
+                    </tbody>
+                  </table>
+                </div>
+                @if (empRows().length > pageSize) {
+                  <div class="border-t lv-border px-5 py-3">
+                    <ui-pagination [totalItems]="empRows().length" [pageSize]="pageSize" [currentPage]="empPage()" [isGoto]="false"
+                                   backgroundColor="var(--color-surface)" (pageChange)="onEmpPage($event)"></ui-pagination>
+                  </div>
+                }
+              }
+            </div>
+          </section>
+        }
+      }
+    </div>
+  }
+</div>
+
+<!-- ================= FILTER PANEL ================= -->
+@if (filtersOpen()) {
+  <div leaveBodyPortal class="lv-overlay fixed inset-0 flex justify-end lv-scrim" (click)="cancelFilters()">
+    <div class="lv-slide flex h-full w-full max-w-md flex-col lv-surface shadow-xl" role="dialog" aria-modal="true" aria-labelledby="lv-filter-title" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between border-b lv-border px-6 py-4">
+        <div>
+          <h2 id="lv-filter-title" class="text-lg font-semibold lv-text">Filters</h2>
+          <p class="text-xs lv-text-2">Pick what you want to see, then press Apply.</p>
+        </div>
+        <ui-icon-button iconName="close" ariaLabel="Close" variant="light" (buttonClick)="cancelFilters()"></ui-icon-button>
+      </div>
+      @for (key of [filterKey()]; track key) {
+        <div class="flex-1 space-y-5 overflow-y-auto px-6 py-5">
+          <section class="space-y-4">
+            <h3 class="text-xs font-semibold uppercase tracking-wide lv-text-2">Date range</h3>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <ui-calendar id="from" label="Start date" [parentFormGroup]="filterForm"></ui-calendar>
+              <ui-calendar id="to" label="End date" [parentFormGroup]="filterForm"></ui-calendar>
+            </div>
+          </section>
+          <section class="space-y-4 border-t lv-border pt-5">
+            <h3 class="text-xs font-semibold uppercase tracking-wide lv-text-2">Requests</h3>
+            <ui-dropdown id="department" label="Department" placeholder="All departments" [isRequired]="false" [parentFormGroup]="filterForm" [options]="departmentOptions()"></ui-dropdown>
+            <ui-dropdown id="leaveType" label="Leave type" placeholder="All types" [isRequired]="false" [parentFormGroup]="filterForm" [options]="typeOptions()"></ui-dropdown>
+            <ui-dropdown id="status" label="Status" placeholder="All statuses" [isRequired]="false" [parentFormGroup]="filterForm" [options]="statusOptions"></ui-dropdown>
+          </section>
+          <section class="border-t lv-border pt-5">
+            <h3 class="mb-3 text-xs font-semibold uppercase tracking-wide lv-text-2">Employees tab</h3>
+            <ui-toggle id="ignorePeriod" label="Ignore date period (show the whole year)" [isRequired]="false" color="var(--color-primary)" labelColor="var(--color-text-primary)" [parentFormGroup]="filterForm"></ui-toggle>
+          </section>
+          @if (filterError()) { <p class="text-xs lv-error" role="alert">{{ filterError() }}</p> }
+        </div>
+      }
+      <div class="flex items-center gap-3 border-t lv-border px-6 py-4">
+        <ui-text-button class="mr-auto" text="Reset" variant="link" (buttonClick)="resetFilters()"></ui-text-button>
+        <ui-text-button text="Cancel" variant="secondary" (buttonClick)="cancelFilters()"></ui-text-button>
+        <ui-text-button text="Apply" variant="primary" (buttonClick)="applyFilters()"></ui-text-button>
       </div>
     </div>
+  </div>
+}
+
+<!-- ================= REQUEST DETAILS ================= -->
+@if (viewing(); as v) {
+  <div leaveBodyPortal class="lv-overlay fixed inset-0 flex justify-end lv-scrim" (click)="viewing.set(null)">
+    <div class="lv-slide flex h-full w-full max-w-md flex-col lv-surface shadow-xl" role="dialog" aria-modal="true" aria-labelledby="lv-view-title" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between border-b lv-border px-6 py-4">
+        <div class="flex items-center gap-3">
+          <ng-container *ngTemplateOutlet="avatar; context: { $implicit: v.employeeName, size: 'h-10 w-10 text-sm' }"></ng-container>
+          <div>
+            <h2 id="lv-view-title" class="text-base font-semibold lv-text">{{ v.employeeName }}</h2>
+            <p class="text-xs lv-text-2">{{ dash(v.designation) }} · {{ v.department }}</p>
+          </div>
+        </div>
+        <ui-icon-button iconName="close" ariaLabel="Close" variant="light" (buttonClick)="viewing.set(null)"></ui-icon-button>
+      </div>
+      <dl class="flex-1 space-y-3 overflow-y-auto px-6 py-5 text-sm">
+        <div class="flex justify-between gap-3"><dt class="lv-text-2">Type</dt><dd class="font-medium" [style.color]="typeTone(v.leaveType).color">{{ v.leaveTypeLabel }}</dd></div>
+        <div class="flex justify-between gap-3"><dt class="lv-text-2">Status</dt><dd><ng-container *ngTemplateOutlet="pill; context: { $implicit: statusOf(v), t: statusTone(statusOf(v)) }"></ng-container></dd></div>
+        <div class="flex justify-between gap-3"><dt class="lv-text-2">Dates</dt><dd class="lv-text">{{ formatRange(v.fromDate, v.toDate) }}</dd></div>
+        <div class="flex justify-between gap-3"><dt class="lv-text-2">Days</dt><dd class="lv-text">{{ v.days }}</dd></div>
+        <div class="flex justify-between gap-3"><dt class="lv-text-2">Applied on</dt><dd class="lv-text">{{ formatDay(v.appliedAt.slice(0, 10), true) }}</dd></div>
+        @if (v.approverName) { <div class="flex justify-between gap-3"><dt class="lv-text-2">Decided by</dt><dd class="lv-text">{{ v.approverName }}</dd></div> }
+        <div><dt class="lv-text-2">Reason</dt><dd class="mt-1 rounded-xl lv-surface-muted px-4 py-3 lv-text">{{ v.reason }}</dd></div>
+        @if (v.decisionNote) { <div><dt class="lv-text-2">Note</dt><dd class="mt-1 rounded-xl lv-surface-muted px-4 py-3 lv-text">{{ v.decisionNote }}</dd></div> }
+      </dl>
+      @if (v.status === 'Pending' && canApprove()) {
+        <div class="flex justify-end gap-3 border-t lv-border px-6 py-4">
+          <ui-text-button text="Reject" variant="danger" [disabled]="busy()" (buttonClick)="askReject(v)"></ui-text-button>
+          <ui-text-button text="Approve" variant="primary" [disabled]="busy()" (buttonClick)="approve(v)"></ui-text-button>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<!-- ================= REJECT ================= -->
+@if (rejecting(); as r) {
+  <div leaveBodyPortal class="lv-overlay lv-overlay--top fixed inset-0 flex items-center justify-center lv-scrim p-4" (click)="rejecting.set(null)">
+    <div class="w-full max-w-md rounded-2xl lv-surface p-6 shadow-xl" role="dialog" aria-modal="true" aria-labelledby="lv-reject-title" (click)="$event.stopPropagation()">
+      <h3 id="lv-reject-title" class="text-base font-semibold lv-text">Reject this request?</h3>
+      <p class="mt-1 text-sm lv-text-2">{{ r.employeeName }} · {{ r.leaveTypeLabel }} · {{ formatRange(r.fromDate, r.toDate) }}</p>
+      @for (k of [rejectKey()]; track k) {
+        <div class="mt-4">
+          <ui-text-area id="note" label="Reason for rejecting" placeholder="The employee will see this" [rows]="3" [maxLength]="500" [parentFormGroup]="rejectForm"></ui-text-area>
+          @if (rejectError()) { <p class="mt-1 text-xs lv-error">{{ rejectError() }}</p> }
+        </div>
+      }
+      <div class="mt-6 flex justify-end gap-3">
+        <ui-text-button text="Cancel" variant="secondary" [disabled]="busy()" (buttonClick)="rejecting.set(null)"></ui-text-button>
+        <ui-text-button [text]="busy() ? 'Rejecting…' : 'Reject'" variant="danger" [disabled]="busy()" (buttonClick)="confirmReject()"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+<ui-toast-stack leaveBodyPortal class="lv-overlay lv-overlay--top" position="bottom-right" [toasts]="toasts()" (toastClosed)="dismissToast($event)"></ui-toast-stack>
+
+<!-- Donut with a legend (type totals). -->
+<ng-template #donut let-d let-label="label">
+  <div class="mx-auto mt-3 max-w-[220px]">
+    <ui-chart type="doughnut" [height]="200" [labels]="d.labels" [series]="d.series" [colors]="d.colors" [showLegend]="false"
+              [centerValue]="d.total" [centerLabel]="label" ariaLabel="Days by leave type"></ui-chart>
+  </div>
+  <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+    @for (l of d.legend; track l.label) {
+      <li class="flex items-center gap-2 rounded-lg lv-surface-muted px-3 py-2 text-xs">
+        <span class="h-2.5 w-2.5 rounded-full" [style.background]="l.color" aria-hidden="true"></span>
+        <span class="flex-1 truncate lv-text-2">{{ l.label }}</span>
+        <strong class="lv-text">{{ l.days }}</strong>
+        <span class="lv-muted">{{ l.percent }}%</span>
+      </li>
+    } @empty {
+      <li class="col-span-2 py-4 text-center text-xs lv-text-2">No leave in this period.</li>
+    }
+  </ul>
+</ng-template>
+
+<ng-template #pill let-text let-t="t">
+  <ui-chip size="status" [text]="text" [usePointerCursor]="false" [color]="t.color" [bgColor]="t.bg" [activeColor]="t.color" [activeBGColor]="t.bg"></ui-chip>
+</ng-template>
+
+<ng-template #avatar let-name let-size="size">
+  <span class="flex shrink-0 items-center justify-center rounded-full font-semibold" [ngClass]="size"
+        [style.color]="avatarTone(name).color" [style.background]="avatarTone(name).bg" aria-hidden="true">{{ initials(name) }}</span>
+</ng-template>
