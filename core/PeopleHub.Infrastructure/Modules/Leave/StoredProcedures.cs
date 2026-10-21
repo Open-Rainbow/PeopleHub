@@ -1,6 +1,6 @@
 namespace PeopleHub.Infrastructure.Modules.Leave;
 
-/// <summary>Stored procedure names for leave (see database/leave.sql).</summary>
+/// <summary>Stored procedure names for leave (see database/leave.sql and database/leave-v2.sql).</summary>
 internal static class StoredProcedures
 {
     public const string GetTypes = "dbo.sp_get_leave_types";
@@ -22,4 +22,9 @@ internal static class StoredProcedures
     public const string PublishPolicy = "dbo.sp_publish_leave_policy";
     public const string DiscardPolicyDraft = "dbo.sp_discard_leave_policy_draft";
     public const string CopyPolicy = "dbo.sp_copy_leave_policy";
+
+    // Leaves & WFH dashboard (section 19)
+    public const string AdminDepartments = "dbo.sp_leave_admin_departments";
+    public const string AdminRequests = "dbo.sp_leave_admin_requests";
+    public const string AdminBalances = "dbo.sp_leave_admin_balances";
 }
