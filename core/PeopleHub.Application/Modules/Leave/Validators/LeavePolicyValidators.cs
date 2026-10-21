@@ -109,6 +109,58 @@ public sealed class LeavePolicyItemValidator : AbstractValidator<LeavePolicyItem
         RuleFor(x => x.IsEncashable)
             .Must((x, v) => !v || x.IsPaid)
             .WithMessage("Unpaid leave can't be encashable.");
+
+        // ---- Section 19 rules ----
+        RuleFor(x => x.AdvanceNoticeHours)
+            .NotNull()
+            .When(x => x.AdvanceNoticeRequired)
+            .WithMessage("Say how many hours of advance notice are needed.");
+
+        RuleFor(x => x.AdvanceNoticeHours)
+            .InclusiveBetween(1, LeavePolicyRules.NoticeHoursMax)
+            .When(x => x.AdvanceNoticeRequired && x.AdvanceNoticeHours is not null)
+            .WithMessage($"Advance notice must be between 1 and {LeavePolicyRules.NoticeHoursMax} hours.");
+
+        RuleFor(x => x.PaidDays)
+            .GreaterThanOrEqualTo(0m).When(x => x.PaidDays is not null)
+            .WithMessage("Paid duration can't be negative.")
+            .Must((x, v) => v is null || x.AnnualAllowance is null || v <= x.AnnualAllowance)
+            .WithMessage("Paid duration can't be more than the total duration.");
+
+        RuleFor(x => x.ExtensionWeeks)
+            .InclusiveBetween(0, LeavePolicyRules.ExtensionWeeksMax)
+            .When(x => x.ExtensionWeeks is not null)
+            .WithMessage($"Extension must be between 0 and {LeavePolicyRules.ExtensionWeeksMax} weeks.");
+
+        RuleFor(x => x.Notes)
+            .MaximumLength(LeavePolicyRules.NotesMax);
+
+        RuleFor(x => x.ExpiryDays)
+            .InclusiveBetween(1, LeavePolicyRules.ExpiryDaysMax)
+            .When(x => x.ExpiryDays is not null)
+            .WithMessage($"Expiry must be between 1 and {LeavePolicyRules.ExpiryDaysMax} days.");
+
+        RuleFor(x => x.MaxAccrual)
+            .InclusiveBetween(0.5m, 365m)
+            .When(x => x.MaxAccrual is not null)
+            .WithMessage("Max accrual must be between 0.5 and 365 days.");
+
+        RuleFor(x => x.MaxPerMonth)
+            .InclusiveBetween(0.5m, 31m)
+            .When(x => x.MaxPerMonth is not null)
+            .WithMessage("Days per month must be between 0.5 and 31.");
+
+        RuleFor(x => x.MaxPerWeek)
+            .InclusiveBetween(0.5m, 7m)
+            .When(x => x.MaxPerWeek is not null)
+            .WithMessage("Days per week must be between 0.5 and 7.")
+            .Must((x, v) => v is null || x.MaxPerMonth is null || v <= x.MaxPerMonth)
+            .WithMessage("Days per week can't be more than days per month.");
+
+        RuleFor(x => x.EligibleAfterMonths)
+            .InclusiveBetween(0, LeavePolicyRules.EligibleMonthsMax)
+            .When(x => x.EligibleAfterMonths is not null)
+            .WithMessage($"'Eligible after' must be between 0 and {LeavePolicyRules.EligibleMonthsMax} months.");
     }
 }
 

@@ -12,7 +12,7 @@ public sealed record LeavePolicyItemDto
     /// <summary>standard | parental | additional</summary>
     public string? Category { get; init; } = "standard";
 
-    /// <summary>Days per year. null = no limit (only allowed for unpaid leave).</summary>
+    /// <summary>Days per year (parental: total duration). null = no limit (only allowed for unpaid leave).</summary>
     public decimal? AnnualAllowance { get; init; }
 
     public decimal CarryForwardDays { get; init; }
@@ -34,6 +34,37 @@ public sealed record LeavePolicyItemDto
 
     /// <summary>Longest single request in working days. null = no limit.</summary>
     public decimal? MaxConsecutive { get; init; }
+
+    // ---- Rules added for the Leave Policy Manager screen (database section 19) ----
+
+    /// <summary>false = employees can't apply for this type (Comp-Off / LOP / WFH "Enable").</summary>
+    public bool IsEnabled { get; init; } = true;
+
+    public bool AdvanceNoticeRequired { get; init; }
+
+    /// <summary>Hours before the start date the request must be sent. Used when AdvanceNoticeRequired.</summary>
+    public int? AdvanceNoticeHours { get; init; }
+
+    /// <summary>Parental: paid part of the total duration (days).</summary>
+    public decimal? PaidDays { get; init; }
+
+    /// <summary>Parental: extra unpaid weeks allowed. null / 0 = no extension.</summary>
+    public int? ExtensionWeeks { get; init; }
+
+    public string? Notes { get; init; }
+
+    /// <summary>Comp-Off: days to use it before it lapses.</summary>
+    public int? ExpiryDays { get; init; }
+
+    /// <summary>Comp-Off: most days banked at one time.</summary>
+    public decimal? MaxAccrual { get; init; }
+
+    /// <summary>WFH: most days in a month / week.</summary>
+    public decimal? MaxPerMonth { get; init; }
+    public decimal? MaxPerWeek { get; init; }
+
+    /// <summary>Months of service before this type can be used.</summary>
+    public int? EligibleAfterMonths { get; init; }
 }
 
 /// <summary>Body for PUT /api/v1/leave/policies/draft. Replaces every item of the draft.</summary>
@@ -121,7 +152,12 @@ public static class LeavePolicyRules
     public const int EmploymentTypeMax = 50;
     public const int LabelMax = 50;
     public const int DescriptionMax = 200;
+    public const int NotesMax = 500;
     public const int MaxItems = 30;
+    public const int NoticeHoursMax = 720;
+    public const int ExtensionWeeksMax = 52;
+    public const int ExpiryDaysMax = 365;
+    public const int EligibleMonthsMax = 60;
     public const string CodePattern = "^[a-z0-9-]{2,20}$";
 
     public static readonly string[] Categories = ["standard", "parental", "additional"];

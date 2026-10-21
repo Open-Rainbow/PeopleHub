@@ -51,6 +51,14 @@ public sealed class LeaveTypeDto
 
     /// <summary>Auto | Manager | HR | Manager + HR (from the published leave policy).</summary>
     public string ApprovalType { get; set; } = "Manager";
+
+    /// <summary>standard | parental | additional (Leaves page filter chips).</summary>
+    public string Category { get; set; } = "standard";
+
+    /// <summary>Most days that can move to next year (from the policy).</summary>
+    public decimal CarryForwardDays { get; set; }
+
+    public bool IsEncashable { get; set; }
 }
 
 public sealed class HolidayDto

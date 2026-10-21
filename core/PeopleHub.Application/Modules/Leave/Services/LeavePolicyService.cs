@@ -163,6 +163,9 @@ public sealed class LeavePolicyService(
                 ApprovalType = LeavePolicyRules.Canonical(LeavePolicyRules.ApprovalTypes, i.ApprovalType),
                 CertificateAfterDays = i.CertificateRequired ? i.CertificateAfterDays : null,
                 IsEncashable = i.IsPaid && i.IsEncashable,
+                AdvanceNoticeHours = i.AdvanceNoticeRequired ? i.AdvanceNoticeHours : null,
+                ExtensionWeeks = i.ExtensionWeeks is > 0 ? i.ExtensionWeeks : null,
+                Notes = string.IsNullOrWhiteSpace(i.Notes) ? null : i.Notes.Trim(),
             };
         }).ToList();
 

@@ -68,6 +68,7 @@ internal static class ApiPermissionMap
         R(Delete, "holidays/.*", ["holidays.manage"], "delete"),
 
         // Leave
+        R(Get, "leave/admin(/.*)?", ApproverPages, "view"),
         R(Get, "leave/approvals", ApproverPages, "view"),
         R(Post, "leave/requests/\\d+/decision", ApproverPages, "approve"),
         R(Post, "leave/requests(/\\d+/withdraw)?", ["apply-leave"], "create"),
