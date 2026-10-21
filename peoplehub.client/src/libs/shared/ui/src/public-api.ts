@@ -58,6 +58,7 @@ export type { TabButtonItem } from './lib/models/component-models/tab-button.mod
 export * from './lib/components/primitives/table/table.component';
 export * from './lib/components/primitives/toast-stack/toast-stack.component';
 export * from './lib/components/primitives/toast/toast.component';
+export * from './lib/components/charts/chart/chart.component';
 export * from './lib/components/charts/dial-chart/dial-chart.component';
 export * from './lib/components/charts/doughnut-chart/doughnut-chart.component';
 export * from './lib/components/charts/employee-org-chart/employee-org-chart.component';
@@ -65,6 +66,7 @@ export * from './lib/components/charts/horizontal-bar-chart/horizontal-bar-chart
 export * from './lib/components/charts/line-chart/line-chart.component';
 export * from './lib/components/charts/org-chart/org-chart.component';
 export * from './lib/components/charts/progress-chart/progress-chart.component';
+export * from './lib/components/charts/ring/ring.component';
 export * from './lib/components/charts/scatter-chart/scatter-chart.component';
 export * from './lib/components/charts/spinning-chart/spinning-chart.component';
 export {

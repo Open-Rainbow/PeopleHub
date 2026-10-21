@@ -1,0 +1,90 @@
+// Shared look of the leave screens. Every colour comes from the theme tokens
+// (src/styles/theme-tokens.css), so the pages follow light / dark themes.
+:host {
+  display: block;
+  color: var(--color-text-primary);
+}
+
+// Overlays are moved to <body> (leaveBodyPortal). The app header is z-[2000], so stay above it.
+.lv-overlay { z-index: 2100; }
+.lv-overlay--top { z-index: 2110; }
+
+.lv-slide { animation: lv-slide-in 0.22s ease-out; }
+
+@keyframes lv-slide-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lv-slide { animation: none; }
+}
+
+.lv-surface { background-color: var(--color-surface); }
+.lv-surface-muted { background-color: var(--color-surface-muted); }
+.lv-scrim { background-color: color-mix(in srgb, var(--color-bg) 35%, rgb(0 0 0 / 0.55)); }
+.lv-veil { background-color: color-mix(in srgb, var(--color-surface) 65%, transparent); }
+.lv-border { border-color: var(--color-border); }
+.lv-divide > :not(:last-child) { border-color: var(--color-border); }
+.lv-row:hover { background-color: var(--color-surface-elevated); }
+
+.lv-text { color: var(--color-text-primary); }
+.lv-text-2 { color: var(--color-text-secondary); }
+.lv-muted { color: var(--color-text-muted); }
+.lv-error { color: var(--color-danger); }
+.lv-primary { color: var(--color-primary); }
+.lv-soft { background-color: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface)); }
+.lv-band { background-color: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface-muted)); }
+
+.lv-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  &:hover { color: var(--color-primary); }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+.lv-tab {
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-secondary);
+
+  &:hover { color: var(--color-primary); }
+
+  &--active {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+.lv-badge {
+  background-color: var(--color-danger);
+  color: var(--color-surface);
+}
+
+.lv-click {
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover { border-color: var(--color-primary-soft); }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+.lv-active {
+  border-color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface));
+}

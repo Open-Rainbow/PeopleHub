@@ -12,7 +12,7 @@ export interface LeavePolicyItem {
   label: string;
   description: string;
   category: PolicyCategory;
-  /** Days per year; null = unlimited (unpaid only). */
+  /** Days per year (parental: total duration); null = unlimited (unpaid only). */
   annualAllowance: number | null;
   carryForwardDays: number;
   isPaid: boolean;
@@ -26,6 +26,26 @@ export interface LeavePolicyItem {
   backdateDays: number;
   /** Longest single request in working days; null = no limit. */
   maxConsecutive: number | null;
+
+  // ---- Rules of the Policy Manager screen (database section 19) ----
+  /** false = employees can't apply for it (Comp-Off / LOP / WFH "Enable"). */
+  isEnabled: boolean;
+  advanceNoticeRequired: boolean;
+  advanceNoticeHours: number | null;
+  /** Parental: paid part of the total duration. */
+  paidDays: number | null;
+  /** Parental: extra weeks allowed; null = no extension. */
+  extensionWeeks: number | null;
+  notes: string;
+  /** Comp-Off: days to use it before it lapses. */
+  expiryDays: number | null;
+  /** Comp-Off: most days banked at once. */
+  maxAccrual: number | null;
+  /** WFH caps. */
+  maxPerMonth: number | null;
+  maxPerWeek: number | null;
+  /** Months of service before it can be used. */
+  eligibleAfterMonths: number | null;
 }
 
 export interface LeavePolicy {

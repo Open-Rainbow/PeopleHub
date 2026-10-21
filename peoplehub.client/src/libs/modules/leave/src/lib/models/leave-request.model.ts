@@ -49,6 +49,13 @@ export interface LeaveTypeConfig {
   approvalType?: string;
   /** Days carried forward from last year (already part of entitlement). */
   carryIn?: number;
+  /** standard | parental | additional (Leaves page filter chips). */
+  category?: string;
+  isPaid?: boolean;
+  /** Most days that can move to next year. */
+  carryForwardDays?: number;
+  isEncashable?: boolean;
+  /** Legacy Tailwind classes (old screens only). New screens colour types from the theme tokens. */
   styles: { chip: string; bar: string; soft: string; ring: string };
 }
 
@@ -58,6 +65,17 @@ export interface LeaveBalance {
   used: number;
   pending: number;
   /** null when the type has no limit. */
+  available: number | null;
+}
+
+/** Balance of one leave type for a given year (GET /api/v1/leave/balances). */
+export interface YearBalance {
+  key: LeaveTypeKey;
+  label: string;
+  entitlement: number | null;
+  carryIn: number;
+  used: number;
+  pending: number;
   available: number | null;
 }
 
