@@ -1,12 +1,15 @@
-:host {
-  display: block;
-}
+@use '../../styles/leave-theme' as *;
 
-// Overlays are moved to <body> by leaveBodyPortal. The app header is z-[2000], so stay above it.
-.ph-overlay {
-  z-index: 2100;
-}
+.lv-card {
+  border-top: 3px solid var(--lv-accent, var(--color-primary));
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 
-.ph-overlay--top {
-  z-index: 2110;
+  &:hover,
+  &--open {
+    box-shadow: 0 8px 24px -14px color-mix(in srgb, var(--lv-accent, var(--color-primary)) 55%, transparent);
+  }
+
+  &--open {
+    border-color: var(--lv-accent, var(--color-primary));
+  }
 }

@@ -1,405 +1,313 @@
-<section class="flex flex-col gap-6 p-6">
+<div class="space-y-6 p-4 sm:p-6">
   <!-- Header -->
-  <header class="flex flex-wrap items-end justify-between gap-4">
+  <div class="flex flex-wrap items-end justify-between gap-4">
     <div>
-      <h1 class="text-2xl font-semibold text-gray-900">Apply Leave</h1>
-      <p class="mt-1 text-sm text-gray-500">
-        Check your balance, request time off and track approvals.
-        @if (!isOnline()) { <span class="ml-1 rounded-md bg-amber-50 px-1.5 py-0.5 text-xs font-medium text-amber-700">Offline demo data</span> }
-      </p>
+      <div class="flex items-center gap-2">
+        <h1 class="text-2xl font-semibold lv-text">Leaves</h1>
+        @if (!isOnline()) {
+          <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Offline demo data', t: tones.warning }"></ng-container>
+        }
+      </div>
+      <p class="mt-1 text-sm lv-text-2">{{ todayLabel }}</p>
     </div>
-    <ui-text-button text="Apply leave" (buttonClick)="openForm()"></ui-text-button>
-  </header>
+    <ui-text-button text="+ Add Leave" variant="primary" (buttonClick)="openApply()"></ui-text-button>
+  </div>
 
   @if (apiError()) {
-    <div class="flex items-start justify-between gap-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
-      <span>{{ apiError() }}</span>
-      <button type="button" class="shrink-0 font-medium hover:underline" (click)="dismissError()">Dismiss</button>
+    <div class="flex items-start gap-2" role="alert">
+      <ui-notice-banner class="flex-1" heading="Could not save: " [content]="apiError()!"
+                        [bannerColor]="errorBanner.bannerColor" [headingColor]="errorBanner.headingColor" [contentColor]="errorBanner.contentColor"
+                        [highlighterColor]="errorBanner.highlighterColor" [iconColor]="errorBanner.iconColor"></ui-notice-banner>
+      <ui-icon-button iconName="close" ariaLabel="Dismiss" variant="light" size="small" (buttonClick)="dismissError()"></ui-icon-button>
     </div>
   }
 
-  <!-- Summary + upcoming -->
-  <div class="grid gap-4 lg:grid-cols-3">
-    <div class="grid grid-cols-3 gap-4 lg:col-span-2">
-      <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
-        <div class="text-sm text-gray-500">Available</div>
-        <div class="mt-1 text-3xl font-semibold text-emerald-600">{{ totals().available }}</div>
-        <div class="text-xs text-gray-400">of {{ totals().entitlement }} days this year</div>
+  <!-- Overview + summary -->
+  <div class="grid gap-4 xl:grid-cols-5">
+    <section class="rounded-2xl border lv-border lv-surface p-5 xl:col-span-2" aria-labelledby="lv-overview-title">
+      <div class="flex items-center justify-between gap-3">
+        <h2 id="lv-overview-title" class="text-base font-semibold lv-text">Leave balance overview</h2>
+        <ui-dropdown class="w-32" id="year" label="Year" [isRequired]="false" [parentFormGroup]="yearForm" [options]="yearOptions"></ui-dropdown>
       </div>
-      <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
-        <div class="text-sm text-gray-500">Taken</div>
-        <div class="mt-1 text-3xl font-semibold text-gray-900">{{ totals().used }}</div>
-        <div class="text-xs text-gray-400">approved days</div>
-      </div>
-      <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
-        <div class="text-sm text-gray-500">Awaiting approval</div>
-        <div class="mt-1 text-3xl font-semibold text-amber-500">{{ totals().pending }}</div>
-        <div class="text-xs text-gray-400">days pending</div>
-      </div>
-    </div>
-
-    @if (upcoming(); as next) {
-      <div class="flex items-center gap-4 rounded-2xl border border-blue-200 bg-blue-50 p-4">
-        <span class="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-white text-blue-700 shadow-sm">
-          <span class="text-xs font-medium uppercase">{{ weekdayName(next.fromDate) }}</span>
-          <span class="text-lg font-semibold leading-none">{{ next.fromDate.slice(8, 10) }}</span>
-        </span>
-        <div class="min-w-0">
-          <div class="text-xs font-semibold uppercase tracking-wide text-blue-700">
-            {{ upcomingIn()! <= 0 ? 'On leave now' : upcomingIn() === 1 ? 'Next leave: tomorrow' : 'Next leave in ' + upcomingIn() + ' days' }}
-          </div>
-          <div class="truncate font-medium text-gray-900">{{ typeMap()[next.type].label }} · {{ formatRange(next.fromDate, next.toDate) }}</div>
-          <div class="text-xs text-gray-500">{{ formatDays(next.days) }} · {{ next.status }}</div>
-        </div>
-      </div>
-    } @else {
-      <div class="flex items-center gap-4 rounded-2xl border border-dashed border-gray-300 bg-white p-4">
-        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-xl text-gray-400">
-          <ui-icon name="calendar"></ui-icon>
-        </span>
-        <div>
-          <div class="font-medium text-gray-900">No upcoming leave</div>
-          <div class="text-sm text-gray-500">Time for a break? Your balance is waiting.</div>
-        </div>
-      </div>
-    }
-  </div>
-
-  <!-- Balance per type -->
-  <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-    @for (b of balances(); track b.type.key) {
-      <button
-        type="button"
-        class="group flex flex-col gap-3 rounded-2xl border border-gray-200 bg-white p-4 text-left shadow-sm transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-        [title]="'Apply ' + b.type.label"
-        (click)="openForm(b.type.key)"
-      >
-        <div class="flex items-center justify-between gap-2">
-          <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset" [ngClass]="b.type.styles.chip">{{ b.type.short }}</span>
-          <span class="text-xs font-medium text-blue-600 opacity-0 transition group-hover:opacity-100">Apply →</span>
-        </div>
-        <div>
-          <div class="text-sm font-medium text-gray-900">{{ b.type.label }}</div>
-          @if (b.available !== null) {
-            <div class="mt-1 flex items-baseline gap-1">
-              <span class="text-2xl font-semibold text-gray-900">{{ b.available }}</span>
-              <span class="text-sm text-gray-400">/ {{ b.entitlement }} left</span>
-            </div>
-          } @else {
-            <div class="mt-1 text-2xl font-semibold text-gray-900">{{ b.used + b.pending }} <span class="text-sm font-normal text-gray-400">taken</span></div>
+      <div class="mt-4 flex flex-col items-center gap-6 sm:flex-row">
+        <ui-chart class="w-full max-w-[220px]" type="doughnut" [height]="210" [labels]="donutLabels()" [series]="donutSeries()" [colors]="donutColors()"
+                  [showLegend]="false" [centerValue]="overview().total" centerLabel="Total leaves" ariaLabel="Leave balance overview"></ui-chart>
+        <ul class="w-full space-y-3">
+          @for (r of overview().rows; track r.label) {
+            <li class="flex items-center gap-3 text-sm">
+              <span class="h-3 w-3 rounded-full" [style.background]="r.color" aria-hidden="true"></span>
+              <span class="flex-1 lv-text-2">{{ r.label }}</span>
+              <span class="font-semibold lv-text">{{ r.value }}</span>
+              <span class="w-12 text-right text-xs font-medium" [style.color]="r.color">{{ r.percent }}%</span>
+            </li>
           }
+        </ul>
+      </div>
+    </section>
+
+    <section class="rounded-2xl border lv-border lv-surface p-5 xl:col-span-3" aria-labelledby="lv-summary-title">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <h2 id="lv-summary-title" class="text-base font-semibold lv-text">Summary</h2>
+          <p class="text-xs lv-text-2">Days per month in {{ year() }}</p>
         </div>
-        @if (b.entitlement) {
-          <div class="flex h-2 overflow-hidden rounded-full bg-gray-100" role="presentation">
-            <span class="h-full" [ngClass]="b.type.styles.bar" [style.width.%]="usedPercent(b.used, b.pending, b.entitlement).used"></span>
-            <span class="h-full opacity-40" [ngClass]="b.type.styles.bar" [style.width.%]="usedPercent(b.used, b.pending, b.entitlement).pending"></span>
-          </div>
-          <div class="text-xs text-gray-500">{{ b.used }} used · {{ b.pending }} pending</div>
-        } @else {
-          <div class="text-xs text-gray-500">Unpaid, no limit</div>
-        }
-      </button>
-    }
+        <ui-text-button text="Download report" variant="secondary" size="small" (buttonClick)="downloadReport()"></ui-text-button>
+      </div>
+      <ui-chart class="mt-3" type="line" [height]="240" [labels]="months" [series]="summarySeries()" ariaLabel="Leave days per month"></ui-chart>
+    </section>
   </div>
 
-  <!-- Requests -->
-  <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 p-4">
-      <h2 class="text-base font-semibold text-gray-900">My requests</h2>
-      <div class="flex flex-wrap rounded-lg bg-gray-100 p-1" role="tablist" aria-label="Status">
-        @for (t of tabs; track t) {
-          <button
-            type="button"
-            role="tab"
-            class="rounded-md px-3 py-1.5 text-sm font-medium transition"
-            [ngClass]="tab() === t ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-900'"
-            [attr.aria-selected]="tab() === t"
-            (click)="tab.set(t)"
-          >
-            {{ t }} <span class="ml-1 text-xs text-gray-400">{{ counts()[t] }}</span>
-          </button>
+  <!-- Leave categories -->
+  <section class="rounded-2xl border lv-border lv-surface p-5" aria-labelledby="lv-cat-title">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <h2 id="lv-cat-title" class="text-base font-semibold lv-text">Leave categories</h2>
+      <ui-button-group ariaLabel="Leave category" size="sm" [items]="categoryItems()" [selectedValues]="[categoryFilter()]" (selectionChange)="setCategory($event)"></ui-button-group>
+    </div>
+
+    @if (!visibleCards().length) {
+      <p class="py-10 text-center text-sm lv-text-2">No leave types in this group.</p>
+    } @else {
+      <div class="mt-4 grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
+        @for (c of visibleCards(); track c.type.key; let i = $index) {
+          <article class="lv-card rounded-2xl border lv-border lv-surface p-4" [class.lv-card--open]="expanded() === c.type.key"
+                   [style.--lv-accent]="typeColor(c.type.key, typeIndex(c.type.key))">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <h3 class="truncate text-sm font-semibold lv-text">{{ c.type.label }}</h3>
+                <p class="text-xs lv-text-2">{{ c.total === null ? 'No limit' : c.percent + '% used' }}</p>
+              </div>
+              <ui-ring [size]="44" [value]="c.total === null ? 0 : c.percent" [label]="c.total === null ? '∞' : c.total"
+                       [color]="typeColor(c.type.key, typeIndex(c.type.key))" [ariaLabel]="c.type.label + ' total ' + (c.total ?? 'unlimited')"></ui-ring>
+            </div>
+            <div class="mt-3 h-1.5 overflow-hidden rounded-full lv-surface-muted" aria-hidden="true">
+              <div class="h-full rounded-full" [style.width.%]="c.percent" [style.background]="typeColor(c.type.key, typeIndex(c.type.key))"></div>
+            </div>
+            <div class="mt-3 flex items-center justify-between text-xs">
+              <span class="lv-text-2">Used <strong class="lv-text">{{ c.used }}</strong> <span class="lv-muted">|</span> Total <strong class="lv-text">{{ c.total ?? '∞' }}</strong></span>
+              <ui-icon-button [iconName]="expanded() === c.type.key ? 'arrow_up' : 'arrow_down'" variant="light" size="small"
+                              [ariaLabel]="(expanded() === c.type.key ? 'Hide' : 'Show') + ' details of ' + c.type.label" (buttonClick)="toggleCard(c.type.key)"></ui-icon-button>
+            </div>
+            @if (expanded() === c.type.key) {
+              <dl class="mt-3 space-y-2 border-t lv-border pt-3 text-xs">
+                <div class="flex justify-between"><dt class="lv-text-2">Remaining</dt><dd class="font-semibold lv-text">{{ c.remaining === null ? 'No limit' : formatDays(c.remaining) }}</dd></div>
+                <div class="flex justify-between"><dt class="lv-text-2">Pending</dt><dd class="font-semibold lv-text">{{ formatDays(c.pending) }}</dd></div>
+                <div class="flex justify-between"><dt class="lv-text-2">Carry forward</dt><dd class="font-semibold lv-text">{{ c.type.carryForwardDays ? formatDays(c.type.carryForwardDays) : 'N/A' }}</dd></div>
+                <div class="flex justify-between"><dt class="lv-text-2">Encashable</dt><dd class="font-semibold lv-text">{{ c.type.isEncashable ? 'Yes' : 'N/A' }}</dd></div>
+                @if (c.type.description) { <p class="pt-1 lv-muted">{{ c.type.description }}</p> }
+              </dl>
+              <ui-text-button class="mt-3 block" [text]="'Apply ' + c.type.label" variant="primary" size="small" [disabled]="c.remaining === 0"
+                              (buttonClick)="openApply(c.type.key)"></ui-text-button>
+            }
+          </article>
         }
+      </div>
+    }
+  </section>
+
+  <!-- History -->
+  <section class="rounded-2xl border lv-border lv-surface" aria-labelledby="lv-history-title">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b lv-border px-5 py-4">
+      <div>
+        <h2 id="lv-history-title" class="text-base font-semibold lv-text">Leave history</h2>
+        <p class="text-xs lv-text-2">Your leave requests and their status</p>
+      </div>
+      <div class="flex items-center gap-2">
+        @if (filterCount()) { <ui-text-button text="Clear filters" variant="link" size="small" (buttonClick)="clearFilters()"></ui-text-button> }
+        <ui-text-button [text]="filterCount() ? 'Filters (' + filterCount() + ')' : 'Filters'" [variant]="filterCount() ? 'primary' : 'secondary'" size="small" (buttonClick)="openFilters()"></ui-text-button>
       </div>
     </div>
 
-    @if (visible().length > 0) {
-      <ul class="divide-y divide-gray-100">
-        @for (r of visible(); track r.id) {
-          <li class="flex flex-wrap items-center gap-4 px-4 py-4 transition hover:bg-gray-50">
-            <span class="h-10 w-1 shrink-0 rounded-full" [ngClass]="typeMap()[r.type].styles.bar"></span>
-            <button type="button" class="min-w-0 flex-1 text-left" (click)="viewing.set(r)">
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="font-medium text-gray-900">{{ typeMap()[r.type].label }}</span>
-                <span class="text-sm text-gray-500">{{ formatRange(r.fromDate, r.toDate) }}</span>
-                <span class="rounded-md bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-gray-600">
-                  {{ formatDays(r.days) }}{{ r.dayPart !== 'full' ? ' · ' + dayPartLabel(r.dayPart) : '' }}
-                </span>
-              </div>
-              <div class="mt-0.5 truncate text-sm text-gray-500">{{ r.reason }}</div>
-            </button>
-            <div class="flex items-center gap-3">
-              <span class="hidden text-xs text-gray-400 md:inline">Applied {{ formatDay(r.appliedOn.slice(0, 10)) }}</span>
-              <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset" [ngClass]="statusStyles[r.status]">{{ r.status }}</span>
-              @if (canCancel(r)) {
-                <button type="button" class="rounded-lg px-2 py-1 text-xs font-medium text-gray-500 transition hover:bg-red-50 hover:text-red-600" (click)="askCancel(r)">Withdraw</button>
-              }
-            </div>
-          </li>
-        }
-      </ul>
+    @if (!history().length) {
+      <p class="px-6 py-12 text-center text-sm lv-text-2">{{ filterCount() ? 'No leaves match these filters.' : 'No leave requests yet. Use Add Leave to apply.' }}</p>
     } @else {
-      <div class="flex flex-col items-center gap-3 px-6 py-14 text-center">
-        <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 text-2xl text-gray-400">
-          <ui-icon name="history"></ui-icon>
-        </span>
-        <p class="font-medium text-gray-900">{{ tab() === 'All' ? 'No leave requests yet' : 'No ' + tab().toLowerCase() + ' requests' }}</p>
-        @if (tab() === 'All') {
-          <ui-text-button text="Apply leave" (buttonClick)="openForm()"></ui-text-button>
-        }
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="lv-surface-muted text-left text-xs font-medium uppercase tracking-wide lv-text-2">
+            <tr>
+              <th scope="col" class="px-5 py-3"><button type="button" class="lv-sort uppercase" (click)="sortBy('type')">Leave type <span aria-hidden="true">{{ sortMark('type') }}</span></button></th>
+              <th scope="col" class="px-4 py-3"><button type="button" class="lv-sort uppercase" (click)="sortBy('duration')">Duration <span aria-hidden="true">{{ sortMark('duration') }}</span></button></th>
+              <th scope="col" class="px-4 py-3"><button type="button" class="lv-sort uppercase" (click)="sortBy('days')">Days <span aria-hidden="true">{{ sortMark('days') }}</span></button></th>
+              <th scope="col" class="px-4 py-3">Status</th>
+              <th scope="col" class="px-4 py-3"><button type="button" class="lv-sort uppercase" (click)="sortBy('applied')">Applied on <span aria-hidden="true">{{ sortMark('applied') }}</span></button></th>
+              <th scope="col" class="px-4 py-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="lv-divide divide-y">
+            @for (r of pageRows(); track r.id) {
+              <tr class="lv-row">
+                <td class="px-5 py-3 font-medium" [style.color]="typeTone(r.type, typeIndex(r.type)).color">{{ typeLabel(r.type) }}</td>
+                <td class="px-4 py-3 lv-text-2">{{ formatRange(r.fromDate, r.toDate) }}@if (r.dayPart !== 'full') { <span class="lv-muted"> · {{ dayPartLabel(r.dayPart) }}</span> }</td>
+                <td class="px-4 py-3 font-semibold lv-text">{{ r.days }}</td>
+                <td class="px-4 py-3"><ng-container *ngTemplateOutlet="pill; context: { $implicit: r.status, t: statusTone(r.status) }"></ng-container></td>
+                <td class="px-4 py-3 lv-text-2">{{ formatDay(r.appliedOn.slice(0, 10), true) }}</td>
+                <td class="px-4 py-3">
+                  <div class="flex justify-end gap-1">
+                    <ui-icon-button iconName="eye" variant="light" size="small" [ariaLabel]="'Details of ' + typeLabel(r.type)" (buttonClick)="viewing.set(r)"></ui-icon-button>
+                    @if (canCancel(r)) {
+                      <ui-icon-button iconName="arrow_uturn_left" variant="light" size="small" ariaLabel="Withdraw" (buttonClick)="pendingCancel.set(r)"></ui-icon-button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
-    }
-  </div>
-</section>
-
-<!-- ========== Apply drawer ========== -->
-@if (formOpen()) {
-  <div leaveBodyPortal class="ph-overlay fixed inset-0 flex justify-end bg-gray-900/40" (click)="closeForm()">
-    <div
-      class="flex h-full w-full max-w-2xl flex-col bg-gray-50 shadow-2xl"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="apply-leave-title"
-      (click)="$event.stopPropagation()"
-    >
-      <div class="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
-        <div>
-          <h2 id="apply-leave-title" class="text-lg font-semibold text-gray-900">Apply leave</h2>
-          <p class="text-sm text-gray-500">Weekends and company holidays aren't counted.</p>
+      @if (history().length > pageSize) {
+        <div class="border-t lv-border px-5 py-3">
+          <ui-pagination [totalItems]="history().length" [pageSize]="pageSize" [currentPage]="page()" [isGoto]="false"
+                         backgroundColor="var(--color-surface)" (pageChange)="onPage($event)"></ui-pagination>
         </div>
-        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition hover:bg-gray-100 hover:text-gray-900" aria-label="Close" (click)="closeForm()">
-          <ui-icon name="close"></ui-icon>
-        </button>
+      }
+    }
+  </section>
+</div>
+
+<!-- ================= APPLY PANEL ================= -->
+@if (applyOpen()) {
+  <div leaveBodyPortal class="lv-overlay fixed inset-0 flex justify-end lv-scrim" (click)="closeApply()">
+    <div class="lv-slide flex h-full w-full max-w-md flex-col lv-surface shadow-xl" role="dialog" aria-modal="true" aria-labelledby="lv-apply-title" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between border-b lv-border px-6 py-4">
+        <div>
+          <h2 id="lv-apply-title" class="text-lg font-semibold lv-text">Add leave request</h2>
+          <p class="text-xs lv-text-2">Weekends and company holidays are not counted.</p>
+        </div>
+        <ui-icon-button iconName="close" ariaLabel="Close" variant="light" (buttonClick)="closeApply()"></ui-icon-button>
       </div>
 
-      <div class="flex flex-1 flex-col gap-5 overflow-y-auto p-6">
-        <!-- Type -->
-        <div class="rounded-2xl border border-gray-200 bg-white p-5">
-          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Leave type</h3>
-          <div class="grid gap-2 sm:grid-cols-2">
-            @for (t of types(); track t.key) {
-              <button
-                type="button"
-                class="flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5 text-left transition"
-                [ngClass]="type() === t.key ? t.styles.ring + ' ring-1 bg-white' : 'border-gray-200 hover:bg-gray-50'"
-                [attr.aria-pressed]="type() === t.key"
-                (click)="setType(t.key)"
-              >
-                <span class="flex items-center gap-2">
-                  <span class="h-2.5 w-2.5 rounded-full" [ngClass]="t.styles.bar"></span>
-                  <span class="text-sm font-medium text-gray-900">{{ t.label }}</span>
-                </span>
-                <span class="text-xs text-gray-500">
-                  @if (t.entitlement !== null) {
-                    {{ balances()[$index].available }} left
-                  } @else {
-                    Unpaid
-                  }
-                </span>
-              </button>
+      @for (key of [applyKey()]; track key) {
+        <div class="flex-1 space-y-5 overflow-y-auto px-6 py-5">
+          <div>
+            <ui-dropdown id="type" label="Leave type" placeholder="Pick a leave type" [parentFormGroup]="applyForm" [options]="applyTypeOptions()"></ui-dropdown>
+            @if (shownErrors().type) { <p class="mt-1 text-xs lv-error">{{ shownErrors().type }}</p> }
+            @if (selectedBalance(); as b) {
+              <p class="mt-1 text-xs lv-text-2">{{ b.available === null ? 'No limit' : b.available + ' day(s) left' }}@if (selectedType()?.approvalType) { · Approved by {{ selectedType()?.approvalType }} }</p>
             }
           </div>
-          <p class="mt-3 flex items-start gap-2 text-xs text-gray-500">
-            <ui-icon class="mt-0.5 shrink-0" name="info"></ui-icon>{{ selectedType().description }}
-          </p>
-        </div>
-
-        <!-- Dates -->
-        <div class="rounded-2xl border border-gray-200 bg-white p-5">
-          <h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Dates</h3>
           <div class="grid gap-4 sm:grid-cols-2">
-            <label class="flex flex-col gap-1">
-              <span class="text-sm font-medium text-gray-700">From <span class="text-red-500">*</span></span>
-              <input
-                type="date"
-                class="h-11 rounded-lg border bg-white px-3 text-sm text-gray-900 focus:outline-none focus:ring-2"
-                [ngClass]="shownErrors().fromDate ? 'border-red-400 focus:ring-red-100' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-100'"
-                [min]="minFrom()"
-                [value]="fromDate()"
-                (change)="setFrom($any($event.target).value)"
-              />
-              @if (shownErrors().fromDate) {
-                <span class="text-xs text-red-600">{{ shownErrors().fromDate }}</span>
+            <div>
+              <ui-calendar id="fromDate" label="From" [parentFormGroup]="applyForm"></ui-calendar>
+              @if (shownErrors().fromDate) { <p class="mt-1 text-xs lv-error">{{ shownErrors().fromDate }}</p> }
+            </div>
+            <div>
+              @for (k of [toKey()]; track k) {
+                <ui-calendar id="toDate" label="To" [parentFormGroup]="applyForm"></ui-calendar>
               }
-            </label>
-            <label class="flex flex-col gap-1">
-              <span class="text-sm font-medium text-gray-700">To <span class="text-red-500">*</span></span>
-              <input
-                type="date"
-                class="h-11 rounded-lg border bg-white px-3 text-sm text-gray-900 focus:outline-none focus:ring-2"
-                [ngClass]="shownErrors().toDate ? 'border-red-400 focus:ring-red-100' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-100'"
-                [min]="fromDate() || minFrom()"
-                [value]="toDate()"
-                (change)="setTo($any($event.target).value)"
-              />
-              @if (shownErrors().toDate) {
-                <span class="text-xs text-red-600">{{ shownErrors().toDate }}</span>
-              }
-            </label>
+              @if (shownErrors().toDate) { <p class="mt-1 text-xs lv-error">{{ shownErrors().toDate }}</p> }
+            </div>
           </div>
-
           @if (isSingleDay()) {
-            <div class="mt-4 grid grid-cols-3 gap-2" role="radiogroup" aria-label="Duration">
-              @for (p of dayParts; track p.key) {
-                <button
-                  type="button"
-                  role="radio"
-                  class="rounded-lg border px-3 py-2 text-sm font-medium transition"
-                  [ngClass]="dayPart() === p.key ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'"
-                  [attr.aria-checked]="dayPart() === p.key"
-                  (click)="setDayPart(p.key)"
-                >
-                  {{ p.label }}
-                </button>
-              }
-            </div>
+            <ui-button-group ariaLabel="Day part" size="sm" [items]="dayParts" [selectedValues]="[dayPart()]" (selectionChange)="setDayPart($event)"></ui-button-group>
           }
 
-          <!-- Live summary -->
           @if (days() > 0) {
-            <div class="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-gray-50 px-4 py-3">
-              <div>
-                <div class="text-sm font-semibold text-gray-900">{{ formatDays(days()) }} of {{ selectedType().label }}</div>
-                <div class="text-xs text-gray-500">
-                  {{ formatRange(fromDate(), toDate()) }}
-                  @if (skipped().weekends > 0) { · {{ skipped().weekends }} weekend day(s) skipped }
-                  @if (skipped().holidays.length > 0) { · holiday: {{ skipped().holidays.join(', ') }} }
-                </div>
-              </div>
-              @if (balanceAfter() !== null) {
-                <div class="text-right">
-                  <div class="text-xs text-gray-500">Balance after</div>
-                  <div class="text-lg font-semibold" [ngClass]="balanceAfter()! < 0 ? 'text-red-600' : 'text-emerald-600'">{{ balanceAfter() }}</div>
-                </div>
+            <div class="rounded-xl lv-surface-muted px-4 py-3 text-sm">
+              <p class="font-semibold lv-text">{{ formatDays(days()) }}</p>
+              @if (skipped().weekends || skipped().holidays.length) {
+                <p class="text-xs lv-text-2">Skipped: {{ skipped().weekends }} weekend day(s)@if (skipped().holidays.length) {, {{ skipped().holidays.join(', ') }} }</p>
               }
+              @if (balanceAfter() !== null) { <p class="text-xs lv-text-2">Balance after this: {{ balanceAfter() }} day(s)</p> }
             </div>
           }
-
-          @if (shownErrors().balance) {
-            <p class="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">{{ shownErrors().balance }}</p>
-          }
-          @if (shownErrors().overlap) {
-            <p class="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800" role="alert">{{ shownErrors().overlap }}</p>
+          @if (shownErrors().balance || shownErrors().overlap) {
+            <ui-notice-banner heading="Check this: " [content]="(shownErrors().balance || shownErrors().overlap)!"
+                              [bannerColor]="warnBanner.bannerColor" [headingColor]="warnBanner.headingColor" [contentColor]="warnBanner.contentColor"
+                              [highlighterColor]="warnBanner.highlighterColor" [iconColor]="warnBanner.iconColor"></ui-notice-banner>
           }
           @if (needsDocument()) {
-            <p class="mt-3 rounded-lg bg-blue-50 px-3 py-2 text-sm text-blue-700">
-              Sick leave over {{ selectedType().documentAfterDays }} days needs a medical certificate. Share it with HR once you're back.
-            </p>
+            <ui-notice-banner heading="Note: " content="A medical certificate is needed for this many days. Share it with HR."
+                              [bannerColor]="infoBanner.bannerColor" [headingColor]="infoBanner.headingColor" [contentColor]="infoBanner.contentColor"
+                              [highlighterColor]="infoBanner.highlighterColor" [iconColor]="infoBanner.iconColor"></ui-notice-banner>
           }
-        </div>
 
-        <!-- Reason -->
-        <div class="rounded-2xl border border-gray-200 bg-white p-5">
-          <label class="flex flex-col gap-1">
-            <span class="flex items-center justify-between text-sm font-medium text-gray-700">
-              <span>Reason <span class="text-red-500">*</span></span>
-              <span class="text-xs font-normal text-gray-400">{{ reason().length }}/{{ reasonMax }}</span>
-            </span>
-            <textarea
-              rows="4"
-              class="w-full resize-y rounded-lg border bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2"
-              [ngClass]="shownErrors().reason ? 'border-red-400 focus:ring-red-100' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-100'"
-              placeholder="e.g. Family function in my hometown"
-              [attr.maxlength]="reasonMax"
-              [value]="reason()"
-              (input)="setReason($any($event.target).value)"
-            ></textarea>
-            @if (shownErrors().reason) {
-              <span class="text-xs text-red-600">{{ shownErrors().reason }}</span>
-            }
-          </label>
-          <p class="mt-3 text-xs text-gray-500">Your reporting manager will be notified and can approve or reject this request.</p>
+          <div>
+            <ui-text-area id="reason" label="Reason" placeholder="Enter leave reason" [rows]="4" [maxLength]="reasonMax" [parentFormGroup]="applyForm"></ui-text-area>
+            @if (shownErrors().reason) { <p class="mt-1 text-xs lv-error">{{ shownErrors().reason }}</p> }
+          </div>
+          <p class="text-xs lv-muted">Status: Pending until your approver decides.</p>
         </div>
-      </div>
+      }
 
-      <div class="flex flex-wrap items-center justify-between gap-3 border-t border-gray-200 bg-white px-6 py-4">
-        <span class="text-sm text-gray-500">
-          @if (days() > 0) { Requesting <strong class="text-gray-900">{{ formatDays(days()) }}</strong> }
-        </span>
-        <div class="flex items-center gap-3">
-          <ui-text-button text="Cancel" variant="secondary" (buttonClick)="closeForm()"></ui-text-button>
-          <ui-text-button text="Submit request" (buttonClick)="submit()"></ui-text-button>
-        </div>
+      <div class="flex items-center justify-end gap-3 border-t lv-border px-6 py-4">
+        <ui-text-button text="Cancel" variant="secondary" (buttonClick)="closeApply()"></ui-text-button>
+        <ui-text-button text="Submit leave" variant="primary" [disabled]="submitted() && hasErrors(errors())" (buttonClick)="submit()"></ui-text-button>
       </div>
     </div>
   </div>
 }
 
-<!-- ========== Request details ========== -->
-@if (viewing(); as r) {
-  <div leaveBodyPortal class="ph-overlay fixed inset-0 flex items-center justify-center bg-gray-900/40 p-4" (click)="viewing.set(null)">
-    <div class="relative w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="leave-view-title" (click)="$event.stopPropagation()">
-      <span class="absolute inset-x-0 top-0 h-1" [ngClass]="typeMap()[r.type].styles.bar"></span>
-      <div class="flex items-start justify-between gap-4 px-6 pb-2 pt-6">
+<!-- ================= FILTER PANEL ================= -->
+@if (filtersOpen()) {
+  <div leaveBodyPortal class="lv-overlay fixed inset-0 flex justify-end lv-scrim" (click)="cancelFilters()">
+    <div class="lv-slide flex h-full w-full max-w-md flex-col lv-surface shadow-xl" role="dialog" aria-modal="true" aria-labelledby="lv-filter-title" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between border-b lv-border px-6 py-4">
         <div>
-          <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset" [ngClass]="statusStyles[r.status]">{{ r.status }}</span>
-          <h2 id="leave-view-title" class="mt-2 text-xl font-semibold text-gray-900">{{ typeMap()[r.type].label }}</h2>
-          <p class="text-sm text-gray-500">{{ formatRange(r.fromDate, r.toDate) }} · {{ formatDays(r.days) }}{{ r.dayPart !== 'full' ? ' (' + dayPartLabel(r.dayPart) + ')' : '' }}</p>
+          <h2 id="lv-filter-title" class="text-lg font-semibold lv-text">Filters</h2>
+          <p class="text-xs lv-text-2">Pick what you want to see, then press Apply.</p>
         </div>
-        <button type="button" class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-500 transition hover:bg-gray-100 hover:text-gray-900" aria-label="Close" (click)="viewing.set(null)">
-          <ui-icon name="close"></ui-icon>
-        </button>
+        <ui-icon-button iconName="close" ariaLabel="Close" variant="light" (buttonClick)="cancelFilters()"></ui-icon-button>
       </div>
-      <dl class="grid gap-4 px-6 py-4 text-sm">
-        <div>
-          <dt class="text-xs font-medium uppercase tracking-wide text-gray-400">Reason</dt>
-          <dd class="mt-1 whitespace-pre-line text-gray-800">{{ r.reason }}</dd>
+      @for (key of [filterKey()]; track key) {
+        <div class="flex-1 space-y-4 overflow-y-auto px-6 py-5">
+          <ui-dropdown id="status" label="Status" placeholder="All statuses" [isRequired]="false" [parentFormGroup]="filterForm" [options]="statusOptions"></ui-dropdown>
+          <ui-dropdown id="type" label="Leave type" placeholder="All leave types" [isRequired]="false" [parentFormGroup]="filterForm" [options]="typeOptions()"></ui-dropdown>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <ui-calendar id="from" label="From" [isRequired]="false" [parentFormGroup]="filterForm"></ui-calendar>
+            <ui-calendar id="to" label="To" [isRequired]="false" [parentFormGroup]="filterForm"></ui-calendar>
+          </div>
+          @if (filterError()) { <p class="text-xs lv-error" role="alert">{{ filterError() }}</p> }
         </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <dt class="text-xs font-medium uppercase tracking-wide text-gray-400">Applied on</dt>
-            <dd class="mt-1 text-gray-800">{{ formatDay(r.appliedOn.slice(0, 10), true) }}</dd>
-          </div>
-          <div>
-            <dt class="text-xs font-medium uppercase tracking-wide text-gray-400">Approver</dt>
-            <dd class="mt-1 text-gray-800">{{ r.approver || 'Reporting Manager' }}</dd>
-          </div>
-        </div>
-        @if (r.decisionNote) {
-          <div class="rounded-xl bg-gray-50 p-3">
-            <dt class="text-xs font-medium uppercase tracking-wide text-gray-400">Note</dt>
-            <dd class="mt-1 text-gray-800">{{ r.decisionNote }}</dd>
-          </div>
-        }
+      }
+      <div class="flex items-center gap-3 border-t lv-border px-6 py-4">
+        <ui-text-button class="mr-auto" text="Reset" variant="link" (buttonClick)="resetFilters()"></ui-text-button>
+        <ui-text-button text="Cancel" variant="secondary" (buttonClick)="cancelFilters()"></ui-text-button>
+        <ui-text-button text="Apply" variant="primary" (buttonClick)="applyFilters()"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ================= DETAILS ================= -->
+@if (viewing(); as v) {
+  <div leaveBodyPortal class="lv-overlay fixed inset-0 flex justify-end lv-scrim" (click)="viewing.set(null)">
+    <div class="lv-slide flex h-full w-full max-w-md flex-col lv-surface shadow-xl" role="dialog" aria-modal="true" aria-labelledby="lv-view-title" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between border-b lv-border px-6 py-4">
+        <h2 id="lv-view-title" class="text-lg font-semibold lv-text">{{ typeLabel(v.type) }}</h2>
+        <ui-icon-button iconName="close" ariaLabel="Close" variant="light" (buttonClick)="viewing.set(null)"></ui-icon-button>
+      </div>
+      <dl class="flex-1 space-y-3 overflow-y-auto px-6 py-5 text-sm">
+        <div class="flex justify-between gap-3"><dt class="lv-text-2">Status</dt><dd><ng-container *ngTemplateOutlet="pill; context: { $implicit: v.status, t: statusTone(v.status) }"></ng-container></dd></div>
+        <div class="flex justify-between gap-3"><dt class="lv-text-2">Dates</dt><dd class="lv-text">{{ formatRange(v.fromDate, v.toDate) }}</dd></div>
+        <div class="flex justify-between gap-3"><dt class="lv-text-2">Days</dt><dd class="lv-text">{{ formatDays(v.days) }}@if (v.dayPart !== 'full') { ({{ dayPartLabel(v.dayPart) }}) }</dd></div>
+        <div class="flex justify-between gap-3"><dt class="lv-text-2">Applied on</dt><dd class="lv-text">{{ formatDay(v.appliedOn.slice(0, 10), true) }}</dd></div>
+        <div class="flex justify-between gap-3"><dt class="lv-text-2">Approver</dt><dd class="lv-text">{{ v.approver || 'Reporting Manager' }}</dd></div>
+        <div><dt class="lv-text-2">Reason</dt><dd class="mt-1 rounded-xl lv-surface-muted px-4 py-3 lv-text">{{ v.reason }}</dd></div>
+        @if (v.decisionNote) { <div><dt class="lv-text-2">Note</dt><dd class="mt-1 rounded-xl lv-surface-muted px-4 py-3 lv-text">{{ v.decisionNote }}</dd></div> }
       </dl>
-      <div class="flex justify-end gap-3 border-t border-gray-100 px-6 py-4">
-        @if (canCancel(r)) {
-          <button type="button" class="rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50" (click)="askCancel(r)">Withdraw request</button>
-        }
-        <ui-text-button text="Close" variant="secondary" (buttonClick)="viewing.set(null)"></ui-text-button>
-      </div>
+      @if (canCancel(v)) {
+        <div class="flex justify-end border-t lv-border px-6 py-4">
+          <ui-text-button text="Withdraw request" variant="danger" (buttonClick)="pendingCancel.set(v)"></ui-text-button>
+        </div>
+      }
     </div>
   </div>
 }
 
-<!-- ========== Withdraw confirmation ========== -->
-@if (pendingCancel(); as r) {
-  <div leaveBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center bg-gray-900/50 p-4" (click)="pendingCancel.set(null)">
-    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl" role="alertdialog" aria-modal="true" aria-labelledby="withdraw-title" (click)="$event.stopPropagation()">
-      <h2 id="withdraw-title" class="text-base font-semibold text-gray-900">Withdraw this request?</h2>
-      <p class="mt-1 text-sm text-gray-500">
-        {{ typeMap()[r.type].label }}, {{ formatRange(r.fromDate, r.toDate) }}. {{ formatDays(r.days) }} will go back to your balance.
-      </p>
+@if (pendingCancel(); as c) {
+  <div leaveBodyPortal class="lv-overlay lv-overlay--top fixed inset-0 flex items-center justify-center lv-scrim p-4" (click)="pendingCancel.set(null)">
+    <div class="w-full max-w-sm rounded-2xl lv-surface p-6 shadow-xl" role="alertdialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <h3 class="text-base font-semibold lv-text">Withdraw this request?</h3>
+      <p class="mt-2 text-sm lv-text-2">{{ typeLabel(c.type) }}, {{ formatRange(c.fromDate, c.toDate) }}. The days go back to your balance.</p>
       <div class="mt-6 flex justify-end gap-3">
-        <ui-text-button text="Keep it" variant="secondary" (buttonClick)="pendingCancel.set(null)"></ui-text-button>
-        <button type="button" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700" (click)="confirmCancel()">Withdraw</button>
+        <ui-text-button text="Keep" variant="secondary" (buttonClick)="pendingCancel.set(null)"></ui-text-button>
+        <ui-text-button text="Withdraw" variant="danger" (buttonClick)="confirmCancel()"></ui-text-button>
       </div>
     </div>
   </div>
 }
 
-@if (toast()) {
-  <div leaveBodyPortal class="ph-overlay ph-overlay--top fixed bottom-6 right-6 flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-3 text-sm font-medium text-white shadow-lg" role="status">
-    <ui-icon class="text-emerald-400" name="check_circle_outline"></ui-icon>
-    {{ toast() }}
-  </div>
-}
+<ui-toast-stack leaveBodyPortal class="lv-overlay lv-overlay--top" position="bottom-right" [toasts]="toasts()" (toastClosed)="dismissToast($event)"></ui-toast-stack>
+
+<ng-template #pill let-text let-t="t">
+  <ui-chip size="status" [text]="text" [usePointerCursor]="false" [color]="t.color" [bgColor]="t.bg" [activeColor]="t.color" [activeBGColor]="t.bg"></ui-chip>
+</ng-template>
