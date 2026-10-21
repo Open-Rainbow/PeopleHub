@@ -1,16 +1,19 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   HostListener,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
   forwardRef,
+  inject,
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -38,7 +41,7 @@ import { useFieldPolicy } from '../../../services/field-policy';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DropdownComponent
-  implements OnInit, OnChanges, ControlValueAccessor
+  implements OnInit, OnChanges, OnDestroy, ControlValueAccessor
 {
   @Input() label?: string = 'Gender';
   @Input() placeholder?: string = 'Select Gender';
@@ -59,6 +62,26 @@ export class DropdownComponent
   isActive: boolean = false;
   /** Field rules from the Setup page (hidden / read-only / required). */
   private readonly fieldPolicy = useFieldPolicy();
+  private readonly document = inject(DOCUMENT);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  /**
+   * Outside-click check in the capture phase, so it still works when the dropdown sits inside a
+   * drawer / dialog that stops click bubbling (e.g. `(click)="$event.stopPropagation()"`).
+   */
+  private readonly onDocumentClick = (event: Event): void => {
+    if (!this.isOpen) return;
+    const clickedNode = event.target as Node | null;
+    if (clickedNode && this.eRef.nativeElement.contains(clickedNode)) return;
+
+    this.closeDropdown();
+    if (!this.hasValue) {
+      this.isActive = false;
+      this.control?.markAsTouched();
+    }
+    this.onTouched();
+    this.cdr.markForCheck();
+  };
 
   get optionLength(): number {
     return this.options?.length ?? 0;
@@ -80,6 +103,11 @@ export class DropdownComponent
     const baseId = this.id || this.dropdownModel || 'field';
     this.uniqueId = `dropdown_${baseId}_${randomStr}`;
     this.syncStateFromControl();
+    this.document.addEventListener('click', this.onDocumentClick, true);
+  }
+
+  ngOnDestroy(): void {
+    this.document.removeEventListener('click', this.onDocumentClick, true);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -240,21 +268,6 @@ export class DropdownComponent
 
     if (!this.hasValue && !this.isOpen) {
       this.isActive = false;
-    }
-  }
-
-  @HostListener('document:click', ['$event'])
-  handleClickOutside(event: MouseEvent) {
-    const clickedNode = event.target as Node | null;
-    if (!clickedNode || !this.eRef.nativeElement.contains(clickedNode)) {
-      this.closeDropdown();
-
-      if (!this.hasValue) {
-        this.isActive = false;
-        this.control?.markAsTouched();
-      }
-
-      this.onTouched();
     }
   }
 
