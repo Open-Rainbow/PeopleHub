@@ -28,7 +28,8 @@
     </span>
 
     @if (showCalendar) {
-      <div class="calendar-popup" (click)="closeCalendar()">
+      <!-- Floats over the page (position: fixed), so panels and tables never get a scrollbar from it. -->
+      <div class="calendar-popup" [class.open-up]="openUp" [ngStyle]="popupStyle" role="dialog" aria-label="Choose a date">
         <div class="calendar-panel" (click)="$event.stopPropagation(); closeMonthDropdown(); closeYearDropdown()">
           <div class="calendar-header">
             <div class="month-year-selectors">

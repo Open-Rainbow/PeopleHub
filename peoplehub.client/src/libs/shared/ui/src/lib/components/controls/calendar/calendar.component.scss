@@ -5,28 +5,22 @@
   user-select: none;
 }
 
+// Floats over the page: top / left come from the component (next to the field, flipped up
+// when there is no room below). Being fixed, it never makes a panel or table scroll.
 .calendar-popup {
-  position: absolute;
-  top: calc(100% + 0.375rem);
-  left: -1px;
-  z-index: 1000;
-  min-width: 100%;
-  width: fit-content;
+  position: fixed;
+  z-index: 2300;
+  width: max-content;
   cursor: default;
-
-  @media (max-width: 640px) {
-    min-width: calc(100vw - 2rem);
-    right: 0;
-    left: auto;
-  }
 }
 
 .calendar-panel {
-  background-color: var(--color-surface, #fff);
+  background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
   padding: 1rem;
-  box-shadow: 0 12px 28px -8px rgba(15, 23, 42, 0.18), 0 4px 8px -4px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 28px -8px color-mix(in srgb, var(--color-text-primary) 22%, transparent),
+    0 4px 8px -4px color-mix(in srgb, var(--color-text-primary) 10%, transparent);
   font-size: 0.8125rem;
   color: var(--color-text-primary);
   overflow: visible;
@@ -73,10 +67,10 @@
     top: calc(100% + 0.25rem);
     left: 0;
     min-width: 7rem;
-    background-color: var(--color-surface, #fff);
+    background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 15px -3px color-mix(in srgb, var(--color-text-primary) 15%, transparent);
     max-height: 15rem;
     overflow-y: auto;
     z-index: 50;
@@ -95,11 +89,18 @@
 
       &.selected {
         background-color: var(--color-primary);
-        color: #fff;
+        color: var(--color-surface);
         font-weight: 500;
       }
     }
   }
+}
+
+// When the picker opens upward there may be little room above the month / year list too,
+// so keep those lists short enough to stay inside the picker.
+.open-up .month-selector .dropdown,
+.open-up .year-selector .dropdown {
+  max-height: 12rem;
 }
 
 .calendar-nav {
@@ -180,7 +181,7 @@
     &.selected {
       background-color: var(--color-primary);
       border-color: var(--color-primary);
-      color: #fff;
+      color: var(--color-surface);
       font-weight: 600;
     }
 
