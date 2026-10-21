@@ -38,6 +38,7 @@ public static class DependencyInjection
         services.AddScoped<IAnnouncementService, AnnouncementService>();
         services.AddScoped<ILeaveService, LeaveService>();
         services.AddScoped<ILeavePolicyService, LeavePolicyService>();
+        services.AddScoped<ILeaveAdminService, LeaveAdminService>();
         services.AddScoped<IHolidayService, HolidayService>();
         services.AddScoped<IAttendanceService, AttendanceService>();
         services.AddScoped<IOrgChartService, OrgChartService>();
