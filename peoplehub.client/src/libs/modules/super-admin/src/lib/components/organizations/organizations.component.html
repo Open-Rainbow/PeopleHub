@@ -1,0 +1,268 @@
+<div class="space-y-6 p-4 sm:p-6">
+  <!-- Header -->
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-2xl font-semibold og-text">Organizations</h1>
+        @if (!isOnline() && !loading()) {
+          <ng-container *ngTemplateOutlet="pill; context: { $implicit: 'Offline demo data', t: tones.warning }"></ng-container>
+        }
+      </div>
+      <p class="mt-1 text-sm og-text-2">Add the companies you run on PeopleHub. Switch to one to set up its roles, employees and settings.</p>
+    </div>
+    @if (isSuperAdmin) {
+      <ui-text-button text="Add organization" variant="primary" (buttonClick)="openEditor()"></ui-text-button>
+    }
+  </div>
+
+  @if (!isSuperAdmin) {
+    <ui-notice-banner heading="Super Admin only: " content="Only Super Admin can add or change organizations."
+                      [bannerColor]="errorBanner.bannerColor" [headingColor]="errorBanner.headingColor" [contentColor]="errorBanner.contentColor"
+                      [highlighterColor]="errorBanner.highlighterColor" [iconColor]="errorBanner.iconColor"></ui-notice-banner>
+  }
+
+  @if (error()) {
+    <div class="flex items-start gap-2" role="alert">
+      <ui-notice-banner class="flex-1" heading="Something went wrong: " [content]="error()!"
+                        [bannerColor]="errorBanner.bannerColor" [headingColor]="errorBanner.headingColor" [contentColor]="errorBanner.contentColor"
+                        [highlighterColor]="errorBanner.highlighterColor" [iconColor]="errorBanner.iconColor"></ui-notice-banner>
+      <ui-text-button text="Retry" variant="secondary" size="small" (buttonClick)="reload()"></ui-text-button>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="flex h-72 items-center justify-center rounded-2xl border og-border og-surface"><ui-loader></ui-loader></div>
+  } @else {
+    <!-- Working in -->
+    @if (current(); as c) {
+      <div class="og-current flex flex-wrap items-center gap-4 rounded-2xl border p-4">
+        <span class="og-logo flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-sm font-semibold">{{ initials(c.name) }}</span>
+        <div class="min-w-0 flex-1">
+          <p class="text-xs font-medium uppercase tracking-wide og-text-2">You are working in</p>
+          <p class="truncate text-lg font-semibold og-text">{{ c.name }} <span class="text-sm font-normal og-muted">({{ c.code }})</span></p>
+          <p class="text-xs og-text-2">Roles, employees, leave and payroll you open now belong to this organization.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <ui-text-button text="Roles & access" variant="secondary" size="small" (buttonClick)="switchAndOpen(c, 'setup')"></ui-text-button>
+          <ui-text-button text="Add employee" variant="secondary" size="small" (buttonClick)="switchAndOpen(c, 'add-employee')"></ui-text-button>
+        </div>
+      </div>
+    }
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      @for (s of stats(); track s.label) {
+        <div class="flex items-start gap-3 rounded-2xl border og-border og-surface p-4">
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" [style.color]="tones[s.tone].color" [style.background]="tones[s.tone].bg">
+            <ui-icon [name]="s.icon"></ui-icon>
+          </span>
+          <div>
+            <p class="text-xs font-medium uppercase tracking-wide og-text-2">{{ s.label }}</p>
+            <p class="mt-0.5 text-2xl font-semibold og-text">{{ s.value }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- List -->
+    <div class="rounded-2xl border og-border og-surface">
+      <div class="flex flex-wrap items-center gap-3 border-b og-border px-5 py-4">
+        <ui-search class="min-w-[16rem] flex-1" id="search" placeholderText="Search name, code, city or email" [displaySuggestions]="false"
+                   [parentFormGroup]="searchForm" (searchChange)="onSearch($event)"></ui-search>
+        <ui-button-group ariaLabel="Status" size="sm" [items]="statusItems" [selectedValues]="[statusFilter()]" (selectionChange)="setStatusFilter($event)"></ui-button-group>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead class="og-surface-muted text-left text-xs font-medium uppercase tracking-wide og-text-2">
+            <tr>
+              <th class="px-5 py-3">Organization</th>
+              <th class="hidden px-4 py-3 md:table-cell">Location</th>
+              <th class="px-4 py-3">Employees</th>
+              <th class="hidden px-4 py-3 lg:table-cell">Roles</th>
+              <th class="px-4 py-3">Status</th>
+              <th class="px-4 py-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="og-divide divide-y">
+            @for (o of view(); track o.id) {
+              <tr class="og-row" [class.og-row--current]="o.id === currentId()">
+                <td class="px-5 py-3">
+                  <div class="flex items-center gap-3">
+                    <span class="og-logo flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xs font-semibold">{{ initials(o.name) }}</span>
+                    <div class="min-w-0">
+                      <p class="truncate font-medium og-text">
+                        {{ o.name }}
+                        @if (o.id === currentId()) { <span class="og-badge ml-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase">Current</span> }
+                      </p>
+                      <p class="truncate text-xs og-text-2">{{ o.code }}@if (o.industry) { · {{ o.industry }} }@if (o.email) { · {{ o.email }} }</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="hidden px-4 py-3 og-text-2 md:table-cell">{{ location(o) }}</td>
+                <td class="px-4 py-3 og-text">{{ o.employeeCount }}</td>
+                <td class="hidden px-4 py-3 og-text-2 lg:table-cell">{{ o.roleCount }}</td>
+                <td class="px-4 py-3"><ng-container *ngTemplateOutlet="pill; context: { $implicit: o.isActive ? 'Active' : 'Inactive', t: pill(o.isActive) }"></ng-container></td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center justify-end gap-1">
+                    @if (o.id !== currentId() && o.isActive) {
+                      <ui-text-button text="Switch to" variant="secondary" size="small" [disabled]="busy()" (buttonClick)="switchTo(o)"></ui-text-button>
+                    }
+                    @if (isSuperAdmin) {
+                      <ui-icon-button iconName="edit" [ariaLabel]="'Edit ' + o.name" variant="light" size="small" (buttonClick)="openEditor(o)"></ui-icon-button>
+                      @if (o.isActive) {
+                        <ui-text-button text="Deactivate" variant="link" size="small" [disabled]="busy()" (buttonClick)="deactivating.set(o)"></ui-text-button>
+                      } @else {
+                        <ui-text-button text="Activate" variant="success" size="small" [disabled]="busy()" (buttonClick)="activate(o)"></ui-text-button>
+                      }
+                    }
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr><td colspan="6" class="px-5 py-12 text-center text-sm og-text-2">
+                {{ orgs().length ? 'No organizations match.' : 'No organizations yet. Add the first one.' }}
+              </td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- ================= ADD / EDIT (slides in) ================= -->
+@if (editing()) {
+  <div orgBodyPortal class="ph-overlay fixed inset-0 flex justify-end og-scrim" (click)="closeEditor()">
+    <div class="og-slide flex h-full w-full max-w-2xl flex-col og-surface shadow-xl" role="dialog" aria-modal="true" aria-labelledby="og-editor-title" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between border-b og-border px-6 py-4">
+        <div>
+          <h2 id="og-editor-title" class="text-lg font-semibold og-text">{{ editingOrg() ? 'Edit ' + editingOrg()!.name : 'Add organization' }}</h2>
+          <p class="text-xs og-text-2">
+            {{ editingOrg() ? 'Changes apply right away.' : 'It starts with the roles Admin, HR, Manager and Employee. You can change them in Setup.' }}
+          </p>
+        </div>
+        <ui-icon-button iconName="close" ariaLabel="Close" variant="light" (buttonClick)="closeEditor()"></ui-icon-button>
+      </div>
+
+      @for (key of [formKey()]; track key) {
+        <div class="flex-1 space-y-6 overflow-y-auto px-6 py-5">
+          <section class="space-y-4">
+            <h3 class="text-xs font-semibold uppercase tracking-wide og-text-2">Basic details</h3>
+            <div class="grid gap-4 sm:grid-cols-3">
+              <div>
+                <ui-text-box id="code" label="Code" placeholder="e.g. OR" [maxLength]="limits.codeMax" [showCharCount]="false" [parentFormGroup]="form"></ui-text-box>
+                @if (fieldError('code')) { <p class="mt-1 text-xs og-error">{{ fieldError('code') }}</p> }
+              </div>
+              <div class="sm:col-span-2">
+                <ui-text-box id="name" label="Organization name" placeholder="e.g. Open Rainbow" [maxLength]="limits.nameMax" [showCharCount]="false" [parentFormGroup]="form"></ui-text-box>
+                @if (fieldError('name')) { <p class="mt-1 text-xs og-error">{{ fieldError('name') }}</p> }
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <ui-text-box id="legalName" label="Legal name" placeholder="As registered" [isRequired]="false" [maxLength]="limits.legalNameMax" [showCharCount]="false" [parentFormGroup]="form"></ui-text-box>
+              <ui-dropdown id="industry" label="Industry" placeholder="Pick an industry" [isRequired]="false" [parentFormGroup]="form" [options]="industryOptions"></ui-dropdown>
+            </div>
+          </section>
+
+          <section class="space-y-4 border-t og-border pt-5">
+            <h3 class="text-xs font-semibold uppercase tracking-wide og-text-2">Contact</h3>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <ui-text-box id="email" label="HR / contact email" placeholder="hr@company.com" [isRequired]="false" [maxLength]="limits.emailMax" [showCharCount]="false" [parentFormGroup]="form"></ui-text-box>
+                @if (fieldError('email')) { <p class="mt-1 text-xs og-error">{{ fieldError('email') }}</p> }
+              </div>
+              <div>
+                <ui-text-box id="phone" label="Phone" placeholder="+91 40 1234 5678" [isRequired]="false" [maxLength]="20" [showCharCount]="false" [parentFormGroup]="form"></ui-text-box>
+                @if (fieldError('phone')) { <p class="mt-1 text-xs og-error">{{ fieldError('phone') }}</p> }
+              </div>
+            </div>
+            <div>
+              <ui-text-box id="website" label="Website" placeholder="https://company.com" [isRequired]="false" [maxLength]="limits.websiteMax" [showCharCount]="false" [parentFormGroup]="form"></ui-text-box>
+              @if (fieldError('website')) { <p class="mt-1 text-xs og-error">{{ fieldError('website') }}</p> }
+            </div>
+          </section>
+
+          <section class="space-y-4 border-t og-border pt-5">
+            <h3 class="text-xs font-semibold uppercase tracking-wide og-text-2">Address</h3>
+            <ui-text-area id="addressLine" label="Address" [rows]="2" [isRequired]="false" [maxLength]="limits.addressMax" [parentFormGroup]="form"></ui-text-area>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <ui-text-box id="city" label="City" placeholder="e.g. Hyderabad" [isRequired]="false" [maxLength]="limits.cityMax" [showCharCount]="false" [parentFormGroup]="form"></ui-text-box>
+              <ui-text-box id="stateProvince" label="State" placeholder="e.g. Telangana" [isRequired]="false" [maxLength]="limits.cityMax" [showCharCount]="false" [parentFormGroup]="form"></ui-text-box>
+              <ui-dropdown id="country" label="Country" placeholder="Pick a country" [isRequired]="false" [parentFormGroup]="form" [options]="countryOptions"></ui-dropdown>
+              <div>
+                <ui-text-box id="pincode" label="PIN / postal code" placeholder="e.g. 500081" [isRequired]="false" [maxLength]="12" [showCharCount]="false" [parentFormGroup]="form"></ui-text-box>
+                @if (fieldError('pincode')) { <p class="mt-1 text-xs og-error">{{ fieldError('pincode') }}</p> }
+              </div>
+            </div>
+          </section>
+
+          <section class="space-y-4 border-t og-border pt-5">
+            <h3 class="text-xs font-semibold uppercase tracking-wide og-text-2">Payroll & calendar</h3>
+            <div class="grid gap-4 sm:grid-cols-3">
+              <ui-dropdown id="currency" label="Currency" placeholder="Pick currency" [isRequired]="false" [parentFormGroup]="form" [options]="currencyOptions"></ui-dropdown>
+              <ui-dropdown id="timeZone" label="Time zone" placeholder="Pick time zone" [isRequired]="false" [parentFormGroup]="form" [options]="timeZoneOptions"></ui-dropdown>
+              <ui-dropdown id="financialYearStartMonth" label="Financial year starts" placeholder="Pick month" [isRequired]="false" [parentFormGroup]="form" [options]="monthOptions"></ui-dropdown>
+            </div>
+          </section>
+
+          <section class="space-y-4 border-t og-border pt-5">
+            <h3 class="text-xs font-semibold uppercase tracking-wide og-text-2">Legal</h3>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <ui-text-box id="taxId" label="Tax ID (PAN / GSTIN)" placeholder="e.g. ABCDE1234F" [isRequired]="false" [maxLength]="limits.taxIdMax" [showCharCount]="false" [parentFormGroup]="form"></ui-text-box>
+                @if (fieldError('taxId')) { <p class="mt-1 text-xs og-error">{{ fieldError('taxId') }}</p> }
+              </div>
+              <ui-text-box id="registrationNumber" label="Registration number (CIN)" placeholder="Company registration" [isRequired]="false" [maxLength]="limits.registrationMax" [showCharCount]="false" [parentFormGroup]="form"></ui-text-box>
+            </div>
+          </section>
+        </div>
+      }
+
+      <div class="flex flex-wrap justify-end gap-3 border-t og-border px-6 py-4">
+        <ui-text-button text="Cancel" variant="secondary" [disabled]="busy()" (buttonClick)="closeEditor()"></ui-text-button>
+        <ui-text-button [text]="busy() ? 'Saving…' : editingOrg() ? 'Save changes' : 'Create organization'" variant="primary" [disabled]="busy()" (buttonClick)="save()"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ================= CREATED: next steps ================= -->
+@if (created(); as o) {
+  <div orgBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center og-scrim p-4" (click)="created.set(null)">
+    <div class="w-full max-w-md rounded-2xl og-surface p-6 shadow-xl" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <h3 class="text-base font-semibold og-text">{{ o.name }} is ready</h3>
+      <p class="mt-2 text-sm og-text-2">It already has the roles Admin, HR, Manager and Employee. What next?</p>
+      <ol class="mt-4 space-y-2 text-sm og-text">
+        <li>1. Switch to it.</li>
+        <li>2. Check roles and page access in Setup.</li>
+        <li>3. Add its first employees (start with the Admin / HR person).</li>
+      </ol>
+      <div class="mt-6 flex flex-wrap justify-end gap-3">
+        <ui-text-button text="Later" variant="secondary" (buttonClick)="created.set(null)"></ui-text-button>
+        <ui-text-button text="Open Setup" variant="secondary" (buttonClick)="switchAndOpen(o, 'setup')"></ui-text-button>
+        <ui-text-button text="Switch now" variant="primary" (buttonClick)="switchTo(o)"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ================= DEACTIVATE CONFIRM ================= -->
+@if (deactivating(); as o) {
+  <div orgBodyPortal class="ph-overlay ph-overlay--top fixed inset-0 flex items-center justify-center og-scrim p-4" (click)="deactivating.set(null)">
+    <div class="w-full max-w-sm rounded-2xl og-surface p-6 shadow-xl" role="alertdialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <h3 class="text-base font-semibold og-text">Deactivate {{ o.name }}?</h3>
+      <p class="mt-2 text-sm og-text-2">Nobody can add employees to it until you activate it again. Its data is kept.</p>
+      <div class="mt-6 flex justify-end gap-3">
+        <ui-text-button text="Keep active" variant="secondary" (buttonClick)="deactivating.set(null)"></ui-text-button>
+        <ui-text-button [text]="busy() ? 'Saving…' : 'Deactivate'" variant="danger" [disabled]="busy()" (buttonClick)="confirmDeactivate()"></ui-text-button>
+      </div>
+    </div>
+  </div>
+}
+
+<ui-toast-stack orgBodyPortal class="ph-overlay ph-overlay--top" position="bottom-right" [toasts]="toasts()" (toastClosed)="dismissToast($event)"></ui-toast-stack>
+
+<ng-template #pill let-text let-t="t">
+  <ui-chip size="status" [text]="text" [usePointerCursor]="false" [color]="t.color" [bgColor]="t.bg" [activeColor]="t.color" [activeBGColor]="t.bg"></ui-chip>
+</ng-template>
