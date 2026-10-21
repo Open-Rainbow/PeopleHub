@@ -14,6 +14,26 @@
   z-index: 2110;
 }
 
+// Side panels slide in from the right.
+.ed-slide {
+  animation: ed-slide-in 0.22s ease-out;
+}
+
+@keyframes ed-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ed-slide {
+    animation: none;
+  }
+}
+
 // ---- Surfaces --------------------------------------------------------------------------------
 .ed-surface {
   background-color: var(--color-surface);

@@ -94,6 +94,29 @@ function bannerTone(t: Tone) {
 type ViewMode = 'table' | 'cards';
 type ProfileTab = 'job' | 'contact' | 'personal' | 'history';
 
+/** Values of the filter panel form. */
+interface FilterFormValue {
+  status: number | null;
+  department: number | null;
+  location: number | null;
+  type: number | null;
+  manager: number | null;
+  joinedFrom: string;
+  joinedTo: string;
+  includeExited: boolean;
+}
+
+const EMPTY_FILTERS: FilterFormValue = {
+  status: null,
+  department: null,
+  location: null,
+  type: null,
+  manager: null,
+  joinedFrom: '',
+  joinedTo: '',
+  includeExited: false,
+};
+
 /** A filter dropdown: ui-dropdown options plus label -> API value. */
 interface FilterSelect {
   options: DropdownOption[];
@@ -119,6 +142,7 @@ const ALL = {
 
 /**
  * View Employee: searchable, filterable employee directory with a profile side panel.
+ * Search stays on the page; the other filters live in a slide-in panel (Apply / Reset).
  * Admin / HR can change status (with reason + history), remove employees and export CSV.
  * What each role may do comes from the Setup page (employees.view / employees.add).
  */
@@ -172,8 +196,10 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   readonly canOrgChart = computed(() => (this.accessVersion(), this.access.can('org-chart', 'view')));
 
   // ---- Forms for the shared controls ---------------------------------------------------------
-  readonly filterForm = new FormGroup({
+  readonly searchForm = new FormGroup({
     search: new FormControl('', { nonNullable: true }),
+  });
+  readonly filterForm = new FormGroup({
     status: new FormControl<number | null>(null),
     department: new FormControl<number | null>(null),
     location: new FormControl<number | null>(null),
@@ -188,9 +214,15 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
     effectiveDate: new FormControl('', { nonNullable: true }),
     reason: new FormControl('', { nonNullable: true }),
   });
-  /** Bumped to re-create the filter controls (they read their value on init). */
+  /** Bumped to re-create controls (they read their value on init). */
   readonly filterKey = signal(0);
-  readonly showMoreFilters = signal(false);
+  readonly searchKey = signal(0);
+
+  // ---- Filter panel --------------------------------------------------------------------------
+  readonly filtersOpen = signal(false);
+  /** Filter values when the panel was opened (Cancel puts them back). */
+  private filterSnapshot: FilterFormValue = { ...EMPTY_FILTERS };
+  readonly filterError = signal<string | null>(null);
 
   // ---- Data ----------------------------------------------------------------------------------
   readonly query = signal<EmployeeQuery>(emptyQuery());
@@ -248,6 +280,9 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
     return chips;
   });
 
+  /** Number of panel filters in use (search not counted). Shown on the Filters button. */
+  readonly filterCount = computed(() => this.activeFilters().filter((f) => f.key !== 'search').length);
+
   readonly columns: { key: EmployeeSortField; label: string; css: string }[] = [
     { key: 'name', label: 'Employee', css: 'px-5' },
     { key: 'designation', label: 'Role', css: 'px-4' },
@@ -283,9 +318,6 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     void this.access.load();
     this.subs.add(
-      this.filterForm.valueChanges.subscribe(() => this.applyFilterForm()),
-    );
-    this.subs.add(
       this.statusForm.controls.status.valueChanges.subscribe((v) =>
         this.pickedStatus.set((optionLabelOf(this.statusOptions(), v) as EmployeeStatus) || null),
       ),
@@ -302,6 +334,7 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   onEscape(): void {
     if (this.deleting()) this.deleting.set(null);
     else if (this.statusTarget()) this.closeStatus();
+    else if (this.filtersOpen()) this.cancelFilters();
     else if (this.profileBase()) this.closeProfile();
   }
 
@@ -349,26 +382,62 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ---- Filters / sort / paging ---------------------------------------------------------------
+  // ---- Search / filter panel -----------------------------------------------------------------
 
   onSearch(value: string): void {
     if (this.searchTimer) clearTimeout(this.searchTimer);
     this.searchTimer = setTimeout(() => this.patchQuery({ search: (value ?? '').slice(0, DIRECTORY_LIMITS.searchMax) }), 300);
   }
 
+  openFilters(): void {
+    this.filterSnapshot = this.filterForm.getRawValue() as FilterFormValue;
+    this.filterError.set(null);
+    this.filterKey.update((k) => k + 1);
+    this.filtersOpen.set(true);
+  }
+
+  /** Close without applying: put the old values back. */
+  cancelFilters(): void {
+    this.filterForm.reset(this.filterSnapshot, { emitEvent: false });
+    this.filterError.set(null);
+    this.filtersOpen.set(false);
+  }
+
+  /** Clears the panel only; the list changes when Apply is pressed. */
+  resetFilters(): void {
+    this.filterForm.reset({ ...EMPTY_FILTERS }, { emitEvent: false });
+    this.filterError.set(null);
+    this.filterKey.update((k) => k + 1);
+  }
+
+  applyFilters(): void {
+    const v = this.filterForm.getRawValue();
+    const from = calendarToIso(v.joinedFrom);
+    const to = calendarToIso(v.joinedTo);
+    if ((v.joinedFrom && !from) || (v.joinedTo && !to)) {
+      this.filterError.set('Pick valid joining dates.');
+      return;
+    }
+    if (from && to && from > to) {
+      this.filterError.set("'Joined to' must be on or after 'Joined from'.");
+      return;
+    }
+    this.filterError.set(null);
+    this.applyFilterForm();
+    this.filtersOpen.set(false);
+  }
+
   private applyFilterForm(): void {
     const v = this.filterForm.getRawValue();
     const s = this.selects();
-    const from = calendarToIso(v.joinedFrom) || null;
-    const to = calendarToIso(v.joinedTo) || null;
     this.patchQuery({
       status: (pick(s.status, v.status) as EmployeeStatus | null) ?? null,
       department: pick(s.department, v.department),
       location: pick(s.location, v.location),
       employeeType: pick(s.type, v.type),
       managerCode: pick(s.manager, v.manager),
-      joinedFrom: from,
-      joinedTo: to,
+      joinedFrom: calendarToIso(v.joinedFrom) || null,
+      joinedTo: calendarToIso(v.joinedTo) || null,
       includeExited: !!v.includeExited,
     });
   }
@@ -380,6 +449,8 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
     this.query.set(next);
     void this.loadList();
   }
+
+  // ---- Sort / paging / layout ----------------------------------------------------------------
 
   sortBy(field: EmployeeSortField): void {
     const q = this.query();
@@ -411,15 +482,15 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   pickStat(card: StatCard): void {
     const current = this.query().status;
     const status = !card.status || current === card.status ? null : card.status;
-    this.setFilterControls({ status: status ? optionValueOf(this.selects().status.options, status) : null });
+    this.setFilterControls({ status: status ? optionValueOf(this.selects().status.options, statusLabel(this.selects().status, status)) : null });
   }
 
   /** Removes one active filter chip. */
   clearFilter(key: keyof EmployeeQuery): void {
     switch (key) {
       case 'search':
-        this.filterForm.controls.search.setValue('', { emitEvent: false });
-        this.filterKey.update((k) => k + 1);
+        this.searchForm.reset({ search: '' }, { emitEvent: false });
+        this.searchKey.update((k) => k + 1);
         this.patchQuery({ search: '' });
         return;
       case 'status': return this.setFilterControls({ status: null });
@@ -433,7 +504,9 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   }
 
   clearAll(): void {
-    this.filterForm.reset({ search: '', status: null, department: null, location: null, type: null, manager: null, joinedFrom: '', joinedTo: '', includeExited: false }, { emitEvent: false });
+    this.searchForm.reset({ search: '' }, { emitEvent: false });
+    this.filterForm.reset({ ...EMPTY_FILTERS }, { emitEvent: false });
+    this.searchKey.update((k) => k + 1);
     this.filterKey.update((k) => k + 1);
     const q = this.query();
     this.patchQuery({ ...emptyQuery(), sortBy: q.sortBy, sortDir: q.sortDir, pageSize: q.pageSize });
@@ -443,10 +516,12 @@ export class EmployeeListComponent implements OnInit, OnDestroy {
   showTeam(code: string | null): void {
     if (!code) return;
     this.closeProfile();
-    this.setFilterControls({ manager: optionValueOf(this.selects().manager.options, this.selects().manager.options.find((o) => this.selects().manager.values.get(o.name) === code)?.name) });
+    const s = this.selects().manager;
+    const label = s.options.find((o) => s.values.get(o.name) === code)?.name;
+    this.setFilterControls({ manager: optionValueOf(s.options, label) });
   }
 
-  private setFilterControls(patch: Partial<ReturnType<typeof this.filterForm.getRawValue>>): void {
+  private setFilterControls(patch: Partial<FilterFormValue>): void {
     this.filterForm.patchValue(patch, { emitEvent: false });
     this.filterKey.update((k) => k + 1);
     this.applyFilterForm();
@@ -701,6 +776,11 @@ function select(allLabel: string, items: FilterOption[]): FilterSelect {
     labels.push(label);
   });
   return { options: toDropdownOptions(labels), values };
+}
+
+/** Option label for an API value (labels carry counts, e.g. "Active (6)"). */
+function statusLabel(s: FilterSelect, value: string): string | undefined {
+  return s.options.find((o) => s.values.get(o.name) === value)?.name;
 }
 
 /** API value for the picked option (null for "All ..." or nothing). */
