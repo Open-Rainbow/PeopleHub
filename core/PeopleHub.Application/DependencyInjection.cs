@@ -6,6 +6,8 @@ using PeopleHub.Application.Modules.Attendance.Interfaces;
 using PeopleHub.Application.Modules.Attendance.Services;
 using PeopleHub.Application.Modules.Employees.AddEmployee.Interfaces;
 using PeopleHub.Application.Modules.Employees.AddEmployee.Services;
+using PeopleHub.Application.Modules.Employees.Directory.Interfaces;
+using PeopleHub.Application.Modules.Employees.Directory.Services;
 using PeopleHub.Application.Modules.Holidays.Interfaces;
 using PeopleHub.Application.Modules.Holidays.Services;
 using PeopleHub.Application.Modules.Leave.Interfaces;
@@ -30,6 +32,7 @@ public static class DependencyInjection
 
         // Services: one line per module.
         services.AddScoped<IAddEmployeeService, AddEmployeeService>();
+        services.AddScoped<IEmployeeDirectoryService, EmployeeDirectoryService>();
         services.AddScoped<IAnnouncementService, AnnouncementService>();
         services.AddScoped<ILeaveService, LeaveService>();
         services.AddScoped<ILeavePolicyService, LeavePolicyService>();

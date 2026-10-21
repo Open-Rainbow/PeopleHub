@@ -54,6 +54,10 @@ internal static class ApiPermissionMap
 
         // Employees
         R(Post, "add-employee/.*", ["employees.add"], "create"),
+        R(Get, "employees/export", ["employees.view"], "export"),
+        R(Get, "employees(/.*)?", ["employees.view"], "view"),
+        R(Post, "employees/[^/]+/status", ["employees.add"], "edit"),
+        R(Delete, "employees/[^/]+", ["employees.add"], "delete"),
         R(Get, "org-chart(/.*)?", ["org-chart", "employees.view"], "view"),
         R(Put, "org-chart/.*", ["org-chart"], "edit"),
 

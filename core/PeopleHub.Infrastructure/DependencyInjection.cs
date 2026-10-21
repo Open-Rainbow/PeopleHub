@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PeopleHub.Application.Modules.Announcements.Interfaces;
 using PeopleHub.Application.Modules.Attendance.Interfaces;
 using PeopleHub.Application.Modules.Employees.AddEmployee.Interfaces;
+using PeopleHub.Application.Modules.Employees.Directory.Interfaces;
 using PeopleHub.Application.Modules.Holidays.Interfaces;
 using PeopleHub.Application.Modules.Leave.Interfaces;
 using PeopleHub.Application.Modules.OrgChart.Interfaces;
@@ -32,6 +33,7 @@ public static class DependencyInjection
 
         // Repositories: one line per module.
         services.AddScoped<IAddEmployeeRepository, AddEmployeeRepository>();
+        services.AddScoped<IEmployeeDirectoryRepository, EmployeeDirectoryRepository>();
         services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
         services.AddScoped<ILeaveRepository, LeaveRepository>();
         services.AddScoped<ILeavePolicyRepository, LeavePolicyRepository>();
