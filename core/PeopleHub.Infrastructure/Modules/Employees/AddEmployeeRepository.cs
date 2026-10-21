@@ -1,6 +1,7 @@
 using System.Data;
 using System.Text.Json;
 using Dapper;
+using PeopleHub.Application.Abstractions.Context;
 using PeopleHub.Application.Common.Utilities;
 using PeopleHub.Application.Modules.Employees.AddEmployee.Contracts;
 using PeopleHub.Application.Modules.Employees.AddEmployee.Interfaces;
@@ -10,7 +11,7 @@ using PeopleHub.Infrastructure.Security;
 namespace PeopleHub.Infrastructure.Modules.Employees;
 
 /// <summary>One method per Add Employee step, each calls its stored procedure.</summary>
-internal sealed class AddEmployeeRepository(SqlDb db) : IAddEmployeeRepository
+internal sealed class AddEmployeeRepository(SqlDb db, IRequestContext context) : IAddEmployeeRepository
 {
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
 
@@ -20,6 +21,8 @@ internal sealed class AddEmployeeRepository(SqlDb db) : IAddEmployeeRepository
         p.Add("@Id", r.Id, DbType.Int32, ParameterDirection.InputOutput);
         p.Add("@Employee_Id", Clean(r.EmployeeId), DbType.AnsiString, ParameterDirection.InputOutput, 50);
         p.Add("@OperationType", r.Id is null or 0 ? "INS" : "UPD");
+        // New employees go to the organization of the request (Super Admin picks it in the header).
+        p.Add("@OrganizationId", context.OrganizationId, DbType.Int32);
         p.Add("@Salutation", Clean(r.Salutation));
         p.Add("@FirstName", Clean(r.FirstName));
         p.Add("@MiddleName", Clean(r.MiddleName));

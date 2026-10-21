@@ -13,6 +13,9 @@ internal sealed class HttpRequestContext(
     /// <summary>Sent by the Angular app until the login API issues tokens with a role claim.</summary>
     public const string RoleHeader = "X-PeopleHub-Role";
 
+    /// <summary>Only Super Admin may work in another organization (picked in the app header).</summary>
+    private const string SuperAdminRole = "superadmin";
+
     private HttpContext? Http => accessor.HttpContext;
 
     public bool IsAuthenticated => Http?.User.Identity?.IsAuthenticated ?? false;
@@ -50,22 +53,25 @@ internal sealed class HttpRequestContext(
         get
         {
             var settings = options.Value;
+            var headerOrg = Http is not null
+                && Http.Request.Headers.TryGetValue(settings.HeaderName, out var header)
+                && int.TryParse(header.ToString(), out var fromHeader)
+                && fromHeader > 0
+                    ? fromHeader
+                    : (int?)null;
+            var isSuperAdmin = string.Equals(Role, SuperAdminRole, StringComparison.Ordinal);
 
-            // Authenticated: trust the token only.
+            // Authenticated: the token decides; Super Admin may switch to another organization.
             if (IsAuthenticated)
             {
+                if (isSuperAdmin && headerOrg is not null) return headerOrg;
                 return int.TryParse(Http!.User.FindFirst(settings.ClaimType)?.Value, out var fromClaim)
                     ? fromClaim
-                    : null;
+                    : settings.DefaultOrganizationId;
             }
 
-            if (Http is not null
-                && Http.Request.Headers.TryGetValue(settings.HeaderName, out var header)
-                && int.TryParse(header.ToString(), out var fromHeader))
-            {
-                return fromHeader;
-            }
-
+            // Dev (no sign-in yet): only Super Admin can pick the organization with the header.
+            if (isSuperAdmin && headerOrg is not null) return headerOrg;
             return settings.DefaultOrganizationId;
         }
     }

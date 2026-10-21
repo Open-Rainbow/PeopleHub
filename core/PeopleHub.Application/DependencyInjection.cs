@@ -14,6 +14,8 @@ using PeopleHub.Application.Modules.Leave.Interfaces;
 using PeopleHub.Application.Modules.Leave.Services;
 using PeopleHub.Application.Modules.OrgChart.Interfaces;
 using PeopleHub.Application.Modules.OrgChart.Services;
+using PeopleHub.Application.Modules.Organizations.Interfaces;
+using PeopleHub.Application.Modules.Organizations.Services;
 using PeopleHub.Application.Modules.Payroll.Interfaces;
 using PeopleHub.Application.Modules.Payroll.Services;
 using PeopleHub.Application.Modules.Policies.Interfaces;
@@ -39,6 +41,7 @@ public static class DependencyInjection
         services.AddScoped<IHolidayService, HolidayService>();
         services.AddScoped<IAttendanceService, AttendanceService>();
         services.AddScoped<IOrgChartService, OrgChartService>();
+        services.AddScoped<IOrganizationService, OrganizationService>();
         services.AddScoped<IPayrollService, PayrollService>();
         services.AddScoped<IPolicyService, PolicyService>();
         services.AddScoped<IAccessService, AccessService>();
